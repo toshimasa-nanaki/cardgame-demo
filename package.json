@@ -1,0 +1,22 @@
+{
+  "name": "daihugou",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kentei/daihugou.git"
+  },
+  "author": "kentei",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kentei/daihugou/issues"
+  },
+  "homepage": "https://github.com/kentei/daihugou#readme"
+  "scripts" : {
+	"start": "node index.js"
+  }
+}
