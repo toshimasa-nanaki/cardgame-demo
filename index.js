@@ -50,7 +50,7 @@ io.on('connection', function(socket){
       let pos = 0; 
       Object.keys(socket.nsp.adapter.rooms[msg.id].sockets).forEach(function (key) {
         io.to(key).emit('gameInit', shuffleCards.slice(pos, (remainder > 0 ? pos+perNum+1 : pos+perNum)));
-        pos = remainder > 0 ? pos + perNum;
+        pos = remainder > 0 ? pos + perNum + 1 : pos + perNum;
         remainder--; 
       });
     }else{

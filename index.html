@@ -48,8 +48,8 @@
     </div>
     <div id="gameFieldArea">
       <ul id="gameStatus"></ul>
-      <div id="cardArea">
-        <ul id="cardList"></ul>
+      <div id="cardList">
+<!--         <ul id="cardList"></ul> -->
       </div>
     </div>
 
@@ -110,7 +110,11 @@
         socket.on("gameInit", function(msg) {
           // $("#messages").append($("<li>").text(msg));
           // window.scrollTo(0, document.body.scrollHeight);
-          msg.forEach(element => $("#cardList").append($("<li>").text(element.type+element.number)));
+          //msg.forEach(element => $("#cardList").append($("<li>").text(element.type+element.number)));
+          msg.forEach(element => $("#cardList").append($('<input type="checkbox" />').attr({name: element.type+element.number})).append($('<label>' + element.type+element.number + '</label>')));
+//           var $input = $('<input type="checkbox" />').attr({name: 'test2'});
+// var $label = $('<label>labeltest2</label>')
+// $("#cardList").append($input).append($label);
         });
       });
     </script>
