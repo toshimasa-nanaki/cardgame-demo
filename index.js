@@ -46,10 +46,12 @@ io.on('connection', function(socket){
     if(socket.nsp.adapter.rooms[msg.id].length == count){
       io.to(store[msg.id].room).emit('gathered', count + "人が集まりました！！！");
       let perNum = Math.floor(54 / count);
+      let remainder = 54 % count;
       let pos = 0; 
       Object.keys(socket.nsp.adapter.rooms[msg.id].sockets).forEach(function (key) {
-        io.to(key).emit('gameInit', shuffleCards.slice(pos, pos+perNum));
-        pos = pos + perNum;
+        io.to(key).emit('gameInit', shuffleCards.slice(pos, (remainder > 0 ? pos+perNum+1 : pos+perNum)));
+        pos = remainder > 0 ? pos + perNum;
+        remainder--; 
       });
     }else{
       io.to(store[msg.id].room).emit('update', "今の部屋の人数:  " + socket.nsp.adapter.rooms[msg.id].length);
