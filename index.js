@@ -17,6 +17,15 @@ app.get('/', function(req, res){
 });
 
 io.on('connection', function(socket){
+  socket.on('createRoom', function(msg) {
+    const usrobj = {
+      'room': msg.roomid,
+      'name': msg.name
+    };
+    console.log(msg.roomid);
+    store[msg.id] = usrobj;
+    socket.join(msg.roomid);
+  });
   socket.on('join', function(msg) {
     const usrobj = {
       'room': msg.roomid,
