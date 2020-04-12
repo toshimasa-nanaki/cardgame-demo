@@ -86,9 +86,13 @@
             // name: "testRoom1"
           });
           $("#roomSelectArea").hide();
-          //socket.emit("update", { id: 1234, roomid: $('#joinRoomId').val() });
+          socket.emit("update", { id: 1234, roomid: $('#joinRoomId').val() });
         });
         socket.on("update", function(msg) {
+          $("#messages").append($("<li>").text(msg));
+          window.scrollTo(0, document.body.scrollHeight);
+        });
+        socket.on("gathered", function(msg) {
           $("#messages").append($("<li>").text(msg));
           window.scrollTo(0, document.body.scrollHeight);
         });
