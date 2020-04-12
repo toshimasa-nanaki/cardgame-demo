@@ -16,6 +16,10 @@
   </head>
   <body>
     <ul id="messages"></ul>
+    <button id="create">createRoom</button>
+    <div id="roomInputArea">
+      <input id="roomName" autocomplete="off"/>
+    </div>
     <form action="">
       <input id="j" autocomplete="off" /><button>Join</button>
     </form>
@@ -37,6 +41,9 @@
         socket.on('chat message', function(msg){
           $('#messages').append($('<li>').text(msg));
           window.scrollTo(0, document.body.scrollHeight);
+        });
+        $('#create').click(function () {
+          $('#roomInputArea').toggle();
         });
       });
     </script>
