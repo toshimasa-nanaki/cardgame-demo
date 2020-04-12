@@ -38,7 +38,7 @@ io.on('connection', function(socket){
   });
   socket.on('chat message', function(msg){
     //io.emit('chat message', socket.client.conn.server.clientsCount);
-    io.to(store[msg.id].room).emit('chat message', socket.client.conn.server.clientsCount);
+    io.to(store[msg.id].room).emit('chat message', socket.nsp.adapter.rooms[msg.id].length);
   });
 });
 
