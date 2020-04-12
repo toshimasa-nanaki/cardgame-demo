@@ -45,7 +45,7 @@ io.on('connection', function(socket){
     const retryCount = 0;
     if(socket.nsp.adapter.rooms[msg.id].length == count){
       io.to(store[msg.id].room).emit('gathered', count + "人が集まりました！！！");
-      let perNum = 54 / count;
+      let perNum = Math.floor(54 / count);
       let pos = 0; 
       Object.keys(socket.nsp.adapter.rooms[msg.id].sockets).forEach(function (key) {
         io.to(key).emit('gameInit', shuffleCards.slice(pos, pos+perNum));
