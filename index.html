@@ -40,13 +40,13 @@
         </div>
       </div>
       <div id="joinArea">
-        <input id="joinRoomId" autocomplete="off" /><button>ルームに参加</button>
+        <input id="joinRoomId" autocomplete="off" /><button id="joinRoom">ルームに参加</button>
       </div>
     </div>
 
-    <form action="">
+<!--     <form action="">
       <input id="j" autocomplete="off" /><button>Join</button>
-    </form>
+    </form> -->
     <ul id="messages"></ul>
     <!--     <form action="">
       <input id="m" autocomplete="off" /><button>Send</button>
@@ -56,13 +56,13 @@
     <script>
       $(function() {
         var socket = io();
-        $("form").submit(function() {
-          socket.emit("join", { id: 1, roomid: 1, name: "testRoom1" });
-          // socket.emit('chat message', $('#m').val());
-          socket.emit("chat message", { id: 1, roomid: 1 });
-          $("#m").val("");
-          return false;
-        });
+        // $("form").submit(function() {
+        //   socket.emit("join", { id: 1, roomid: 1, name: "testRoom1" });
+        //   // socket.emit('chat message', $('#m').val());
+        //   socket.emit("chat message", { id: 1, roomid: 1 });
+        //   $("#m").val("");
+        //   return false;
+        // });
         socket.on("chat message", function(msg) {
           $("#messages").append($("<li>").text(msg));
           window.scrollTo(0, document.body.scrollHeight);
@@ -78,13 +78,17 @@
           });
           $("#roomSelectArea").hide();
         });
-        $("#createRoom").click(function() {
+        $("#joinRoom").click(function() {
           socket.emit("join", {
-            id: 1234,
-            roomid: 1234,
-            name: "testRoom1"
+            id: 1,
+            roomid: $('#m').val()
+            // name: "testRoom1"
           });
           $("#roomSelectArea").hide();
+        });
+        socket.on("update", function(msg) {
+          $("#messages").append($("<li>").text(msg));
+          window.scrollTo(0, document.body.scrollHeight);
         });
       });
     </script>
