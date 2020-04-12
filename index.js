@@ -46,10 +46,25 @@ io.on('connection', function(socket){
         io.to(store[msg.id].room).emit('gathered', count + "人が集まりました！！！");
         break;
       }
+      if(retryCount >= 10){
+        io.to(store[msg.id].room).emit('update', count + "人が集まりました！！！");
+        return;
+      }
+      sleep(5000);
+      retryCount++;
     }
     
   });
 });
+
+function sleep(a){
+  var dt1 = new Date().getTime();
+  var dt2 = new Date().getTime();
+  while (dt2 < dt1 + a){
+    dt2 = new Date().getTime();
+  }
+  return;
+}
 
 http.listen(port, function(){
   console.log('listening on *:' + port);
