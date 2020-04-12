@@ -49,6 +49,7 @@
     <div id="gameFieldArea">
       <ul id="gameStatus"></ul>
       <div id="cardArea">
+        <ul id="cardList"></ul>
       </div>
     </div>
 
@@ -105,6 +106,12 @@
           // window.scrollTo(0, document.body.scrollHeight);
           $("#gameFieldArea").toggle();
           $("#gameStatus").append($("<li>").text("カード配ります"));
+        });
+        socket.on("gameInit", function(msg) {
+          // $("#messages").append($("<li>").text(msg));
+          // window.scrollTo(0, document.body.scrollHeight);
+          $("#gameFieldArea").toggle();
+          $("#cardList").append($("<li>").text(msg.type+msg.number));
         });
       });
     </script>

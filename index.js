@@ -48,7 +48,8 @@ io.on('connection', function(socket){
       let perNum = 54 / count;
       let pos = 0; 
       Object.keys(socket.nsp.adapter.rooms[msg.id].sockets).forEach(function (key) {
-        io.to(key).emit('update', shuffleCards.slice(pos, pos+perNum));
+        io.to(key).emit('gameInit', shuffleCards.slice(pos, pos+perNum));
+        pos = pos + perNum;
       });
     }else{
       io.to(store[msg.id].room).emit('update', "今の部屋の人数:  " + socket.nsp.adapter.rooms[msg.id].length);
