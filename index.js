@@ -47,10 +47,10 @@ io.on('connection', function(socket){
         break;
       }
       if(retryCount >= 10){
-        io.to(store[msg.id].room).emit('update', count + "人が集まりました！！！");
+        io.to(store[msg.id].room).emit('update', "集まれませんでした。。");
         return;
       }
-      sleep(5000);
+      //sleep(5000);
       retryCount++;
     }
     
