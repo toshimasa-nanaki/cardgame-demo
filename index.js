@@ -5,7 +5,7 @@ const TRUMPDATA = {
         { type: 'heart', count: 13 },
         { type: 'diamond', count: 13 }
     ],
-    joker: 1
+    joker: 2
 }
 
 var app = require('express')();
@@ -45,9 +45,10 @@ io.on('connection', function(socket){
     const retryCount = 0;
     if(socket.nsp.adapter.rooms[msg.id].length == count){
       io.to(store[msg.id].room).emit('gathered', count + "人が集まりました！！！");
-      
-      Object.keys(socket.nsp.adapter.rooms[msg.id]).forEach(function (key) {
-        io.to(key).emit('update', shuffleCards);
+      let perNum = 54 / count;
+      let pos = 0; 
+      Object.keys(socket.nsp.adapter.rooms[msg.id].sockets).forEach(function (key) {
+        io.to(key).emit('update', shuffleCards.slice(pos, pos+perNum));
       });
     }else{
       io.to(store[msg.id].room).emit('update', "今の部屋の人数:  " + socket.nsp.adapter.rooms[msg.id].length);
