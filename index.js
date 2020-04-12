@@ -10,12 +10,21 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var port = process.env.PORT || 3000;
+var store = {};
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
 
 io.on('connection', function(socket){
+  socket.on('join', function(msg) {
+    const usrobj = {
+      'room': msg.roomid,
+      'name': msg.name
+    };
+    store[msg.id] = usrobj;
+    socket.join(msg.roomid);
+  });
   socket.on('chat message', function(msg){
     io.emit('chat message', socket.client.conn.server.clientsCount);
   });
