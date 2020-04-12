@@ -20,9 +20,10 @@ io.on('connection', function(socket){
   socket.on('createRoom', function(msg) {
     const usrobj = {
       'room': msg.roomid,
-      'name': msg.name
+      'name': msg.name,
+      'count': msg.count
     };
-    console.log(msg.roomid);
+    console.log("createRoom:  " + msg.roomid);
     store[msg.id] = usrobj;
     socket.join(msg.roomid);
   });
