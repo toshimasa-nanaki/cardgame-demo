@@ -77,14 +77,16 @@
             name: "testRoom1"
           });
           $("#roomSelectArea").hide();
+          socket.emit("update", { id: 1234, roomid: 1234 });
         });
         $("#joinRoom").click(function() {
           socket.emit("join", {
-            id: 1,
-            roomid: $('#m').val()
+            id: 1234,
+            roomid: $('#joinRoomId').val()
             // name: "testRoom1"
           });
           $("#roomSelectArea").hide();
+          socket.emit("update", { id: 1234, roomid: $('#joinRoomId').val() });
         });
         socket.on("update", function(msg) {
           $("#messages").append($("<li>").text(msg));

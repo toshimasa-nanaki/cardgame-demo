@@ -28,17 +28,17 @@ io.on('connection', function(socket){
     socket.join(msg.roomid);
   });
   socket.on('join', function(msg) {
-    const usrobj = {
-      'room': msg.roomid,
-      'name': msg.name
-    };
-    console.log(msg.roomid);
-    store[msg.id] = usrobj;
+    // const usrobj = {
+    //   'room': msg.roomid,
+    //   'name': msg.name
+    // };
+    // console.log(msg.roomid);
+    // store[msg.id] = usrobj;
     socket.join(msg.roomid);
   });
-  socket.on('chat message', function(msg){
+  socket.on('update', function(msg){
     //io.emit('chat message', socket.client.conn.server.clientsCount);
-    io.to(store[msg.id].room).emit('update', socket.nsp.adapter.rooms[msg.id].length);
+    io.to(store[msg.id].room).emit('update', "今の部屋の人数:  " + socket.nsp.adapter.rooms[msg.id].length);
   });
 });
 
