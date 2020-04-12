@@ -22,12 +22,16 @@ io.on('connection', function(socket){
       'room': msg.roomid,
       'name': msg.name
     };
+    console.log(msg.roomid);
     store[msg.id] = usrobj;
     socket.join(msg.roomid);
   });
   socket.on('chat message', function(msg){
     io.emit('chat message', socket.client.conn.server.clientsCount);
   });
+  socket.on('chat message', function(msg) {
+        io.to(store[msg.id].room).emit('chat message', msg);
+      });
 });
 
 http.listen(port, function(){
