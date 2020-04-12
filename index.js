@@ -27,11 +27,9 @@ io.on('connection', function(socket){
     socket.join(msg.roomid);
   });
   socket.on('chat message', function(msg){
-    io.emit('chat message', socket.client.conn.server.clientsCount);
+    //io.emit('chat message', socket.client.conn.server.clientsCount);
+    io.to(store[msg.id].room).emit('chat message', socket.client.conn.server.clientsCount);
   });
-  socket.on('chat message', function(msg) {
-        io.to(store[msg.id].room).emit('chat message', msg);
-      });
 });
 
 http.listen(port, function(){

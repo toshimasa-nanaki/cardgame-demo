@@ -27,7 +27,8 @@
         var socket = io();
         $('form').submit(function(){
           socket.emit('join', {id: 1,roomid: 1, name:'testRoom1'});
-          socket.emit('chat message', $('#m').val());
+          // socket.emit('chat message', $('#m').val());
+          socket.emit('chat message', {id: 1,roomid: 1});
           $('#m').val('');
           return false;
         });
