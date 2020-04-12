@@ -121,9 +121,10 @@
         });
         $("#send").click(function() {
           let sendCards = [];
+          let cardarr;
           $('input:checkbox[name="cards"]:checked').each(function() {
-            
-			      sendCards.push({type: }$(this).val());
+            cardarr = $(this).val().split('_');
+			      sendCards.push({type: cardarr[0], number: cardarr[1]});
 		      });
           socket.emit("validate", {
             cards: sendCards
