@@ -12,6 +12,9 @@
       div#roomInputArea {
         display: none;
       }
+      div#gameFieldArea {
+        display: none;
+      }
       /*       form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; } */
       /*       form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; } */
       /*       form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; } */
@@ -41,6 +44,11 @@
       </div>
       <div id="joinArea">
         <input id="joinRoomId" autocomplete="off" /><button id="joinRoom">ルームに参加</button>
+      </div>
+    </div>
+    <div id="gameFieldArea">
+      <ul id="gameStatus"></ul>
+      <div id="cardArea">
       </div>
     </div>
 
@@ -93,8 +101,10 @@
           window.scrollTo(0, document.body.scrollHeight);
         });
         socket.on("gathered", function(msg) {
-          $("#messages").append($("<li>").text(msg));
-          window.scrollTo(0, document.body.scrollHeight);
+          // $("#messages").append($("<li>").text(msg));
+          // window.scrollTo(0, document.body.scrollHeight);
+          $("#gameFieldArea").toggle();
+          $("#gameStatus").append($("<li>").text("カード配ります"));
         });
       });
     </script>

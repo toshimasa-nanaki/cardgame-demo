@@ -62,15 +62,6 @@ io.on('connection', function(socket){
   });
 });
 
-function sleep(a){
-  var dt1 = new Date().getTime();
-  var dt2 = new Date().getTime();
-  while (dt2 < dt1 + a){
-    dt2 = new Date().getTime();
-  }
-  return;
-}
-
 http.listen(port, function(){
   console.log('listening on *:' + port);
 });
