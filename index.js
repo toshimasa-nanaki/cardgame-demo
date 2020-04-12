@@ -38,7 +38,16 @@ io.on('connection', function(socket){
   });
   socket.on('update', function(msg){
     //io.emit('chat message', socket.client.conn.server.clientsCount);
-    io.to(store[msg.id].room).emit('update', "今の部屋の人数:  " + socket.nsp.adapter.rooms[msg.id].length);
+    const count = typeof store[msg.id].count === "undefined" ? 4 : store[msg.id].count;
+    const retryCount = 0;
+    while(true){
+      io.to(store[msg.id].room).emit('update', "今の部屋の人数:  " + socket.nsp.adapter.rooms[msg.id].length);
+      if(socket.nsp.adapter.rooms[msg.id].length == count){
+        io.to(store[msg.id].room).emit('gathered', count + "人が集まりました！！！");
+        break;
+      }
+    }
+    
   });
 });
 
