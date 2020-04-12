@@ -58,6 +58,9 @@ io.on('connection', function(socket){
     }
     
   });
+  socket.on('validate', function(msg) {
+    console.log(msg);
+  });
 });
 
 function trump_init(trumpData) {
