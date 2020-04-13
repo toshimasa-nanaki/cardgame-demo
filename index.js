@@ -75,7 +75,18 @@ io.on('connection', function(socket){
       io.to(Object.keys(ORDER)[currentTurn]).emit('order', false);
       io.to(Object.keys(ORDER)[nextTurn]).emit('order', true);
     }else{
+      if(nowCard.cards.length != msg.cards.length){
+        //枚数が違うのはあり得ない
+        io.to(socket.id).emit('validateResult', {card: msg, error:1, reazon:"枚数が違うよね"});
+      }
+      //数字を比べる
+      if(comparison())
       
+      if(msg.cards[0].number == 8){
+        //8ぎり
+        nowCard = "";
+        
+      }
     }
     console.log(msg);
   });
