@@ -17,6 +17,8 @@ const ORIGINALCARDDATA = trump_init(TRUMPDATA);
 const shuffleCards = sort_at_random(ORIGINALCARDDATA);
 let nowCard = "";
 let ORDER = {};
+let elevenbackFlag = false;
+let revolutionFlag = false;
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
@@ -80,7 +82,9 @@ io.on('connection', function(socket){
         io.to(socket.id).emit('validateResult', {card: msg, error:1, reazon:"枚数が違うよね"});
       }
       //数字を比べる
-      if(comparison())
+      if(!numComparison(nowCard.cards[0].number, msg.cards[0].number)){
+        
+      }
       
       if(msg.cards[0].number == 8){
         //8ぎり
@@ -96,7 +100,7 @@ function trump_init(trumpData) {
     var cards = [];
     for (var i = 0; i < trumpData['card'].length; i++) {
         var thistype = trumpData['card'][i];
-        for (var j = 0; j < thistype['count']; j++) {
+        for (var j = 2; j < thistype['count']; j++) {
             cards.push({
                 type: thistype['type'],
                 number: j + 1
@@ -122,6 +126,16 @@ function sort_at_random(arrayData) {
         arr.splice(randomTarget, 1);
     }
     return randomArr;
+}
+
+function numComparison(nowCard, sendCard){
+  if(elevenbackFlag || revolutionFlag){
+    //逆残
+    
+  }else{
+    //かつも含めて普通
+    
+  }
 }
 
 http.listen(port, function(){
