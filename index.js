@@ -86,7 +86,10 @@ io.on('connection', function(socket){
       if(!isSameNumber(msg.cards)){
         io.to(socket.id).emit('validateResult', {card: msg, error:1, reazon:"数字は全部同じにしてね"});
       }
-      いｆ
+      //縛りはTODO
+      // if(shibari && !isSameType(nowCard.cards, msg.cards)){
+      //   io.to(socket.id).emit('validateResult', {card: msg, error:1, reazon:"縛りです"});
+      // }
       //数字を比べる
       if(!numComparison(nowCard.cards[0], msg.cards[0])){
         io.to(socket.id).emit('validateResult', {card: msg, error:1, reazon:"弱いカードはおけない"});
@@ -95,7 +98,6 @@ io.on('connection', function(socket){
       if(msg.cards[0].number == 8){
         //8ぎり
         nowCard = "";
-        
       }
     }
     console.log(msg);
@@ -133,6 +135,13 @@ function sort_at_random(arrayData) {
     }
     return randomArr;
 }
+
+//しばりはTODO
+// function isSameType(nowCard, sendCard){
+//   for(let i=0; i < nowCard.length; i++){
+    
+//   }
+// }
 
 function isSameNumber(cards){
   let base = cards[0].number;
