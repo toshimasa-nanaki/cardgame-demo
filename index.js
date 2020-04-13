@@ -15,6 +15,7 @@ var port = process.env.PORT || 3000;
 var store = {};
 const ORIGINALCARDDATA = trump_init(TRUMPDATA);
 const shuffleCards = sort_at_random(ORIGINALCARDDATA);
+let nowCard = "";
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
@@ -59,6 +60,9 @@ io.on('connection', function(socket){
     
   });
   socket.on('validate', function(msg) {
+    if(nowCard == ""){
+      nowCard = msg;
+    }
     console.log(msg);
   });
 });
