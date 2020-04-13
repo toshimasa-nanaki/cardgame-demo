@@ -136,6 +136,10 @@
           //出したやつを消す。
           $("#gameStatus").append($("<li>").text("今のカード: " + msg.result.cards[0].type + msg.result.cards[0].number + "×" + msg.result.cards.length + "枚"));
         });
+        socket.on("chageStatus", function(msg) {
+          //出したやつを消す。
+          $("#gameStatus").append($("<li>").text("今のカード: " + msg.result.cards[0].type + msg.result.cards[0].number + "×" + msg.result.cards.length + "枚"));
+        });
       });
     </script>
   </body>

@@ -45,11 +45,9 @@ io.on('connection', function(socket){
     }
   });
   socket.on('update', function(msg){
-    //io.emit('chat message', socket.client.conn.server.clientsCount);
     const count = typeof store[msg.id].count === "undefined" ? 4 : store[msg.id].count;
     const retryCount = 0;
     if(socket.nsp.adapter.rooms[msg.id].length == count){
-      //io.to(store[msg.id].room).emit('gathered', count + "人が集まりました！！！");
       nowCard = "";
       let perNum = Math.floor(54 / count);
       let remainder = 54 % count;
@@ -95,16 +93,18 @@ io.on('connection', function(socket){
       if(msg.cards[0].number == 8){
         //8ぎり
         nowCard = "";
-        io.to(store[msg.id].room).emit('result', {card: msg, error:0, reason:"", result: "8ぎりが発生"});
+        io.to(store[msg.id].room).emit('result', {type: "cut8"});
         return;
       }
       if(msg.cards[0].number == 11){
         //11back
         elevenbackFlag = !elevenbackFlag;
+        io.to(store[msg.id].room).emit('changeStatus', {type: "elevenback"});
       }
       if(msg.cards.length == 4){
         //革命
         revolutionFlag = !revolutionFlag;
+        io.to(store[msg.id].room).emit('changeStatus', {type: "revolution"});
       }
     }
     nowCard = msg;
@@ -113,7 +113,6 @@ io.on('connection', function(socket){
       let nextTurn = currentTurn != Object.keys(ORDER).length -1 ? currentTurn+1 : 0;
       io.to(Object.keys(ORDER)[currentTurn]).emit('order', false);
       io.to(Object.keys(ORDER)[nextTurn]).emit('order', true);
-    console.log(msg);
   });
 });
 
