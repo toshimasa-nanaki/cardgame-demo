@@ -50,7 +50,7 @@ let pass = 0;
     const count = typeof store[msg.id].count === "undefined" ? 4 : store[msg.id].count;
     const retryCount = 0;
     if(socket.nsp.adapter.rooms[msg.id].length == count){
-      nowCard = "";
+      //nowCard = "";
       let perNum = Math.floor(54 / count);
       let remainder = 54 % count;
       let pos = 0; 
