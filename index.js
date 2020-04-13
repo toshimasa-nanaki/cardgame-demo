@@ -13,14 +13,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var port = process.env.PORT || 3000;
 var store = {};
-
-
-app.get('/', function(req, res){
-  res.sendFile(__dirname + '/index.html');
-});
-
-io.on('connection', function(socket){
-  const ORIGINALCARDDATA = trump_init(TRUMPDATA);
+const ORIGINALCARDDATA = trump_init(TRUMPDATA);
 const shuffleCards = sort_at_random(ORIGINALCARDDATA);
 let nowCard = "";
 let ORDER = {};
@@ -28,6 +21,12 @@ let elevenbackFlag = false;
 let revolutionFlag = false;
 let shibari = false;
 let pass = 0;
+
+app.get('/', function(req, res){
+  res.sendFile(__dirname + '/index.html');
+});
+
+io.on('connection', function(socket){
   socket.on('createRoom', function(msg) {
     const usrobj = {
       'room': msg.roomid,
@@ -50,7 +49,7 @@ let pass = 0;
     const count = typeof store[msg.id].count === "undefined" ? 4 : store[msg.id].count;
     const retryCount = 0;
     if(socket.nsp.adapter.rooms[msg.id].length == count){
-      //nowCard = "";
+      nowCard = "";
       let perNum = Math.floor(54 / count);
       let remainder = 54 % count;
       let pos = 0; 
@@ -132,9 +131,9 @@ let pass = 0;
       io.to(Object.keys(ORDER)[currentTurn]).emit('order', false);
       io.to(Object.keys(ORDER)[nextTurn]).emit('order', true);
   });
-  
-  
-  function trump_init(trumpData) {
+});
+
+function trump_init(trumpData) {
     var cards = [];
     for (var i = 0; i < trumpData['card'].length; i++) {
         var thistype = trumpData['card'][i];
@@ -201,9 +200,6 @@ function numComparison(nc, sc){
     return nc.number < sc.number;
   }
 }
-});
-
-
 
 http.listen(port, function(){
   console.log('listening on *:' + port);
