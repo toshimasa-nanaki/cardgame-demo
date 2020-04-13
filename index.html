@@ -64,9 +64,13 @@
     <script>
       $(function() {
         var socket = io();
-        const DISPLAY_DIC = {
-          "spade3":"♠3","spade4":"♠4","spade5":"♠5","spade6":"♠6","spade7":"♠7","spade8":"♠8","spade9":"♠9","spade10":"","spade11":"",
-        }
+        var DISPLAY_DIC = {
+          "spade3":"♠3","spade4":"♠4","spade5":"♠5","spade6":"♠6","spade7":"♠7","spade8":"♠8","spade9":"♠9","spade10":"♠10","spade11":"♠J","spade12":"♠Q","spade13":"♠K","spade1":"♠A","spade2":"♠2",
+          "clover3":"♧3","clover4":"♧4","clover5":"♧5","clover6":"♧6","clover7":"♧7","clover8":"♧8","clover9":"♧9","clover10":"♧10","clover11":"♧J","clover12":"♧Q","clover13":"♧K","clover1":"♧A","clover2":"♧2",
+          "diamond3":"♦3","diamond4":"♦4","diamond5":"♦5","diamond6":"♦6","diamond7":"♦7","diamond8":"♦8","diamond9":"♦9","diamond10":"♦10","diamond11":"♦J","diamond12":"♦Q","diamond13":"♦K","diamond1":"♦A","diamond2":"♦2",
+          "heart3":"♥3","heart4":"♥4","heart5":"♥5","heart6":"♥6","heart7":"♥7","heart8":"♥8","heart9":"♥9","heart10":"♥10","heart11":"♥J","heart12":"♥Q","heart13":"♥K","heart1":"♥A","heart2":"♥2",
+          "joker99":"JOKER"
+        };
         $("#createDisplay").click(function() {
           $("#roomInputArea").toggle();
         });
