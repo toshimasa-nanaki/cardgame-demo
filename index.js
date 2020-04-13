@@ -81,10 +81,12 @@ io.on('connection', function(socket){
       if(nowCard.cards.length != msg.cards.length){
         //枚数が違うのはあり得ない
         io.to(socket.id).emit('validateResult', {card: msg, error:1, reazon:"枚数が違うよね"});
+        return;
       }
       //数字はすべて同じだよね？
       if(!isSameNumber(msg.cards)){
         io.to(socket.id).emit('validateResult', {card: msg, error:1, reazon:"数字は全部同じにしてね"});
+        return;
       }
       //縛りはTODO
       // if(shibari && !isSameType(nowCard.cards, msg.cards)){
@@ -93,6 +95,7 @@ io.on('connection', function(socket){
       //数字を比べる
       if(!numComparison(nowCard.cards[0], msg.cards[0])){
         io.to(socket.id).emit('validateResult', {card: msg, error:1, reazon:"弱いカードはおけない"});
+        return;
       }
       
       if(msg.cards[0].number == 8){
