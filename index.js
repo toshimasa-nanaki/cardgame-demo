@@ -52,12 +52,12 @@ io.on('connection', function(socket){
       let pos = 0; 
       ORDER = socket.nsp.adapter.rooms[msg.id].sockets;
       Object.keys(socket.nsp.adapter.rooms[msg.id].sockets).forEach(function (key) {
-        if(ORDER[0] == key){
+        io.to(key).emit('gameInit', shuffleCards.slice(pos, (remainder > 0 ? pos+perNum+1 : pos+perNum)));
+        if(Object.keys(ORDER)[0] == key){
           io.to(key).emit('order', true);
         }else{
           io.to(key).emit('order', false);
         }
-        io.to(key).emit('gameInit', shuffleCards.slice(pos, (remainder > 0 ? pos+perNum+1 : pos+perNum)));
         pos = remainder > 0 ? pos + perNum + 1 : pos + perNum;
         remainder--;
       });
