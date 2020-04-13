@@ -48,13 +48,23 @@
     </div>
     <ul id="connectStatus"></ul>  
     <div id="gameFieldArea">
-      <span id="order"></span>
+      <div>
+        <span id="order"></span>
+      </div>
+      <div>
+        <span id="field"></span>
+      </div>
+      <div>
+        <span id="revolution"></span>
+        <span id="elevenback"></span>
+      </div>
       <ul id="gameStatus"></ul>
       <div id="cardList">
 <!--         <ul id="cardList"></ul> -->
       </div>
       <div>
         <button id="send">カードを出す</button>
+        <button id="pass">パス</button>
       </div>
     </div>
 
@@ -134,11 +144,16 @@
         });
         socket.on("result", function(msg) {
           //出したやつを消す。
-          $("#gameStatus").append($("<li>").text("今のカード: " + msg.result.cards[0].type + msg.result.cards[0].number + "×" + msg.result.cards.length + "枚"));
+          $("#field").text("現在のカード: " + DISPLAY_DIC[msg.result.cards[0].type + msg.result.cards[0].number]+ " × " + msg.result.cards.length + "枚")
+          //$("#gameStatus").append($("<li>").text("現在のカード: " + msg.result.cards[0].type + msg.result.cards[0].number + "×" + msg.result.cards.length + "枚"));
         });
         socket.on("chageStatus", function(msg) {
           //出したやつを消す。
-          $("#gameStatus").append($("<li>").text("今のカード: " + msg.result.cards[0].type + msg.result.cards[0].number + "×" + msg.result.cards.length + "枚"));
+          switch(msg.type){
+              "elevenback":
+              
+          }
+          //$("#gameStatus").append($("<li>").text("現在のカード: " + msg.result.cards[0].type + msg.result.cards[0].number + "×" + msg.result.cards.length + "枚"));
         });
       });
     </script>

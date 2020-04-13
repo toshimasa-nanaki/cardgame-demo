@@ -99,12 +99,12 @@ io.on('connection', function(socket){
       if(msg.cards[0].number == 11){
         //11back
         elevenbackFlag = !elevenbackFlag;
-        io.to(store[msg.id].room).emit('changeStatus', {type: "elevenback"});
+        io.to(store[msg.id].room).emit('changeStatus', {type: "elevenback", value: elevenbackFlag});
       }
       if(msg.cards.length == 4){
         //革命
         revolutionFlag = !revolutionFlag;
-        io.to(store[msg.id].room).emit('changeStatus', {type: "revolution"});
+        io.to(store[msg.id].room).emit('changeStatus', {type: "revolution", value: revolutionFlag});
       }
     }
     nowCard = msg;
