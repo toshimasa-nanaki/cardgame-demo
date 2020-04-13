@@ -39,14 +39,18 @@
       <div id="roomCreateArea">
         <button id="createDisplay">ルーム作成F表示</button>
         <div id="roomInputArea">
-          <input id="roomName" autocomplete="off" /><button id="createRoom">ルーム作成</button>
+          <input id="roomName" autocomplete="off" /><button id="createRoom">
+            ルーム作成
+          </button>
         </div>
       </div>
       <div id="joinArea">
-        <input id="joinRoomId" autocomplete="off" /><button id="joinRoom">ルームに参加</button>
+        <input id="joinRoomId" autocomplete="off" /><button id="joinRoom">
+          ルームに参加
+        </button>
       </div>
     </div>
-    <ul id="connectStatus"></ul>  
+    <ul id="connectStatus"></ul>
     <div id="gameFieldArea">
       <div>
         <span id="order"></span>
@@ -63,7 +67,7 @@
       </div>
       <ul id="gameStatus"></ul>
       <div id="cardList">
-<!--         <ul id="cardList"></ul> -->
+        <!--         <ul id="cardList"></ul> -->
       </div>
       <div>
         <button id="send">カードを出す</button>
@@ -71,18 +75,65 @@
       </div>
     </div>
 
-    
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
       $(function() {
         var socket = io();
         var DISPLAY_DIC = {
-          "spade3":"♠3","spade4":"♠4","spade5":"♠5","spade6":"♠6","spade7":"♠7","spade8":"♠8","spade9":"♠9","spade10":"♠10","spade11":"♠J","spade12":"♠Q","spade13":"♠K","spade14":"♠A","spade15":"♠2",
-          "clover3":"♧3","clover4":"♧4","clover5":"♧5","clover6":"♧6","clover7":"♧7","clover8":"♧8","clover9":"♧9","clover10":"♧10","clover11":"♧J","clover12":"♧Q","clover13":"♧K","clover14":"♧A","clover15":"♧2",
-          "diamond3":"♦3","diamond4":"♦4","diamond5":"♦5","diamond6":"♦6","diamond7":"♦7","diamond8":"♦8","diamond9":"♦9","diamond10":"♦10","diamond11":"♦J","diamond12":"♦Q","diamond13":"♦K","diamond14":"♦A","diamond15":"♦2",
-          "heart3":"♥3","heart4":"♥4","heart5":"♥5","heart6":"♥6","heart7":"♥7","heart8":"♥8","heart9":"♥9","heart10":"♥10","heart11":"♥J","heart12":"♥Q","heart13":"♥K","heart14":"♥A","heart15":"♥2",
-          "joker99":"JOKER"
+          spade3: "♠3",
+          spade4: "♠4",
+          spade5: "♠5",
+          spade6: "♠6",
+          spade7: "♠7",
+          spade8: "♠8",
+          spade9: "♠9",
+          spade10: "♠10",
+          spade11: "♠J",
+          spade12: "♠Q",
+          spade13: "♠K",
+          spade14: "♠A",
+          spade15: "♠2",
+          clover3: "♧3",
+          clover4: "♧4",
+          clover5: "♧5",
+          clover6: "♧6",
+          clover7: "♧7",
+          clover8: "♧8",
+          clover9: "♧9",
+          clover10: "♧10",
+          clover11: "♧J",
+          clover12: "♧Q",
+          clover13: "♧K",
+          clover14: "♧A",
+          clover15: "♧2",
+          diamond3: "♦3",
+          diamond4: "♦4",
+          diamond5: "♦5",
+          diamond6: "♦6",
+          diamond7: "♦7",
+          diamond8: "♦8",
+          diamond9: "♦9",
+          diamond10: "♦10",
+          diamond11: "♦J",
+          diamond12: "♦Q",
+          diamond13: "♦K",
+          diamond14: "♦A",
+          diamond15: "♦2",
+          heart3: "♥3",
+          heart4: "♥4",
+          heart5: "♥5",
+          heart6: "♥6",
+          heart7: "♥7",
+          heart8: "♥8",
+          heart9: "♥9",
+          heart10: "♥10",
+          heart11: "♥J",
+          heart12: "♥Q",
+          heart13: "♥K",
+          heart14: "♥A",
+          heart15: "♥2",
+          joker99: "JOKER"
         };
         $("#createDisplay").click(function() {
           $("#roomInputArea").toggle();
@@ -113,29 +164,43 @@
         socket.on("gameInit", function(msg) {
           $("#gameFieldArea").toggle();
           $("#connectStatus").toggle();
-          msg.forEach(element => $("#cardList").append($('<input type="checkbox" />').attr({id: element.type + element.number ,name: "cards", value: element.type + "_" + element.number})).append($('<label for="' + element.type + element.number + '">' + DISPLAY_DIC[element.type+element.number] + '</label>')));
+          msg.forEach(element => {
+            var check = $(
+              '<label id="' +
+                element.type +
+                element.number +
+                '">' +
+                DISPLAY_DIC[element.type + element.number] +
+                "</label>"
+            ).prepend(
+              $('<input type="checkbox" />').attr({
+                name: "cards",
+                value: element.type + "_" + element.number
+              })
+            );
+            $("#cardList").append(check);
+          });
         });
         socket.on("order", function(msg) {
-          if(msg){
-            $('#cardList input').prop("disabled", false);
+          if (msg) {
+            $("#cardList input").prop("disabled", false);
             $("#order").text("あなたの番です");
-            // $("#gameStatus").append($("<li>").text("あなたの番です"));
-            // $("#gameStatus").append($("<li>").text("あなたの番です"));
-          }else{
-            $('#cardList input').prop("disabled", true);
+          } else {
+            $("#cardList input").prop("disabled", true);
             $("#order").text("別のプレイヤーの番です");
-            //$("#gameStatus").append($("<li>").text("別のプレイヤーの番です"));
           }
           window.scrollTo(0, document.body.scrollHeight);
         });
-        
+
         $("#send").click(function() {
           let sendCards = [];
           let cardarr;
           $('input:checkbox[name="cards"]:checked').each(function() {
-            cardarr = $(this).val().split('_');
-			      sendCards.push({type: cardarr[0], number: Number(cardarr[1])});
-		      });
+            cardarr = $(this)
+              .val()
+              .split("_");
+            sendCards.push({ type: cardarr[0], number: Number(cardarr[1]) });
+          });
           socket.emit("validate", {
             cards: sendCards,
             id: 1234
@@ -143,26 +208,31 @@
         });
         socket.on("validateError", function(msg) {
           $("#errorMsg").text(msg.reason);
-          //$("#gameStatus").append($("<li>").text(msg.reason));
         });
         socket.on("result", function(msg) {
           //出したやつを消す。
-          $("#field").text("現在のカード: " + DISPLAY_DIC[msg.result.cards[0].type + msg.result.cards[0].number]+ " × " + msg.result.cards.length + "枚");
-          for(let i=0; i < msg.card.cards.length; i++){
-            $("#"+ msg.card.cards[i].type+ msg.card.cards[i].number).remove();
+          $("#field").text(
+            "現在のカード: " +
+              DISPLAY_DIC[
+                msg.result.cards[0].type + msg.result.cards[0].number
+              ] +
+              " × " +
+              msg.result.cards.length +
+              "枚"
+          );
+          for (let i = 0; i < msg.card.cards.length; i++) {
+            $("#" + msg.card.cards[i].type + msg.card.cards[i].number).remove();
           }
-          //$("#gameStatus").append($("<li>").text("現在のカード: " + msg.result.cards[0].type + msg.result.cards[0].number + "×" + msg.result.cards.length + "枚"));
         });
         socket.on("chageStatus", function(msg) {
-          switch(msg.type){
-              case "elevenback":
-                $("#elevenback").text(msg.value ? "　11Back　" : "");
-                break;
-              case "revolution":
-                $("#revolution").text(msg.value ? "　革命中　" : "");
-                break;
+          switch (msg.type) {
+            case "elevenback":
+              $("#elevenback").text(msg.value ? "　11Back　" : "");
+              break;
+            case "revolution":
+              $("#revolution").text(msg.value ? "　革命中　" : "");
+              break;
           }
-          //$("#gameStatus").append($("<li>").text("現在のカード: " + msg.result.cards[0].type + msg.result.cards[0].number + "×" + msg.result.cards.length + "枚"));
         });
       });
     </script>
