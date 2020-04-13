@@ -110,7 +110,7 @@
         socket.on("gameInit", function(msg) {
           $("#gameFieldArea").toggle();
           $("#connectStatus").toggle();
-          msg.forEach(element => $("#cardList").append($('<input type="checkbox" />').attr({name: "cards", value: element.type + "_" + element.number})).append($('<label>' + DISPLAY_DIC[element.type+element.number] + '</label>')));
+          msg.forEach(element => $("#cardList").append($('<input type="checkbox" />').attr({id: element.type + element.number ,name: "cards", value: element.type + "_" + element.number})).append($('<label>' + DISPLAY_DIC[element.type+element.number] + '</label>')));
         });
         socket.on("order", function(msg) {
           if(msg){
@@ -139,19 +139,24 @@
           });
         });
         socket.on("validateError", function(msg) {
-          //出したやつを消す。
           $("#gameStatus").append($("<li>").text(msg.reason));
         });
         socket.on("result", function(msg) {
           //出したやつを消す。
-          $("#field").text("現在のカード: " + DISPLAY_DIC[msg.result.cards[0].type + msg.result.cards[0].number]+ " × " + msg.result.cards.length + "枚")
+          $("#field").text("現在のカード: " + DISPLAY_DIC[msg.result.cards[0].type + msg.result.cards[0].number]+ " × " + msg.result.cards.length + "枚");
+          for(let i=0; i < msg.card.cards.length; i++){
+            $("#"+ msg.card.cards[i].type+ msg.card.cards[i].number).remove();
+          }
           //$("#gameStatus").append($("<li>").text("現在のカード: " + msg.result.cards[0].type + msg.result.cards[0].number + "×" + msg.result.cards.length + "枚"));
         });
         socket.on("chageStatus", function(msg) {
-          //出したやつを消す。
           switch(msg.type){
-              "elevenback":
-              
+              case "elevenback":
+                $("#elevenback").text(msg.value ? "　11Back　" : "");
+                break;
+              case "revolution":
+                $("#revolution").text(msg.value ? "　革命中　" : "");
+                break;
           }
           //$("#gameStatus").append($("<li>").text("現在のカード: " + msg.result.cards[0].type + msg.result.cards[0].number + "×" + msg.result.cards.length + "枚"));
         });
