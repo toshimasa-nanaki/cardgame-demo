@@ -70,38 +70,31 @@ io.on('connection', function(socket){
     
   });
   socket.on('validate', function(msg) {
-    if(nowCard == ""){
-      nowCard = msg;
-      io.to(socket.id).emit('validateResult', {card: msg, error:0, reazon:"", result: nowCard});
-      let currentTurn = Object.keys(ORDER).indexOf(socket.id);
-      let nextTurn = currentTurn != ORDER.length -1 ? currentTurn+1 : 0;
-      io.to(Object.keys(ORDER)[currentTurn]).emit('order', false);
-      io.to(Object.keys(ORDER)[nextTurn]).emit('order', true);
-    }else{
+    if(nowCard != ""){
       if(nowCard.cards.length != msg.cards.length){
         //枚数が違うのはあり得ない
-        io.to(socket.id).emit('validateResult', {card: msg, error:1, reazon:"枚数が違うよね"});
+        io.to(socket.id).emit('validateError', {card: msg, error:1, reazon:"枚数が違うよね"});
         return;
       }
       //数字はすべて同じだよね？
       if(!isSameNumber(msg.cards)){
-        io.to(socket.id).emit('validateResult', {card: msg, error:1, reazon:"数字は全部同じにしてね"});
+        io.to(socket.id).emit('validateError', {card: msg, error:1, reazon:"数字は全部同じにしてね"});
         return;
       }
       //縛りはTODO
       // if(shibari && !isSameType(nowCard.cards, msg.cards)){
-      //   io.to(socket.id).emit('validateResult', {card: msg, error:1, reazon:"縛りです"});
+      //   io.to(socket.id).emit('validateError', {card: msg, error:1, reazon:"縛りです"});
       // }
       //数字を比べる
       if(!numComparison(nowCard.cards[0], msg.cards[0])){
-        io.to(socket.id).emit('validateResult', {card: msg, error:1, reazon:"弱いカードはおけない"});
+        io.to(socket.id).emit('validateError', {card: msg, error:1, reazon:"弱いカードはおけない"});
         return;
       }
       
       if(msg.cards[0].number == 8){
         //8ぎり
         nowCard = "";
-        io.to(socket.id).emit('validateResult', {card: msg, error:0, reazon:"", result: []});
+        io.to(socket.id).emit('result', {card: msg, error:0, reazon:"", result: []});
         return;
       }
       if(msg.cards[0].number == 11){
@@ -112,9 +105,15 @@ io.on('connection', function(socket){
         //革命
         revolutionFlag = !revolutionFlag;
       }
-      nowCard = msg;
-      io.to(socket.id).emit('validateResult', {card: msg, error:0, reazon:"", result: []});
+      // nowCard = msg;
+      // io.to(socket.id).emit('validateResult', {card: msg, error:0, reazon:"", result: []});
     }
+    nowCard = msg;
+      io.to(socket.id).emit('result', {card: msg, error:0, reazon:"", result: nowCard});
+      let currentTurn = Object.keys(ORDER).indexOf(socket.id);
+      let nextTurn = currentTurn != ORDER.length -1 ? currentTurn+1 : 0;
+      io.to(Object.keys(ORDER)[currentTurn]).emit('order', false);
+      io.to(Object.keys(ORDER)[nextTurn]).emit('order', true);
     console.log(msg);
   });
 });

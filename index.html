@@ -68,13 +68,6 @@
     <script>
       $(function() {
         var socket = io();
-        // $("form").submit(function() {
-        //   socket.emit("join", { id: 1, roomid: 1, name: "testRoom1" });
-        //   // socket.emit('chat message', $('#m').val());
-        //   socket.emit("chat message", { id: 1, roomid: 1 });
-        //   $("#m").val("");
-        //   return false;
-        // });
         socket.on("chat message", function(msg) {
           $("#messages").append($("<li>").text(msg));
           window.scrollTo(0, document.body.scrollHeight);
@@ -133,12 +126,14 @@
           socket.emit("validate", {
             cards: sendCards
           });
-          // $("#roomSelectArea").hide();
-          // socket.emit("update", { id: 1234, roomid: $('#joinRoomId').val() });
         });
-        socket.on("validateResult", function(msg) {
+        socket.on("validateError", function(msg) {
           //出したやつを消す。
-          console.log(msg);
+          $("#gameStatus").append($("<li>").text(msg.reason));
+        });
+        socket.on("result", function(msg) {
+          //出したやつを消す。
+          $("#gameStatus").append($("<li>").text("今のカード: " + msg.result.cards));
         });
       });
     </script>
