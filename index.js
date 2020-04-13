@@ -50,6 +50,7 @@ io.on('connection', function(socket){
     const retryCount = 0;
     if(socket.nsp.adapter.rooms[msg.id].length == count){
       io.to(store[msg.id].room).emit('gathered', count + "人が集まりました！！！");
+      nowCard = "";
       let perNum = Math.floor(54 / count);
       let remainder = 54 % count;
       let pos = 0; 
@@ -109,7 +110,7 @@ io.on('connection', function(socket){
     nowCard = msg;
       io.to(store[msg.id].room).emit('result', {card: msg, error:0, reason:"", result: nowCard});
       let currentTurn = Object.keys(ORDER).indexOf(socket.id);
-      let nextTurn = currentTurn != ORDER.length -1 ? currentTurn+1 : 0;
+      let nextTurn = currentTurn != Object.keys(ORDER).length -1 ? currentTurn+1 : 0;
       io.to(Object.keys(ORDER)[currentTurn]).emit('order', false);
       io.to(Object.keys(ORDER)[nextTurn]).emit('order', true);
     console.log(msg);
