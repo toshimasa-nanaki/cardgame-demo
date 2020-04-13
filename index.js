@@ -69,6 +69,13 @@ io.on('connection', function(socket){
   socket.on('validate', function(msg) {
     if(nowCard == ""){
       nowCard = msg;
+      io.to(socket.id).emit('validateResult', {error:0, reazon:""});
+      let currentTurn = Object.keys(ORDER).indexof(socket.id);
+      let nextTurn = currentTurn != ORDER.length -1 ? currentTurn+1 : 0;
+      io.to(Object.keys(ORDER)[currentTurn]).emit('order', false);
+      io.to(Object.keys(ORDER)[nextTurn]).emit('order', true);
+    }else{
+      
     }
     console.log(msg);
   });

@@ -121,13 +121,7 @@
           window.scrollTo(0, document.body.scrollHeight);
         });
         socket.on("gameInit", function(msg) {
-          // $("#messages").append($("<li>").text(msg));
-          // window.scrollTo(0, document.body.scrollHeight);
-          //msg.forEach(element => $("#cardList").append($("<li>").text(element.type+element.number)));
           msg.forEach(element => $("#cardList").append($('<input type="checkbox" />').attr({name: "cards", value: element.type + "_" + element.number})).append($('<label>' + element.type+element.number + '</label>')));
-//           var $input = $('<input type="checkbox" />').attr({name: 'test2'});
-// var $label = $('<label>labeltest2</label>')
-// $("#cardList").append($input).append($label);
         });
         $("#send").click(function() {
           let sendCards = [];
@@ -141,6 +135,9 @@
           });
           // $("#roomSelectArea").hide();
           // socket.emit("update", { id: 1234, roomid: $('#joinRoomId').val() });
+        });
+        socket.on("gameInit", function(msg) {
+          msg.forEach(element => $("#cardList").append($('<input type="checkbox" />').attr({name: "cards", value: element.type + "_" + element.number})).append($('<label>' + element.type+element.number + '</label>')));
         });
       });
     </script>
