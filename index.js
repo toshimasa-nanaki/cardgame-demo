@@ -16,7 +16,7 @@ var store = {};
 const ORIGINALCARDDATA = trump_init(TRUMPDATA);
 const shuffleCards = sort_at_random(ORIGINALCARDDATA);
 let nowCard = "";
-const ORDER = {};
+let ORDER = {};
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');

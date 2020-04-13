@@ -112,12 +112,13 @@
         });
         socket.on("order", function(msg) {
           if(msg){
-            
+            $('#cardList input').prop("disabled", false);
+            $("#gameStatus").append($("<li>").text("あなたの番です"));
+          }else{
+            $('#cardList input').prop("disabled", true);
+            $("#gameStatus").append($("<li>").text("別のプレイヤーの番です"));
           }
-          // $("#messages").append($("<li>").text(msg));
-          // window.scrollTo(0, document.body.scrollHeight);
-          $("#gameFieldArea").toggle();
-          $("#gameStatus").append($("<li>").text("カード配ります"));
+          window.scrollTo(0, document.body.scrollHeight);
         });
         socket.on("gameInit", function(msg) {
           // $("#messages").append($("<li>").text(msg));
