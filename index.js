@@ -111,10 +111,10 @@ function trump_init(trumpData) {
     var cards = [];
     for (var i = 0; i < trumpData['card'].length; i++) {
         var thistype = trumpData['card'][i];
-        for (var j = 2; j < thistype['count']; j++) {
+        for (var j = 0; j < thistype['count']; j++) {
             cards.push({
                 type: thistype['type'],
-                number: j + 1
+                number: j + 3
             });
         }
     }
