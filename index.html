@@ -48,6 +48,7 @@
     </div>
     <ul id="connectStatus"></ul>  
     <div id="gameFieldArea">
+      <span id="order"></span>
       <ul id="gameStatus"></ul>
       <div id="cardList">
 <!--         <ul id="cardList"></ul> -->
@@ -63,10 +64,9 @@
     <script>
       $(function() {
         var socket = io();
-        // socket.on("chat message", function(msg) {
-        //   $("#messages").append($("<li>").text(msg));
-        //   window.scrollTo(0, document.body.scrollHeight);
-        // });
+        const DISPLAY_DIC = {
+          "spade3":"♠3","spade4":"♠4","spade5":"♠5","spade6":"♠6","spade7":"♠7","spade8":"♠8","spade9":"♠9","spade10":"","spade11":"",
+        }
         $("#createDisplay").click(function() {
           $("#roomInputArea").toggle();
         });
@@ -97,21 +97,25 @@
         //   $("#gameFieldArea").toggle();
         //   $("#gameStatus").append($("<li>").text("カード配ります"));
         // });
-        socket.on("order", function(msg) {
-          if(msg){
-            $('#cardList input').prop("disabled", false);
-            $("#gameStatus").append($("<li>").text("あなたの番です"));
-          }else{
-            $('#cardList input').prop("disabled", true);
-            $("#gameStatus").append($("<li>").text("別のプレイヤーの番です"));
-          }
-          window.scrollTo(0, document.body.scrollHeight);
-        });
         socket.on("gameInit", function(msg) {
           $("#gameFieldArea").toggle();
           $("#connectStatus").toggle();
           msg.forEach(element => $("#cardList").append($('<input type="checkbox" />').attr({name: "cards", value: element.type + "_" + element.number})).append($('<label>' + element.type+element.number + '</label>')));
         });
+        socket.on("order", function(msg) {
+          if(msg){
+            $('#cardList input').prop("disabled", false);
+            $("#order").text("あなたの番です");
+            // $("#gameStatus").append($("<li>").text("あなたの番です"));
+            // $("#gameStatus").append($("<li>").text("あなたの番です"));
+          }else{
+            $('#cardList input').prop("disabled", true);
+            $("#order").text("別のプレイヤーの番です");
+            //$("#gameStatus").append($("<li>").text("別のプレイヤーの番です"));
+          }
+          window.scrollTo(0, document.body.scrollHeight);
+        });
+        
         $("#send").click(function() {
           let sendCards = [];
           let cardarr;
