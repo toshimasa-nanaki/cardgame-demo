@@ -65,6 +65,9 @@
       <div>
         <span id="errorMsg"></span>
       </div>
+      <div>
+        <span id="other"></span>
+      </div>
       <ul id="gameStatus"></ul>
       <div id="cardList">
         <!--         <ul id="cardList"></ul> -->
@@ -206,6 +209,11 @@
             id: 1234
           });
         });
+        $("#pass").click(function() {
+          socket.emit("pass", {
+            id: 1234
+          });
+        });
         socket.on("validateError", function(msg) {
           $("#errorMsg").text(msg.reason);
         });
@@ -231,6 +239,11 @@
               break;
             case "revolution":
               $("#revolution").text(msg.value ? "　革命中　" : "");
+              break;
+            case "cut8":
+              $("#other").text(msg.value ? "　革命中　" : "");
+              break;
+            case "cutPass":
               break;
           }
         });

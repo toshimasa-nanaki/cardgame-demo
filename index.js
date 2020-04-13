@@ -20,6 +20,7 @@ let ORDER = {};
 let elevenbackFlag = false;
 let revolutionFlag = false;
 let shibari = false;
+let pass = 0;
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
@@ -68,6 +69,20 @@ io.on('connection', function(socket){
     }
     
   });
+  socket.on('pass', function(msg){
+    pass++;
+    const count = typeof store[msg.id].count === "undefined" ? 4 : store[msg.id].count;
+    if(pass == count){
+      //パスで一周した場合流す
+      nowCard = "";
+      io.to(store[msg.id].room).emit('changeStatus', {type: "cutPass"});
+    }
+    let currentTurn = Object.keys(ORDER).indexOf(socket.id);
+    let nextTurn = currentTurn != Object.keys(ORDER).length -1 ? currentTurn+1 : 0;
+    io.to(Object.keys(ORDER)[currentTurn]).emit('order', false);
+    io.to(Object.keys(ORDER)[nextTurn]).emit('order', true);
+    
+  });
   socket.on('validate', function(msg) {
     if(nowCard != ""){
       if(nowCard.cards.length != msg.cards.length){
@@ -93,7 +108,8 @@ io.on('connection', function(socket){
       if(msg.cards[0].number == 8){
         //8ぎり
         nowCard = "";
-        io.to(store[msg.id].room).emit('result', {type: "cut8"});
+        io.to(store[msg.id].room).emit('changeStatus', {type: "cut8"});
+        pass = 0;
         return;
       }
       if(msg.cards[0].number == 11){
@@ -107,6 +123,7 @@ io.on('connection', function(socket){
         io.to(store[msg.id].room).emit('changeStatus', {type: "revolution", value: revolutionFlag});
       }
     }
+    pass=0;
     nowCard = msg;
       io.to(store[msg.id].room).emit('result', {card: msg, error:0, reason:"", result: nowCard});
       let currentTurn = Object.keys(ORDER).indexOf(socket.id);
