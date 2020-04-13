@@ -46,6 +46,7 @@
         <input id="joinRoomId" autocomplete="off" /><button id="joinRoom">ルームに参加</button>
       </div>
     </div>
+    <ul id="connectStatus"></ul>  
     <div id="gameFieldArea">
       <ul id="gameStatus"></ul>
       <div id="cardList">
@@ -56,16 +57,16 @@
       </div>
     </div>
 
-    <ul id="messages"></ul>
+    
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
       $(function() {
         var socket = io();
-        socket.on("chat message", function(msg) {
-          $("#messages").append($("<li>").text(msg));
-          window.scrollTo(0, document.body.scrollHeight);
-        });
+        // socket.on("chat message", function(msg) {
+        //   $("#messages").append($("<li>").text(msg));
+        //   window.scrollTo(0, document.body.scrollHeight);
+        // });
         $("#createDisplay").click(function() {
           $("#roomInputArea").toggle();
         });
@@ -89,15 +90,13 @@
           socket.emit("update", { id: 1234, roomid: 1234 });
         });
         socket.on("update", function(msg) {
-          $("#messages").append($("<li>").text(msg));
+          $("#connectStatus").append($("<li>").text(msg));
           window.scrollTo(0, document.body.scrollHeight);
         });
-        socket.on("gathered", function(msg) {
-          // $("#messages").append($("<li>").text(msg));
-          // window.scrollTo(0, document.body.scrollHeight);
-          $("#gameFieldArea").toggle();
-          $("#gameStatus").append($("<li>").text("カード配ります"));
-        });
+        // socket.on("gathered", function(msg) {
+        //   $("#gameFieldArea").toggle();
+        //   $("#gameStatus").append($("<li>").text("カード配ります"));
+        // });
         socket.on("order", function(msg) {
           if(msg){
             $('#cardList input').prop("disabled", false);
@@ -109,6 +108,8 @@
           window.scrollTo(0, document.body.scrollHeight);
         });
         socket.on("gameInit", function(msg) {
+          $("#gameFieldArea").toggle();
+          $("#connectStatus").toggle();
           msg.forEach(element => $("#cardList").append($('<input type="checkbox" />').attr({name: "cards", value: element.type + "_" + element.number})).append($('<label>' + element.type+element.number + '</label>')));
         });
         $("#send").click(function() {

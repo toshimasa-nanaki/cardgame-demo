@@ -49,7 +49,7 @@ io.on('connection', function(socket){
     const count = typeof store[msg.id].count === "undefined" ? 4 : store[msg.id].count;
     const retryCount = 0;
     if(socket.nsp.adapter.rooms[msg.id].length == count){
-      io.to(store[msg.id].room).emit('gathered', count + "人が集まりました！！！");
+      //io.to(store[msg.id].room).emit('gathered', count + "人が集まりました！！！");
       nowCard = "";
       let perNum = Math.floor(54 / count);
       let remainder = 54 % count;
