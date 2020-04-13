@@ -58,6 +58,9 @@
         <span id="revolution"></span>
         <span id="elevenback"></span>
       </div>
+      <div>
+        <span id="errorMsg"></span>
+      </div>
       <ul id="gameStatus"></ul>
       <div id="cardList">
 <!--         <ul id="cardList"></ul> -->
@@ -110,7 +113,7 @@
         socket.on("gameInit", function(msg) {
           $("#gameFieldArea").toggle();
           $("#connectStatus").toggle();
-          msg.forEach(element => $("#cardList").append($('<input type="checkbox" />').attr({id: element.type + element.number ,name: "cards", value: element.type + "_" + element.number})).append($('<label>' + DISPLAY_DIC[element.type+element.number] + '</label>')));
+          msg.forEach(element => $("#cardList").append($('<input type="checkbox" />').attr({id: element.type + element.number ,name: "cards", value: element.type + "_" + element.number})).append($('<label for="' + element.type + element.number + '">' + DISPLAY_DIC[element.type+element.number] + '</label>')));
         });
         socket.on("order", function(msg) {
           if(msg){
@@ -139,7 +142,8 @@
           });
         });
         socket.on("validateError", function(msg) {
-          $("#gameStatus").append($("<li>").text(msg.reason));
+          $("#errorMsg").text(msg.reason);
+          //$("#gameStatus").append($("<li>").text(msg.reason));
         });
         socket.on("result", function(msg) {
           //出したやつを消す。
