@@ -72,7 +72,7 @@ io.on('connection', function(socket){
   socket.on('pass', function(msg){
     pass++;
     const count = typeof store[msg.id].count === "undefined" ? 4 : store[msg.id].count;
-    if(pass == count){
+    if(pass >= count){
       //パスで一周した場合流す
       nowCard = "";
       io.to(store[msg.id].room).emit('changeStatus', {type: "cutPass"});

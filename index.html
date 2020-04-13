@@ -232,7 +232,7 @@
             $("#" + msg.card.cards[i].type + msg.card.cards[i].number).remove();
           }
         });
-        socket.on("chageStatus", function(msg) {
+        socket.on("changeStatus", function(msg) {
           switch (msg.type) {
             case "elevenback":
               $("#elevenback").text(msg.value ? "　11Back　" : "");
@@ -241,9 +241,16 @@
               $("#revolution").text(msg.value ? "　革命中　" : "");
               break;
             case "cut8":
-              $("#other").text(msg.value ? "　革命中　" : "");
+              $("#other").text("8切ました");
+              $("#field").text(
+                "現在のカード: なし"
+              );
               break;
             case "cutPass":
+              $("#other").text("パス一周をしました");
+              $("#field").text(
+                "現在のカード: なし"
+              );
               break;
           }
         });
