@@ -86,9 +86,10 @@ io.on('connection', function(socket){
       if(!isSameNumber(msg.cards)){
         io.to(socket.id).emit('validateResult', {card: msg, error:1, reazon:"数字は全部同じにしてね"});
       }
+      いｆ
       //数字を比べる
-      if(!numComparison(nowCard.cards[0].number, msg.cards[0].number)){
-        
+      if(!numComparison(nowCard.cards[0], msg.cards[0])){
+        io.to(socket.id).emit('validateResult', {card: msg, error:1, reazon:"弱いカードはおけない"});
       }
       
       if(msg.cards[0].number == 8){
@@ -150,13 +151,15 @@ function isSameNumber(cards){
 }
 
 function numComparison(nowCard, sendCard){
-  if(nowCard == 99 && )
+  if(nowCard.type == "joker" && sendCard.type == "spade" && sendCard.number == "3"){
+    return true;
+  }
   if(elevenbackFlag || revolutionFlag){
     //逆残
-    return nowCard > sendCard;
+    return nowCard.number > sendCard.number;
   }else{
     //かつも含めて普通
-    return nowCard < sendCard;
+    return nowCard.number < sendCard.number;
   }
 }
 
