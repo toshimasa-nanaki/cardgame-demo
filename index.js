@@ -16,6 +16,7 @@ var store = {};
 const ORIGINALCARDDATA = trump_init(TRUMPDATA);
 const shuffleCards = sort_at_random(ORIGINALCARDDATA);
 let nowCard = "";
+const ORDER = {};
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
@@ -49,10 +50,16 @@ io.on('connection', function(socket){
       let perNum = Math.floor(54 / count);
       let remainder = 54 % count;
       let pos = 0; 
+      ORDER = socket.nsp.adapter.rooms[msg.id].sockets;
       Object.keys(socket.nsp.adapter.rooms[msg.id].sockets).forEach(function (key) {
+        if(ORDER[0] == key){
+          io.to(key).emit('order', true);
+        }else{
+          io.to(key).emit('order', false);
+        }
         io.to(key).emit('gameInit', shuffleCards.slice(pos, (remainder > 0 ? pos+perNum+1 : pos+perNum)));
         pos = remainder > 0 ? pos + perNum + 1 : pos + perNum;
-        remainder--; 
+        remainder--;
       });
     }else{
       io.to(store[msg.id].room).emit('update', "今の部屋の人数:  " + socket.nsp.adapter.rooms[msg.id].length);

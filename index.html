@@ -110,6 +110,15 @@
           $("#gameFieldArea").toggle();
           $("#gameStatus").append($("<li>").text("カード配ります"));
         });
+        socket.on("order", function(msg) {
+          if(msg){
+            
+          }
+          // $("#messages").append($("<li>").text(msg));
+          // window.scrollTo(0, document.body.scrollHeight);
+          $("#gameFieldArea").toggle();
+          $("#gameStatus").append($("<li>").text("カード配ります"));
+        });
         socket.on("gameInit", function(msg) {
           // $("#messages").append($("<li>").text(msg));
           // window.scrollTo(0, document.body.scrollHeight);
