@@ -122,7 +122,7 @@
           let cardarr;
           $('input:checkbox[name="cards"]:checked').each(function() {
             cardarr = $(this).val().split('_');
-			      sendCards.push({type: cardarr[0], number: cardarr[1]});
+			      sendCards.push({type: cardarr[0], number: Number(cardarr[1])});
 		      });
           socket.emit("validate", {
             cards: sendCards,
