@@ -171,16 +171,16 @@ function isSameNumber(cards){
   return true;
 }
 
-function numComparison(nowCard, sendCard){
-  if(nowCard.type == "joker" && sendCard.type == "spade" && sendCard.number == "3"){
+function numComparison(nc, sc){
+  if(nc.type == "joker" && sc.type == "spade" && sc.number == "3"){
     return true;
   }
   if(elevenbackFlag || revolutionFlag){
     //逆残
-    return nowCard.number > sendCard.number;
+    return nc.number > sc.number;
   }else{
     //かつも含めて普通
-    return nowCard.number < sendCard.number;
+    return nc.number < sc.number;
   }
 }
 
