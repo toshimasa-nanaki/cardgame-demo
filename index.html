@@ -87,11 +87,12 @@
         $("#joinRoom").click(function() {
           socket.emit("join", {
             id: 1234,
-            roomid: $('#joinRoomId').val()
+            roomid: 1234
+            //roomid: $('#joinRoomId').val()
             // name: "testRoom1"
           });
           $("#roomSelectArea").hide();
-          socket.emit("update", { id: 1234, roomid: $('#joinRoomId').val() });
+          socket.emit("update", { id: 1234, roomid: 1234 });
         });
         socket.on("update", function(msg) {
           $("#messages").append($("<li>").text(msg));
@@ -124,7 +125,8 @@
 			      sendCards.push({type: cardarr[0], number: cardarr[1]});
 		      });
           socket.emit("validate", {
-            cards: sendCards
+            cards: sendCards,
+            id: 1234
           });
         });
         socket.on("validateError", function(msg) {
@@ -133,7 +135,7 @@
         });
         socket.on("result", function(msg) {
           //出したやつを消す。
-          $("#gameStatus").append($("<li>").text("今のカード: " + msg.result.cards));
+          $("#gameStatus").append($("<li>").text("今のカード: " + msg.result.cards[0].type + msg.result.cards[0].number + "×" + msg.result.cards.length + "枚"));
         });
       });
     </script>
