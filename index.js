@@ -19,6 +19,7 @@ let nowCard = "";
 let ORDER = {};
 let elevenbackFlag = false;
 let revolutionFlag = false;
+let shibari = false;
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
@@ -81,6 +82,10 @@ io.on('connection', function(socket){
         //枚数が違うのはあり得ない
         io.to(socket.id).emit('validateResult', {card: msg, error:1, reazon:"枚数が違うよね"});
       }
+      //数字はすべて同じだよね？
+      if(!isSameNumber(msg.cards)){
+        io.to(socket.id).emit('validateResult', {card: msg, error:1, reazon:"数字は全部同じにしてね"});
+      }
       //数字を比べる
       if(!numComparison(nowCard.cards[0].number, msg.cards[0].number)){
         
@@ -110,7 +115,7 @@ function trump_init(trumpData) {
     for (var i = 0; i < trumpData['joker']; i++) {
         cards.push({
             type: 'joker',
-            number: i + 1
+            number: 99
         });
     }
     return cards;
@@ -128,13 +133,30 @@ function sort_at_random(arrayData) {
     return randomArr;
 }
 
+function isSameNumber(cards){
+  let base = cards[0].number;
+  if(cards.length == 1){
+    return true;
+  }
+  for(let i = 1; i < cards.length; i++){
+    if(cards[i].type == "joker"){
+      continue;
+    }
+    if(base != cards[i].number){
+      return false;
+    }
+  }
+  return true;
+}
+
 function numComparison(nowCard, sendCard){
+  if(nowCard == 99 && )
   if(elevenbackFlag || revolutionFlag){
     //逆残
-    
+    return nowCard > sendCard;
   }else{
     //かつも含めて普通
-    
+    return nowCard < sendCard;
   }
 }
 
