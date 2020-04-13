@@ -72,7 +72,7 @@ io.on('connection', function(socket){
   socket.on('validate', function(msg) {
     if(nowCard == ""){
       nowCard = msg;
-      io.to(socket.id).emit('validateResult', {card: msg, error:0, reazon:""});
+      io.to(socket.id).emit('validateResult', {card: msg, error:0, reazon:"", result: nowCard});
       let currentTurn = Object.keys(ORDER).indexOf(socket.id);
       let nextTurn = currentTurn != ORDER.length -1 ? currentTurn+1 : 0;
       io.to(Object.keys(ORDER)[currentTurn]).emit('order', false);
@@ -101,7 +101,19 @@ io.on('connection', function(socket){
       if(msg.cards[0].number == 8){
         //8ぎり
         nowCard = "";
+        io.to(socket.id).emit('validateResult', {card: msg, error:0, reazon:"", result: []});
+        return;
       }
+      if(msg.cards[0].number == 11){
+        //11back
+        elevenbackFlag = !elevenbackFlag;
+      }
+      if(msg.cards.length == 4){
+        //革命
+        revolutionFlag = !revolutionFlag;
+      }
+      nowCard = msg;
+      io.to(socket.id).emit('validateResult', {card: msg, error:0, reazon:"", result: []});
     }
     console.log(msg);
   });
