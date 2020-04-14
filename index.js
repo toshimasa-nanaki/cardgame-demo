@@ -11,8 +11,8 @@ const TRUMPDATA = {
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-io.set('heartbeat interval', 5000);
-io.set('heartbeat timeout', 15000);
+// io.set('heartbeat interval', 5000);
+// io.set('heartbeat timeout', 15000);
 var port = process.env.PORT || 3000;
 var store = {};
 const ORIGINALCARDDATA = trump_init(TRUMPDATA);
