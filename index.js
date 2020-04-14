@@ -174,8 +174,8 @@ io.on("connection", function(socket) {
         });
         return;
       }
-      //縛りはTODO
-      if(shibari && !isShibari(nowCard.cards, msg.cards)){
+      //縛り
+      if(shibari && !isSameType(nowCard.cards, msg.cards)){
         io.to(socket.id).emit('validateError', {card: msg, error:1, reason:"縛りです"});
         return;
       }
@@ -359,6 +359,20 @@ function isSameNumber(cards) {
     }
   }
   return true;
+}
+
+function isSameType(ncs, scs){
+  if (
+    scs.some(item => ~item.type.indexOf("joker")) ||
+    ncs.some(item => ~item.type.indexOf("joker"))
+  ) {
+    return true;
+  }
+  var flag = false;
+  for (let i = 0; i < ncs.length; i++) {
+    flag = scs.some(item => item.type === ncs[i].type);
+  }
+  return flag;
 }
 
 function numComparison(nc, sc) {
