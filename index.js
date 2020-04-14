@@ -24,6 +24,7 @@ let elevenbackFlag = false;
 let revolutionFlag = false;
 let shibari = false;
 let pass = 0;
+let seiseki = {};
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
@@ -87,6 +88,7 @@ io.on('connection', function(socket){
       //パスで一周した場合流す
       nowCard = "";
       pass=0;
+      elevenbackFlag=false;
       io.to(store[msg.id].room).emit('changeStatus', {type: "cutPass"});
     }
     let currentTurn = Object.keys(ORDER).indexOf(socket.id);
@@ -122,6 +124,7 @@ io.on('connection', function(socket){
         nowCard = "";
         io.to(store[msg.id].room).emit('changeStatus', {type: "cut8"});
         pass = 0;
+        elevenbackFlag=false;
         return;
       }
       if(msg.cards[0].number == 11){
