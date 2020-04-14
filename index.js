@@ -27,7 +27,7 @@ let pass = 0;
 let seiseki = [];
 let rank=0;
 let rankTable = [];
-
+let UserList = {};
 
 app.get("/", function(req, res) {
   res.sendFile(__dirname + "/index.html");
@@ -46,6 +46,7 @@ io.on("connection", function(socket) {
     };
     console.log("createRoom:  " + msg.roomid);
     store[msg.id] = usrobj;
+    UserList[socket.id] = msg.playerName;
     socket.join(msg.roomid);
   });
   socket.on("join", function(msg) {
@@ -54,6 +55,7 @@ io.on("connection", function(socket) {
     if (socket.nsp.adapter.rooms[msg.id].length >= count) {
       io.to(socket.id).emit("update", "もう部屋がいっぱいです");
     } else {
+      UserList[socket.id] = msg.playerName;
       socket.join(msg.roomid);
     }
   });
@@ -89,7 +91,7 @@ io.on("connection", function(socket) {
         if (ORDER[0].id == key) {
           io.to(key).emit("order", {flag: true, skip: false});
         } else {
-          io.to(key).emit("order", {flag: false, skip: false});
+          io.to(key).emit("order", {flag: false, skip: false, playerName: UserList[ORDER[0].id]});
         }
         pos = remainder > 0 ? pos + perNum + 1 : pos + perNum;
         remainder--;
@@ -121,7 +123,7 @@ io.on("connection", function(socket) {
     });
     
     let nextTurn = currentTurn != ORDER.length - 1 ? currentTurn + 1 : 0;
-    io.to(ORDER[currentTurn].id).emit("order", {flag: false, skip: false});
+    io.to(store[msg.id].room).emit("order", {flag: false, skip: false, playerName: UserList[ORDER[nextTurn].id]});
     io.to(ORDER[nextTurn].id).emit("order", {flag: true, skip: ORDER[nextTurn].rank != "" ? true : false});
   });
   socket.on("validate", function(msg) {
@@ -209,7 +211,7 @@ io.on("connection", function(socket) {
     }
     
     let nextTurn = currentTurn != ORDER.length - 1 ? currentTurn + 1 : 0;
-    io.to(ORDER[currentTurn].id).emit("order", {flag: false, skip: false});
+    io.to(store[msg.id].room).emit("order", {flag: false, skip: false, playerName: UserList[ORDER[nextTurn].id]});
     io.to(ORDER[nextTurn].id).emit("order", {flag: true, skip: ORDER[nextTurn].rank != "" ? true : false});
   });
 });

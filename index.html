@@ -201,7 +201,7 @@
             }
           } else {
             $("#cardList input").prop("disabled", true);
-            $("#order").text("別のプレイヤーの番です");
+            $("#order").text(msg.playerName + "の番です");
           }
           window.scrollTo(0, document.body.scrollHeight);
         });
