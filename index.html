@@ -269,6 +269,7 @@
                 $("#" + msg.value.cards[i].type + msg.value.cards[i].number).remove();
               }
               $("#elevenback").text("");
+              $("#shibari").text("");
               break;
             case "cut8":
               $("#other").text("8切ました");
@@ -279,6 +280,7 @@
                 $("#" + msg.value.cards[i].type + msg.value.cards[i].number).remove();
               }
               $("#elevenback").text("");
+              $("#shibari").text("");
               break;
             case "cutPass":
               $("#other").text("パス一周をしました");
@@ -286,6 +288,7 @@
                 "現在のカード: なし"
               );
               $("#elevenback").text("");
+              $("#shibari").text("");
               break;
           }
         });

@@ -177,6 +177,7 @@ io.on("connection", function(socket) {
       //縛りはTODO
       if(shibari && !isShibari(nowCard.cards, msg.cards)){
         io.to(socket.id).emit('validateError', {card: msg, error:1, reason:"縛りです"});
+        return;
       }
       //数字を比べる
       if (!numComparison(nowCard.cards[0], msg.cards[0])) {
@@ -210,8 +211,8 @@ io.on("connection", function(socket) {
         ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
         return;
       }
-      if (isShibari(nowCard.cards, msg.cards)) {
-        shibari = !shibari;
+      if (!shibari && isShibari(nowCard.cards, msg.cards)) {
+        shibari = true;
       io.to(store[msg.id].room).emit("changeStatus", {
         type: "shibari",
         value: shibari
