@@ -272,11 +272,12 @@ function numComparison(nc, sc) {
   if (nc.type == "joker" && sc.type == "spade" && sc.number == "3") {
     return true;
   }
-  if (elevenbackFlag || revolutionFlag) {
+  if (elevenbackFlag && revolutionFlag){
+    return nc.number < sc.number;
+  }else if(elevenbackFlag || revolutionFlag){
     //逆残
     return nc.number > sc.number;
-  } else {
-    //かつも含めて普通
+  }else{
     return nc.number < sc.number;
   }
 }
