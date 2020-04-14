@@ -301,12 +301,13 @@ function sort_at_random(arrayData) {
   return randomArr;
 }
 
-//しばりはTODO
-// function isSameType(nowCard, sendCard){
-//   for(let i=0; i < nowCard.length; i++){
 
-//   }
-// }
+function isShibari(ncs, scs){
+  for(let i=0; i < ncs.length; i++){
+    console.log();
+
+  }
+}
 
 function isSameNumber(cards) {
   let base = cards[0].number;
