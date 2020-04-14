@@ -265,7 +265,7 @@ function trump_init(trumpData) {
   }
   for (var i = 0; i < trumpData["joker"]; i++) {
     cards.push({
-      type: "joker",
+      type: "joker_" + i,
       number: 99
     });
   }
