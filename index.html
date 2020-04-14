@@ -189,9 +189,14 @@
         });
         socket.on("order", function(msg) {
           console.log("order accept");
-          if (msg) {
+          if (msg.flag) {
             $("#cardList input").prop("disabled", false);
             $("#order").text("あなたの番です");
+            if(msg.skip){
+              socket.emit("pass", {
+                id: 1234
+              });
+            }
           } else {
             $("#cardList input").prop("disabled", true);
             $("#order").text("別のプレイヤーの番です");
