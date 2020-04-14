@@ -120,6 +120,7 @@ io.on("connection", function(socket) {
       nowCard = "";
       pass = 0;
       elevenbackFlag = false;
+      shibari = false;
       io.to(store[msg.id].room).emit("changeStatus", { type: "cutPass" });
     }
     let currentTurn;
@@ -174,9 +175,9 @@ io.on("connection", function(socket) {
         return;
       }
       //縛りはTODO
-      // if(shibari && !isSameType(nowCard.cards, msg.cards)){
-      //   io.to(socket.id).emit('validateError', {card: msg, error:1, reason:"縛りです"});
-      // }
+      if(shibari && !isShibari(nowCard.cards, msg.cards)){
+        io.to(socket.id).emit('validateError', {card: msg, error:1, reason:"縛りです"});
+      }
       //数字を比べる
       if (!numComparison(nowCard.cards[0], msg.cards[0])) {
         io.to(socket.id).emit("validateError", {
@@ -186,24 +187,38 @@ io.on("connection", function(socket) {
         });
         return;
       }
-      if (~nowCard.cards[0].type.indexOf('joker') && msg.cards[0].type == "spade" && msg.cards[0].number == "3") {
-      //JOKER討伐(誰も倒せないから流す)
-      nowCard = "";
+      if (
+        ~nowCard.cards[0].type.indexOf("joker") &&
+        msg.cards[0].type == "spade" &&
+        msg.cards[0].number == "3"
+      ) {
+        //JOKER討伐(誰も倒せないから流す)
+        nowCard = "";
+        io.to(store[msg.id].room).emit("changeStatus", {
+          type: "winjoker",
+          value: msg
+        });
+        pass = 0;
+        elevenbackFlag = false;
+        shibari = false;
+        console.log(
+          "スペ3プレイヤー名:" +
+            UserList[socket.id] +
+            "　出したカードの数：" +
+            msg.cards.length
+        );
+        ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
+        return;
+      }
+      if (isShibari(nowCard.cards, msg.cards)) {
+        shibari = !shibari;
       io.to(store[msg.id].room).emit("changeStatus", {
-        type: "winjoker",
-        value: msg
+        type: "shibari",
+        value: shibari
       });
-      pass = 0;
-      elevenbackFlag = false;
-      console.log("スペ3プレイヤー名:" + UserList[socket.id] + "　出したカードの数：" + msg.cards.length);
-      ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
-      return;
-    }
-      if (isShibari(nowCard.cards, msg.cards)){
-      
       }
     }
-    
+
     if (msg.cards.length == 4) {
       //革命
       revolutionFlag = !revolutionFlag;
@@ -221,7 +236,13 @@ io.on("connection", function(socket) {
       });
       pass = 0;
       elevenbackFlag = false;
-      console.log("8ぎりプレイヤー名:" + UserList[socket.id] + "　出したカードの数：" + msg.cards.length);
+      shibari = false;
+      console.log(
+        "8ぎりプレイヤー名:" +
+          UserList[socket.id] +
+          "　出したカードの数：" +
+          msg.cards.length
+      );
       ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
       return;
     }
@@ -243,7 +264,12 @@ io.on("connection", function(socket) {
     });
 
     //成績をここでつける
-    console.log("プレイヤー名:" + UserList[socket.id] + "　出したカードの数：" + msg.cards.length);
+    console.log(
+      "プレイヤー名:" +
+        UserList[socket.id] +
+        "　出したカードの数：" +
+        msg.cards.length
+    );
     ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
     if (ORDER[currentTurn].card <= 0) {
       //上がり
@@ -282,7 +308,7 @@ function trump_init(trumpData) {
   }
   for (var i = 0; i < trumpData["joker"]; i++) {
     cards.push({
-      type: "joker" + (i+1),
+      type: "joker" + (i + 1),
       number: 99
     });
   }
@@ -301,14 +327,18 @@ function sort_at_random(arrayData) {
   return randomArr;
 }
 
-
-function isShibari(ncs, scs){
-  for(let i=0; i < ncs.length; i++){
-    if(ncs[i].type == "joker")
-    scs.some(item => {
-      item.type === ncs[i].type
-    });
+function isShibari(ncs, scs) {
+  if (
+    scs.some(item => ~item.type.indexOf("joker")) ||
+    ncs.some(item => ~item.type.indexOf("joker"))
+  ) {
+    return false;
   }
+  var flag = false;
+  for (let i = 0; i < ncs.length; i++) {
+    flag = scs.some(item => item.type === ncs[i].type);
+  }
+  return flag;
 }
 
 function isSameNumber(cards) {
@@ -317,9 +347,12 @@ function isSameNumber(cards) {
     return true;
   }
   for (let i = 1; i < cards.length; i++) {
-    if (cards[i].type == "joker") {
+    if (~cards[i].type.indexOf("joker")) {
       continue;
     }
+    // if (cards[i].type == "joker") {
+    //   continue;
+    // }
     if (base != cards[i].number) {
       return false;
     }
@@ -328,7 +361,7 @@ function isSameNumber(cards) {
 }
 
 function numComparison(nc, sc) {
-  if (~nc.type.indexOf('joker') && sc.type == "spade" && sc.number == "3") {
+  if (~nc.type.indexOf("joker") && sc.type == "spade" && sc.number == "3") {
     return true;
   }
   if (elevenbackFlag && revolutionFlag) {
