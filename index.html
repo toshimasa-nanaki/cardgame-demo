@@ -230,18 +230,21 @@
           $("#errorMsg").text(msg.reason);
         });
         socket.on("result", function(msg) {
-          $("#field").text(
-            "現在のカード: " +
-              DISPLAY_DIC[
-                msg.result.cards[0].type + msg.result.cards[0].number
-              ] +
-              " × " +
-              msg.result.cards.length +
-              "枚"
-          );
+          let message = "現在のカード: "
+          // $("#field").text(
+          //   "現在のカード:" +
+          //     DISPLAY_DIC[
+          //       msg.result.cards[0].type + msg.result.cards[0].number
+          //     ] +
+          //     " × " +
+          //     msg.result.cards.length +
+          //     "枚"
+          // );
           for (let i = 0; i < msg.card.cards.length; i++) {
+            message = message + "　" + DISPLAY_DIC[msg.result.cards[i].type + msg.result.cards[i].number];
             $("#" + msg.card.cards[i].type + msg.card.cards[i].number).remove();
           }
+          $("#field").text(message);
           $("#other").text("");
           $("#errorMsg").text("");
         });
@@ -252,6 +255,16 @@
               break;
             case "revolution":
               $("#revolution").text(msg.value ? "　革命中　" : "");
+              break;
+            case "winjoker":
+              $("#other").text("JOKER討伐!!");
+              $("#field").text(
+                "現在のカード: なし"
+              );
+              for (let i = 0; i < msg.value.cards.length; i++) {
+                $("#" + msg.value.cards[i].type + msg.value.cards[i].number).remove();
+              }
+              $("#elevenback").text("");
               break;
             case "cut8":
               $("#other").text("8切ました");
