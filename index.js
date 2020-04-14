@@ -26,6 +26,7 @@ let shibari = false;
 let pass = 0;
 let seiseki = [];
 let rank=1;
+let rankTable = [];
 
 app.get("/", function(req, res) {
   res.sendFile(__dirname + "/index.html");
