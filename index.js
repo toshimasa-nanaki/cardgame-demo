@@ -28,6 +28,7 @@ let seiseki = [];
 let rank=0;
 let rankTable = [];
 
+
 app.get("/", function(req, res) {
   res.sendFile(__dirname + "/index.html");
 });

@@ -40,13 +40,13 @@
       <div id="roomCreateArea">
         <button id="createDisplay">ルーム作成F表示</button>
         <div id="roomInputArea">
-          <input id="roomName" autocomplete="off" /><button id="createRoom">
+          <input id="playerNameAdmin" autocomplete="on" /><button id="createRoom">
             ルーム作成
           </button>
         </div>
       </div>
       <div id="joinArea">
-        <input id="joinRoomId" autocomplete="off" /><button id="joinRoom">
+        <label for="name">プレイヤー名：</label><input id="playerName" autocomplete="on" /><button id="joinRoom">
           ルームに参加
         </button>
       </div>
@@ -148,7 +148,8 @@
           socket.emit("createRoom", {
             id: 1234,
             roomid: 1234,
-            name: "testRoom1"
+            name: "testRoom1",
+            playerName: $('#playerNameAdmin').val()
           });
           $("#roomSelectArea").hide();
           socket.emit("update", { id: 1234, roomid: 1234 });
@@ -156,7 +157,8 @@
         $("#joinRoom").click(function() {
           socket.emit("join", {
             id: 1234,
-            roomid: 1234
+            roomid: 1234,
+            playerName: $('#playerName').val()
             //roomid: $('#joinRoomId').val()
             // name: "testRoom1"
           });
