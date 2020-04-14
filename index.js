@@ -207,12 +207,19 @@ io.on("connection", function(socket) {
     // let nextTurn =
     //   currentTurn != ORDER.length - 1 ? currentTurn + 1 : 0;
     let nextTurn = currentTurn != ORDER.length - 1 ? currentTurn + 1 : 0;
+    let c = 0;
     while(true){
+//       if(ORDER.length -1 <= c){
+//         //ゲーム終了。ここで上がってない奴は貧民
+        
+//       }
       if(ORDER[nextTurn].rank == ""){
         break;
       }else{
-        
+        nextTurn++;
+        if(nextTurn >= ORDER.length) nextTurn = 0;
       }
+      c++;
     }
     io.to(ORDER[currentTurn].id).emit("order", false);
     io.to(ORDER[nextTurn].id).emit("order", true);

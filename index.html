@@ -16,6 +16,9 @@
       div#gameFieldArea {
         display: none;
       }
+/*       div#res {
+        display: none;
+      } */
       #messages {
         list-style-type: none;
         margin: 0;
@@ -73,6 +76,9 @@
         <button id="send">カードを出す</button>
         <button id="pass">パス</button>
       </div>
+    </div>
+    <div id="res">
+      <span id="seiseki"></span>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
@@ -250,6 +256,13 @@
                 "現在のカード: なし"
               );
               $("#elevenback").text("");
+              break;
+          }
+        });
+        socket.on("finish", function(msg) {
+          switch (msg) {
+            case "1":
+              $("#elevenback").text(msg.value ? "　11Back　" : "");
               break;
           }
         });
