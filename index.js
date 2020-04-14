@@ -67,6 +67,16 @@ io.on("connection", function(socket) {
       let pos = 0;
       ORDER = [];
       rank = 1;
+      createRankTable(count);
+      for(let i = 0; i < count; i++){
+        if(i==0){
+          
+        }else if(i == count -1){
+          
+        }else{
+          
+        }
+      }
       Object.keys(socket.nsp.adapter.rooms[msg.id].sockets).forEach(function(
         key
       ) {
@@ -278,6 +288,15 @@ function numComparison(nc, sc) {
     return nc.number < sc.number;
   }
 }
+
+function createRankTable(count){
+  //初期化しておく
+  rankTable = [];
+  for(let i = 0; i < count; i++){
+    
+  }
+}
+
 
 http.listen(port, function() {
   console.log("listening on *:" + port);
