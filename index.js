@@ -11,10 +11,13 @@ const TRUMPDATA = {
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+io.set('heartbeat interval', 5000);
+io.set('heartbeat timeout', 15000);
 var port = process.env.PORT || 3000;
 var store = {};
 const ORIGINALCARDDATA = trump_init(TRUMPDATA);
 const shuffleCards = sort_at_random(ORIGINALCARDDATA);
+let gameStart= false;
 let nowCard = "";
 let ORDER = {};
 let elevenbackFlag = false;
@@ -27,6 +30,10 @@ app.get('/', function(req, res){
 });
 
 io.on('connection', function(socket){
+  socket.on('disconnect', function () {
+    //TODO ゲームがすでに始まっている場合は解散
+      console.log(socket);
+  });
   socket.on('createRoom', function(msg) {
     const usrobj = {
       'room': msg.roomid,
