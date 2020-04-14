@@ -67,7 +67,8 @@ io.on("connection", function(socket) {
       Object.keys(socket.nsp.adapter.rooms[msg.id].sockets).forEach(function(
         key
       ) {
-        ORDER.push({id: key, rank: ""})
+        ORDER.push({id: key, card: remainder > 0 ? perNum + 1 : perNum ,rank: ""})
+        var cardNum = remainder > 0 ? pos + perNum + 1 : pos + perNum 
         io.to(key).emit(
           "gameInit",
           shuffleCards
