@@ -234,6 +234,7 @@
             $("#" + msg.card.cards[i].type + msg.card.cards[i].number).remove();
           }
           $("#other").text("");
+          $("#errorMsg").text("");
         });
         socket.on("changeStatus", function(msg) {
           switch (msg.type) {
@@ -260,9 +261,10 @@
           }
         });
         socket.on("finish", function(msg) {
+          $("#gameFieldArea").toggle();
           switch (msg) {
             case "1":
-              $("#elevenback").text(msg.value ? "　11Back　" : "");
+              $("#seiseki").text("大富豪です！！！");
               break;
           }
         });
