@@ -123,7 +123,12 @@ io.on("connection", function(socket) {
     });
     
     let nextTurn = currentTurn != ORDER.length - 1 ? currentTurn + 1 : 0;
-    io.to(store[msg.id].room).emit("order", {flag: false, skip: false, playerName: UserList[ORDER[nextTurn].id]});
+    ORDER.forEach(function(element){
+      if(element.id != ORDER[nextTurn].id){
+        io.to(element.id).emit("order", {flag: false, skip: false, playerName: UserList[ORDER[nextTurn].id]});
+      }      
+    });
+    // io.to(ORDER[currentTurn].id).emit("order", {flag: false, skip: false, playerName: UserList[ORDER[nextTurn].id]});
     io.to(ORDER[nextTurn].id).emit("order", {flag: true, skip: ORDER[nextTurn].rank != "" ? true : false});
   });
   socket.on("validate", function(msg) {
@@ -211,7 +216,11 @@ io.on("connection", function(socket) {
     }
     
     let nextTurn = currentTurn != ORDER.length - 1 ? currentTurn + 1 : 0;
-    io.to(store[msg.id].room).emit("order", {flag: false, skip: false, playerName: UserList[ORDER[nextTurn].id]});
+    ORDER.forEach(function(element){
+      if(element.id != ORDER[nextTurn].id){
+        io.to(element.id).emit("order", {flag: false, skip: false, playerName: UserList[ORDER[nextTurn].id]});
+      }      
+    });
     io.to(ORDER[nextTurn].id).emit("order", {flag: true, skip: ORDER[nextTurn].rank != "" ? true : false});
   });
 });
