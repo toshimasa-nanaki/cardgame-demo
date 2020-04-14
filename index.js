@@ -83,9 +83,9 @@ io.on("connection", function(socket) {
         );
         //seiseki[key]=
         if (ORDER[0].id == key) {
-          io.to(key).emit("order", true);
+          io.to(key).emit("order", {flag: true, skip: false});
         } else {
-          io.to(key).emit("order", false);
+          io.to(key).emit("order", {flag: false, skip: false});
         }
         pos = remainder > 0 ? pos + perNum + 1 : pos + perNum;
         remainder--;
@@ -135,7 +135,7 @@ io.on("connection", function(socket) {
 //       c++;
 //     }
     io.to(ORDER[currentTurn].id).emit("order", {flag: false, skip: ORDER[currentTurn].rank != "" ? true : false});
-    io.to(ORDER[nextTurn].id).emit("order", {flag: false, skip: ORDER[nextTurn].rank != "" ? true : false});
+    io.to(ORDER[nextTurn].id).emit("order", {flag: true, skip: ORDER[nextTurn].rank != "" ? true : false});
   });
   socket.on("validate", function(msg) {
     if (nowCard != "") {
@@ -238,7 +238,7 @@ io.on("connection", function(socket) {
 //       c++;
 //     }
     io.to(ORDER[currentTurn].id).emit("order", {flag: false, skip: ORDER[currentTurn].rank != "" ? true : false});
-    io.to(ORDER[nextTurn].id).emit("order", {flag: false, skip: ORDER[nextTurn].rank != "" ? true : false});
+    io.to(ORDER[nextTurn].id).emit("order", {flag: true, skip: ORDER[nextTurn].rank != "" ? true : false});
   });
 });
 
