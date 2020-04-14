@@ -65,6 +65,7 @@ io.on("connection", function(socket) {
       let remainder = 54 % count;
       let pos = 0;
       ORDER = [];
+      rank = 1;
       Object.keys(socket.nsp.adapter.rooms[msg.id].sockets).forEach(function(
         key
       ) {
@@ -199,12 +200,20 @@ io.on("connection", function(socket) {
     if(ORDER[currentTurn].card - msg.cards.length <= 0){
       //上がり
       ORDER[currentTurn].rank = rank;
-      io.to(ORDER[currentTurn].id).emit("order", false);
+      io.to(ORDER[currentTurn].id).emit("finish", rank);
       rank++;
     }
     
-    let nextTurn =
-      currentTurn != ORDER.length - 1 ? currentTurn + 1 : 0;
+    // let nextTurn =
+    //   currentTurn != ORDER.length - 1 ? currentTurn + 1 : 0;
+    let nextTurn = currentTurn != ORDER.length - 1 ? currentTurn + 1 : 0;
+    while(true){
+      if(ORDER[nextTurn].rank == ""){
+        break;
+      }else{
+        
+      }
+    }
     io.to(ORDER[currentTurn].id).emit("order", false);
     io.to(ORDER[nextTurn].id).emit("order", true);
   });
