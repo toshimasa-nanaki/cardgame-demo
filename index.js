@@ -108,7 +108,6 @@ io.on("connection", function(socket) {
       elevenbackFlag = false;
       io.to(store[msg.id].room).emit("changeStatus", { type: "cutPass" });
     }
-    //let currentTurn = Object.keys(ORDER).indexOf(socket.id);
     let currentTurn;
     let currentPlayer = ORDER.filter(function(item, index){
       if (item.id == socket.id){
@@ -117,23 +116,7 @@ io.on("connection", function(socket) {
       }
     });
     
-    // let nextTurn =
-    //   currentTurn != ORDER.length - 1 ? currentTurn + 1 : 0;
     let nextTurn = currentTurn != ORDER.length - 1 ? currentTurn + 1 : 0;
-//     let c = 0;
-//     while(true){
-// //       if(ORDER.length -1 <= c){
-// //         //ゲーム終了。ここで上がってない奴は貧民
-        
-// //       }
-//       if(ORDER[nextTurn].rank == ""){
-//         break;
-//       }else{
-//         nextTurn++;
-//         if(nextTurn >= ORDER.length) nextTurn = 0;
-//       }
-//       c++;
-//     }
     io.to(ORDER[currentTurn].id).emit("order", {flag: false, skip: ORDER[currentTurn].rank != "" ? true : false});
     io.to(ORDER[nextTurn].id).emit("order", {flag: true, skip: ORDER[nextTurn].rank != "" ? true : false});
   });
@@ -169,9 +152,9 @@ io.on("connection", function(socket) {
           reason: "弱いカードはおけない"
         });
         return;
-      }
-
-      if (msg.cards.length == 4) {
+      } 
+    }
+    if (msg.cards.length == 4) {
         //革命
         revolutionFlag = !revolutionFlag;
         io.to(store[msg.id].room).emit("changeStatus", {
@@ -182,7 +165,7 @@ io.on("connection", function(socket) {
       if (msg.cards[0].number == 8) {
         //8ぎり
         nowCard = "";
-        io.to(store[msg.id].room).emit("changeStatus", { type: "cut8" });
+        io.to(store[msg.id].room).emit("changeStatus", { type: "cut8", value: msg });
         pass = 0;
         elevenbackFlag = false;
         return;
@@ -195,7 +178,6 @@ io.on("connection", function(socket) {
           value: elevenbackFlag
         });
       }
-    }
     pass = 0;
     nowCard = msg;
     io.to(store[msg.id].room).emit("result", {
@@ -220,23 +202,7 @@ io.on("connection", function(socket) {
       rank++;
     }
     
-    // let nextTurn =
-    //   currentTurn != ORDER.length - 1 ? currentTurn + 1 : 0;
     let nextTurn = currentTurn != ORDER.length - 1 ? currentTurn + 1 : 0;
-//     let c = 0;
-//     while(true){
-// //       if(ORDER.length -1 <= c){
-// //         //ゲーム終了。ここで上がってない奴は貧民
-        
-// //       }
-//       if(ORDER[nextTurn].rank == ""){
-//         break;
-//       }else{
-//         nextTurn++;
-//         if(nextTurn >= ORDER.length) nextTurn = 0;
-//       }
-//       c++;
-//     }
     io.to(ORDER[currentTurn].id).emit("order", {flag: false, skip: ORDER[currentTurn].rank != "" ? true : false});
     io.to(ORDER[nextTurn].id).emit("order", {flag: true, skip: ORDER[nextTurn].rank != "" ? true : false});
   });
