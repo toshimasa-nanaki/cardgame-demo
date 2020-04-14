@@ -120,7 +120,7 @@ io.on("connection", function(socket) {
     });
     
     let nextTurn = currentTurn != ORDER.length - 1 ? currentTurn + 1 : 0;
-    io.to(ORDER[currentTurn].id).emit("order", {flag: false, skip: ORDER[currentTurn].rank != "" ? true : false});
+    io.to(ORDER[currentTurn].id).emit("order", {flag: false, skip: false});
     io.to(ORDER[nextTurn].id).emit("order", {flag: true, skip: ORDER[nextTurn].rank != "" ? true : false});
   });
   socket.on("validate", function(msg) {
@@ -208,7 +208,7 @@ io.on("connection", function(socket) {
     }
     
     let nextTurn = currentTurn != ORDER.length - 1 ? currentTurn + 1 : 0;
-    io.to(ORDER[currentTurn].id).emit("order", {flag: false, skip: ORDER[currentTurn].rank != "" ? true : false});
+    io.to(ORDER[currentTurn].id).emit("order", {flag: false, skip: false});
     io.to(ORDER[nextTurn].id).emit("order", {flag: true, skip: ORDER[nextTurn].rank != "" ? true : false});
   });
 });
