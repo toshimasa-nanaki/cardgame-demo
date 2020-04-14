@@ -62,6 +62,7 @@
       <div>
         <span id="revolution"></span>
         <span id="elevenback"></span>
+        <span id="shibari"></span>
       </div>
       <div>
         <span id="errorMsg"></span>
@@ -255,6 +256,9 @@
               break;
             case "revolution":
               $("#revolution").text(msg.value ? "　革命中　" : "");
+              break;
+            case "shibari":
+              $("#shibari").text(msg.value ? "　縛り　" : "");
               break;
             case "winjoker":
               $("#other").text("JOKER討伐!!");
