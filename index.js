@@ -25,7 +25,7 @@ let revolutionFlag = false;
 let shibari = false;
 let pass = 0;
 let seiseki = [];
-let rank=1;
+let rank=0;
 let rankTable = [];
 
 app.get("/", function(req, res) {
@@ -66,17 +66,9 @@ io.on("connection", function(socket) {
       let remainder = 54 % count;
       let pos = 0;
       ORDER = [];
-      rank = 1;
+      rank = 0;
       createRankTable(count);
-      for(let i = 0; i < count; i++){
-        if(i==0){
-          
-        }else if(i == count -1){
-          
-        }else{
-          
-        }
-      }
+      
       Object.keys(socket.nsp.adapter.rooms[msg.id].sockets).forEach(function(
         key
       ) {
@@ -211,7 +203,7 @@ io.on("connection", function(socket) {
     if(ORDER[currentTurn].card <= 0){
       //上がり
       ORDER[currentTurn].rank = rank;
-      io.to(ORDER[currentTurn].id).emit("finish", rank);
+      io.to(ORDER[currentTurn].id).emit("finish", rankTable[rank]);
       rank++;
     }
     
@@ -292,8 +284,19 @@ function numComparison(nc, sc) {
 function createRankTable(count){
   //初期化しておく
   rankTable = [];
-  for(let i = 0; i < count; i++){
-    
+  if(count == 2){
+    rankTable = ["hugou","hinmin"];
+  }else if(count == 3){
+    rankTable = ["hugou", "heimin","hinmin"];
+  }else if(count == 4){
+    rankTable = ["daihugou","hugou", "hinmin","daihinmin"];
+  }else{
+    rankTable = ["daihugou","hugou"]
+    for(let i = 0; i < count - 4; i++){
+      rankTable.push("heimin");
+    }
+    rankTable.push("hinmin");
+    rankTable.push("daihinmin");
   }
 }
 

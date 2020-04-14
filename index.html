@@ -273,11 +273,20 @@
           console.log("finish accept");
           $("#gameFieldArea").toggle();
           switch (msg) {
-            case 1:
+            case "daihugou":
               $("#seiseki").text("大富豪です！！！");
               break;
-            case 1:
-              $("#seiseki").text("大富豪です！！！");
+            case "hugou":
+              $("#seiseki").text("富豪です！！！");
+              break;
+            case "heimin":
+              $("#seiseki").text("平民です！！！");
+              break;
+            case "hinmin":
+              $("#seiseki").text("貧民です！！！");
+              break;
+            case "daihinmin":
+              $("#seiseki").text("大貧民です！！！");
               break;
           }
         });
