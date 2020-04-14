@@ -304,8 +304,10 @@ function sort_at_random(arrayData) {
 
 function isShibari(ncs, scs){
   for(let i=0; i < ncs.length; i++){
-    console.log();
-
+    if(ncs[i].type == "joker")
+    scs.some(item => {
+      item.type === ncs[i].type
+    });
   }
 }
 
