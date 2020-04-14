@@ -62,7 +62,11 @@ io.on('connection', function(socket){
       let pos = 0; 
       ORDER = socket.nsp.adapter.rooms[msg.id].sockets;
       Object.keys(socket.nsp.adapter.rooms[msg.id].sockets).forEach(function (key) {
-        io.to(key).emit('gameInit', shuffleCards.slice(pos, (remainder > 0 ? pos+perNum+1 : pos+perNum)).sort());
+        io.to(key).emit('gameInit', shuffleCards.slice(pos, (remainder > 0 ? pos+perNum+1 : pos+perNum)).sort(function(a,b){
+    if(a.number<b.number) return -1;
+    if(a.number > b.number) return 1;
+    return 0;
+}));
         if(Object.keys(ORDER)[0] == key){
           io.to(key).emit('order', true);
         }else{
