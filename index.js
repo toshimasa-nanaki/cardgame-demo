@@ -204,6 +204,7 @@ io.on("connection", function(socket) {
       });
       pass = 0;
       elevenbackFlag = false;
+      console.log("8ぎりプレイヤー名:" + UserList[socket.id] + "　出したカードの数：" + msg.cards.length);
       ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
       return;
     }
@@ -225,6 +226,7 @@ io.on("connection", function(socket) {
     });
 
     //成績をここでつける
+    console.log("プレイヤー名:" + UserList[socket.id] + "　出したカードの数：" + msg.cards.length);
     ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
     if (ORDER[currentTurn].card <= 0) {
       //上がり
