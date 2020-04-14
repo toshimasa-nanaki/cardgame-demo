@@ -106,11 +106,19 @@ io.on("connection", function(socket) {
       elevenbackFlag = false;
       io.to(store[msg.id].room).emit("changeStatus", { type: "cutPass" });
     }
-    let currentTurn = Object.keys(ORDER).indexOf(socket.id);
+    //let currentTurn = Object.keys(ORDER).indexOf(socket.id);
+    let currentTurn;
+    let currentPlayer = ORDER.filter(function(item, index){
+      if (item.id == socket.id){
+        currentTurn = index;
+        return true;
+      }
+    });
+    
     let nextTurn =
       currentTurn != ORDER.length - 1 ? currentTurn + 1 : 0;
-    io.to(ORDER[currentTurn]).emit("order", false);
-    io.to(ORDER[nextTurn]).emit("order", true);
+    io.to(ORDER[currentTurn].id).emit("order", false);
+    io.to(ORDER[nextTurn].id).emit("order", true);
   });
   socket.on("validate", function(msg) {
     if (nowCard != "") {
@@ -179,11 +187,18 @@ io.on("connection", function(socket) {
       reason: "",
       result: nowCard
     });
-    let currentTurn = Object.keys(ORDER).indexOf(socket.id);
+    let currentTurn;
+    let currentPlayer = ORDER.filter(function(item, index){
+      if (item.id == socket.id){
+        currentTurn = index;
+        return true;
+      }
+    });
+    //let currentTurn = Object.keys(ORDER).indexOf(socket.id);
     let nextTurn =
       currentTurn != ORDER.length - 1 ? currentTurn + 1 : 0;
-    io.to(ORDER[currentTurn]).emit("order", false);
-    io.to(ORDER[nextTurn]).emit("order", true);
+    io.to(ORDER[currentTurn].id).emit("order", false);
+    io.to(ORDER[nextTurn].id).emit("order", true);
   });
 });
 
