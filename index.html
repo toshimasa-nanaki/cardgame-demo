@@ -255,8 +255,8 @@
               $("#field").text(
                 "現在のカード: なし"
               );
-              for (let i = 0; i < msg.value.card.cards.length; i++) {
-                $("#" + msg.value.card.cards[i].type + msg.value.card.cards[i].number).remove();
+              for (let i = 0; i < msg.value.cards.length; i++) {
+                $("#" + msg.value.cards[i].type + msg.value.cards[i].number).remove();
               }
               $("#elevenback").text("");
               break;

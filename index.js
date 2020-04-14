@@ -121,6 +121,13 @@ io.on("connection", function(socket) {
     io.to(ORDER[nextTurn].id).emit("order", {flag: true, skip: ORDER[nextTurn].rank != "" ? true : false});
   });
   socket.on("validate", function(msg) {
+    let currentTurn;
+    let currentPlayer = ORDER.filter(function(item, index){
+      if (item.id == socket.id){
+        currentTurn = index;
+        return true;
+      }
+    });
     if (nowCard != "") {
       if (nowCard.cards.length != msg.cards.length) {
         //枚数が違うのはあり得ない
@@ -168,6 +175,7 @@ io.on("connection", function(socket) {
         io.to(store[msg.id].room).emit("changeStatus", { type: "cut8", value: msg });
         pass = 0;
         elevenbackFlag = false;
+        ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
         return;
       }
       if (msg.cards[0].number == 11) {
@@ -186,13 +194,7 @@ io.on("connection", function(socket) {
       reason: "",
       result: nowCard
     });
-    let currentTurn;
-    let currentPlayer = ORDER.filter(function(item, index){
-      if (item.id == socket.id){
-        currentTurn = index;
-        return true;
-      }
-    });
+    
     //成績をここでつける
     ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
     if(ORDER[currentTurn].card <= 0){
