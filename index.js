@@ -25,6 +25,7 @@ let revolutionFlag = false;
 let shibari = false;
 let pass = 0;
 let seiseki = [];
+let rank=1;
 
 app.get("/", function(req, res) {
   res.sendFile(__dirname + "/index.html");
@@ -154,6 +155,14 @@ io.on("connection", function(socket) {
         return;
       }
 
+      if (msg.cards.length == 4) {
+        //革命
+        revolutionFlag = !revolutionFlag;
+        io.to(store[msg.id].room).emit("changeStatus", {
+          type: "revolution",
+          value: revolutionFlag
+        });
+      }
       if (msg.cards[0].number == 8) {
         //8ぎり
         nowCard = "";
@@ -168,14 +177,6 @@ io.on("connection", function(socket) {
         io.to(store[msg.id].room).emit("changeStatus", {
           type: "elevenback",
           value: elevenbackFlag
-        });
-      }
-      if (msg.cards.length == 4) {
-        //革命
-        revolutionFlag = !revolutionFlag;
-        io.to(store[msg.id].room).emit("changeStatus", {
-          type: "revolution",
-          value: revolutionFlag
         });
       }
     }
@@ -194,7 +195,14 @@ io.on("connection", function(socket) {
         return true;
       }
     });
-    //let currentTurn = Object.keys(ORDER).indexOf(socket.id);
+    //成績をここでつける
+    if(ORDER[currentTurn].card - msg.cards.length <= 0){
+      //上がり
+      ORDER[currentTurn].rank = rank;
+      io.to(ORDER[currentTurn].id).emit("order", false);
+      rank++;
+    }
+    
     let nextTurn =
       currentTurn != ORDER.length - 1 ? currentTurn + 1 : 0;
     io.to(ORDER[currentTurn].id).emit("order", false);
