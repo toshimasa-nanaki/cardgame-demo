@@ -265,7 +265,7 @@ function trump_init(trumpData) {
   }
   for (var i = 0; i < trumpData["joker"]; i++) {
     cards.push({
-      type: "joker_" + i,
+      type: "joker" + (i+1),
       number: 99
     });
   }
@@ -308,7 +308,7 @@ function isSameNumber(cards) {
 }
 
 function numComparison(nc, sc) {
-  if (nc.type == "joker" && sc.type == "spade" && sc.number == "3") {
+  if (~nc.type.indexOf('joker') && sc.type == "spade" && sc.number == "3") {
     return true;
   }
   if (elevenbackFlag && revolutionFlag) {
