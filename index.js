@@ -25,7 +25,7 @@ let revolutionFlag = false;
 let shibari = false;
 let pass = 0;
 let seiseki = [];
-let rank=0;
+let rank = 0;
 let rankTable = [];
 let UserList = {};
 
@@ -71,12 +71,16 @@ io.on("connection", function(socket) {
       ORDER = [];
       rank = 0;
       createRankTable(count);
-      
+
       Object.keys(socket.nsp.adapter.rooms[msg.id].sockets).forEach(function(
         key
       ) {
-        ORDER.push({id: key, card: remainder > 0 ? perNum + 1 : perNum ,rank: ""})
-        var cardNum = remainder > 0 ? pos + perNum + 1 : pos + perNum 
+        ORDER.push({
+          id: key,
+          card: remainder > 0 ? perNum + 1 : perNum,
+          rank: ""
+        });
+        var cardNum = remainder > 0 ? pos + perNum + 1 : pos + perNum;
         io.to(key).emit(
           "gameInit",
           shuffleCards
@@ -89,9 +93,13 @@ io.on("connection", function(socket) {
         );
         //seiseki[key]=
         if (ORDER[0].id == key) {
-          io.to(key).emit("order", {flag: true, skip: false});
+          io.to(key).emit("order", { flag: true, skip: false });
         } else {
-          io.to(key).emit("order", {flag: false, skip: false, playerName: UserList[ORDER[0].id]});
+          io.to(key).emit("order", {
+            flag: false,
+            skip: false,
+            playerName: UserList[ORDER[0].id]
+          });
         }
         pos = remainder > 0 ? pos + perNum + 1 : pos + perNum;
         remainder--;
@@ -115,26 +123,33 @@ io.on("connection", function(socket) {
       io.to(store[msg.id].room).emit("changeStatus", { type: "cutPass" });
     }
     let currentTurn;
-    let currentPlayer = ORDER.filter(function(item, index){
-      if (item.id == socket.id){
+    let currentPlayer = ORDER.filter(function(item, index) {
+      if (item.id == socket.id) {
         currentTurn = index;
         return true;
       }
     });
-    
+
     let nextTurn = currentTurn != ORDER.length - 1 ? currentTurn + 1 : 0;
-    ORDER.forEach(function(element){
-      if(element.id != ORDER[nextTurn].id){
-        io.to(element.id).emit("order", {flag: false, skip: false, playerName: UserList[ORDER[nextTurn].id]});
-      }      
+    ORDER.forEach(function(element) {
+      if (element.id != ORDER[nextTurn].id) {
+        io.to(element.id).emit("order", {
+          flag: false,
+          skip: false,
+          playerName: UserList[ORDER[nextTurn].id]
+        });
+      }
     });
     // io.to(ORDER[currentTurn].id).emit("order", {flag: false, skip: false, playerName: UserList[ORDER[nextTurn].id]});
-    io.to(ORDER[nextTurn].id).emit("order", {flag: true, skip: ORDER[nextTurn].rank != "" ? true : false});
+    io.to(ORDER[nextTurn].id).emit("order", {
+      flag: true,
+      skip: ORDER[nextTurn].rank != "" ? true : false
+    });
   });
   socket.on("validate", function(msg) {
     let currentTurn;
-    let currentPlayer = ORDER.filter(function(item, index){
-      if (item.id == socket.id){
+    let currentPlayer = ORDER.filter(function(item, index) {
+      if (item.id == socket.id) {
         currentTurn = index;
         return true;
       }
@@ -170,33 +185,36 @@ io.on("connection", function(socket) {
           reason: "弱いカードはおけない"
         });
         return;
-      } 
+      }
     }
     if (msg.cards.length == 4) {
-        //革命
-        revolutionFlag = !revolutionFlag;
-        io.to(store[msg.id].room).emit("changeStatus", {
-          type: "revolution",
-          value: revolutionFlag
-        });
-      }
-      if (msg.cards[0].number == 8) {
-        //8ぎり
-        nowCard = "";
-        io.to(store[msg.id].room).emit("changeStatus", { type: "cut8", value: msg });
-        pass = 0;
-        elevenbackFlag = false;
-        ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
-        return;
-      }
-      if (msg.cards[0].number == 11) {
-        //11back
-        elevenbackFlag = !elevenbackFlag;
-        io.to(store[msg.id].room).emit("changeStatus", {
-          type: "elevenback",
-          value: elevenbackFlag
-        });
-      }
+      //革命
+      revolutionFlag = !revolutionFlag;
+      io.to(store[msg.id].room).emit("changeStatus", {
+        type: "revolution",
+        value: revolutionFlag
+      });
+    }
+    if (msg.cards[0].number == 8) {
+      //8ぎり
+      nowCard = "";
+      io.to(store[msg.id].room).emit("changeStatus", {
+        type: "cut8",
+        value: msg
+      });
+      pass = 0;
+      elevenbackFlag = false;
+      ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
+      return;
+    }
+    if (msg.cards[0].number == 11) {
+      //11back
+      elevenbackFlag = !elevenbackFlag;
+      io.to(store[msg.id].room).emit("changeStatus", {
+        type: "elevenback",
+        value: elevenbackFlag
+      });
+    }
     pass = 0;
     nowCard = msg;
     io.to(store[msg.id].room).emit("result", {
@@ -205,23 +223,30 @@ io.on("connection", function(socket) {
       reason: "",
       result: nowCard
     });
-    
+
     //成績をここでつける
     ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
-    if(ORDER[currentTurn].card <= 0){
+    if (ORDER[currentTurn].card <= 0) {
       //上がり
       ORDER[currentTurn].rank = rankTable[rank];
       io.to(ORDER[currentTurn].id).emit("finish", rankTable[rank]);
       rank++;
     }
-    
+
     let nextTurn = currentTurn != ORDER.length - 1 ? currentTurn + 1 : 0;
-    ORDER.forEach(function(element){
-      if(element.id != ORDER[nextTurn].id){
-        io.to(element.id).emit("order", {flag: false, skip: false, playerName: UserList[ORDER[nextTurn].id]});
-      }      
+    ORDER.forEach(function(element) {
+      if (element.id != ORDER[nextTurn].id) {
+        io.to(element.id).emit("order", {
+          flag: false,
+          skip: false,
+          playerName: UserList[ORDER[nextTurn].id]
+        });
+      }
     });
-    io.to(ORDER[nextTurn].id).emit("order", {flag: true, skip: ORDER[nextTurn].rank != "" ? true : false});
+    io.to(ORDER[nextTurn].id).emit("order", {
+      flag: true,
+      skip: ORDER[nextTurn].rank != "" ? true : false
+    });
   });
 });
 
@@ -284,35 +309,34 @@ function numComparison(nc, sc) {
   if (nc.type == "joker" && sc.type == "spade" && sc.number == "3") {
     return true;
   }
-  if (elevenbackFlag && revolutionFlag){
+  if (elevenbackFlag && revolutionFlag) {
     return nc.number < sc.number;
-  }else if(elevenbackFlag || revolutionFlag){
+  } else if (elevenbackFlag || revolutionFlag) {
     //逆残
     return nc.number > sc.number;
-  }else{
+  } else {
     return nc.number < sc.number;
   }
 }
 
-function createRankTable(count){
+function createRankTable(count) {
   //初期化しておく
   rankTable = [];
-  if(count == 2){
-    rankTable = ["hugou","hinmin"];
-  }else if(count == 3){
-    rankTable = ["hugou", "heimin","hinmin"];
-  }else if(count == 4){
-    rankTable = ["daihugou","hugou", "hinmin","daihinmin"];
-  }else{
-    rankTable = ["daihugou","hugou"]
-    for(let i = 0; i < count - 4; i++){
+  if (count == 2) {
+    rankTable = ["hugou", "hinmin"];
+  } else if (count == 3) {
+    rankTable = ["hugou", "heimin", "hinmin"];
+  } else if (count == 4) {
+    rankTable = ["daihugou", "hugou", "hinmin", "daihinmin"];
+  } else {
+    rankTable = ["daihugou", "hugou"];
+    for (let i = 0; i < count - 4; i++) {
       rankTable.push("heimin");
     }
     rankTable.push("hinmin");
     rankTable.push("daihinmin");
   }
 }
-
 
 http.listen(port, function() {
   console.log("listening on *:" + port);
