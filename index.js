@@ -199,6 +199,9 @@ io.on("connection", function(socket) {
       ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
       return;
     }
+      if (isShibari(nowCard.cards, msg.cards)){
+      
+      }
     }
     
     if (msg.cards.length == 4) {
