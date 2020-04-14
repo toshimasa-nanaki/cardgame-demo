@@ -63,7 +63,7 @@ io.on("connection", function(socket) {
       let perNum = Math.floor(54 / count);
       let remainder = 54 % count;
       let pos = 0;
-      //ORDER = socket.nsp.adapter.rooms[msg.id].sockets;
+      ORDER = [];
       Object.keys(socket.nsp.adapter.rooms[msg.id].sockets).forEach(function(
         key
       ) {
@@ -108,9 +108,9 @@ io.on("connection", function(socket) {
     }
     let currentTurn = Object.keys(ORDER).indexOf(socket.id);
     let nextTurn =
-      currentTurn != Object.keys(ORDER).length - 1 ? currentTurn + 1 : 0;
-    io.to(Object.keys(ORDER)[currentTurn]).emit("order", false);
-    io.to(Object.keys(ORDER)[nextTurn]).emit("order", true);
+      currentTurn != ORDER.length - 1 ? currentTurn + 1 : 0;
+    io.to(ORDER[currentTurn]).emit("order", false);
+    io.to(ORDER[nextTurn]).emit("order", true);
   });
   socket.on("validate", function(msg) {
     if (nowCard != "") {
@@ -181,9 +181,9 @@ io.on("connection", function(socket) {
     });
     let currentTurn = Object.keys(ORDER).indexOf(socket.id);
     let nextTurn =
-      currentTurn != Object.keys(ORDER).length - 1 ? currentTurn + 1 : 0;
-    io.to(Object.keys(ORDER)[currentTurn]).emit("order", false);
-    io.to(Object.keys(ORDER)[nextTurn]).emit("order", true);
+      currentTurn != ORDER.length - 1 ? currentTurn + 1 : 0;
+    io.to(ORDER[currentTurn]).emit("order", false);
+    io.to(ORDER[nextTurn]).emit("order", true);
   });
 });
 
