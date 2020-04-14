@@ -186,8 +186,7 @@ io.on("connection", function(socket) {
         });
         return;
       }
-    }
-    if (~nowCard.cards[0].type.indexOf('joker') && msg.cards[0].type == "spade" && msg.cards[0].number == "3") {
+      if (~nowCard.cards[0].type.indexOf('joker') && msg.cards[0].type == "spade" && msg.cards[0].number == "3") {
       //JOKER討伐(誰も倒せないから流す)
       nowCard = "";
       io.to(store[msg.id].room).emit("changeStatus", {
@@ -200,6 +199,8 @@ io.on("connection", function(socket) {
       ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
       return;
     }
+    }
+    
     if (msg.cards.length == 4) {
       //革命
       revolutionFlag = !revolutionFlag;
