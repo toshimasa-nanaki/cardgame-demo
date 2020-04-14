@@ -30,10 +30,10 @@ app.get('/', function(req, res){
 });
 
 io.on('connection', function(socket){
-  socket.on('disconnect', function () {
-    //TODO ゲームがすでに始まっている場合は解散
-      console.log(socket);
-  });
+  // socket.on('disconnect', function () {
+  //   //TODO ゲームがすでに始まっている場合は解散
+  //     console.log(socket);
+  // });
   socket.on('createRoom', function(msg) {
     const usrobj = {
       'room': msg.roomid,
@@ -62,7 +62,7 @@ io.on('connection', function(socket){
       let pos = 0; 
       ORDER = socket.nsp.adapter.rooms[msg.id].sockets;
       Object.keys(socket.nsp.adapter.rooms[msg.id].sockets).forEach(function (key) {
-        io.to(key).emit('gameInit', shuffleCards.slice(pos, (remainder > 0 ? pos+perNum+1 : pos+perNum)));
+        io.to(key).emit('gameInit', shuffleCards.slice(pos, (remainder > 0 ? pos+perNum+1 : pos+perNum)).sort());
         if(Object.keys(ORDER)[0] == key){
           io.to(key).emit('order', true);
         }else{
@@ -79,9 +79,10 @@ io.on('connection', function(socket){
   socket.on('pass', function(msg){
     pass++;
     const count = typeof store[msg.id].count === "undefined" ? 4 : store[msg.id].count;
-    if(pass >= count){
+    if(pass >= count-1){
       //パスで一周した場合流す
       nowCard = "";
+      pass=0;
       io.to(store[msg.id].room).emit('changeStatus', {type: "cutPass"});
     }
     let currentTurn = Object.keys(ORDER).indexOf(socket.id);
