@@ -202,7 +202,7 @@ io.on("connection", function(socket) {
     ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
     if(ORDER[currentTurn].card <= 0){
       //上がり
-      ORDER[currentTurn].rank = rank;
+      ORDER[currentTurn].rank = rankTable[rank];
       io.to(ORDER[currentTurn].id).emit("finish", rankTable[rank]);
       rank++;
     }
