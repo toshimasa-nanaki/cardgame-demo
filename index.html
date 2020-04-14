@@ -188,6 +188,7 @@
           });
         });
         socket.on("order", function(msg) {
+          console.log("order accept");
           if (msg) {
             $("#cardList input").prop("disabled", false);
             $("#order").text("あなたの番です");
@@ -261,6 +262,7 @@
           }
         });
         socket.on("finish", function(msg) {
+          console.log("finish accept");
           $("#gameFieldArea").toggle();
           switch (msg) {
             case "1":
