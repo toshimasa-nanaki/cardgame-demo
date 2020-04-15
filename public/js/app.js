@@ -243,10 +243,10 @@ $(function() {
   });
   socket.on("gameFinish", function(msg) {
     console.log("game finish");
-    $("#retry").toggle();
+    $("#rematch").show();
   });
-  $("#retry").click(function() {
-    socket.emit("retry", { id: 1234, roomid: 1234 });
+  $("#rematch").click(function() {
+    socket.emit("rematch", { id: 1234, roomid: 1234 });
     //今はまだTODO
   });
 });
