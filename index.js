@@ -33,7 +33,7 @@ let UserList = {};
 app.get("/", function(req, res) {
   res.sendFile(__dirname + "/index.html");
 });
-app.use('/css', express.static('/'));
+app.use('/css', express.static('public/css'));
 
 io.on("connection", function(socket) {
   // socket.on('disconnect', function () {
