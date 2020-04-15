@@ -367,7 +367,7 @@ function isSameNumber(cards) {
 
 function isSameType(ncs, scs){
   //まずジョーカーの数を数える
-  const jokerCount = scs.filter(item => ~item.type.indexOf("joker")).length;
+  let jokerCount = scs.filter(item => ~item.type.indexOf("joker")).length;
   // if (
   //   scs.some(item => ~item.type.indexOf("joker")) ||
   //   ncs.some(item => ~item.type.indexOf("joker"))
