@@ -287,6 +287,14 @@ io.on("connection", function(socket) {
     ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
     if (ORDER[currentTurn].card <= 0) {
       //上がり
+      //まずは反則あがりをチェック
+      //・スペ3一枚で上がってない？
+      //・8またはJOKER含まれてない？
+      // ・革命時に3
+      //・非革命時に2
+      if((msg.cards[0].number == 3 && msg.cards[0].type == "spade" && msg.cards.length==1) || 
+         msg.cards[0].number == 8 || ~msg.cards[0].type.indexOf("joker") || 
+         (revolution)
       ORDER[currentTurn].rank = rankTable[rank];
       io.to(ORDER[currentTurn].id).emit("finish", rankTable[rank]);
       io.to(store[msg.id].room).emit("finishNotification", {rank: rank + 1, playerName: UserList[ORDER[currentTurn].id]});
