@@ -73,62 +73,57 @@ io.on("connection", function(socket) {
       gameInit(count, socket.nsp.adapter.rooms[msg.id].sockets);
     }else{
       //TODO 解散
-      
-    }
-    if (socket.nsp.adapter.rooms[msg.id].length >= count) {
-      io.to(socket.id).emit("update", "もう部屋がいっぱいです");
-    } else {
-      UserList[socket.id] = msg.playerName;
-      socket.join(msg.roomid);
+      console.log("人数が足りないので解散する");
     }
   });
   socket.on("update", function(msg) {
     const count =
       typeof store[msg.id].count === "undefined" ? 4 : store[msg.id].count;
     if (socket.nsp.adapter.rooms[msg.id].length == count) {
-      nowCard = "";
-      let perNum = Math.floor(54 / count);
-      let remainder = 54 % count;
-      let pos = 0;
-      ORDER = [];
-      rank = 0;
-      createRankTable(count);
-      elevenbackFlag = false;
-      shibari = false;
-      revolutionFlag = false;
+      gameInit(count, socket.nsp.adapter.rooms[msg.id].sockets);
+//       nowCard = "";
+//       let perNum = Math.floor(54 / count);
+//       let remainder = 54 % count;
+//       let pos = 0;
+//       ORDER = [];
+//       rank = 0;
+//       createRankTable(count);
+//       elevenbackFlag = false;
+//       shibari = false;
+//       revolutionFlag = false;
 
-      Object.keys(socket.nsp.adapter.rooms[msg.id].sockets).forEach(function(
-        key
-      ) {
-        ORDER.push({
-          id: key,
-          card: remainder > 0 ? perNum + 1 : perNum,
-          rank: ""
-        });
-        var cardNum = remainder > 0 ? pos + perNum + 1 : pos + perNum;
-        io.to(key).emit(
-          "gameInit",
-          shuffleCards
-            .slice(pos, remainder > 0 ? pos + perNum + 1 : pos + perNum)
-            .sort(function(a, b) {
-              if (a.number < b.number) return -1;
-              if (a.number > b.number) return 1;
-              return 0;
-            })
-        );
-        //seiseki[key]=
-        if (ORDER[0].id == key) {
-          io.to(key).emit("order", { flag: true, skip: false });
-        } else {
-          io.to(key).emit("order", {
-            flag: false,
-            skip: false,
-            playerName: UserList[ORDER[0].id]
-          });
-        }
-        pos = remainder > 0 ? pos + perNum + 1 : pos + perNum;
-        remainder--;
-      });
+//       Object.keys(socket.nsp.adapter.rooms[msg.id].sockets).forEach(function(
+//         key
+//       ) {
+//         ORDER.push({
+//           id: key,
+//           card: remainder > 0 ? perNum + 1 : perNum,
+//           rank: ""
+//         });
+//         var cardNum = remainder > 0 ? pos + perNum + 1 : pos + perNum;
+//         io.to(key).emit(
+//           "gameInit",
+//           shuffleCards
+//             .slice(pos, remainder > 0 ? pos + perNum + 1 : pos + perNum)
+//             .sort(function(a, b) {
+//               if (a.number < b.number) return -1;
+//               if (a.number > b.number) return 1;
+//               return 0;
+//             })
+//         );
+//         //seiseki[key]=
+//         if (ORDER[0].id == key) {
+//           io.to(key).emit("order", { flag: true, skip: false });
+//         } else {
+//           io.to(key).emit("order", {
+//             flag: false,
+//             skip: false,
+//             playerName: UserList[ORDER[0].id]
+//           });
+//         }
+//         pos = remainder > 0 ? pos + perNum + 1 : pos + perNum;
+//         remainder--;
+//       });
     } else {
       io.to(store[msg.id].room).emit(
         "update",
@@ -502,7 +497,7 @@ function gameInit(count, sockets){
       shibari = false;
       revolutionFlag = false;
 
-      Object.keys(socket.nsp.adapter.rooms[msg.id].sockets).forEach(function(
+      Object.keys(sockets).forEach(function(
         key
       ) {
         ORDER.push({

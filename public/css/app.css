@@ -13,7 +13,7 @@ div#errorMsg {
       div#gameFieldArea {
         display: none;
       }
-      button#retry {
+      button#rematch {
         display: none;
       }
 /*       div#res {

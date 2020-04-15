@@ -93,6 +93,7 @@ $(function() {
     $("#connectStatus").toggle();
     $("#send").prop("disabled", true);
     $("#pass").prop("disabled", true);
+    $("#cardList").empty();
     msg.forEach(element => {
       var check = $(
         '<label id="' +
