@@ -307,10 +307,10 @@ io.on("connection", function(socket) {
       rank++;
       if(rank == ORDER.length - 1){
         //つまり全員終了
-        let biri = ORDER.filter(item => ~item.rank.indexOf(""))[0].id;
+        let biri = ORDER.filter(item => item.rank.length==0)[0].id;
         console.log(biri);
         io.to(biri).emit("finish", rankTable[rank]);
-        io.to(store[msg.id].room).emit("finishNotification", {rank: ORDER[currentTurn].rank, playerName: UserList[ORDER[currentTurn].id]});
+        io.to(store[msg.id].room).emit("finishNotification", {rank: rankTable[rank], playerName: UserList[biri]});
         io.to(store[msg.id].room).emit("gameFinish", "");
       }
     }
