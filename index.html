@@ -232,15 +232,6 @@
         });
         socket.on("result", function(msg) {
           let message = "現在のカード: "
-          // $("#field").text(
-          //   "現在のカード:" +
-          //     DISPLAY_DIC[
-          //       msg.result.cards[0].type + msg.result.cards[0].number
-          //     ] +
-          //     " × " +
-          //     msg.result.cards.length +
-          //     "枚"
-          // );
           for (let i = 0; i < msg.card.cards.length; i++) {
             message = message + "　" + DISPLAY_DIC[msg.result.cards[i].type + msg.result.cards[i].number];
             $("#" + msg.card.cards[i].type + msg.card.cards[i].number).remove();
