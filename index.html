@@ -1,74 +1,106 @@
 <!DOCTYPE html>
 <html lang="ja">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="css/app.css">
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" type="text/css" href="css/app.css" />
     <title>賢帝の大富豪</title>
   </head>
   <body>
-    <div id="roomSelectArea">
-      <div id="roomCreateArea">
-        <button id="createDisplay">ルーム作成F表示</button>
-        <div id="roomInputArea">
-          <input id="playerNameAdmin" autocomplete="on" /><button id="createRoom">
-            ルーム作成
-          </button>
+    <nav class="navbar navbar-dark bg-dark">
+      <a class="navbar-brand" href="#">賢帝の大富豪</a>
+    </nav>
+    <div class="container">
+      <main role="main">
+        <div class="jumbotron">
+          <div class="col-sm-8 mx-auto">
+            <div id="roomSelectArea">
+              <div id="roomCreateArea">
+                <button id="createDisplay">ルーム作成F表示</button>
+                <div id="roomInputArea">
+                  <input id="playerNameAdmin" autocomplete="on" /><button
+                    id="createRoom"
+                  >
+                    ルーム作成
+                  </button>
+                </div>
+              </div>
+              <div id="joinArea">
+                <label for="name">プレイヤー名：</label
+                ><input id="playerName" autocomplete="on" />
+                <button id="joinRoom" type="button" class="btn btn-outline-primary">ルームに参加</button>
+              </div>
+            </div>
+            <ul id="connectStatus"></ul>
+            <div id="gameFieldArea">
+              <div>
+                <span id="order"></span>
+              </div>
+              <div>
+                <span id="field"></span>
+              </div>
+              <div>
+                <span id="revolution"></span>
+                <span id="elevenback"></span>
+                <span id="shibari"></span>
+              </div>
+              <div>
+                <span id="errorMsg"></span>
+              </div>
+              <div>
+                <span id="other"></span>
+              </div>
+              <ul id="gameStatus"></ul>
+              <div id="cardList"></div>
+              <div>
+                <button id="send">カードを出す</button>
+                <button id="pass">パス</button>
+              </div>
+            </div>
+            <div id="res">
+              <span id="seiseki"></span>
+            </div>
+            <ul id="rank"></ul>
+            <button id="retry">再戦</button>
+          </div>
         </div>
-      </div>
-      <div id="joinArea">
-        <label for="name">プレイヤー名：</label><input id="playerName" autocomplete="on" /><button id="joinRoom">
-          ルームに参加
-        </button>
-      </div>
+      </main>
     </div>
-    <ul id="connectStatus"></ul>
-    <div id="gameFieldArea">
-      <div>
-        <span id="order"></span>
-      </div>
-      <div>
-        <span id="field"></span>
-      </div>
-      <div>
-        <span id="revolution"></span>
-        <span id="elevenback"></span>
-        <span id="shibari"></span>
-      </div>
-      <div>
-        <span id="errorMsg"></span>
-      </div>
-      <div>
-        <span id="other"></span>
-      </div>
-      <ul id="gameStatus"></ul>
-      <div id="cardList">
-      </div>
-      <div>
-        <button id="send">カードを出す</button>
-        <button id="pass">パス</button>
-      </div>
-    </div>
-    <div id="res">
-      <span id="seiseki"></span>
-    </div>
-    <ul id="rank"></ul>
-    <button id="retry">再戦</button>
 
     <script src="/socket.io/socket.io.js"></script>
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
     <script>
       $(function() {
         var socket = io();
         var RANKING_DIC = {
-          "daihugou":"大富豪",
-          "hugou":"富豪",
-          "heimin":"平民",
-          "hinmin":"貧民",
-          "daihinmin":"大貧民"
+          daihugou: "大富豪",
+          hugou: "富豪",
+          heimin: "平民",
+          hinmin: "貧民",
+          daihinmin: "大貧民"
         };
         var DISPLAY_DIC = {
           spade3: "♠3",
@@ -134,7 +166,7 @@
             id: 1234,
             roomid: 1234,
             name: "testRoom1",
-            playerName: $('#playerNameAdmin').val()
+            playerName: $("#playerNameAdmin").val()
           });
           $("#roomSelectArea").hide();
           socket.emit("update", { id: 1234, roomid: 1234 });
@@ -143,7 +175,7 @@
           socket.emit("join", {
             id: 1234,
             roomid: 1234,
-            playerName: $('#playerName').val()
+            playerName: $("#playerName").val()
             //roomid: $('#joinRoomId').val()
             // name: "testRoom1"
           });
@@ -157,8 +189,8 @@
         socket.on("gameInit", function(msg) {
           $("#gameFieldArea").toggle();
           $("#connectStatus").toggle();
-          $("#send").prop('disabled', true);
-          $("#pass").prop('disabled', true);
+          $("#send").prop("disabled", true);
+          $("#pass").prop("disabled", true);
           msg.forEach(element => {
             var check = $(
               '<label id="' +
@@ -179,18 +211,18 @@
         socket.on("order", function(msg) {
           console.log("order accept");
           if (msg.flag) {
-            $("#send").prop('disabled', false);
-            $("#pass").prop('disabled', false);
+            $("#send").prop("disabled", false);
+            $("#pass").prop("disabled", false);
             $("#cardList input").prop("disabled", false);
             $("#order").text("あなたの番です");
-            if(msg.skip){
+            if (msg.skip) {
               socket.emit("pass", {
                 id: 1234
               });
             }
           } else {
-            $("#send").prop('disabled', true);
-            $("#pass").prop('disabled', true);
+            $("#send").prop("disabled", true);
+            $("#pass").prop("disabled", true);
             $("#cardList input").prop("disabled", true);
             $("#order").text(msg.playerName + "の番です");
           }
@@ -220,9 +252,14 @@
           $("#errorMsg").text(msg.reason);
         });
         socket.on("result", function(msg) {
-          let message = "現在のカード: "
+          let message = "現在のカード: ";
           for (let i = 0; i < msg.card.cards.length; i++) {
-            message = message + "　" + DISPLAY_DIC[msg.result.cards[i].type + msg.result.cards[i].number];
+            message =
+              message +
+              "　" +
+              DISPLAY_DIC[
+                msg.result.cards[i].type + msg.result.cards[i].number
+              ];
             $("#" + msg.card.cards[i].type + msg.card.cards[i].number).remove();
           }
           $("#field").text(message);
@@ -242,42 +279,40 @@
               break;
             case "winjoker":
               $("#other").text("JOKER討伐したので流しました。");
-              $("#field").text(
-                "現在のカード: なし"
-              );
+              $("#field").text("現在のカード: なし");
               for (let i = 0; i < msg.value.cards.length; i++) {
-                $("#" + msg.value.cards[i].type + msg.value.cards[i].number).remove();
+                $(
+                  "#" + msg.value.cards[i].type + msg.value.cards[i].number
+                ).remove();
               }
               $("#elevenback").text("");
               $("#shibari").text("");
               break;
             case "doblejoker":
               $("#other").text("ダブルJOKERなので流しました。");
-              $("#field").text(
-                "現在のカード: なし"
-              );
+              $("#field").text("現在のカード: なし");
               for (let i = 0; i < msg.value.cards.length; i++) {
-                $("#" + msg.value.cards[i].type + msg.value.cards[i].number).remove();
+                $(
+                  "#" + msg.value.cards[i].type + msg.value.cards[i].number
+                ).remove();
               }
               $("#elevenback").text("");
               $("#shibari").text("");
               break;
             case "cut8":
               $("#other").text("8切ました。");
-              $("#field").text(
-                "現在のカード: なし"
-              );
+              $("#field").text("現在のカード: なし");
               for (let i = 0; i < msg.value.cards.length; i++) {
-                $("#" + msg.value.cards[i].type + msg.value.cards[i].number).remove();
+                $(
+                  "#" + msg.value.cards[i].type + msg.value.cards[i].number
+                ).remove();
               }
               $("#elevenback").text("");
               $("#shibari").text("");
               break;
             case "cutPass":
               $("#other").text("パスが一周したので流しました");
-              $("#field").text(
-                "現在のカード: なし"
-              );
+              $("#field").text("現在のカード: なし");
               $("#elevenback").text("");
               $("#shibari").text("");
               break;
@@ -306,7 +341,9 @@
         });
         socket.on("finishNotification", function(msg) {
           console.log("finish accept notification");
-          $("#rank").append($("<li>").text(RANKING_DIC[msg.rank] + "：" + msg.playerName));
+          $("#rank").append(
+            $("<li>").text(RANKING_DIC[msg.rank] + "：" + msg.playerName)
+          );
         });
         socket.on("gameFinish", function(msg) {
           console.log("game finish");
