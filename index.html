@@ -261,7 +261,18 @@
               $("#shibari").text(msg.value ? "　縛り　" : "");
               break;
             case "winjoker":
-              $("#other").text("JOKER討伐!!");
+              $("#other").text("JOKER討伐したので流しました。");
+              $("#field").text(
+                "現在のカード: なし"
+              );
+              for (let i = 0; i < msg.value.cards.length; i++) {
+                $("#" + msg.value.cards[i].type + msg.value.cards[i].number).remove();
+              }
+              $("#elevenback").text("");
+              $("#shibari").text("");
+              break;
+            case "doblejoker":
+              $("#other").text("ダブルJOKERなので流しました。");
               $("#field").text(
                 "現在のカード: なし"
               );
@@ -272,7 +283,7 @@
               $("#shibari").text("");
               break;
             case "cut8":
-              $("#other").text("8切ました");
+              $("#other").text("8切ました。");
               $("#field").text(
                 "現在のカード: なし"
               );
@@ -283,7 +294,7 @@
               $("#shibari").text("");
               break;
             case "cutPass":
-              $("#other").text("パス一周をしました");
+              $("#other").text("パスが一周したので流しました");
               $("#field").text(
                 "現在のカード: なし"
               );

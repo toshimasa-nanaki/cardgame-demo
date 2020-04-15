@@ -220,13 +220,18 @@ io.on("connection", function(socket) {
       }
     }
 
-    if (msg.cards.length == 4) {
+    if (msg.cards.length == 2 && ~msg.cards[0].type.indexOf("joker") && ~msg.cards[1].type.indexOf("joker")) {
       //JOKER2枚だしは歯が立たないので流す
-      revolutionFlag = !revolutionFlag;
-      io.to(store[msg.id].room).emit("changeStatus", {
-        type: "revolution",
-        value: revolutionFlag
-      });
+      nowCard = "";
+        io.to(store[msg.id].room).emit("changeStatus", {
+          type: "doblejoker",
+          value: msg
+        });
+        pass = 0;
+        elevenbackFlag = false;
+        shibari = false;
+        ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
+        return;
     }
     if (msg.cards.length == 4) {
       //革命
