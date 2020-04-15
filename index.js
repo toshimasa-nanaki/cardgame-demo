@@ -338,6 +338,10 @@ function isShibari(ncs, scs) {
   var flag = false;
   for (let i = 0; i < ncs.length; i++) {
     flag = scs.some(item => item.type === ncs[i].type);
+    if(!flag){
+      //一回でも一致しなければfalse
+      return false;
+    }
   }
   return flag;
 }
@@ -363,15 +367,26 @@ function isSameNumber(cards) {
 
 function isSameType(ncs, scs){
   //まずジョーカーの数を数える
-  if (
-    scs.some(item => ~item.type.indexOf("joker")) ||
-    ncs.some(item => ~item.type.indexOf("joker"))
-  ) {
-    return true;
-  }
+  const jokerCount = scs.filter(item => ~item.type.indexOf("joker")).length;
+  // if (
+  //   scs.some(item => ~item.type.indexOf("joker")) ||
+  //   ncs.some(item => ~item.type.indexOf("joker"))
+  // ) {
+  //   return true;
+  // }
   var flag = false;
   for (let i = 0; i < ncs.length; i++) {
     flag = scs.some(item => item.type === ncs[i].type);
+    if(!flag){
+      if(jokerCount >= 0){
+        //Joker置き換え
+        jokerCount--;
+        continue;        
+      }else{
+        //一回でも一致しなければfalse
+        return false;
+      }
+    }
   }
   return flag;
 }
