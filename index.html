@@ -16,6 +16,9 @@
       div#gameFieldArea {
         display: none;
       }
+      button#retry {
+        display: none;
+      }
 /*       div#res {
         display: none;
       } */
@@ -82,6 +85,7 @@
       <span id="seiseki"></span>
     </div>
     <ul id="rank"></ul>
+    <button id="retry">再戦</button>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
@@ -319,6 +323,13 @@
         socket.on("finishNotification", function(msg) {
           console.log("finish accept notification");
           $("#rank").append($("<li>").text(msg.rank + "位：" + msg.playerName));
+        });
+        socket.on("gameFinish", function(msg) {
+          console.log("game finish");
+          $("#retry").toggle();
+        });
+        $("#retry").click(function() {
+          //今はまだTODO
         });
       });
     </script>

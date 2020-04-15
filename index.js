@@ -291,7 +291,13 @@ io.on("connection", function(socket) {
       io.to(ORDER[currentTurn].id).emit("finish", rankTable[rank]);
       io.to(store[msg.id].room).emit("finishNotification", {rank: rank + 1, playerName: UserList[ORDER[currentTurn].id]});
       rank++;
-      if(rank == count)
+      if(rank == ORDER.length - 1){
+        //つまり全員終了
+        let biri = ORDER.filter(item => ~item.type.indexOf("joker"))[0].id;
+        io.to(biri).emit("finish", rankTable[rank]);
+        io.to(store[msg.id].room).emit("finishNotification", {rank: rank + 1, playerName: UserList[ORDER[currentTurn].id]});
+        io.to(store[msg.id].room).emit("gameFinish", "");
+      }
     }
 
     let nextTurn = currentTurn != ORDER.length - 1 ? currentTurn + 1 : 0;
