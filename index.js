@@ -160,6 +160,16 @@ io.on("connection", function(socket) {
         return true;
       }
     });
+    //数字はすべて同じだよね？
+      if (!isSameNumber(msg.cards)) {
+        io.to(socket.id).emit("validateError", {
+          card: msg,
+          error: 1,
+          reason: "数字は全部同じにしてね"
+        });
+        return;
+      }
+    
     if (nowCard != "") {
       if (nowCard.cards.length != msg.cards.length) {
         //枚数が違うのはあり得ない
@@ -167,15 +177,6 @@ io.on("connection", function(socket) {
           card: msg,
           error: 1,
           reason: "枚数が違うよね"
-        });
-        return;
-      }
-      //数字はすべて同じだよね？
-      if (!isSameNumber(msg.cards)) {
-        io.to(socket.id).emit("validateError", {
-          card: msg,
-          error: 1,
-          reason: "数字は全部同じにしてね"
         });
         return;
       }
