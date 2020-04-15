@@ -29,11 +29,11 @@
                   <div class="nav nav-tabs" id="nav-tab" role="tablist">
                     <a
                       class="nav-item nav-link active"
-                      id="nav-home-tab"
+                      id="nav-joinroom-tab"
                       data-toggle="tab"
-                      href="#nav-home"
+                      href="#nav-joinroom"
                       role="tab"
-                      aria-controls="nav-home"
+                      aria-controls="nav-joinroom"
                       aria-selected="true"
                       >部屋に入る</a
                     >
@@ -56,17 +56,23 @@
                     role="tabpanel"
                     aria-labelledby="nav-home-tab"
                   >
-                    <div id="joinArea">
-                <label for="name">プレイヤー名：</label
-                ><input id="playerName" autocomplete="on" />
-                <button
-                  id="joinRoom"
-                  type="button"
-                  class="btn btn-outline-primary"
-                >
-                  ルームに参加
-                </button>
-              </div>
+                    <div class="form-group">
+                      <label for="playerName">プレイヤー名</label>
+                      <input
+                        type="email"
+                        class="form-control"
+                        id="playerName"
+                        aria-describedby="emailHelp"
+                        placeholder="プレイヤー名を入力してください"
+                      />
+                    </div>
+                    <button
+                      id="joinRoom"
+                      type="button"
+                      class="btn btn-outline-primary"
+                    >
+                      ルームに参加
+                    </button>
                   </div>
                   <div
                     class="tab-pane fade"
@@ -75,17 +81,15 @@
                     aria-labelledby="nav-profile-tab"
                   >
                     <div id="roomInputArea">
-                  <input id="playerNameAdmin" autocomplete="on" /><button
-                    id="createRoom"
-                  >
-                    ルーム作成
-                  </button>
-                </div>
+                      <input id="playerNameAdmin" autocomplete="on" /><button
+                        id="createRoom"
+                      >
+                        ルーム作成
+                      </button>
+                    </div>
                   </div>
                 </div>
-                
               </div>
-              
             </div>
             <ul id="connectStatus"></ul>
             <div id="gameFieldArea">
