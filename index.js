@@ -378,7 +378,7 @@ function isSameType(ncs, scs){
   for (let i = 0; i < ncs.length; i++) {
     flag = scs.some(item => item.type === ncs[i].type);
     if(!flag){
-      if(jokerCount >= 0){
+      if(jokerCount > 0){
         //Joker置き換え
         jokerCount--;
         continue;        
