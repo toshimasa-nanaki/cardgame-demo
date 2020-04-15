@@ -8,6 +8,7 @@ const TRUMPDATA = {
   joker: 2
 };
 
+var express = require('express');
 var app = require("express")();
 var http = require("http").Server(app);
 var io = require("socket.io")(http);
@@ -32,8 +33,7 @@ let UserList = {};
 app.get("/", function(req, res) {
   res.sendFile(__dirname + "/index.html");
 });
-app.use('/css', app.express.static('css'));
-app.use('/img', app.express.static('img'));
+app.use('/css', express.static('public'));
 
 io.on("connection", function(socket) {
   // socket.on('disconnect', function () {
