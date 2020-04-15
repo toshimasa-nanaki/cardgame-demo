@@ -81,6 +81,7 @@
     <div id="res">
       <span id="seiseki"></span>
     </div>
+    <ul id="rank"></ul>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
@@ -314,6 +315,10 @@
               $("#seiseki").text("大貧民です！！！");
               break;
           }
+        });
+        socket.on("finishNotification", function(msg) {
+          console.log("finish accept notification");
+          $("#rank").append($("<li>").text(msg.rank + "位：" + msg.playerName));
         });
       });
     </script>

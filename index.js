@@ -289,7 +289,9 @@ io.on("connection", function(socket) {
       //上がり
       ORDER[currentTurn].rank = rankTable[rank];
       io.to(ORDER[currentTurn].id).emit("finish", rankTable[rank]);
+      io.to(store[msg.id].room).emit("finishNotification", {rank: rank + 1, playerName: UserList[ORDER[currentTurn].id]});
       rank++;
+      if(rank == count)
     }
 
     let nextTurn = currentTurn != ORDER.length - 1 ? currentTurn + 1 : 0;
