@@ -221,6 +221,14 @@ io.on("connection", function(socket) {
     }
 
     if (msg.cards.length == 4) {
+      //JOKER2枚だしは歯が立たないので流す
+      revolutionFlag = !revolutionFlag;
+      io.to(store[msg.id].room).emit("changeStatus", {
+        type: "revolution",
+        value: revolutionFlag
+      });
+    }
+    if (msg.cards.length == 4) {
       //革命
       revolutionFlag = !revolutionFlag;
       io.to(store[msg.id].room).emit("changeStatus", {
@@ -380,11 +388,18 @@ function isSameType(ncs, scs){
     if(!flag){
       if(jokerCount > 0){
         //Joker置き換え
+        flag = true;
         jokerCount--;
         continue;        
       }else{
-        //一回でも一致しなければfalse
-        return false;
+        if(~ncs[i].type.indexOf("joker")){
+          //相手がjokerだった場合は好きなマークで置き換え可能
+          flag = true;
+          continue;
+        }else{
+          //一回でも一致しなければfalse
+          return false;
+        }
       }
     }
   }
