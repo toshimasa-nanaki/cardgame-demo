@@ -32,6 +32,8 @@ let UserList = {};
 app.get("/", function(req, res) {
   res.sendFile(__dirname + "/index.html");
 });
+app.use('/css', app.express.static('css'));
+app.use('/img', app.express.static('img'));
 
 io.on("connection", function(socket) {
   // socket.on('disconnect', function () {
