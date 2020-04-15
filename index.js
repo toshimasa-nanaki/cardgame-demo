@@ -34,6 +34,7 @@ app.get("/", function(req, res) {
   res.sendFile(__dirname + "/index.html");
 });
 app.use('/css', express.static('public/css'));
+app.use('/js', express.static('public/js'));
 
 io.on("connection", function(socket) {
   // socket.on('disconnect', function () {
