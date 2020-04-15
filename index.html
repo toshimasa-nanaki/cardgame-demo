@@ -332,6 +332,7 @@
           });
         });
         socket.on("validateError", function(msg) {
+          $("#errorMsg").show();
           $("#errorMsg").text(msg.reason);
         });
         socket.on("result", function(msg) {
@@ -347,6 +348,7 @@
           }
           $("#field").text(message);
           $("#other").text("");
+          $("#errorMsg").hide();
           $("#errorMsg").text("");
         });
         socket.on("changeStatus", function(msg) {
