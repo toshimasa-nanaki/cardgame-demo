@@ -294,16 +294,19 @@ io.on("connection", function(socket) {
       //・非革命時に2
       if((msg.cards[0].number == 3 && msg.cards[0].type == "spade" && msg.cards.length==1) || 
          msg.cards[0].number == 8 || ~msg.cards[0].type.indexOf("joker") || 
-         (revolution)
-      ORDER[currentTurn].rank = rankTable[rank];
+         (revolutionFlag && msg.cards[0].number == 3) || (!revolutionFlag && msg.cards[0].number == 2)){
+        ORDER[currentTurn].rank = rankTable[ORDER.length - 1];
+      }else{
+        ORDER[currentTurn].rank = rankTable[rank];
+      }
       io.to(ORDER[currentTurn].id).emit("finish", rankTable[rank]);
-      io.to(store[msg.id].room).emit("finishNotification", {rank: rank + 1, playerName: UserList[ORDER[currentTurn].id]});
+      io.to(store[msg.id].room).emit("finishNotification", {rank: ORDER[currentTurn].rank, playerName: UserList[ORDER[currentTurn].id]});
       rank++;
       if(rank == ORDER.length - 1){
         //つまり全員終了
         let biri = ORDER.filter(item => ~item.type.indexOf("joker"))[0].id;
         io.to(biri).emit("finish", rankTable[rank]);
-        io.to(store[msg.id].room).emit("finishNotification", {rank: rank + 1, playerName: UserList[ORDER[currentTurn].id]});
+        io.to(store[msg.id].room).emit("finishNotification", {rank: ORDER[currentTurn].rank, playerName: UserList[ORDER[currentTurn].id]});
         io.to(store[msg.id].room).emit("gameFinish", "");
       }
     }

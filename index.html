@@ -92,6 +92,13 @@
     <script>
       $(function() {
         var socket = io();
+        var RANKING_DIC = {
+          "daihugou":"大富豪",
+          "hugou":"富豪",
+          "heimin":"平民",
+          "hinmin":"貧民",
+          "daihinmin":"大貧民"
+        };
         var DISPLAY_DIC = {
           spade3: "♠3",
           spade4: "♠4",
@@ -322,7 +329,7 @@
         });
         socket.on("finishNotification", function(msg) {
           console.log("finish accept notification");
-          $("#rank").append($("<li>").text(msg.rank + "位：" + msg.playerName));
+          $("#rank").append($("<li>").text(RANKING_DIC[msg.rank] + "：" + msg.playerName));
         });
         socket.on("gameFinish", function(msg) {
           console.log("game finish");
