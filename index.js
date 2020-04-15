@@ -37,10 +37,11 @@ app.use('/css', express.static('public/css'));
 app.use('/js', express.static('public/js'));
 
 io.on("connection", function(socket) {
-  // socket.on('disconnect', function () {
-  //   //TODO ゲームがすでに始まっている場合は解散
-  //     console.log(socket);
-  // });
+  socket.on('disconnect', function () {
+    //TODO ゲームがすでに始まっている場合は解散
+    //let roomList = socket.sockets.manager.roomClients[socket.id];
+      console.log(socket.sockets);
+  });
   socket.on("createRoom", function(msg) {
     const usrobj = {
       room: msg.roomid,
