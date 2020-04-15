@@ -25,20 +25,67 @@
           <div class="col-sm-8 mx-auto">
             <div id="roomSelectArea">
               <div id="roomCreateArea">
-                <button id="createDisplay">ルーム作成F表示</button>
-                <div id="roomInputArea">
+                <nav>
+                  <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <a
+                      class="nav-item nav-link active"
+                      id="nav-home-tab"
+                      data-toggle="tab"
+                      href="#nav-home"
+                      role="tab"
+                      aria-controls="nav-home"
+                      aria-selected="true"
+                      >部屋に入る</a
+                    >
+                    <a
+                      class="nav-item nav-link"
+                      id="nav-profile-tab"
+                      data-toggle="tab"
+                      href="#nav-profile"
+                      role="tab"
+                      aria-controls="nav-profile"
+                      aria-selected="false"
+                      >部屋を作る</a
+                    >
+                  </div>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">
+                  <div
+                    class="tab-pane fade show active"
+                    id="nav-home"
+                    role="tabpanel"
+                    aria-labelledby="nav-home-tab"
+                  >
+                    <div id="joinArea">
+                <label for="name">プレイヤー名：</label
+                ><input id="playerName" autocomplete="on" />
+                <button
+                  id="joinRoom"
+                  type="button"
+                  class="btn btn-outline-primary"
+                >
+                  ルームに参加
+                </button>
+              </div>
+                  </div>
+                  <div
+                    class="tab-pane fade"
+                    id="nav-profile"
+                    role="tabpanel"
+                    aria-labelledby="nav-profile-tab"
+                  >
+                    <div id="roomInputArea">
                   <input id="playerNameAdmin" autocomplete="on" /><button
                     id="createRoom"
                   >
                     ルーム作成
                   </button>
                 </div>
+                  </div>
+                </div>
+                
               </div>
-              <div id="joinArea">
-                <label for="name">プレイヤー名：</label
-                ><input id="playerName" autocomplete="on" />
-                <button id="joinRoom" type="button" class="btn btn-outline-primary">ルームに参加</button>
-              </div>
+              
             </div>
             <ul id="connectStatus"></ul>
             <div id="gameFieldArea">
@@ -62,8 +109,12 @@
               <ul id="gameStatus"></ul>
               <div id="cardList"></div>
               <div>
-                <button id="send">カードを出す</button>
-                <button id="pass">パス</button>
+                <button id="send" type="button" class="btn btn-outline-primary">
+                  カードを出す
+                </button>
+                <button id="pass" type="button" class="btn btn-outline-warning">
+                  パス
+                </button>
               </div>
             </div>
             <div id="res">
