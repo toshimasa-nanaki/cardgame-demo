@@ -71,6 +71,9 @@ io.on("connection", function(socket) {
       ORDER = [];
       rank = 0;
       createRankTable(count);
+      elevenbackFlag = false;
+      shibari = false;
+      revolutionFlag = false;
 
       Object.keys(socket.nsp.adapter.rooms[msg.id].sockets).forEach(function(
         key
@@ -305,6 +308,7 @@ io.on("connection", function(socket) {
       if(rank == ORDER.length - 1){
         //つまり全員終了
         let biri = ORDER.filter(item => ~item.rank.indexOf(""))[0].id;
+        console.log(biri);
         io.to(biri).emit("finish", rankTable[rank]);
         io.to(store[msg.id].room).emit("finishNotification", {rank: ORDER[currentTurn].rank, playerName: UserList[ORDER[currentTurn].id]});
         io.to(store[msg.id].room).emit("gameFinish", "");
