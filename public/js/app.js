@@ -125,10 +125,21 @@ $(function() {
       $("#gameCommentaryArea").append( joinMembers[key] + "さんが部屋に入りました<br />" );
       $("#gameCommentaryArea").scrollTop( $("#gameCommentaryArea")[0].scrollHeight );
     });
-    //createSelectRoomRadioButton(roomList);
+  });
+  socket.on("otherMemberJoinedRoom", function(joinMemberName) {
+    //他のメンバーが部屋に入ったとき
+    console.log("otherMemberJoinedRoom");
+    $("#gameCommentaryArea").append( joinMemberName + "さんが部屋に入りました<br />" );
+    $("#gameCommentaryArea").scrollTop( $("#gameCommentaryArea")[0].scrollHeight );
   });
   socket.on("update", function(msg) {
     $("#gameCommentaryArea").append( msg + "<br />" );
+    $("#gameCommentaryArea").scrollTop( $("#gameCommentaryArea")[0].scrollHeight );
+    //$("#connectStatus").append($("<li>").text(msg));
+    //window.scrollTo(0, document.body.scrollHeight);
+  });
+  socket.on("gameReady", function(msg) {
+    $("#gameCommentaryArea").append( "ゲームを開始します" + "<br />" );
     $("#gameCommentaryArea").scrollTop( $("#gameCommentaryArea")[0].scrollHeight );
     //$("#connectStatus").append($("<li>").text(msg));
     //window.scrollTo(0, document.body.scrollHeight);

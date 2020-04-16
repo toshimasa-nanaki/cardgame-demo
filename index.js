@@ -71,7 +71,7 @@ io.on("connection", function(socket) {
       io.to(socket.id).emit("joinedRoom", UserList);
       Object.keys(UserList).forEach(function(key){
         if(key != socket.id){
-          io.to(key).emit("joinedRoomNotification", UserList);
+          io.to(key).emit("otherMemberJoinedRoom", joinInfo.playerName);
         }
       });
     }
