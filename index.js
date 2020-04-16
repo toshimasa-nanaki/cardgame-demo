@@ -17,7 +17,6 @@ var io = require("socket.io")(http);
 var port = process.env.PORT || 3000;
 var store = {};
 const ORIGINALCARDDATA = trump_init(TRUMPDATA);
-const shuffleCards = sort_at_random(ORIGINALCARDDATA);
 let gameStart = false;
 let nowCard = "";
 let ORDER = [];
@@ -473,6 +472,7 @@ function gameInit(count, sockets){
       elevenbackFlag = false;
       shibari = false;
       revolutionFlag = false;
+    let shuffleCards = sort_at_random(ORIGINALCARDDATA);
 
       Object.keys(sockets).forEach(function(
         key
