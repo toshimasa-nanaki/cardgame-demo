@@ -60,13 +60,19 @@ io.on("connection", function(socket) {
   socket.on("join", function(joinInfo) {
     // const count =
     //   typeof store[joinInfo.roomId].capacity === "undefined" ? 4 : store[joinInfo.id].capacity;
-    console.log("部屋入り情報:" + joinInfo);
+    console.log("部屋入り情報:" + JSON.stringify(joinInfo));
+    const count = store[joinInfo.roomId].capacity;
     //if (socket.nsp.adapter.rooms[msg.id].length >= count) {
-    if (Object.keys(UserList).length >= store[joinInfo.roomId].capacity) {
+    if (Object.keys(UserList).length >= count) {
       io.to(socket.id).emit("update", "もう部屋がいっぱいです");
     } else {
       UserList[socket.id] = joinInfo.playerName;
       socket.join(joinInfo.roomId);
+      io.to(joinInfo.roomId).emit("joinedRoom", UserList);
+    }
+    if(Object.keys(UserList).length == count){
+      //人数がそろった場合は、メンバー全員に通知する
+      io.to(joinInfo.roomId).emit("gameReady", UserList);
     }
   });
   //再戦
@@ -84,9 +90,10 @@ io.on("connection", function(socket) {
     }
   });
   socket.on("update", function(msg) {
-    const count =
-      typeof store[msg.id].capacity === "undefined" ? 4 : store[msg.id].capacity;
+    // const count =
+    //   typeof store[msg.id].capacity === "undefined" ? 4 : store[msg.id].capacity;
     //if (socket.nsp.adapter.rooms[msg.id].length == count) {
+    const count = store[msg.id].capacity;
     if (Object.keys(UserList).length == count) {
       gameInit(count, socket.nsp.adapter.rooms[msg.id].sockets);
     } else {

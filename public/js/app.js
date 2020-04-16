@@ -118,6 +118,11 @@ $(function() {
     $("#gameArea").show();
     socket.emit("update", { id: roomId, roomid: roomId });
   });
+  socket.on("joinedRoom", function(join) {
+    //部屋ジョイン後
+    console.log("JoinedRoom");
+    //createSelectRoomRadioButton(roomList);
+  });
   socket.on("update", function(msg) {
     $("#gameCommentaryArea").append( msg + "<br />" );
     $("#gameCommentaryArea").scrollTop( $("#gameCommentaryArea")[0].scrollHeight );
