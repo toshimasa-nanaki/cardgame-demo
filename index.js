@@ -37,10 +37,14 @@ app.use('/css', express.static('public/css'));
 app.use('/js', express.static('public/js'));
 
 io.on("connection", function(socket) {
+  //最初の接続時に現在のルーム一覧を送る
+  console.log(JSON.stringify(store));
+  io.to(socket.id).emit("showRoomList", store);
+  
   socket.on('disconnect', function () {
     //TODO ゲームがすでに始まっている場合は解散
     //let roomList = socket.sockets.manager.roomClients[socket.id];
-      console.log(socket.sockets);
+      //console.log(socket.sockets);
   });
   socket.on("requestRoomCreate", function(roomInfo) {
     const roomObj = {
@@ -51,8 +55,8 @@ io.on("connection", function(socket) {
     store[roomInfo.id] = roomObj;
     console.log("Store情報:  " + JSON.stringify(store));
     UserList[socket.id] = roomInfo.playerName;
-    console.log("createRoom:  " + roomInfo.roomid);
-    io.emit()
+    console.log("createRoom:  " + roomInfo.id);
+    io.emit("createdRoom", roomObj);
     //socket.join(roomInfo.roomid);
   });
   socket.on("join", function(msg) {

@@ -74,6 +74,11 @@ $(function() {
     //$("#roomSelectArea").hide();
     //socket.emit("update", { id: 1234, roomid: 1234 });
   });
+  socket.on("createdRoom", function(msg) {
+    console.log("CreatedRoom");
+    // $("#connectStatus").append($("<li>").text(msg));
+    // window.scrollTo(0, document.body.scrollHeight);
+  });
   $("#joinRoom").click(function() {
     socket.emit("join", {
       id: 1234,
