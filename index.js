@@ -171,6 +171,7 @@ io.on("connection", function(socket) {
       }
     });
     //数字はすべて同じだよね？
+    //TODO 階段対応ができない
       if (!isSameNumber(msg.cards)) {
         io.to(socket.id).emit("validateError", {
           card: msg,
