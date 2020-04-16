@@ -47,15 +47,16 @@ io.on("connection", function(socket) {
       //console.log(socket.sockets);
   });
   socket.on("requestRoomCreate", function(roomInfo) {
+    const createRoomId = uniqueId();
     const roomObj = {
-      roomId: roomInfo.id,
+      roomId: createRoomId,
       roomDispName: roomInfo.dispName,
       capacity: roomInfo.capacity
     };
-    store[roomInfo.id] = roomObj;
+    store[createRoomId] = roomObj;
     console.log("Store情報:  " + JSON.stringify(store));
     UserList[socket.id] = roomInfo.playerName;
-    console.log("createRoom:  " + roomInfo.id);
+    console.log("createRoom:  " + roomInfo.roomDispName);
     io.emit("createdRoom", roomObj);
     //socket.join(roomInfo.roomid);
   });
@@ -312,6 +313,12 @@ io.on("connection", function(socket) {
     });
   });
 });
+
+
+let uniqueId = function(digits) {
+    var strong = typeof digits !== 'undefined' ? digits : 1000;
+    return Date.now().toString(16) + Math.floor(strong * Math.random()).toString(16);
+};
 
 function trump_init(trumpData) {
   var cards = [];
