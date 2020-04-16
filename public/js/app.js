@@ -63,15 +63,16 @@ $(function() {
     joker199: "JOKER",
     joker299: "JOKER"
   };
-  $("#createRoom").click(function() {
-    socket.emit("createRoom", {
+  $("#requestRoomCreate").click(function() {
+    //部屋作成時
+    socket.emit("requestRoomCreate", {
       id: 1234,
       roomid: 1234,
       name: "testRoom1",
       playerName: $("#playerNameAdmin").val()
     });
-    $("#roomSelectArea").hide();
-    socket.emit("update", { id: 1234, roomid: 1234 });
+    //$("#roomSelectArea").hide();
+    //socket.emit("update", { id: 1234, roomid: 1234 });
   });
   $("#joinRoom").click(function() {
     socket.emit("join", {

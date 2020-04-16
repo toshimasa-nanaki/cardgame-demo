@@ -42,16 +42,17 @@ io.on("connection", function(socket) {
     //let roomList = socket.sockets.manager.roomClients[socket.id];
       console.log(socket.sockets);
   });
-  socket.on("createRoom", function(msg) {
+  socket.on("requestRoomCreate", function(roomInfo) {
     const usrobj = {
-      room: msg.roomid,
-      name: msg.name,
-      count: msg.count
+      room: roomInfo.roomid,
+      name: roomInfo.name,
+      count: roomInfo.count
     };
-    console.log("createRoom:  " + msg.roomid);
-    store[msg.id] = usrobj;
-    UserList[socket.id] = msg.playerName;
-    socket.join(msg.roomid);
+    store[roomInfo.id] = usrobj;
+    console.log("Store情報:  " + store[roomInfo.id]);
+    UserList[socket.id] = roomInfo.playerName;
+    console.log("createRoom:  " + roomInfo.roomid);
+    socket.join(roomInfo.roomid);
   });
   socket.on("join", function(msg) {
     const count =
