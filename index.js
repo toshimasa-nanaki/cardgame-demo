@@ -78,12 +78,12 @@ io.on("connection", function(socket) {
     } else {
       if (typeof store[joinInfo.roomId]["users"] === "undefined") {
         store[joinInfo.roomId]["users"] = {
-          [socket.id]: { dispName: joinInfo.playerName, card: 0, rank: "" }
+          [socket.id]: { dispName: joinInfo.playerName, card: [], rank: "" }
         };
       } else {
         store[joinInfo.roomId]["users"][socket.id] = {
           dispName: joinInfo.playerName,
-          card: 0,
+          card: [],
           rank: ""
         };
       }
@@ -569,15 +569,23 @@ function gameInit(count, sockets, roomId) {
       rank: ""
     });
     var cardNum = remainder > 0 ? pos + perNum + 1 : pos + perNum;
-    io.to(key).emit(
-      "gameInit",
-      shuffleCards
+    store[roomId]['users'][key].card = shuffleCards
         .slice(pos, remainder > 0 ? pos + perNum + 1 : pos + perNum)
         .sort(function(a, b) {
           if (a.number < b.number) return -1;
           if (a.number > b.number) return 1;
           return 0;
         })
+    io.to(key).emit(
+      "gameInit",
+      store[roomId]['users'][key].card
+      // shuffleCards
+      //   .slice(pos, remainder > 0 ? pos + perNum + 1 : pos + perNum)
+      //   .sort(function(a, b) {
+      //     if (a.number < b.number) return -1;
+      //     if (a.number > b.number) return 1;
+      //     return 0;
+      //   })
     );
     //seiseki[key]=
     if (ORDER[0].id == key) {
