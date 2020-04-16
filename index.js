@@ -42,10 +42,19 @@ io.on("connection", function(socket) {
   
   socket.on('disconnect', function () {
     //TODO ゲームがすでに始まっている場合は解散
-    let belongRoomIds = store.filter(item => {
-      item.users.some(user => user.)
+    console.log(Object.keys(store));
+    const roomIds = Object.keys(store);
+    roomIds.forEach(roomId => {
+      if(~Object.keys(store[roomId].users).indexOf(socket.id)){
+        socket.leave(roomId);
+        console.log(roomId);
+      }
     });
-    socket.leave("ルーム1"); 
+    // let belongRoomIds = Object.keys(store).filter(item => ~Object.keys(item.users).indexOf(socket.id));
+    // belongRoomIds.forEach(roomId => {
+    //   console.log(roomId);
+    // });
+    //socket.leave("ルーム1"); 
     //let roomList = socket.sockets.manager.roomClients[socket.id];
       //console.log(socket.sockets);
   });
