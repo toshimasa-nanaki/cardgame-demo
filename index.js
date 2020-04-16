@@ -88,10 +88,11 @@ io.on("connection", function(socket) {
   socket.on("update", function(msg) {
     const count =
       typeof store[msg.id].capacity === "undefined" ? 4 : store[msg.id].capacity;
-    if (socket.nsp.adapter.rooms[msg.id].length == count) {
+    //if (socket.nsp.adapter.rooms[msg.id].length == count) {
+    if (Object.keys(UserList).length == count) {
       gameInit(count, socket.nsp.adapter.rooms[msg.id].sockets);
     } else {
-      io.to(store[msg.id].room).emit(
+      io.to(store[msg.id].roomId).emit(
         "update",
         "今の部屋の人数:  " + socket.nsp.adapter.rooms[msg.id].length
       );
@@ -107,7 +108,7 @@ io.on("connection", function(socket) {
       pass = 0;
       elevenbackFlag = false;
       shibari = false;
-      io.to(store[msg.id].room).emit("changeStatus", { type: "cutPass" });
+      io.to(store[msg.id].roomId).emit("changeStatus", { type: "cutPass" });
     }
     let currentTurn;
     let currentPlayer = ORDER.filter(function(item, index) {
@@ -182,7 +183,7 @@ io.on("connection", function(socket) {
       ) {
         //JOKER討伐(誰も倒せないから流す)
         nowCard = "";
-        io.to(store[msg.id].room).emit("changeStatus", {
+        io.to(store[msg.id].roomId).emit("changeStatus", {
           type: "winjoker",
           value: msg
         });
@@ -200,7 +201,7 @@ io.on("connection", function(socket) {
       }
       if (!shibari && isShibari(nowCard.cards, msg.cards)) {
         shibari = true;
-      io.to(store[msg.id].room).emit("changeStatus", {
+      io.to(store[msg.id].roomId).emit("changeStatus", {
         type: "shibari",
         value: shibari
       });
@@ -210,7 +211,7 @@ io.on("connection", function(socket) {
     if (msg.cards.length == 2 && ~msg.cards[0].type.indexOf("joker") && ~msg.cards[1].type.indexOf("joker")) {
       //JOKER2枚だしは歯が立たないので流す
       nowCard = "";
-        io.to(store[msg.id].room).emit("changeStatus", {
+        io.to(store[msg.id].roomId).emit("changeStatus", {
           type: "doblejoker",
           value: msg
         });
@@ -223,7 +224,7 @@ io.on("connection", function(socket) {
     if (msg.cards.length == 4) {
       //革命
       revolutionFlag = !revolutionFlag;
-      io.to(store[msg.id].room).emit("changeStatus", {
+      io.to(store[msg.id].roomId).emit("changeStatus", {
         type: "revolution",
         value: revolutionFlag
       });
@@ -231,7 +232,7 @@ io.on("connection", function(socket) {
     if (msg.cards[0].number == 8) {
       //8ぎり
       nowCard = "";
-      io.to(store[msg.id].room).emit("changeStatus", {
+      io.to(store[msg.id].roomId).emit("changeStatus", {
         type: "cut8",
         value: msg
       });
@@ -250,14 +251,14 @@ io.on("connection", function(socket) {
     if (msg.cards[0].number == 11) {
       //11back
       elevenbackFlag = !elevenbackFlag;
-      io.to(store[msg.id].room).emit("changeStatus", {
+      io.to(store[msg.id].roomId).emit("changeStatus", {
         type: "elevenback",
         value: elevenbackFlag
       });
     }
     pass = 0;
     nowCard = msg;
-    io.to(store[msg.id].room).emit("result", {
+    io.to(store[msg.id].roomId).emit("result", {
       card: msg,
       error: 0,
       reason: "",
@@ -287,15 +288,15 @@ io.on("connection", function(socket) {
         ORDER[currentTurn].rank = rankTable[rank];
       }
       io.to(ORDER[currentTurn].id).emit("finish", rankTable[rank]);
-      io.to(store[msg.id].room).emit("finishNotification", {rank: ORDER[currentTurn].rank, playerName: UserList[ORDER[currentTurn].id]});
+      io.to(store[msg.id].roomId).emit("finishNotification", {rank: ORDER[currentTurn].rank, playerName: UserList[ORDER[currentTurn].id]});
       rank++;
       if(rank == ORDER.length - 1){
         //つまり全員終了
         let biri = ORDER.filter(item => item.rank.length==0)[0].id;
         console.log(biri);
         io.to(biri).emit("finish", rankTable[rank]);
-        io.to(store[msg.id].room).emit("finishNotification", {rank: rankTable[rank], playerName: UserList[biri]});
-        io.to(store[msg.id].room).emit("gameFinish", "");
+        io.to(store[msg.id].roomId).emit("finishNotification", {rank: rankTable[rank], playerName: UserList[biri]});
+        io.to(store[msg.id].roomId).emit("gameFinish", "");
       }
     }
 
