@@ -78,27 +78,65 @@ $(function() {
     //部屋一覧に追加する。
     console.log("CreatedRoom");
     const div = $('<div class="form-check"></div>');
-    div.append($('<input type="radio" />').attr({
-          class: "form-check-input",
-          name: "roomRadios",
-          value: "option1",
-          id: "room_"+roomList.roomId
-          //value: element.type + "_" + element.number
-        }));
-    div.append($('<label class="form-check-label" for="' + "room_" + roomList.roomId + '">' + roomList.roomDispName + "</label>"));
+    div.append(
+      $('<input type="radio" />').attr({
+        class: "form-check-input",
+        name: "roomRadios",
+        value: "option1",
+        id: "room_" + roomList.roomId
+        //value: element.type + "_" + element.number
+      })
+    );
+    div.append(
+      $(
+        '<label class="form-check-label" for="' +
+          "room_" +
+          roomList.roomId +
+          '">' +
+          roomList.roomDispName +
+          "</label>"
+      )
+    );
     $("#selectRoomList").append(div);
   });
 
   socket.on("showRoomList", function(roomList) {
     console.log("ShowRoom");
-    Object.keys(roomList).for
-    for(let i=0; i < roomList.length; i++){
-      console.log(roomList[i]);
-    }
-    
+    // Object.keys(roomList).forEach(function(key){
+    //   console.log(roomList[key]);
+    // });
+    createSelectRoomRadioButton(roomList);
+
     // $("#connectStatus").append($("<li>").text(msg));
     // window.scrollTo(0, document.body.scrollHeight);
   });
+
+  function createSelectRoomRadioButton(roomList) {
+    Object.keys(roomList).forEach(function(key) {
+      console.log(roomList[key]);
+      const div = $('<div class="form-check"></div>');
+      div.append(
+        $('<input type="radio" />').attr({
+          class: "form-check-input",
+          name: "roomRadios",
+          value: roomList[key].roomId,
+          id: "room_" + roomList[key].roomId
+          //value: element.type + "_" + element.number
+        })
+      );
+      div.append(
+        $(
+          '<label class="form-check-label" for="' +
+            "room_" +
+            roomList[key].roomId +
+            '">' +
+            roomList[key].roomDispName +
+            "</label>"
+        )
+      );
+      $("#selectRoomList").append(div);
+    });
+  }
   $("#joinRoom").click(function() {
     socket.emit("join", {
       id: 1234,
