@@ -8,7 +8,7 @@ const TRUMPDATA = {
   joker: 2
 };
 
-var express = require('express');
+var express = require("express");
 var app = require("express")();
 var http = require("http").Server(app);
 var io = require("socket.io")(http);
@@ -32,22 +32,22 @@ let UserList = {};
 app.get("/", function(req, res) {
   res.sendFile(__dirname + "/index.html");
 });
-app.use('/css', express.static('public/css'));
-app.use('/js', express.static('public/js'));
+app.use("/css", express.static("public/css"));
+app.use("/js", express.static("public/js"));
 
 io.on("connection", function(socket) {
   //最初の接続時に現在のルーム一覧を送る
   console.log(JSON.stringify(store));
   io.to(socket.id).emit("showRoomList", store);
-  
-  socket.on('disconnect', function () {
+
+  socket.on("disconnect", function() {
     //TODO ゲームがすでに始まっている場合は解散
     console.log(Object.keys(store));
     const roomIds = Object.keys(store);
     roomIds.forEach(roomId => {
-      if(~Object.keys(store[roomId].users).indexOf(socket.id)){
+      if (~Object.keys(store[roomId].users).indexOf(socket.id)) {
         console.log(socket.id + "が" + roomId + "から退出");
-        delete store[roomId]['users'][socket.id];
+        delete store[roomId]["users"][socket.id];
         delete UserList[socket.id];
         socket.leave(roomId);
       }
@@ -57,13 +57,14 @@ io.on("connection", function(socket) {
     const createRoomId = uniqueId();
     const roomObj = {
       roomId: createRoomId,
-      roomDispName: roomInfo.dispName == "" ? createdDefaultRoomName() : roomInfo.dispName,
+      roomDispName:
+        roomInfo.dispName == "" ? createdDefaultRoomName() : roomInfo.dispName,
       capacity: roomInfo.capacity == "" ? 4 : roomInfo.capacity
     };
     store[createRoomId] = roomObj;
     //console.log("Store情報:  " + JSON.stringify(store));
     console.log("createRoom:  " + roomInfo.roomDispName);
-    io.emit("createdRoom", {[createRoomId]:roomObj});
+    io.emit("createdRoom", { [createRoomId]: roomObj });
   });
   socket.on("join", function(joinInfo) {
     // const count =
@@ -75,39 +76,48 @@ io.on("connection", function(socket) {
       io.to(socket.id).emit("connectError", "もう部屋がいっぱいです");
       return;
     } else {
-      if (typeof store[joinInfo.roomId]['users'] === "undefined") {
-        store[joinInfo.roomId]['users'] = {[socket.id]:{'dispName': joinInfo.playerName, 'card': 0, 'rank': ''}};
-      }else{
-        store[joinInfo.roomId]['users'][socket.id] = {'dispName': joinInfo.playerName, 'card': 0, 'rank': ''}
+      if (typeof store[joinInfo.roomId]["users"] === "undefined") {
+        store[joinInfo.roomId]["users"] = {
+          [socket.id]: { dispName: joinInfo.playerName, card: 0, rank: "" }
+        };
+      } else {
+        store[joinInfo.roomId]["users"][socket.id] = {
+          dispName: joinInfo.playerName,
+          card: 0,
+          rank: ""
+        };
       }
-      console.log("User追加後のStore情報:  " + JSON.stringify(store[joinInfo.roomId]['users']));
+      console.log(
+        "User追加後のStore情報:  " +
+          JSON.stringify(store[joinInfo.roomId]["users"])
+      );
       //store[joinInfo.roomId]['users'] = {'dispName': joinInfo.playerName, 'card': 0, 'rank': ''}
       //console.log("Store情報:  " + JSON.stringify(store));
       UserList[socket.id] = joinInfo.playerName;
       socket.join(joinInfo.roomId);
       io.to(socket.id).emit("joinedRoom", UserList);
-      Object.keys(UserList).forEach(function(key){
-        if(key != socket.id){
+      Object.keys(UserList).forEach(function(key) {
+        if (key != socket.id) {
           io.to(key).emit("otherMemberJoinedRoom", joinInfo.playerName);
         }
       });
     }
-    if(Object.keys(UserList).length == count){
+    if (Object.keys(UserList).length == count) {
       //人数がそろった場合は、メンバー全員に通知する
-      gameInit(count, UserList);
+      gameInit(count, UserList, joinInfo.roomId);
       io.to(joinInfo.roomId).emit("gameReady", UserList);
     }
   });
   //再戦
   socket.on("rematch", function(msg) {
     const count = store[msg.id].capacity;
-      // typeof store[msg.id].capacity === "undefined" ? 4 : store[msg.id].capacity;
-    
+    // typeof store[msg.id].capacity === "undefined" ? 4 : store[msg.id].capacity;
+
     //if (socket.nsp.adapter.rooms[msg.id].length == count) {
     if (Object.keys(UserList).length == count) {
       //人数がそろっているのか確認
-      gameInit(count, socket.nsp.adapter.rooms[msg.id].sockets);
-    }else{
+      gameInit(count, socket.nsp.adapter.rooms[msg.id].sockets, msg.id);
+    } else {
       //TODO 解散
       console.log("人数が足りないので解散する");
     }
@@ -129,7 +139,9 @@ io.on("connection", function(socket) {
   socket.on("pass", function(msg) {
     pass++;
     const count =
-      typeof store[msg.id].capacity === "undefined" ? 4 : store[msg.id].capacity;
+      typeof store[msg.id].capacity === "undefined"
+        ? 4
+        : store[msg.id].capacity;
     if (pass >= count - 1) {
       //パスで一周した場合流す
       nowCard = "";
@@ -172,15 +184,15 @@ io.on("connection", function(socket) {
     });
     //数字はすべて同じだよね？
     //TODO 階段対応ができない
-      if (!isSameNumber(msg.cards)) {
-        io.to(socket.id).emit("validateError", {
-          card: msg,
-          error: 1,
-          reason: "数字は全部同じにしてね"
-        });
-        return;
-      }
-    
+    if (!isSameNumber(msg.cards)) {
+      io.to(socket.id).emit("validateError", {
+        card: msg,
+        error: 1,
+        reason: "数字は全部同じにしてね"
+      });
+      return;
+    }
+
     if (nowCard != "") {
       if (nowCard.cards.length != msg.cards.length) {
         //枚数が違うのはあり得ない
@@ -192,8 +204,12 @@ io.on("connection", function(socket) {
         return;
       }
       //縛り
-      if(shibari && !isSameType(nowCard.cards, msg.cards)){
-        io.to(socket.id).emit('validateError', {card: msg, error:1, reason:"縛りです"});
+      if (shibari && !isSameType(nowCard.cards, msg.cards)) {
+        io.to(socket.id).emit("validateError", {
+          card: msg,
+          error: 1,
+          reason: "縛りです"
+        });
         return;
       }
       //数字を比べる
@@ -230,25 +246,29 @@ io.on("connection", function(socket) {
       }
       if (!shibari && isShibari(nowCard.cards, msg.cards)) {
         shibari = true;
-      io.to(store[msg.id].roomId).emit("changeStatus", {
-        type: "shibari",
-        value: shibari
-      });
+        io.to(store[msg.id].roomId).emit("changeStatus", {
+          type: "shibari",
+          value: shibari
+        });
       }
     }
 
-    if (msg.cards.length == 2 && ~msg.cards[0].type.indexOf("joker") && ~msg.cards[1].type.indexOf("joker")) {
+    if (
+      msg.cards.length == 2 &&
+      ~msg.cards[0].type.indexOf("joker") &&
+      ~msg.cards[1].type.indexOf("joker")
+    ) {
       //JOKER2枚だしは歯が立たないので流す
       nowCard = "";
-        io.to(store[msg.id].roomId).emit("changeStatus", {
-          type: "doblejoker",
-          value: msg
-        });
-        pass = 0;
-        elevenbackFlag = false;
-        shibari = false;
-        ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
-        return;
+      io.to(store[msg.id].roomId).emit("changeStatus", {
+        type: "doblejoker",
+        value: msg
+      });
+      pass = 0;
+      elevenbackFlag = false;
+      shibari = false;
+      ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
+      return;
     }
     if (msg.cards.length == 4) {
       //革命
@@ -309,22 +329,34 @@ io.on("connection", function(socket) {
       //・8またはJOKER含まれてない？
       // ・革命時に3
       //・非革命時に2
-      if((msg.cards[0].number == 3 && msg.cards[0].type == "spade" && msg.cards.length==1) || 
-         msg.cards[0].number == 8 || ~msg.cards[0].type.indexOf("joker") || 
-         (revolutionFlag && msg.cards[0].number == 3) || (!revolutionFlag && msg.cards[0].number == 2)){
+      if (
+        (msg.cards[0].number == 3 &&
+          msg.cards[0].type == "spade" &&
+          msg.cards.length == 1) ||
+        msg.cards[0].number == 8 ||
+        ~msg.cards[0].type.indexOf("joker") ||
+        (revolutionFlag && msg.cards[0].number == 3) ||
+        (!revolutionFlag && msg.cards[0].number == 2)
+      ) {
         ORDER[currentTurn].rank = rankTable[ORDER.length - 1];
-      }else{
+      } else {
         ORDER[currentTurn].rank = rankTable[rank];
       }
       io.to(ORDER[currentTurn].id).emit("finish", rankTable[rank]);
-      io.to(store[msg.id].roomId).emit("finishNotification", {rank: ORDER[currentTurn].rank, playerName: UserList[ORDER[currentTurn].id]});
+      io.to(store[msg.id].roomId).emit("finishNotification", {
+        rank: ORDER[currentTurn].rank,
+        playerName: UserList[ORDER[currentTurn].id]
+      });
       rank++;
-      if(rank == ORDER.length - 1){
+      if (rank == ORDER.length - 1) {
         //つまり全員終了
-        let biri = ORDER.filter(item => item.rank.length==0)[0].id;
+        let biri = ORDER.filter(item => item.rank.length == 0)[0].id;
         console.log(biri);
         io.to(biri).emit("finish", rankTable[rank]);
-        io.to(store[msg.id].roomId).emit("finishNotification", {rank: rankTable[rank], playerName: UserList[biri]});
+        io.to(store[msg.id].roomId).emit("finishNotification", {
+          rank: rankTable[rank],
+          playerName: UserList[biri]
+        });
         io.to(store[msg.id].roomId).emit("gameFinish", "");
       }
     }
@@ -346,16 +378,29 @@ io.on("connection", function(socket) {
   });
 });
 
-
 let uniqueId = function(digits) {
-    var strong = typeof digits !== 'undefined' ? digits : 1000;
-    return Date.now().toString(16) + Math.floor(strong * Math.random()).toString(16);
+  var strong = typeof digits !== "undefined" ? digits : 1000;
+  return (
+    Date.now().toString(16) + Math.floor(strong * Math.random()).toString(16)
+  );
 };
 
 let createdDefaultRoomName = function() {
   let now = new Date();
-  return now.getFullYear() + "_" + (now.getMonth() + 1) + "_" + now.getDate() + "_" + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
-}
+  return (
+    now.getFullYear() +
+    "_" +
+    (now.getMonth() + 1) +
+    "_" +
+    now.getDate() +
+    "_" +
+    now.getHours() +
+    ":" +
+    now.getMinutes() +
+    ":" +
+    now.getSeconds()
+  );
+};
 
 function trump_init(trumpData) {
   var cards = [];
@@ -390,9 +435,7 @@ function sort_at_random(arrayData) {
 }
 
 //枚数確認
-function isMatchNumCards(ncs, scs){
-  
-}
+function isMatchNumCards(ncs, scs) {}
 
 function isShibari(ncs, scs) {
   if (
@@ -404,7 +447,7 @@ function isShibari(ncs, scs) {
   var flag = false;
   for (let i = 0; i < ncs.length; i++) {
     flag = scs.some(item => item.type === ncs[i].type);
-    if(!flag){
+    if (!flag) {
       //一回でも一致しなければfalse
       return false;
     }
@@ -431,7 +474,7 @@ function isSameNumber(cards) {
   return true;
 }
 
-function isSameType(ncs, scs){
+function isSameType(ncs, scs) {
   //まずジョーカーの数を数える
   let jokerCount = scs.filter(item => ~item.type.indexOf("joker")).length;
   // if (
@@ -443,18 +486,18 @@ function isSameType(ncs, scs){
   var flag = false;
   for (let i = 0; i < ncs.length; i++) {
     flag = scs.some(item => item.type === ncs[i].type);
-    if(!flag){
-      if(jokerCount > 0){
+    if (!flag) {
+      if (jokerCount > 0) {
         //Joker置き換え
         flag = true;
         jokerCount--;
-        continue;        
-      }else{
-        if(~ncs[i].type.indexOf("joker")){
+        continue;
+      } else {
+        if (~ncs[i].type.indexOf("joker")) {
           //相手がjokerだった場合は好きなマークで置き換え可能
           flag = true;
           continue;
-        }else{
+        } else {
           //一回でも一致しなければfalse
           return false;
         }
@@ -477,7 +520,7 @@ function numComparison(nc, sc) {
     return nc.number < sc.number;
   } else if (elevenbackFlag || revolutionFlag) {
     //逆残
-    if (~sc.type.indexOf("joker")){
+    if (~sc.type.indexOf("joker")) {
       //ジョーカーは必ず勝てる
       return true;
     }
@@ -506,52 +549,50 @@ function createRankTable(count) {
   }
 }
 
-function gameInit(count, sockets){
+function gameInit(count, sockets, roomId) {
   nowCard = "";
-      let perNum = Math.floor(54 / count);
-      let remainder = 54 % count;
-      let pos = 0;
-      ORDER = [];
-      rank = 0;
-      createRankTable(count);
-      elevenbackFlag = false;
-      shibari = false;
-      revolutionFlag = false;
-    let shuffleCards = sort_at_random(ORIGINALCARDDATA);
+  let perNum = Math.floor(54 / count);
+  let remainder = 54 % count;
+  let pos = 0;
+  ORDER = [];
+  rank = 0;
+  createRankTable(count);
+  elevenbackFlag = false;
+  shibari = false;
+  revolutionFlag = false;
+  let shuffleCards = sort_at_random(ORIGINALCARDDATA);
 
-      Object.keys(sockets).forEach(function(
-        key
-      ) {
-        ORDER.push({
-          id: key,
-          card: remainder > 0 ? perNum + 1 : perNum,
-          rank: ""
-        });
-        var cardNum = remainder > 0 ? pos + perNum + 1 : pos + perNum;
-        io.to(key).emit(
-          "gameInit",
-          shuffleCards
-            .slice(pos, remainder > 0 ? pos + perNum + 1 : pos + perNum)
-            .sort(function(a, b) {
-              if (a.number < b.number) return -1;
-              if (a.number > b.number) return 1;
-              return 0;
-            })
-        );
-        //seiseki[key]=
-        if (ORDER[0].id == key) {
-          io.to(key).emit("order", { flag: true, skip: false });
-        } else {
-          io.to(key).emit("order", {
-            flag: false,
-            skip: false,
-            playerName: UserList[ORDER[0].id]
-          });
-        }
-        pos = remainder > 0 ? pos + perNum + 1 : pos + perNum;
-        remainder--;
+  Object.keys(sockets).forEach(function(key) {
+    ORDER.push({
+      id: key,
+      card: remainder > 0 ? perNum + 1 : perNum,
+      rank: ""
+    });
+    var cardNum = remainder > 0 ? pos + perNum + 1 : pos + perNum;
+    io.to(key).emit(
+      "gameInit",
+      shuffleCards
+        .slice(pos, remainder > 0 ? pos + perNum + 1 : pos + perNum)
+        .sort(function(a, b) {
+          if (a.number < b.number) return -1;
+          if (a.number > b.number) return 1;
+          return 0;
+        })
+    );
+    //seiseki[key]=
+    if (ORDER[0].id == key) {
+      io.to(key).emit("order", { flag: true, skip: false });
+    } else {
+      io.to(key).emit("order", {
+        flag: false,
+        skip: false,
+        playerName: UserList[ORDER[0].id]
       });
-} 
+    }
+    pos = remainder > 0 ? pos + perNum + 1 : pos + perNum;
+    remainder--;
+  });
+}
 
 http.listen(port, function() {
   console.log("listening on *:" + port);
