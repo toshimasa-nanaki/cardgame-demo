@@ -50,8 +50,8 @@ io.on("connection", function(socket) {
     const createRoomId = uniqueId();
     const roomObj = {
       roomId: createRoomId,
-      roomDispName: roomInfo.dispName,
-      capacity: roomInfo.capacity
+      roomDispName: roomInfo.dispName == "" ? createdDefaultRoomName() : roomInfo.dispName,
+      capacity: roomInfo.capacity == "" ? 4 : roomInfo.capacity
     };
     store[createRoomId] = roomObj;
     console.log("Store情報:  " + JSON.stringify(store));
@@ -322,7 +322,7 @@ let uniqueId = function(digits) {
 
 let createdDefaultRoomName = function() {
   let now = new Date();
-  return 
+  return now.getFullYear() + "_" + (now.getMonth() + 1) + "_" + now.getDate() + "_" + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
 }
 
 function trump_init(trumpData) {

@@ -91,7 +91,6 @@ $(function() {
           name: "roomRadios",
           value: roomList[key].roomId,
           id: "room_" + roomList[key].roomId
-          //value: element.type + "_" + element.number
         })
       );
       div.append(
@@ -100,7 +99,7 @@ $(function() {
             "room_" +
             roomList[key].roomId +
             '">' +
-            roomList[key].roomDispName +
+            roomList[key].roomDispName + "(定員：" + roomList[key].capacity + "人)" +
             "</label>"
         )
       );
