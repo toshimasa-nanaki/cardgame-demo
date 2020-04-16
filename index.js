@@ -72,9 +72,9 @@ io.on("connection", function(socket) {
       }else{
         store[joinInfo.roomId]['users'][socket.id] = {'dispName': joinInfo.playerName, 'card': 0, 'rank': ''}
       }
-      console.log("User追加後のStore情報:  " + store[joinInfo.roomId]['users']);
+      console.log("User追加後のStore情報:  " + JSON.stringify(store[joinInfo.roomId]['users']));
       //store[joinInfo.roomId]['users'] = {'dispName': joinInfo.playerName, 'card': 0, 'rank': ''}
-      console.log("Store情報:  " + JSON.stringify(store));
+      //console.log("Store情報:  " + JSON.stringify(store));
       UserList[socket.id] = joinInfo.playerName;
       socket.join(joinInfo.roomId);
       io.to(socket.id).emit("joinedRoom", UserList);
