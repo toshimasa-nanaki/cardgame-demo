@@ -55,10 +55,8 @@ io.on("connection", function(socket) {
     };
     store[createRoomId] = roomObj;
     console.log("Store情報:  " + JSON.stringify(store));
-    //UserList[socket.id] = roomInfo.playerName;
     console.log("createRoom:  " + roomInfo.roomDispName);
     io.emit("createdRoom", {[createRoomId]:roomObj});
-    //socket.join(roomInfo.roomid);
   });
   socket.on("join", function(msg) {
     const count =
@@ -77,7 +75,8 @@ io.on("connection", function(socket) {
     const count =
       typeof store[msg.id].capacity === "undefined" ? 4 : store[msg.id].capacity;
     
-    if (socket.nsp.adapter.rooms[msg.id].length == count) {
+    //if (socket.nsp.adapter.rooms[msg.id].length == count) {
+    if (Object.keys(UserList).length == count) {
       //人数がそろっているのか確認
       gameInit(count, socket.nsp.adapter.rooms[msg.id].sockets);
     }else{

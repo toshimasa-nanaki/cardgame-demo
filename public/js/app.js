@@ -71,12 +71,13 @@ $(function() {
     });
   });
   socket.on("createdRoom", function(roomList) {
-    //部屋一覧に追加する。
+    //部屋作成完了後
     console.log("CreatedRoom");
     createSelectRoomRadioButton(roomList);
   });
 
   socket.on("showRoomList", function(roomList) {
+    //サーバ接続時に部屋一覧を渡す
     console.log("ShowRoom");
     createSelectRoomRadioButton(roomList);
   });
@@ -154,7 +155,7 @@ $(function() {
       $("#order").text("あなたの番です");
       if (msg.skip) {
         socket.emit("pass", {
-          id: 1234
+          id: $('input[name=roomRadios]:checked').val()
         });
       }
     } else {
@@ -177,12 +178,12 @@ $(function() {
     });
     socket.emit("validate", {
       cards: sendCards,
-      id: 1234
+      id: $('input[name=roomRadios]:checked').val()
     });
   });
   $("#pass").click(function() {
     socket.emit("pass", {
-      id: 1234
+      id: $('input[name=roomRadios]:checked').val()
     });
   });
   socket.on("validateError", function(msg) {
@@ -281,7 +282,7 @@ $(function() {
     $("#rematch").show();
   });
   $("#rematch").click(function() {
-    socket.emit("rematch", { id: 1234, roomid: 1234 });
+    socket.emit("rematch", { id: $('input[name=roomRadios]:checked').val(), roomid: $('input[name=roomRadios]:checked').val() });
     //今はまだTODO
   });
 });
