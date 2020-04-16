@@ -74,7 +74,13 @@ $(function() {
     //$("#roomSelectArea").hide();
     //socket.emit("update", { id: 1234, roomid: 1234 });
   });
-  socket.on("createdRoom", function(msg) {
+  socket.on("createdRoom", function(roomList) {
+    //部屋一覧に追加する。
+    console.log("CreatedRoom");
+    // $("#selectRoomList").append($("<li>").text(msg));
+    // window.scrollTo(0, document.body.scrollHeight);
+  });
+  socket.on("showRoomList", function(roomList) {
     console.log("CreatedRoom");
     // $("#connectStatus").append($("<li>").text(msg));
     // window.scrollTo(0, document.body.scrollHeight);
