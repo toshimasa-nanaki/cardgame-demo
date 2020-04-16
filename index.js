@@ -64,7 +64,8 @@ io.on("connection", function(socket) {
     const count = store[joinInfo.roomId].capacity;
     //if (socket.nsp.adapter.rooms[msg.id].length >= count) {
     if (Object.keys(UserList).length >= count) {
-      io.to(socket.id).emit("update", "もう部屋がいっぱいです");
+      io.to(socket.id).emit("connectError", "もう部屋がいっぱいです");
+      return;
     } else {
       UserList[socket.id] = joinInfo.playerName;
       socket.join(joinInfo.roomId);
