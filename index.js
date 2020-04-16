@@ -68,7 +68,12 @@ io.on("connection", function(socket) {
     } else {
       UserList[socket.id] = joinInfo.playerName;
       socket.join(joinInfo.roomId);
-      io.to(joinInfo.roomId).emit("joinedRoom", UserList);
+      io.to(socket.id).emit("joinedRoom", UserList);
+      Object.keys(UserList).forEach(function(key){
+        if(key != socket.id){
+          io.to(key).emit("joinedRoomNotification", UserList);
+        }
+      });
     }
     if(Object.keys(UserList).length == count){
       //人数がそろった場合は、メンバー全員に通知する
