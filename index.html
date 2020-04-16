@@ -64,7 +64,17 @@
                         id="playerName"
                         placeholder="プレイヤー名を入力してください"
                       />
+                      <div class="form-group">
+                      <label for="playerName">プレイヤー名</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="playerName"
+                        placeholder="プレイヤー名を入力してください"
+                      />
+                      
                     </div>
+                    
                     <button
                       id="joinRoom"
                       type="button"
@@ -113,7 +123,6 @@
                     >
                       ルームを作成
                     </button>
-                    
                   </div>
                 </div>
               </div>
@@ -127,9 +136,18 @@
                 <span id="field"></span>
               </div>
               <div>
-                <span id="shibari" class="badge badge-pill badge-success"></span>
-                <span id="elevenback" class="badge badge-pill badge-danger"></span>
-                <span id="revolution" class="badge badge-pill badge-warning"></span>
+                <span
+                  id="shibari"
+                  class="badge badge-pill badge-success"
+                ></span>
+                <span
+                  id="elevenback"
+                  class="badge badge-pill badge-danger"
+                ></span>
+                <span
+                  id="revolution"
+                  class="badge badge-pill badge-warning"
+                ></span>
               </div>
               <div id="errorMsg" class="alert alert-danger" role="alert"></div>
               <div>
@@ -150,13 +168,9 @@
               <span id="seiseki"></span>
             </div>
             <ul id="rank"></ul>
-            <button
-                      id="rematch"
-                      type="button"
-                      class="btn btn-outline-primary"
-                    >
-                      再戦
-                    </button>
+            <button id="rematch" type="button" class="btn btn-outline-primary">
+              再戦
+            </button>
           </div>
         </div>
       </main>
