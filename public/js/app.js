@@ -301,7 +301,14 @@ $(function() {
     $("#rematch").show();
   });
   $("#rematch").click(function() {
+    $("#rank").clear();
+    $("#rematch").hide();
+    $("#seiseki").text("");
+    $("#field").text("現在のカード：なし");
+    $("#other").text("");
+    $("#elevenback").text("");
+    $("#shibari").text("");
+    $("#revolution").text("");
     socket.emit("rematch", { id: $('input[name=roomRadios]:checked').val(), roomid: $('input[name=roomRadios]:checked').val() });
-    //今はまだTODO
   });
 });
