@@ -132,7 +132,7 @@ $(function() {
     $("#gameCommentaryArea").append( joinMemberName + "さんが部屋に入りました<br />" );
     $("#gameCommentaryArea").scrollTop( $("#gameCommentaryArea")[0].scrollHeight );
   });
-  socket.on("update", function(msg) {
+  socket.on("connectError", function(msg) {
     $("#gameCommentaryArea").append( msg + "<br />" );
     $("#gameCommentaryArea").scrollTop( $("#gameCommentaryArea")[0].scrollHeight );
     //$("#connectStatus").append($("<li>").text(msg));
