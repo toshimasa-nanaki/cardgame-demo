@@ -133,10 +133,13 @@ $(function() {
     $("#gameCommentaryArea").scrollTop( $("#gameCommentaryArea")[0].scrollHeight );
   });
   socket.on("connectError", function(msg) {
-    $("#gameCommentaryArea").append( msg + "<br />" );
-    $("#gameCommentaryArea").scrollTop( $("#gameCommentaryArea")[0].scrollHeight );
-    //$("#connectStatus").append($("<li>").text(msg));
-    //window.scrollTo(0, document.body.scrollHeight);
+    $('#errorModalBody').text("");
+    $('#errorModalBody').text(msg);
+    $('#errorModal').modal();
+    // $("#gameCommentaryArea").append( msg + "<br />" );
+    // $("#gameCommentaryArea").scrollTop( $("#gameCommentaryArea")[0].scrollHeight );
+    // //$("#connectStatus").append($("<li>").text(msg));
+    // //window.scrollTo(0, document.body.scrollHeight);
   });
   socket.on("gameReady", function(msg) {
     $("#gameCommentaryArea").append( "ゲームを開始します" + "<br />" );
