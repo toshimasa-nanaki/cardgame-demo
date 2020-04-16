@@ -10,6 +10,15 @@
 div#errorMsg {
   display: none;
 }
+div#gameArea{
+  display: none;
+}
+div#gameCommentaryArea {
+    padding:5px;
+    border:solid 1px #000;
+    height:150px;
+    overflow:auto;
+}
       div#gameFieldArea {
         display: none;
       }

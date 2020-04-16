@@ -115,6 +115,7 @@ $(function() {
       playerName: $("#playerName").val()
     });
     $("#roomSelectArea").hide();
+    $("#gameArea").show();
     socket.emit("update", { id: roomId, roomid: roomId });
   });
   socket.on("update", function(msg) {
