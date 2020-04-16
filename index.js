@@ -77,6 +77,7 @@ io.on("connection", function(socket) {
     }
     if(Object.keys(UserList).length == count){
       //人数がそろった場合は、メンバー全員に通知する
+      gameInit(count, UserList);
       io.to(joinInfo.roomId).emit("gameReady", UserList);
     }
   });

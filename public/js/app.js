@@ -116,7 +116,7 @@ $(function() {
     });
     $("#roomSelectArea").hide();
     $("#gameArea").show();
-    socket.emit("update", { id: roomId, roomid: roomId });
+    //socket.emit("update", { id: roomId, roomid: roomId });
   });
   socket.on("joinedRoom", function(joinMembers) {
     //部屋ジョイン後
@@ -141,8 +141,6 @@ $(function() {
   socket.on("gameReady", function(msg) {
     $("#gameCommentaryArea").append( "ゲームを開始します" + "<br />" );
     $("#gameCommentaryArea").scrollTop( $("#gameCommentaryArea")[0].scrollHeight );
-    //$("#connectStatus").append($("<li>").text(msg));
-    //window.scrollTo(0, document.body.scrollHeight);
   });
   socket.on("gameInit", function(msg) {
     $("#gameFieldArea").toggle();
