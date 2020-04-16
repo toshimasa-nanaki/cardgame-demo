@@ -77,9 +77,39 @@ $(function() {
   socket.on("createdRoom", function(roomList) {
     //部屋一覧に追加する。
     console.log("CreatedRoom");
-    // $("#selectRoomList").append($("<li>").text(msg));
+    $("#selectRoomList").append($('<input type="radio" />').attr({
+          name: "roomRadios",
+          value: "option1",
+          id: "room_"+roomList.id
+          //value: element.type + "_" + element.number
+        }).append($('<label class="form-check-label" for="' + "room_" + roomList.roomId + '">' + roomList.roomDispName + "</label>")));
     // window.scrollTo(0, document.body.scrollHeight);
   });
+  // <input
+  //                       class="form-check-input"
+  //                       type="radio"
+  //                       name="exampleRadios"
+  //                       id="exampleRadios1"
+  //                       value="option1"
+  //                       checked
+  //                     />
+  //                     <label class="form-check-label" for="exampleRadios1">
+  //                       Default radio
+  //                     </label>
+  // var check = $(
+  //       '<label id="' +
+  //         element.type +
+  //         element.number +
+  //         '">' +
+  //         DISPLAY_DIC[element.type + element.number] +
+  //         "</label>"
+  //     ).prepend(
+  //       $('<input type="checkbox" />').attr({
+  //         name: "cards",
+  //         value: element.type + "_" + element.number
+  //       })
+  //     );
+  //     $("#cardList").append(check);
   socket.on("showRoomList", function(roomList) {
     console.log("CreatedRoom");
     // $("#connectStatus").append($("<li>").text(msg));
