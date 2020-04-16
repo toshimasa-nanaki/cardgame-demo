@@ -53,7 +53,7 @@ io.on("connection", function(socket) {
       capacity: roomInfo.capacity == "" ? 4 : roomInfo.capacity
     };
     store[createRoomId] = roomObj;
-    console.log("Store情報:  " + JSON.stringify(store));
+    //console.log("Store情報:  " + JSON.stringify(store));
     console.log("createRoom:  " + roomInfo.roomDispName);
     io.emit("createdRoom", {[createRoomId]:roomObj});
   });
@@ -67,7 +67,14 @@ io.on("connection", function(socket) {
       io.to(socket.id).emit("connectError", "もう部屋がいっぱいです");
       return;
     } else {
-      store[joinInfo.roomId]['users'] = {[socket.id]:{'dispName': joinInfo.playerName, 'card': 0, 'rank': ''}}
+      if (typeof store[joinInfo.roomId]['users'] === "undefined") {
+        store[joinInfo.roomId]['users'] = {[socket.id]:{'dispName': joinInfo.playerName, 'card': 0, 'rank': ''}};
+      }else{
+        store[joinInfo.roomId]['users'][socket.id] = {'dispName': joinInfo.playerName, 'card': 0, 'rank': ''}
+      }
+      console.log("User追加後のStore情報:  " + store[joinInfo.roomId]['users']);
+      //store[joinInfo.roomId]['users'] = {'dispName': joinInfo.playerName, 'card': 0, 'rank': ''}
+      console.log("Store情報:  " + JSON.stringify(store));
       UserList[socket.id] = joinInfo.playerName;
       socket.join(joinInfo.roomId);
       io.to(socket.id).emit("joinedRoom", UserList);
