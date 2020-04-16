@@ -63,6 +63,7 @@ io.on("connection", function(socket) {
   socket.on("join", function(msg) {
     const count =
       typeof store[msg.id].capacity === "undefined" ? 4 : store[msg.id].capacity;
+    console.log(msg);
     if (socket.nsp.adapter.rooms[msg.id].length >= count) {
       io.to(socket.id).emit("update", "もう部屋がいっぱいです");
     } else {

@@ -107,15 +107,16 @@ $(function() {
     });
   }
   $("#joinRoom").click(function() {
+    let roomId = $('input[name=roomRadios]:checked').val();
     socket.emit("join", {
-      id: 1234,
-      roomid: 1234,
+      id: roomId,
+      roomid: roomId,
       playerName: $("#playerName").val()
       //roomid: $('#joinRoomId').val()
       // name: "testRoom1"
     });
     $("#roomSelectArea").hide();
-    socket.emit("update", { id: 1234, roomid: 1234 });
+    socket.emit("update", { id: roomId, roomid: roomId });
   });
   socket.on("update", function(msg) {
     $("#connectStatus").append($("<li>").text(msg));
