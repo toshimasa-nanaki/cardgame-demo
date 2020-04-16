@@ -118,8 +118,10 @@ $(function() {
     socket.emit("update", { id: roomId, roomid: roomId });
   });
   socket.on("update", function(msg) {
-    $("#connectStatus").append($("<li>").text(msg));
-    window.scrollTo(0, document.body.scrollHeight);
+    $("#gameCommentaryArea").append( msg + "<br />" );
+    $("#gameCommentaryArea").scrollTop( $("#gameCommentaryArea")[0].scrollHeight );
+    //$("#connectStatus").append($("<li>").text(msg));
+    //window.scrollTo(0, document.body.scrollHeight);
   });
   socket.on("gameInit", function(msg) {
     $("#gameFieldArea").toggle();

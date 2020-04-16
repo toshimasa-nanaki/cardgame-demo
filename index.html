@@ -65,12 +65,11 @@
                         placeholder="プレイヤー名を入力してください"
                       />
                     </div>
-                      <div class="form-group">
+                    <div class="form-group">
                       <label for="selectRoomList">部屋選択</label>
-                      <div id="selectRoomList">
-                      </div>
+                      <div id="selectRoomList"></div>
                     </div>
-                    
+
                     <button
                       id="joinRoom"
                       type="button"
@@ -114,43 +113,61 @@
                 </div>
               </div>
             </div>
-            <ul id="connectStatus"></ul>
-            <div id="gameFieldArea">
-              <div>
-                <span id="order"></span>
+            <div id="gameArea">
+              <div id="gameFieldArea">
+                <div>
+                  <span id="order"></span>
+                </div>
+                <div>
+                  <span id="field"></span>
+                </div>
+                <div>
+                  <span
+                    id="shibari"
+                    class="badge badge-pill badge-success"
+                  ></span>
+                  <span
+                    id="elevenback"
+                    class="badge badge-pill badge-danger"
+                  ></span>
+                  <span
+                    id="revolution"
+                    class="badge badge-pill badge-warning"
+                  ></span>
+                </div>
+                <div
+                  id="errorMsg"
+                  class="alert alert-danger"
+                  role="alert"
+                ></div>
+                <div>
+                  <span id="other"></span>
+                </div>
+                <ul id="gameStatus"></ul>
+                <div id="cardList"></div>
+                <div>
+                  <button
+                    id="send"
+                    type="button"
+                    class="btn btn-outline-primary"
+                  >
+                    カードを出す
+                  </button>
+                  <button
+                    id="pass"
+                    type="button"
+                    class="btn btn-outline-warning"
+                  >
+                    パス
+                  </button>
+                </div>
               </div>
-              <div>
-                <span id="field"></span>
-              </div>
-              <div>
-                <span
-                  id="shibari"
-                  class="badge badge-pill badge-success"
-                ></span>
-                <span
-                  id="elevenback"
-                  class="badge badge-pill badge-danger"
-                ></span>
-                <span
-                  id="revolution"
-                  class="badge badge-pill badge-warning"
-                ></span>
-              </div>
-              <div id="errorMsg" class="alert alert-danger" role="alert"></div>
-              <div>
-                <span id="other"></span>
-              </div>
-              <ul id="gameStatus"></ul>
-              <div id="cardList"></div>
-              <div>
-                <button id="send" type="button" class="btn btn-outline-primary">
-                  カードを出す
-                </button>
-                <button id="pass" type="button" class="btn btn-outline-warning">
-                  パス
-                </button>
+              <div id="gameCommentaryArea">
+                
               </div>
             </div>
+            <ul id="connectStatus"></ul>
+
             <div id="res">
               <span id="seiseki"></span>
             </div>
