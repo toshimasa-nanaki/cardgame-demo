@@ -67,6 +67,7 @@ io.on("connection", function(socket) {
       io.to(socket.id).emit("connectError", "もう部屋がいっぱいです");
       return;
     } else {
+      store[joinInfo.roomId]
       UserList[socket.id] = joinInfo.playerName;
       socket.join(joinInfo.roomId);
       io.to(socket.id).emit("joinedRoom", UserList);

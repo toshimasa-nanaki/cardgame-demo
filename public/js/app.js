@@ -114,13 +114,12 @@ $(function() {
       roomId: $('input[name=roomRadios]:checked').val(),
       playerName: $("#playerName").val()
     });
-    $("#roomSelectArea").hide();
-    $("#gameArea").show();
-    //socket.emit("update", { id: roomId, roomid: roomId });
   });
   socket.on("joinedRoom", function(joinMembers) {
     //部屋ジョイン後
     console.log("JoinedRoom");
+    $("#roomSelectArea").hide();
+    $("#gameArea").show();
     Object.keys(joinMembers).forEach(function(key){
       $("#gameCommentaryArea").append( joinMembers[key] + "さんが部屋に入りました<br />" );
       $("#gameCommentaryArea").scrollTop( $("#gameCommentaryArea")[0].scrollHeight );
@@ -136,18 +135,14 @@ $(function() {
     $('#errorModalBody').text("");
     $('#errorModalBody').text(msg);
     $('#errorModal').modal();
-    // $("#gameCommentaryArea").append( msg + "<br />" );
-    // $("#gameCommentaryArea").scrollTop( $("#gameCommentaryArea")[0].scrollHeight );
-    // //$("#connectStatus").append($("<li>").text(msg));
-    // //window.scrollTo(0, document.body.scrollHeight);
   });
   socket.on("gameReady", function(msg) {
     $("#gameCommentaryArea").append( "ゲームを開始します" + "<br />" );
     $("#gameCommentaryArea").scrollTop( $("#gameCommentaryArea")[0].scrollHeight );
   });
   socket.on("gameInit", function(msg) {
-    $("#gameFieldArea").toggle();
-    $("#connectStatus").toggle();
+    $("#gameFieldArea").show();
+    // $("#connectStatus").toggle();
     $("#send").prop("disabled", true);
     $("#pass").prop("disabled", true);
     $("#cardList").empty();
