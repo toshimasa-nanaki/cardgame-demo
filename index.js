@@ -57,7 +57,7 @@ io.on("connection", function(socket) {
     console.log("Store情報:  " + JSON.stringify(store));
     UserList[socket.id] = roomInfo.playerName;
     console.log("createRoom:  " + roomInfo.roomDispName);
-    io.emit("createdRoom", roomObj);
+    io.emit("createdRoom", {[createRoomId]:roomObj});
     //socket.join(roomInfo.roomid);
   });
   socket.on("join", function(msg) {

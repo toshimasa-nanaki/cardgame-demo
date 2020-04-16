@@ -66,9 +66,8 @@ $(function() {
   $("#requestRoomCreate").click(function() {
     //部屋作成時
     socket.emit("requestRoomCreate", {
-      id: 1234,
-      dispName: "testRoom1",
-      capacity: 4
+      dispName: $("#roomDispName").val(),
+      capacity: $("#roomcapacity").val()
       //playerName: $("#playerNameAdmin").val()
     });
     //$("#roomSelectArea").hide();
@@ -77,38 +76,12 @@ $(function() {
   socket.on("createdRoom", function(roomList) {
     //部屋一覧に追加する。
     console.log("CreatedRoom");
-    const div = $('<div class="form-check"></div>');
-    div.append(
-      $('<input type="radio" />').attr({
-        class: "form-check-input",
-        name: "roomRadios",
-        value: "option1",
-        id: "room_" + roomList.roomId
-        //value: element.type + "_" + element.number
-      })
-    );
-    div.append(
-      $(
-        '<label class="form-check-label" for="' +
-          "room_" +
-          roomList.roomId +
-          '">' +
-          roomList.roomDispName +
-          "</label>"
-      )
-    );
-    $("#selectRoomList").append(div);
+    createSelectRoomRadioButton(roomList);
   });
 
   socket.on("showRoomList", function(roomList) {
     console.log("ShowRoom");
-    // Object.keys(roomList).forEach(function(key){
-    //   console.log(roomList[key]);
-    // });
     createSelectRoomRadioButton(roomList);
-
-    // $("#connectStatus").append($("<li>").text(msg));
-    // window.scrollTo(0, document.body.scrollHeight);
   });
 
   function createSelectRoomRadioButton(roomList) {
