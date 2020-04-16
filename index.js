@@ -430,12 +430,21 @@ function isSameType(ncs, scs){
 
 function numComparison(nc, sc) {
   if (~nc.type.indexOf("joker") && sc.type == "spade" && sc.number == "3") {
+    //スペ3はジョーカーに勝てる
     return true;
+  }
+  if (~sc.type.indexOf("joker") && nc.type == "spade" && nc.number == "3") {
+    //ジョーカーはスペ3に勝てない
+    return false;
   }
   if (elevenbackFlag && revolutionFlag) {
     return nc.number < sc.number;
   } else if (elevenbackFlag || revolutionFlag) {
     //逆残
+    if (~sc.type.indexOf("joker")){
+      //ジョーカーは必ず勝てる
+      return true;
+    }
     return nc.number > sc.number;
   } else {
     return nc.number < sc.number;
