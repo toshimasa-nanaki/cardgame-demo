@@ -299,7 +299,7 @@ $(function() {
     $("#rematch").show();
   });
   $("#rematch").click(function() {
-    $("#rank").clear();
+    $("#rank").text("");
     $("#rematch").hide();
     $("#seiseki").text("");
     $("#field").text("現在のカード：なし");

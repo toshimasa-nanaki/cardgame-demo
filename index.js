@@ -92,8 +92,8 @@ io.on("connection", function(socket) {
   });
   //再戦
   socket.on("rematch", function(msg) {
-    const count =
-      typeof store[msg.id].capacity === "undefined" ? 4 : store[msg.id].capacity;
+    const count = store[msg.id].capacity;
+      // typeof store[msg.id].capacity === "undefined" ? 4 : store[msg.id].capacity;
     
     //if (socket.nsp.adapter.rooms[msg.id].length == count) {
     if (Object.keys(UserList).length == count) {
@@ -104,20 +104,20 @@ io.on("connection", function(socket) {
       console.log("人数が足りないので解散する");
     }
   });
-  socket.on("update", function(msg) {
-    // const count =
-    //   typeof store[msg.id].capacity === "undefined" ? 4 : store[msg.id].capacity;
-    //if (socket.nsp.adapter.rooms[msg.id].length == count) {
-    const count = store[msg.id].capacity;
-    if (Object.keys(UserList).length == count) {
-      gameInit(count, socket.nsp.adapter.rooms[msg.id].sockets);
-    } else {
-      io.to(store[msg.id].roomId).emit(
-        "update",
-        "今の部屋の人数:  " + socket.nsp.adapter.rooms[msg.id].length
-      );
-    }
-  });
+  // socket.on("update", function(msg) {
+  //   // const count =
+  //   //   typeof store[msg.id].capacity === "undefined" ? 4 : store[msg.id].capacity;
+  //   //if (socket.nsp.adapter.rooms[msg.id].length == count) {
+  //   const count = store[msg.id].capacity;
+  //   if (Object.keys(UserList).length == count) {
+  //     gameInit(count, socket.nsp.adapter.rooms[msg.id].sockets);
+  //   } else {
+  //     io.to(store[msg.id].roomId).emit(
+  //       "update",
+  //       "今の部屋の人数:  " + socket.nsp.adapter.rooms[msg.id].length
+  //     );
+  //   }
+  // });
   socket.on("pass", function(msg) {
     pass++;
     const count =
