@@ -12,6 +12,9 @@ var express = require("express");
 var app = require("express")();
 var http = require("http").Server(app);
 var io = require("socket.io")(http);
+const log4js = require('log4js')
+const logger = log4js.getLogger();
+logger.level = 'debug';
 // io.set('heartbeat interval', 5000);
 // io.set('heartbeat timeout', 15000);
 var port = process.env.PORT || 3000;
@@ -63,7 +66,7 @@ io.on("connection", function(socket) {
     };
     store[createRoomId] = roomObj;
     //console.log("Store情報:  " + JSON.stringify(store));
-    console.log("createRoom:  " + roomInfo.roomDispName);
+    logger.info("createRoom:  " + roomObj.roomDispName);
     io.emit("createdRoom", { [createRoomId]: roomObj });
   });
   socket.on("join", function(joinInfo) {
