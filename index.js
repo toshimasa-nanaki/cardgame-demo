@@ -46,17 +46,12 @@ io.on("connection", function(socket) {
     const roomIds = Object.keys(store);
     roomIds.forEach(roomId => {
       if(~Object.keys(store[roomId].users).indexOf(socket.id)){
+        console.log(socket.id + "が" + roomId + "から退出");
+        delete store[roomId]['users'][socket.id];
+        delete UserList[socket.id];
         socket.leave(roomId);
-        console.log(roomId);
       }
     });
-    // let belongRoomIds = Object.keys(store).filter(item => ~Object.keys(item.users).indexOf(socket.id));
-    // belongRoomIds.forEach(roomId => {
-    //   console.log(roomId);
-    // });
-    //socket.leave("ルーム1"); 
-    //let roomList = socket.sockets.manager.roomClients[socket.id];
-      //console.log(socket.sockets);
   });
   socket.on("requestRoomCreate", function(roomInfo) {
     const createRoomId = uniqueId();
