@@ -67,9 +67,9 @@ $(function() {
     //部屋作成時
     socket.emit("requestRoomCreate", {
       id: 1234,
-      roomid: 1234,
-      name: "testRoom1",
-      playerName: $("#playerNameAdmin").val()
+      dispName: "testRoom1",
+      capacity: 4
+      //playerName: $("#playerNameAdmin").val()
     });
     //$("#roomSelectArea").hide();
     //socket.emit("update", { id: 1234, roomid: 1234 });

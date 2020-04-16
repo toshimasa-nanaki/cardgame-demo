@@ -43,20 +43,21 @@ io.on("connection", function(socket) {
       console.log(socket.sockets);
   });
   socket.on("requestRoomCreate", function(roomInfo) {
-    const usrobj = {
-      room: roomInfo.roomid,
-      name: roomInfo.name,
-      count: roomInfo.count
+    const roomObj = {
+      roomId: roomInfo.id,
+      roomDispName: roomInfo.dispName,
+      capacity: roomInfo.capacity
     };
-    store[roomInfo.id] = usrobj;
-    console.log("Store情報:  " + store[roomInfo.id]);
+    store[roomInfo.id] = roomObj;
+    console.log("Store情報:  " + JSON.stringify(store));
     UserList[socket.id] = roomInfo.playerName;
     console.log("createRoom:  " + roomInfo.roomid);
-    socket.join(roomInfo.roomid);
+    io.emit()
+    //socket.join(roomInfo.roomid);
   });
   socket.on("join", function(msg) {
     const count =
-      typeof store[msg.id].count === "undefined" ? 4 : store[msg.id].count;
+      typeof store[msg.id].capacity === "undefined" ? 4 : store[msg.id].capacity;
     if (socket.nsp.adapter.rooms[msg.id].length >= count) {
       io.to(socket.id).emit("update", "もう部屋がいっぱいです");
     } else {
@@ -67,7 +68,7 @@ io.on("connection", function(socket) {
   //再戦
   socket.on("rematch", function(msg) {
     const count =
-      typeof store[msg.id].count === "undefined" ? 4 : store[msg.id].count;
+      typeof store[msg.id].capacity === "undefined" ? 4 : store[msg.id].capacity;
     
     if (socket.nsp.adapter.rooms[msg.id].length == count) {
       //人数がそろっているのか確認
@@ -79,7 +80,7 @@ io.on("connection", function(socket) {
   });
   socket.on("update", function(msg) {
     const count =
-      typeof store[msg.id].count === "undefined" ? 4 : store[msg.id].count;
+      typeof store[msg.id].capacity === "undefined" ? 4 : store[msg.id].capacity;
     if (socket.nsp.adapter.rooms[msg.id].length == count) {
       gameInit(count, socket.nsp.adapter.rooms[msg.id].sockets);
     } else {
@@ -92,7 +93,7 @@ io.on("connection", function(socket) {
   socket.on("pass", function(msg) {
     pass++;
     const count =
-      typeof store[msg.id].count === "undefined" ? 4 : store[msg.id].count;
+      typeof store[msg.id].capacity === "undefined" ? 4 : store[msg.id].capacity;
     if (pass >= count - 1) {
       //パスで一周した場合流す
       nowCard = "";
