@@ -388,6 +388,11 @@ function sort_at_random(arrayData) {
   return randomArr;
 }
 
+//枚数確認
+function isMatchNumCards(ncs, scs){
+  
+}
+
 function isShibari(ncs, scs) {
   if (
     scs.some(item => ~item.type.indexOf("joker")) ||
