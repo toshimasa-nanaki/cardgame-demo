@@ -42,6 +42,10 @@ io.on("connection", function(socket) {
   
   socket.on('disconnect', function () {
     //TODO ゲームがすでに始まっている場合は解散
+    let belongRoomIds = store.filter(item => {
+      item.users.some(user => user.)
+    });
+    socket.leave("ルーム1"); 
     //let roomList = socket.sockets.manager.roomClients[socket.id];
       //console.log(socket.sockets);
   });
