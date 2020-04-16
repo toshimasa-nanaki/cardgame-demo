@@ -58,16 +58,16 @@ io.on("connection", function(socket) {
     console.log("createRoom:  " + roomInfo.roomDispName);
     io.emit("createdRoom", {[createRoomId]:roomObj});
   });
-  socket.on("join", function(msg) {
-    const count =
-      typeof store[msg.id].capacity === "undefined" ? 4 : store[msg.id].capacity;
-    console.log(msg);
+  socket.on("join", function(joinInfo) {
+    // const count =
+    //   typeof store[joinInfo.roomId].capacity === "undefined" ? 4 : store[joinInfo.id].capacity;
+    console.log("部屋入り情報:" + joinInfo);
     //if (socket.nsp.adapter.rooms[msg.id].length >= count) {
-    if (Object.keys(UserList).length >= count) {
+    if (Object.keys(UserList).length >= store[joinInfo.roomId].capacity) {
       io.to(socket.id).emit("update", "もう部屋がいっぱいです");
     } else {
-      UserList[socket.id] = msg.playerName;
-      socket.join(msg.roomid);
+      UserList[socket.id] = joinInfo.playerName;
+      socket.join(joinInfo.roomId);
     }
   });
   //再戦

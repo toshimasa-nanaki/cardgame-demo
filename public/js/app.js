@@ -82,6 +82,7 @@ $(function() {
     createSelectRoomRadioButton(roomList);
   });
 
+  // 部屋一覧のラジオボタン生成
   function createSelectRoomRadioButton(roomList) {
     Object.keys(roomList).forEach(function(key) {
       console.log(roomList[key]);
@@ -110,11 +111,8 @@ $(function() {
   $("#joinRoom").click(function() {
     let roomId = $('input[name=roomRadios]:checked').val();
     socket.emit("join", {
-      id: roomId,
-      roomid: roomId,
+      roomId: $('input[name=roomRadios]:checked').val(),
       playerName: $("#playerName").val()
-      //roomid: $('#joinRoomId').val()
-      // name: "testRoom1"
     });
     $("#roomSelectArea").hide();
     socket.emit("update", { id: roomId, roomid: roomId });
