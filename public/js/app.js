@@ -68,10 +68,7 @@ $(function() {
     socket.emit("requestRoomCreate", {
       dispName: $("#roomDispName").val(),
       capacity: $("#roomcapacity").val()
-      //playerName: $("#playerNameAdmin").val()
     });
-    //$("#roomSelectArea").hide();
-    //socket.emit("update", { id: 1234, roomid: 1234 });
   });
   socket.on("createdRoom", function(roomList) {
     //部屋一覧に追加する。

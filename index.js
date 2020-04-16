@@ -320,6 +320,11 @@ let uniqueId = function(digits) {
     return Date.now().toString(16) + Math.floor(strong * Math.random()).toString(16);
 };
 
+let createdDefaultRoomName = function() {
+  let now = new Date();
+  return 
+}
+
 function trump_init(trumpData) {
   var cards = [];
   for (var i = 0; i < trumpData["card"].length; i++) {
