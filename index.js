@@ -571,7 +571,7 @@ function gameInit(count, sockets, roomId) {
       card: remainder > 0 ? perNum + 1 : perNum,
       rank: ""
     });
-    var cardNum = remainder > 0 ? pos + perNum + 1 : pos + perNum;
+    // var cardNum = remainder > 0 ? pos + perNum + 1 : pos + perNum;
     store[roomId]['users'][key].card = shuffleCards
         .slice(pos, remainder > 0 ? pos + perNum + 1 : pos + perNum)
         .sort(function(a, b) {
