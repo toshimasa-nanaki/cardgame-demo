@@ -601,6 +601,53 @@ function notifyChangeTurn(currentTurnIndex, roomId){
     });
 }
 
+// 大富豪の役を満たしているか
+function checkValidateHand(sc){
+  //1枚だし
+  //複数枚だし
+  //階段(3枚以上、順番、同スート)
+  if(sc.length === 1){
+    //1枚だしは特に問題なし
+    return true;
+  }else if(isAllSameNumber(sc)){
+    return true;
+  }else if(){
+    return true;
+  }
+  return false;
+  if (!isSameNumber(msg.cards)) {
+      io.to(socket.id).emit("validateError", {
+        card: msg,
+        error: 1,
+        reason: "数字は全部同じにしてね"
+      });
+      return;
+    }
+}
+
+function isAllSameNumber(sc){
+  sc.filter(element => {
+    
+  });
+  let base = cards[0].number;
+  if (cards.length == 1) {
+    return true;
+  }
+  for (let i = 1; i < cards.length; i++) {
+    if (~cards[i].type.indexOf("joker")) {
+      continue;
+    }
+    if (base != cards[i].number) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function isStairsCard(sc){
+  
+}
+
 http.listen(port, function() {
   console.log("listening on *:" + port);
 });
