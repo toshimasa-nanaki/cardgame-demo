@@ -642,6 +642,7 @@ function handOutCards(count, roomId){
         });
     pos = remainder > 0 ? pos + perNum + 1 : pos + perNum;
     remainder--;
+    logger.debug(key +"の持ちカード： " + JSON.stringify(store[roomId]['users'][key].card));
   });
 }
 
