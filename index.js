@@ -62,7 +62,8 @@ io.on("connection", function(socket) {
       roomId: createRoomId,
       roomDispName:
         roomInfo.dispName == "" ? createdDefaultRoomName() : roomInfo.dispName,
-      capacity: roomInfo.capacity == "" ? 4 : roomInfo.capacity
+      capacity: roomInfo.capacity == "" ? 4 : roomInfo.capacity,
+      gameNum: 1
     };
     store[createRoomId] = roomObj;
     //console.log("Store情報:  " + JSON.stringify(store));
@@ -564,6 +565,7 @@ function gameInit(count, sockets, roomId) {
   shibari = false;
   revolutionFlag = false;
   let shuffleCards = sort_at_random(ORIGINALCARDDATA);
+  store[roomId]['order'] = [];
 
   Object.keys(sockets).forEach(function(key) {
     ORDER.push({
@@ -571,6 +573,12 @@ function gameInit(count, sockets, roomId) {
       card: remainder > 0 ? perNum + 1 : perNum,
       rank: ""
     });
+    if(store[roomId].gameNum == 1){
+      //1回目の場合は部屋に入った順
+      store[roomId]['order'].push(key);
+    }else{
+      //2回目以降は大貧民が一番。
+    }
     // var cardNum = remainder > 0 ? pos + perNum + 1 : pos + perNum;
     store[roomId]['users'][key].card = shuffleCards
         .slice(pos, remainder > 0 ? pos + perNum + 1 : pos + perNum)
@@ -591,6 +599,7 @@ function gameInit(count, sockets, roomId) {
       //   })
     );
     //seiseki[key]=
+    
     if (ORDER[0].id == key) {
       io.to(key).emit("order", { flag: true, skip: false });
     } else {
