@@ -136,6 +136,7 @@ $(function() {
     $('#errorModalBody').text(msg);
     $('#errorModal').modal();
   });
+  //ゲームの準備ができたことを受け取る
   socket.on("gameReady", function(msg) {
     $("#gameCommentaryArea").append( "ゲームを開始します" + "<br />" );
     $("#gameCommentaryArea").scrollTop( $("#gameCommentaryArea")[0].scrollHeight );
@@ -143,7 +144,7 @@ $(function() {
     $("#send").prop("disabled", true);
     $("#pass").prop("disabled", true);
     $("#cardList").empty();
-    msg.forEach(element => {
+    msg.card.forEach(element => {
       var check = $(
         '<label id="' +
           element.type +
@@ -159,6 +160,23 @@ $(function() {
       );
       $("#cardList").append(check);
     });
+    console.log("order accept");
+    if (msg.yourTurn) {
+      $("#send").prop("disabled", false);
+      $("#pass").prop("disabled", false);
+      $("#cardList input").prop("disabled", false);
+      $("#order").text("あなたの番です");
+      if (msg.skip) {
+        socket.emit("pass", {
+          id: $('input[name=roomRadios]:checked').val()
+        });
+      }
+    } else {
+      $("#send").prop("disabled", true);
+      $("#pass").prop("disabled", true);
+      $("#cardList input").prop("disabled", true);
+      $("#order").text(msg.playerName + "の番です");
+    }
   });
   // socket.on("gameInit", function(msg) {
   //   $("#gameFieldArea").show();
@@ -202,7 +220,7 @@ $(function() {
     }
     window.scrollTo(0, document.body.scrollHeight);
   });
-
+　//カードを出したとき
   $("#send").click(function() {
     let sendCards = [];
     let cardarr;
@@ -212,6 +230,7 @@ $(function() {
         .split("_");
       sendCards.push({ type: cardarr[0], number: Number(cardarr[1]) });
     });
+    //カードの確認をしてもらう
     socket.emit("validate", {
       cards: sendCards,
       id: $('input[name=roomRadios]:checked').val()
