@@ -109,7 +109,7 @@ io.on("connection", function(socket) {
     if (Object.keys(UserList).length == count) {
       //人数がそろった場合は、メンバー全員に通知する
       gameInit(count, UserList, joinInfo.roomId);
-      io.to(joinInfo.roomId).emit("gameReady", UserList);
+      //io.to(joinInfo.roomId).emit("gameReady", UserList);
     }
   });
   //再戦
@@ -155,6 +155,7 @@ io.on("connection", function(socket) {
       io.to(store[msg.id].roomId).emit("changeStatus", { type: "cutPass" });
     }
     let currentTurn;
+    //let currentPlayer = ORDER.filter(function(item, index) {
     let currentPlayer = ORDER.filter(function(item, index) {
       if (item.id == socket.id) {
         currentTurn = index;
@@ -162,8 +163,8 @@ io.on("connection", function(socket) {
       }
     });
 
-    let nextTurn = currentTurn != ORDER.length - 1 ? currentTurn + 1 : 0;
-    ORDER.forEach(function(element) {
+    //let nextTurn = currentTurn != ORDER.length - 1 ? currentTurn + 1 : 0;
+    //ORDER.forEach(function(element) {
       if (element.id != ORDER[nextTurn].id) {
         io.to(element.id).emit("order", {
           flag: false,
@@ -652,9 +653,9 @@ function handOutCards(count, roomId){
 function notifyGameReady(roomId){
   const orders = store[roomId]['order'];
   const users = store[roomId]['users'];
-  io.to(orders[0]).emit("gameReady", { gameNum: store[roomId].gameNum,card: store[roomId]['users'][store[roomId]['order'][0]].card, yourTurn: true });
+  io.to(orders[0]).emit("gameReady", { gameNum: store[roomId].gameNum,card: users[orders[0]].card, yourTurn: true });
   for(let i = 1; i < store[roomId]['order'].length; i++){
-    io.to(orders[i]).emit("gameReady", { card: store[roomId]['users'][store[roomId]['order'][i]].card, yourTurn: false });
+    io.to(orders[i]).emit("gameReady", { card: users[orders[i]].card, yourTurn: false });
   }
 }
 
