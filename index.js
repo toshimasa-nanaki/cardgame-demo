@@ -569,6 +569,9 @@ function gameInit(count, sockets, roomId) {
   
   //まずは順番決め
   decideOrder(roomId);
+  
+  //カード配布
+  handOutCards(count, roomId);
 
   Object.keys(sockets).forEach(function(key) {
     ORDER.push({
@@ -622,6 +625,24 @@ function decideOrder(roomId){
     //2回目以降は大貧民が一番。時計回りという概念がないので、とりあえず順位の逆順にする。(オリジナル)
     //TODO? 実際は大貧民から時計回り。
   }
+}
+
+function handOutCards(count, roomId){
+  const shuffleCards = sort_at_random(ORIGINALCARDDATA);
+  const perNum = Math.floor(54 / count);
+  let remainder = 54 % count;
+  let pos = 0;
+  Object.keys(store[roomId]['users']).forEach(key => {
+      store[roomId]['users'][key].card = shuffleCards
+        .slice(pos, remainder > 0 ? pos + perNum + 1 : pos + perNum)
+        .sort(function(a, b) {
+          if (a.number < b.number) return -1;
+          if (a.number > b.number) return 1;
+          return 0;
+        });
+    pos = remainder > 0 ? pos + perNum + 1 : pos + perNum;
+    remainder--;
+  });
 }
 
 http.listen(port, function() {
