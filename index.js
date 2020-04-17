@@ -126,26 +126,9 @@ io.on("connection", function(socket) {
       console.log("人数が足りないので解散する");
     }
   });
-  // socket.on("update", function(msg) {
-  //   // const count =
-  //   //   typeof store[msg.id].capacity === "undefined" ? 4 : store[msg.id].capacity;
-  //   //if (socket.nsp.adapter.rooms[msg.id].length == count) {
-  //   const count = store[msg.id].capacity;
-  //   if (Object.keys(UserList).length == count) {
-  //     gameInit(count, socket.nsp.adapter.rooms[msg.id].sockets);
-  //   } else {
-  //     io.to(store[msg.id].roomId).emit(
-  //       "update",
-  //       "今の部屋の人数:  " + socket.nsp.adapter.rooms[msg.id].length
-  //     );
-  //   }
-  // });
   socket.on("pass", function(msg) {
     pass++;
-    const count =
-      typeof store[msg.id].capacity === "undefined"
-        ? 4
-        : store[msg.id].capacity;
+    const count = store[msg.id].capacity;
     if (pass >= count - 1) {
       //パスで一周した場合流す
       nowCard = "";
@@ -154,21 +137,13 @@ io.on("connection", function(socket) {
       shibari = false;
       io.to(store[msg.id].roomId).emit("changeStatus", { type: "cutPass" });
     }
-    //let currentTurn;
     const orderList = store[msg.id]['order'];
     const users = store[msg.id]['users'];
-    //let currentTurn;
     let currentTurn = orderList.indexOf(socket.id);
-    // let currentPlayer = ORDER.filter(function(item, index) {
-    //   if (item.id == socket.id) {
-    //     currentTurn = index;
-    //     return true;
-    //   }
-    // });
 
     let nextTurn = currentTurn != orderList.length - 1 ? currentTurn + 1 : 0;
     orderList.forEach(function(element) {
-      if (element.id != orderList[nextTurn].id) {
+      if (element.id != orderList[nextTurn]) {
         io.to(element.id).emit("order", {
           flag: false,
           skip: false,
@@ -177,9 +152,9 @@ io.on("connection", function(socket) {
       }
     });
     // io.to(ORDER[currentTurn].id).emit("order", {flag: false, skip: false, playerName: UserList[ORDER[nextTurn].id]});
-    io.to(orderList[nextTurn].id).emit("order", {
+    io.to(orderList[nextTurn]).emit("order", {
       flag: true,
-      skip: orderList[nextTurn].rank != "" ? true : false
+      skip: users[orderList[nextTurn]].rank != "" ? true : false
     });
   });
   socket.on("validate", function(msg) {
@@ -362,15 +337,15 @@ io.on("connection", function(socket) {
         store[msg.id]['users'][socket.id].rank = rankTable[rank];
         //ORDER[currentTurn].rank = rankTable[rank];
       }
-      io.to(ORDER[currentTurn].id).emit("finish", rankTable[rank]);
+      io.to(orderList[currentTurn]).emit("finish", rankTable[rank]);
       io.to(store[msg.id].roomId).emit("finishNotification", {
-        rank: ORDER[currentTurn].rank,
-        playerName: UserList[ORDER[currentTurn].id]
+        rank: users[orderList[currentTurn]].rank,
+        playerName: UserList[orderList[currentTurn]]
       });
       rank++;
-      if (rank == ORDER.length - 1) {
+      if (rank == orderList.length - 1) {
         //つまり全員終了
-        let biri = ORDER.filter(item => item.rank.length == 0)[0].id;
+        let biri = users.filter(item => item.rank.length == 0)[0].id;
         console.log(biri);
         io.to(biri).emit("finish", rankTable[rank]);
         io.to(store[msg.id].roomId).emit("finishNotification", {
@@ -381,19 +356,19 @@ io.on("connection", function(socket) {
       }
     }
 
-    let nextTurn = currentTurn != ORDER.length - 1 ? currentTurn + 1 : 0;
-    ORDER.forEach(function(element) {
-      if (element.id != ORDER[nextTurn].id) {
+    let nextTurn = currentTurn != orderList.length - 1 ? currentTurn + 1 : 0;
+    orderList.forEach(function(element) {
+      if (element.id != orderList[nextTurn]) {
         io.to(element.id).emit("order", {
           flag: false,
           skip: false,
-          playerName: UserList[ORDER[nextTurn].id]
+          playerName: UserList[orderList[nextTurn]]
         });
       }
     });
-    io.to(ORDER[nextTurn].id).emit("order", {
+    io.to(orderList[nextTurn]).emit("order", {
       flag: true,
-      skip: ORDER[nextTurn].rank != "" ? true : false
+      skip: users[orderList[nextTurn]].rank != "" ? true : false
     });
   });
 });
@@ -571,16 +546,11 @@ function createRankTable(count) {
 
 function gameInit(count, sockets, roomId) {
   nowCard = "";
-  // let perNum = Math.floor(54 / count);
-  // let remainder = 54 % count;
-  // let pos = 0;
-  // ORDER = [];
   rank = 0;
   createRankTable(count);
   elevenbackFlag = false;
   shibari = false;
   revolutionFlag = false;
-  let shuffleCards = sort_at_random(ORIGINALCARDDATA);
   store[roomId]['order'] = [];
   
   //まずは順番決め
@@ -591,46 +561,6 @@ function gameInit(count, sockets, roomId) {
   
   //準備完了通知
   notifyGameReady(roomId);
-
-//   Object.keys(sockets).forEach(function(key) {
-//     ORDER.push({
-//       id: key,
-//       card: remainder > 0 ? perNum + 1 : perNum,
-//       rank: ""
-//     });
-//     // var cardNum = remainder > 0 ? pos + perNum + 1 : pos + perNum;
-//     store[roomId]['users'][key].card = shuffleCards
-//         .slice(pos, remainder > 0 ? pos + perNum + 1 : pos + perNum)
-//         .sort(function(a, b) {
-//           if (a.number < b.number) return -1;
-//           if (a.number > b.number) return 1;
-//           return 0;
-//         })
-//     io.to(key).emit(
-//       "gameInit",
-//       store[roomId]['users'][key].card
-//       // shuffleCards
-//       //   .slice(pos, remainder > 0 ? pos + perNum + 1 : pos + perNum)
-//       //   .sort(function(a, b) {
-//       //     if (a.number < b.number) return -1;
-//       //     if (a.number > b.number) return 1;
-//       //     return 0;
-//       //   })
-//     );
-//     //seiseki[key]=
-    
-//     if (ORDER[0].id == key) {
-//       io.to(key).emit("order", { flag: true, skip: false });
-//     } else {
-//       io.to(key).emit("order", {
-//         flag: false,
-//         skip: false,
-//         playerName: UserList[ORDER[0].id]
-//       });
-//     }
-//     pos = remainder > 0 ? pos + perNum + 1 : pos + perNum;
-//     remainder--;
-//   });
 }
 
 function decideOrder(roomId){
@@ -671,7 +601,7 @@ function notifyGameReady(roomId){
   io.to(orders[0]).emit("gameReady", { gameNum: store[roomId].gameNum,card: users[orders[0]].card, yourTurn: true, playerName: users[orders[0]].dispName });
   logger.debug("gameReadyのレスポンス(一番目)： " + JSON.stringify({ gameNum: store[roomId].gameNum,card: users[orders[0]].card, yourTurn: true, playerName: users[orders[0]].dispName}));
   for(let i = 1; i < store[roomId]['order'].length; i++){
-    io.to(orders[i]).emit("gameReady", { card: users[orders[i]].card, yourTurn: false, playerName: users[orders[i]].dispName });
+    io.to(orders[i]).emit("gameReady", { gameNum: store[roomId].gameNum,card: users[orders[i]].card, yourTurn: false, playerName: users[orders[i]].dispName });
     logger.debug("gameReadyのレスポンス(二番目以降)： " + JSON.stringify({ card: users[orders[i]].card, yourTurn: false, playerName: users[orders[i]].dispName }));
   }
 }
@@ -680,13 +610,6 @@ function removeCard(sc, userId ,roomId){
   const arr01 = [...new Set(sc)],
         arr02 = [...new Set(store[roomId]['users'][userId].card)];
   store[roomId]['users'][userId].card = [...arr01, ...arr02].filter(value => !arr01.includes(value) || !arr02.includes(value));
-//   let sendedCardPos = users[socket.id].card.indexOf(msg.cards);
-//         if(sendedCardPos != -1){
-          
-//         }else{
-//           //TODO　不正なデータを送られた可能性がある。
-//           logger.error("不正なデータを送られました。"+ JSON.stringify(msg.cards));
-//         }
 }
 
 http.listen(port, function() {
