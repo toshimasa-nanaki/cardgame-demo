@@ -155,7 +155,6 @@ io.on("connection", function(socket) {
       io.to(store[msg.id].roomId).emit("changeStatus", { type: "cutPass" });
     }
     let currentTurn;
-    //let currentPlayer = ORDER.filter(function(item, index) {
     let currentPlayer = ORDER.filter(function(item, index) {
       if (item.id == socket.id) {
         currentTurn = index;
@@ -163,8 +162,8 @@ io.on("connection", function(socket) {
       }
     });
 
-    //let nextTurn = currentTurn != ORDER.length - 1 ? currentTurn + 1 : 0;
-    //ORDER.forEach(function(element) {
+    let nextTurn = currentTurn != ORDER.length - 1 ? currentTurn + 1 : 0;
+    ORDER.forEach(function(element) {
       if (element.id != ORDER[nextTurn].id) {
         io.to(element.id).emit("order", {
           flag: false,
@@ -654,8 +653,10 @@ function notifyGameReady(roomId){
   const orders = store[roomId]['order'];
   const users = store[roomId]['users'];
   io.to(orders[0]).emit("gameReady", { gameNum: store[roomId].gameNum,card: users[orders[0]].card, yourTurn: true });
+  logger.debug("gameReadyのレスポンス(一番目)： " + JSON.stringify({ gameNum: store[roomId].gameNum,card: users[orders[0]].card, yourTurn: true }));
   for(let i = 1; i < store[roomId]['order'].length; i++){
     io.to(orders[i]).emit("gameReady", { card: users[orders[i]].card, yourTurn: false });
+    logger.debug("gameReadyのレスポンス(二番目以降)： " + JSON.stringify({ card: users[orders[i]].card, yourTurn: false }));
   }
 }
 
