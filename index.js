@@ -26,7 +26,7 @@ let nowCard = "";
 let elevenbackFlag = false;
 let revolutionFlag = false;
 let shibari = false;
-let pass = 0;
+//let pass = 0;
 let seiseki = [];
 let rank = 0;
 let rankTable = [];
@@ -63,7 +63,11 @@ io.on("connection", function(socket) {
       roomDispName:
         roomInfo.dispName == "" ? createdDefaultRoomName() : roomInfo.dispName,
       capacity: roomInfo.capacity == "" ? 4 : roomInfo.capacity,
-      gameNum: 1
+      gameNum: 1,
+      passCount: 0,
+      elevenback: false,
+      shibari: false,
+      revolution: false
     };
     store[createRoomId] = roomObj;
     //console.log("Store情報:  " + JSON.stringify(store));
@@ -127,14 +131,11 @@ io.on("connection", function(socket) {
     }
   });
   socket.on("pass", function(msg) {
-    pass++;
+    store[msg.id].passCount = store[msg.id].passCount + 1;
     const count = store[msg.id].capacity;
-    if (pass >= count - 1) {
+    if (store[msg.id].passCount >= count - 1) {
       //パスで一周した場合流す
-      nowCard = "";
-      pass = 0;
-      elevenbackFlag = false;
-      shibari = false;
+      fieldClear(msg.id);
       io.to(store[msg.id].roomId).emit("changeStatus", { type: "cutPass" });
     }
     const orderList = store[msg.id]['order'];
@@ -610,6 +611,14 @@ function removeCard(sc, userId ,roomId){
   const arr01 = [...new Set(sc)],
         arr02 = [...new Set(store[roomId]['users'][userId].card)];
   store[roomId]['users'][userId].card = [...arr01, ...arr02].filter(value => !arr01.includes(value) || !arr02.includes(value));
+}
+
+//流した場合の動作
+function fieldClear(roomId){
+  nowCard = "";
+  store[roomId].passCount = 0;
+  elevenbackFlag = false;
+  shibari = false;
 }
 
 http.listen(port, function() {
