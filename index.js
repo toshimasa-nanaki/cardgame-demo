@@ -566,6 +566,9 @@ function gameInit(count, sockets, roomId) {
   revolutionFlag = false;
   let shuffleCards = sort_at_random(ORIGINALCARDDATA);
   store[roomId]['order'] = [];
+  
+  //まずは順番決め
+  decideOrder(roomId);
 
   Object.keys(sockets).forEach(function(key) {
     ORDER.push({
@@ -573,12 +576,6 @@ function gameInit(count, sockets, roomId) {
       card: remainder > 0 ? perNum + 1 : perNum,
       rank: ""
     });
-    if(store[roomId].gameNum == 1){
-      //1回目の場合は部屋に入った順
-      store[roomId]['order'].push(key);
-    }else{
-      //2回目以降は大貧民が一番。
-    }
     // var cardNum = remainder > 0 ? pos + perNum + 1 : pos + perNum;
     store[roomId]['users'][key].card = shuffleCards
         .slice(pos, remainder > 0 ? pos + perNum + 1 : pos + perNum)
@@ -612,6 +609,19 @@ function gameInit(count, sockets, roomId) {
     pos = remainder > 0 ? pos + perNum + 1 : pos + perNum;
     remainder--;
   });
+}
+
+function decideOrder(roomId){
+  if(store[roomId].gameNum == 1){
+    //1回目の場合は部屋に入った順
+    Object.keys(store[roomId]['users']).forEach(key => {
+      store[roomId]['order'].push(key);
+    });
+    logger.debug("第1回ゲームの順序: " + store[roomId]['order']);
+  }else{
+    //2回目以降は大貧民が一番。時計回りという概念がないので、とりあえず順位の逆順にする。(オリジナル)
+    //TODO? 実際は大貧民から時計回り。
+  }
 }
 
 http.listen(port, function() {
