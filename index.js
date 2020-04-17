@@ -290,9 +290,9 @@ io.on("connection", function(socket) {
         "　出したカードの数：" +
         msg.cards.length
     );
-    logger.debug("カード削除前: " +  store[msg.id]['users'][socket.id].card);
+    logger.debug("カード削除前: " +  JSON.stringify(store[msg.id]['users'][socket.id].card));
     removeCard(msg.cards, socket.id ,msg.id);
-    logger.debug("カード削除後: " +  store[msg.id]['users'][socket.id].card);
+    logger.debug("カード削除後: " +  JSON.stringify(store[msg.id]['users'][socket.id].card));
     //ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
     if(users[socket.id].card.length <= 0){
     //if (ORDER[currentTurn].card <= 0) {
@@ -575,7 +575,11 @@ function notifyGameReady(roomId){
 function removeCard(sc, userId ,roomId){
   const arr01 = [...new Set(sc)],
         arr02 = [...new Set(store[roomId]['users'][userId].card)];
-  store[roomId]['users'][userId].card = [...arr01, ...arr02].filter(value => !arr01.includes(value) || !arr02.includes(value));
+  logger.debug(arr01);
+  logger.debug(arr02);
+  store[roomId]['users'][userId].card = [...arr01, ...arr02].filter(value => {
+    !arr01.includes(value) || !arr02.includes(value)
+  });
 }
 
 //流した場合の動作
