@@ -574,7 +574,7 @@ function gameInit(count, sockets, roomId) {
   handOutCards(count, roomId);
   
   //準備完了通知
-  notifyGameReady();
+  notifyGameReady(roomId);
 
   Object.keys(sockets).forEach(function(key) {
     ORDER.push({
@@ -649,17 +649,13 @@ function handOutCards(count, roomId){
   });
 }
 
-function notifyGameReady(){
-  io.to(key).emit("gameReady", { flag: true, skip: false });
-  if (ORDER[0].id == key) {
-      io.to(key).emit("order", { flag: true, skip: false });
-    } else {
-      io.to(key).emit("order", {
-        flag: false,
-        skip: false,
-        playerName: UserList[ORDER[0].id]
-      });
-    }
+function notifyGameReady(roomId){
+  const orders = store[roomId]['order'];
+  const users = store[roomId]['users'];
+  io.to(orders[0]).emit("gameReady", { gameNum: store[roomId].gameNum,card: store[roomId]['users'][store[roomId]['order'][0]].card, yourTurn: true });
+  for(let i = 1; i < store[roomId]['order'].length; i++){
+    io.to(orders[i]).emit("gameReady", { card: store[roomId]['users'][store[roomId]['order'][i]].card, yourTurn: false });
+  }
 }
 
 http.listen(port, function() {
