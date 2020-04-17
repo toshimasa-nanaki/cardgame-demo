@@ -66,7 +66,7 @@ io.on("connection", function(socket) {
     };
     store[createRoomId] = roomObj;
     //console.log("Store情報:  " + JSON.stringify(store));
-    logger.info("createRoom:  " + roomObj.roomDispName);
+    logger.info("createdRoom:  " + roomObj.roomDispName);
     io.emit("createdRoom", { [createRoomId]: roomObj });
   });
   socket.on("join", function(joinInfo) {
