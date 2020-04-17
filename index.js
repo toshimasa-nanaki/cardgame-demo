@@ -248,9 +248,13 @@ io.on("connection", function(socket) {
             "　出したカードの数：" +
             msg.cards.length
         );
-        users[socket.id].card.filter((item,index)=>{
+        let sendedCardPos = users[socket.id].card.indexOf(msg.cards);
+        if(sendedCardPos != -1){
           
-        });
+        }else{
+          //TODO　不正なデータを送られた可能性がある。
+          logger.error("不正なデータを送られました。"+ JSON.stringify(msg.cards));
+        }
         ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
         return;
       }
