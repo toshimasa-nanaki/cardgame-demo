@@ -147,14 +147,7 @@ io.on("connection", function(socket) {
   socket.on("validate", function(msg) {
     const orderList = store[msg.id]['order'];
     const users = store[msg.id]['users'];
-    //let currentTurn;
     let currentTurn = orderList.indexOf(socket.id);
-    // let currentPlayer = orderList.filter(function(item, index) {
-    //   if (item.id == socket.id) {
-    //     currentTurn = index;
-    //     return true;
-    //   }
-    // });
     //数字はすべて同じだよね？
     //TODO 階段対応ができない
     if (!isSameNumber(msg.cards)) {
@@ -290,9 +283,7 @@ io.on("connection", function(socket) {
         "　出したカードの数：" +
         msg.cards.length
     );
-    logger.debug("カード削除前: " +  JSON.stringify(store[msg.id]['users'][socket.id].card));
     removeCard(msg.cards, socket.id ,msg.id);
-    logger.debug("カード削除後: " +  JSON.stringify(store[msg.id]['users'][socket.id].card));
     //ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
     if(users[socket.id].card.length <= 0){
     //if (ORDER[currentTurn].card <= 0) {
@@ -574,19 +565,13 @@ function notifyGameReady(roomId){
 
 function removeCard(sc, userId ,roomId){
   //let arr = [];
+  logger.debug("カード削除前: " +  JSON.stringify(store[roomId]['users'][userId].card));
   sc.forEach(v => {
     store[roomId]['users'][userId].card = store[roomId]['users'][userId].card.filter(ele => {
       return v.type !== ele.type || v.number !== ele.number;
     })
   });
-  //store[roomId]['users'][userId].card = arr;
-  // const arr01 = [...new Set(sc)],
-  //       arr02 = [...new Set(store[roomId]['users'][userId].card)];
-  // logger.debug(arr01);
-  // logger.debug(arr02);
-  // store[roomId]['users'][userId].card = [...arr01, ...arr02].filter(value => {
-  //   !arr01.includes(value) || !arr02.includes(value)
-  // });
+  logger.debug("カード削除後: " +  JSON.stringify(store[roomId]['users'][userId].card));
 }
 
 //流した場合の動作
