@@ -347,21 +347,10 @@ io.on("connection", function(socket) {
         io.to(store[msg.id].roomId).emit("gameFinish", "");
       }
     }
+    
+    currentTurn
 
-    let nextTurn = currentTurn != orderList.length - 1 ? currentTurn + 1 : 0;
-    orderList.forEach(function(element) {
-      if (element != orderList[nextTurn]) {
-        io.to(element).emit("order", {
-          flag: false,
-          skip: false,
-          playerName: UserList[orderList[nextTurn]]
-        });
-      }
-    });
-    io.to(orderList[nextTurn]).emit("order", {
-      flag: true,
-      skip: users[orderList[nextTurn]].rank != "" ? true : false
-    });
+    
   });
 });
 
@@ -610,6 +599,25 @@ function fieldClear(roomId){
   store[roomId].passCount = 0;
   elevenbackFlag = false;
   shibari = false;
+}
+
+function notifyChangeTurn(currentTurnIndex, roomId){
+  const orderList = store[roomId]['order'];
+  const users = store[roomId]['users'];
+  let nextTurn = currentTurnIndex != orderList.length - 1 ? currentTurnIndex + 1 : 0;
+    orderList.forEach(function(element) {
+      if (element != orderList[nextTurn]) {
+        io.to(element).emit("order", {
+          flag: false,
+          skip: false,
+          playerName: UserList[orderList[nextTurn]]
+        });
+      }
+    });
+    io.to(orderList[nextTurn]).emit("order", {
+      flag: true,
+      skip: users[orderList[nextTurn]].rank != "" ? true : false
+    });
 }
 
 http.listen(port, function() {
