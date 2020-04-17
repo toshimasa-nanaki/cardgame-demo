@@ -179,14 +179,16 @@ io.on("connection", function(socket) {
     });
   });
   socket.on("validate", function(msg) {
-    const order
-    let currentTurn;
-    let currentPlayer = ORDER.filter(function(item, index) {
-      if (item.id == socket.id) {
-        currentTurn = index;
-        return true;
-      }
-    });
+    const orderList = store[msg.id]['order'];
+    const users = store[msg.id]['users'];
+    //let currentTurn;
+    let currentTurn = orderList.indexOf(socket.id);
+    // let currentPlayer = orderList.filter(function(item, index) {
+    //   if (item.id == socket.id) {
+    //     currentTurn = index;
+    //     return true;
+    //   }
+    // });
     //数字はすべて同じだよね？
     //TODO 階段対応ができない
     if (!isSameNumber(msg.cards)) {
@@ -246,6 +248,9 @@ io.on("connection", function(socket) {
             "　出したカードの数：" +
             msg.cards.length
         );
+        users[socket.id].card.filter((item,index)=>{
+          
+        });
         ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
         return;
       }
