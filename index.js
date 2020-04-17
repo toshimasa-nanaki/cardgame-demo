@@ -142,21 +142,7 @@ io.on("connection", function(socket) {
     const users = store[msg.id]['users'];
     let currentTurn = orderList.indexOf(socket.id);
 
-    let nextTurn = currentTurn != orderList.length - 1 ? currentTurn + 1 : 0;
-    orderList.forEach(function(element) {
-      if (element != orderList[nextTurn]) {
-        io.to(element).emit("order", {
-          flag: false,
-          skip: false,
-          playerName: UserList[orderList[nextTurn]]
-        });
-      }
-    });
-    // io.to(ORDER[currentTurn].id).emit("order", {flag: false, skip: false, playerName: UserList[ORDER[nextTurn].id]});
-    io.to(orderList[nextTurn]).emit("order", {
-      flag: true,
-      skip: users[orderList[nextTurn]].rank != "" ? true : false
-    });
+    notifyChangeTurn(currentTurn, msg.id);
   });
   socket.on("validate", function(msg) {
     const orderList = store[msg.id]['order'];
@@ -304,7 +290,9 @@ io.on("connection", function(socket) {
         "　出したカードの数：" +
         msg.cards.length
     );
+    logger.debug("カード削除前: " +  store[msg.id]['users'][socket.id].card);
     removeCard(msg.cards, socket.id ,msg.id);
+    logger.debug("カード削除後: " +  store[msg.id]['users'][socket.id].card);
     //ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
     if(users[socket.id].card.length <= 0){
     //if (ORDER[currentTurn].card <= 0) {
@@ -347,10 +335,7 @@ io.on("connection", function(socket) {
         io.to(store[msg.id].roomId).emit("gameFinish", "");
       }
     }
-    
-    currentTurn
-
-    
+    notifyChangeTurn(currentTurn, msg.id);
   });
 });
 
