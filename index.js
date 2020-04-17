@@ -22,7 +22,7 @@ var store = {};
 const ORIGINALCARDDATA = trump_init(TRUMPDATA);
 let gameStart = false;
 let nowCard = "";
-let ORDER = [];
+//let ORDER = [];
 let elevenbackFlag = false;
 let revolutionFlag = false;
 let shibari = false;
@@ -154,28 +154,32 @@ io.on("connection", function(socket) {
       shibari = false;
       io.to(store[msg.id].roomId).emit("changeStatus", { type: "cutPass" });
     }
-    let currentTurn;
-    let currentPlayer = ORDER.filter(function(item, index) {
-      if (item.id == socket.id) {
-        currentTurn = index;
-        return true;
-      }
-    });
+    //let currentTurn;
+    const orderList = store[msg.id]['order'];
+    const users = store[msg.id]['users'];
+    //let currentTurn;
+    let currentTurn = orderList.indexOf(socket.id);
+    // let currentPlayer = ORDER.filter(function(item, index) {
+    //   if (item.id == socket.id) {
+    //     currentTurn = index;
+    //     return true;
+    //   }
+    // });
 
-    let nextTurn = currentTurn != ORDER.length - 1 ? currentTurn + 1 : 0;
-    ORDER.forEach(function(element) {
-      if (element.id != ORDER[nextTurn].id) {
+    let nextTurn = currentTurn != orderList.length - 1 ? currentTurn + 1 : 0;
+    orderList.forEach(function(element) {
+      if (element.id != orderList[nextTurn].id) {
         io.to(element.id).emit("order", {
           flag: false,
           skip: false,
-          playerName: UserList[ORDER[nextTurn].id]
+          playerName: UserList[orderList[nextTurn]]
         });
       }
     });
     // io.to(ORDER[currentTurn].id).emit("order", {flag: false, skip: false, playerName: UserList[ORDER[nextTurn].id]});
-    io.to(ORDER[nextTurn].id).emit("order", {
+    io.to(orderList[nextTurn].id).emit("order", {
       flag: true,
-      skip: ORDER[nextTurn].rank != "" ? true : false
+      skip: orderList[nextTurn].rank != "" ? true : false
     });
   });
   socket.on("validate", function(msg) {
@@ -249,7 +253,7 @@ io.on("connection", function(socket) {
             msg.cards.length
         );
         //ストアからカードを抜きだす
-        removeCard(msg.cards, users[socket.id].card ,msg.id);
+        removeCard(msg.cards, socket.id ,msg.id);
         
         //ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
         return;
@@ -277,7 +281,8 @@ io.on("connection", function(socket) {
       pass = 0;
       elevenbackFlag = false;
       shibari = false;
-      ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
+      removeCard(msg.cards, socket.id ,msg.id);
+      //ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
       return;
     }
     if (msg.cards.length == 4) {
@@ -304,7 +309,8 @@ io.on("connection", function(socket) {
           "　出したカードの数：" +
           msg.cards.length
       );
-      ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
+      removeCard(msg.cards, socket.id ,msg.id);
+      //ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
       return;
     }
     if (msg.cards[0].number == 11) {
@@ -331,8 +337,10 @@ io.on("connection", function(socket) {
         "　出したカードの数：" +
         msg.cards.length
     );
-    ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
-    if (ORDER[currentTurn].card <= 0) {
+    removeCard(msg.cards, socket.id ,msg.id);
+    //ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
+    if(users[socket.id].card.length <= 0){
+    //if (ORDER[currentTurn].card <= 0) {
       //上がり
       //まずは反則あがりをチェック
       //・スペ3一枚で上がってない？
@@ -348,9 +356,11 @@ io.on("connection", function(socket) {
         (revolutionFlag && msg.cards[0].number == 3) ||
         (!revolutionFlag && msg.cards[0].number == 2)
       ) {
-        ORDER[currentTurn].rank = rankTable[ORDER.length - 1];
+        store[msg.id]['users'][socket.id].rank = rankTable[store[msg.id]['order'].length - 1];
+        //ORDER[currentTurn].rank = rankTable[ORDER.length - 1];
       } else {
-        ORDER[currentTurn].rank = rankTable[rank];
+        store[msg.id]['users'][socket.id].rank = rankTable[rank];
+        //ORDER[currentTurn].rank = rankTable[rank];
       }
       io.to(ORDER[currentTurn].id).emit("finish", rankTable[rank]);
       io.to(store[msg.id].roomId).emit("finishNotification", {
