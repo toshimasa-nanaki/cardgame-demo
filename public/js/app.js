@@ -139,10 +139,7 @@ $(function() {
   socket.on("gameReady", function(msg) {
     $("#gameCommentaryArea").append( "ゲームを開始します" + "<br />" );
     $("#gameCommentaryArea").scrollTop( $("#gameCommentaryArea")[0].scrollHeight );
-  });
-  socket.on("gameInit", function(msg) {
     $("#gameFieldArea").show();
-    // $("#connectStatus").toggle();
     $("#send").prop("disabled", true);
     $("#pass").prop("disabled", true);
     $("#cardList").empty();
@@ -163,6 +160,28 @@ $(function() {
       $("#cardList").append(check);
     });
   });
+  // socket.on("gameInit", function(msg) {
+  //   $("#gameFieldArea").show();
+  //   $("#send").prop("disabled", true);
+  //   $("#pass").prop("disabled", true);
+  //   $("#cardList").empty();
+  //   msg.forEach(element => {
+  //     var check = $(
+  //       '<label id="' +
+  //         element.type +
+  //         element.number +
+  //         '">' +
+  //         DISPLAY_DIC[element.type + element.number] +
+  //         "</label>"
+  //     ).prepend(
+  //       $('<input type="checkbox" />').attr({
+  //         name: "cards",
+  //         value: element.type + "_" + element.number
+  //       })
+  //     );
+  //     $("#cardList").append(check);
+  //   });
+  // });
   socket.on("order", function(msg) {
     console.log("order accept");
     if (msg.flag) {
