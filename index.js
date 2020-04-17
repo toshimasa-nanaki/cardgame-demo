@@ -248,14 +248,10 @@ io.on("connection", function(socket) {
             "　出したカードの数：" +
             msg.cards.length
         );
-        let sendedCardPos = users[socket.id].card.indexOf(msg.cards);
-        if(sendedCardPos != -1){
-          
-        }else{
-          //TODO　不正なデータを送られた可能性がある。
-          logger.error("不正なデータを送られました。"+ JSON.stringify(msg.cards));
-        }
-        ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
+        //ストアからカードを抜きだす
+        removeCard(msg.cards, users[socket.id].card ,msg.id);
+        
+        //ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
         return;
       }
       if (!shibari && isShibari(nowCard.cards, msg.cards)) {
@@ -668,6 +664,19 @@ function notifyGameReady(roomId){
     io.to(orders[i]).emit("gameReady", { card: users[orders[i]].card, yourTurn: false, playerName: users[orders[i]].dispName });
     logger.debug("gameReadyのレスポンス(二番目以降)： " + JSON.stringify({ card: users[orders[i]].card, yourTurn: false, playerName: users[orders[i]].dispName }));
   }
+}
+
+function removeCard(sc, userId ,roomId){
+  const arr01 = [...new Set(sc)],
+        arr02 = [...new Set(store[roomId]['users'][userId].card)];
+  store[roomId]['users'][userId].card = [...arr01, ...arr02].filter(value => !arr01.includes(value) || !arr02.includes(value));
+//   let sendedCardPos = users[socket.id].card.indexOf(msg.cards);
+//         if(sendedCardPos != -1){
+          
+//         }else{
+//           //TODO　不正なデータを送られた可能性がある。
+//           logger.error("不正なデータを送られました。"+ JSON.stringify(msg.cards));
+//         }
 }
 
 http.listen(port, function() {
