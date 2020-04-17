@@ -573,13 +573,18 @@ function notifyGameReady(roomId){
 }
 
 function removeCard(sc, userId ,roomId){
-  const arr01 = [...new Set(sc)],
-        arr02 = [...new Set(store[roomId]['users'][userId].card)];
-  logger.debug(arr01);
-  logger.debug(arr02);
-  store[roomId]['users'][userId].card = [...arr01, ...arr02].filter(value => {
-    !arr01.includes(value) || !arr02.includes(value)
+  sc.forEach(v => {
+    store[roomId]['users'][userId].card = store[roomId]['users'][userId].card.filter(ele => {
+      return v.type === ele.type && v.number === ele.number;
+    })
   });
+  // const arr01 = [...new Set(sc)],
+  //       arr02 = [...new Set(store[roomId]['users'][userId].card)];
+  // logger.debug(arr01);
+  // logger.debug(arr02);
+  // store[roomId]['users'][userId].card = [...arr01, ...arr02].filter(value => {
+  //   !arr01.includes(value) || !arr02.includes(value)
+  // });
 }
 
 //流した場合の動作
