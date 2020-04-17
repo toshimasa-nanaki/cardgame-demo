@@ -144,8 +144,8 @@ io.on("connection", function(socket) {
 
     let nextTurn = currentTurn != orderList.length - 1 ? currentTurn + 1 : 0;
     orderList.forEach(function(element) {
-      if (element.id != orderList[nextTurn]) {
-        io.to(element.id).emit("order", {
+      if (element != orderList[nextTurn]) {
+        io.to(element).emit("order", {
           flag: false,
           skip: false,
           playerName: UserList[orderList[nextTurn]]
@@ -214,14 +214,11 @@ io.on("connection", function(socket) {
         msg.cards[0].number == "3"
       ) {
         //JOKER討伐(誰も倒せないから流す)
-        nowCard = "";
+        fieldClear(msg.id);
         io.to(store[msg.id].roomId).emit("changeStatus", {
           type: "winjoker",
           value: msg
         });
-        pass = 0;
-        elevenbackFlag = false;
-        shibari = false;
         console.log(
           "スペ3プレイヤー名:" +
             UserList[socket.id] +
@@ -249,14 +246,11 @@ io.on("connection", function(socket) {
       ~msg.cards[1].type.indexOf("joker")
     ) {
       //JOKER2枚だしは歯が立たないので流す
-      nowCard = "";
+      fieldClear(msg.id);
       io.to(store[msg.id].roomId).emit("changeStatus", {
         type: "doblejoker",
         value: msg
       });
-      pass = 0;
-      elevenbackFlag = false;
-      shibari = false;
       removeCard(msg.cards, socket.id ,msg.id);
       //ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
       return;
@@ -271,14 +265,11 @@ io.on("connection", function(socket) {
     }
     if (msg.cards[0].number == 8) {
       //8ぎり
-      nowCard = "";
+      fieldClear(msg.id);
       io.to(store[msg.id].roomId).emit("changeStatus", {
         type: "cut8",
         value: msg
       });
-      pass = 0;
-      elevenbackFlag = false;
-      shibari = false;
       console.log(
         "8ぎりプレイヤー名:" +
           UserList[socket.id] +
@@ -297,7 +288,7 @@ io.on("connection", function(socket) {
         value: elevenbackFlag
       });
     }
-    pass = 0;
+    store[msg.id].passCount = 0;
     nowCard = msg;
     io.to(store[msg.id].roomId).emit("result", {
       card: msg,
@@ -359,8 +350,8 @@ io.on("connection", function(socket) {
 
     let nextTurn = currentTurn != orderList.length - 1 ? currentTurn + 1 : 0;
     orderList.forEach(function(element) {
-      if (element.id != orderList[nextTurn]) {
-        io.to(element.id).emit("order", {
+      if (element != orderList[nextTurn]) {
+        io.to(element).emit("order", {
           flag: false,
           skip: false,
           playerName: UserList[orderList[nextTurn]]
