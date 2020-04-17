@@ -572,6 +572,9 @@ function gameInit(count, sockets, roomId) {
   
   //カード配布
   handOutCards(count, roomId);
+  
+  //準備完了通知
+  notifyGameReady();
 
   Object.keys(sockets).forEach(function(key) {
     ORDER.push({
@@ -644,6 +647,19 @@ function handOutCards(count, roomId){
     remainder--;
     logger.debug(key +"の持ちカード： " + JSON.stringify(store[roomId]['users'][key].card));
   });
+}
+
+function notifyGameReady(){
+  io.to(key).emit("gameReady", { flag: true, skip: false });
+  if (ORDER[0].id == key) {
+      io.to(key).emit("order", { flag: true, skip: false });
+    } else {
+      io.to(key).emit("order", {
+        flag: false,
+        skip: false,
+        playerName: UserList[ORDER[0].id]
+      });
+    }
 }
 
 http.listen(port, function() {
