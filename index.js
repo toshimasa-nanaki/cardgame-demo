@@ -610,34 +610,22 @@ function checkValidateHand(sc){
     //1枚だしは特に問題なし
     return true;
   }else if(isAllSameNumber(sc)){
+    //複数枚だしで数字がそろっていること
     return true;
-  }else if(){
+  }else if(isStairsCard(sc)){
+    //階段
     return true;
   }
   return false;
-  if (!isSameNumber(msg.cards)) {
-      io.to(socket.id).emit("validateError", {
-        card: msg,
-        error: 1,
-        reason: "数字は全部同じにしてね"
-      });
-      return;
-    }
 }
 
 function isAllSameNumber(sc){
-  sc.filter(element => {
-    
-  });
-  let base = cards[0].number;
-  if (cards.length == 1) {
-    return true;
-  }
-  for (let i = 1; i < cards.length; i++) {
-    if (~cards[i].type.indexOf("joker")) {
+  let base = sc[0].number;
+  for (let i = 1; i < sc.length; i++) {
+    if (~sc[i].type.indexOf("joker")) {
       continue;
     }
-    if (base != cards[i].number) {
+    if (base !== sc[i].number) {
       return false;
     }
   }
