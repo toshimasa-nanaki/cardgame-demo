@@ -325,7 +325,7 @@ io.on("connection", function(socket) {
       rank++;
       if (rank == orderList.length - 1) {
         //つまり全員終了
-        let biri = users.filter(item => item.rank.length == 0)[0].id;
+        let biri = Object.keys(users).filter(item => item.rank.length == 0)[0].id;
         console.log(biri);
         io.to(biri).emit("finish", rankTable[rank]);
         io.to(store[msg.id].roomId).emit("finishNotification", {
@@ -573,11 +573,13 @@ function notifyGameReady(roomId){
 }
 
 function removeCard(sc, userId ,roomId){
+  //let arr = [];
   sc.forEach(v => {
     store[roomId]['users'][userId].card = store[roomId]['users'][userId].card.filter(ele => {
-      return v.type === ele.type && v.number === ele.number;
+      return v.type !== ele.type || v.number !== ele.number;
     })
   });
+  //store[roomId]['users'][userId].card = arr;
   // const arr01 = [...new Set(sc)],
   //       arr02 = [...new Set(store[roomId]['users'][userId].card)];
   // logger.debug(arr01);
