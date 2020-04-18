@@ -25,7 +25,7 @@ let stair = false;
 let seiseki = [];
 let rank = 0;
 let rankTable = [];
-let UserList = {};
+//let UserList = {};
 
 app.get("/", function(req, res) {
   res.sendFile(__dirname + "/index.html");
@@ -46,7 +46,7 @@ io.on("connection", function(socket) {
       if (~Object.keys(store[roomId].users).indexOf(socket.id)) {
         console.log(socket.id + "が" + roomId + "から退出");
         delete store[roomId]["users"][socket.id];
-        delete UserList[socket.id];
+        //delete UserList[socket.id];
         socket.leave(roomId);
       }
     });
@@ -75,7 +75,7 @@ io.on("connection", function(socket) {
     console.log("部屋入り情報:" + JSON.stringify(joinInfo));
     const count = store[joinInfo.roomId].capacity;
     //if (socket.nsp.adapter.rooms[msg.id].length >= count) {
-    if (Object.keys(UserList).length >= count) {
+    if (Object.keys(store[joinInfo.roomId]["users"]).length >= count) {
       io.to(socket.id).emit("connectError", "もう部屋がいっぱいです");
       return;
     } else {
@@ -97,18 +97,18 @@ io.on("connection", function(socket) {
       );
       //store[joinInfo.roomId]['users'] = {'dispName': joinInfo.playerName, 'card': 0, 'rank': ''}
       //console.log("Store情報:  " + JSON.stringify(store));
-      UserList[socket.id] = joinInfo.playerName;
+      //UserList[socket.id] = joinInfo.playerName;
       socket.join(joinInfo.roomId);
-      io.to(socket.id).emit("joinedRoom", UserList);
-      Object.keys(UserList).forEach(function(key) {
+      io.to(socket.id).emit("joinedRoom", store[joinInfo.roomId]["users"]);
+      Object.keys(store[joinInfo.roomId]["users"]).forEach(function(key) {
         if (key != socket.id) {
           io.to(key).emit("otherMemberJoinedRoom", joinInfo.playerName);
         }
       });
     }
-    if (Object.keys(UserList).length == count) {
+    if (Object.keys(store[joinInfo.roomId]["users"]).length == count) {
       //人数がそろった場合は、メンバー全員に通知する
-      gameInit(count, UserList, joinInfo.roomId);
+      gameInit(count, store[joinInfo.roomId]["users"], joinInfo.roomId);
     }
   });
   //再戦
@@ -117,7 +117,7 @@ io.on("connection", function(socket) {
     // typeof store[msg.id].capacity === "undefined" ? 4 : store[msg.id].capacity;
 
     //if (socket.nsp.adapter.rooms[msg.id].length == count) {
-    if (Object.keys(UserList).length == count) {
+    if (Object.keys(store[msg.id]["users"]).length == count) {
       //人数がそろっているのか確認
       gameInit(count, socket.nsp.adapter.rooms[msg.id].sockets, msg.id);
     } else {
@@ -187,12 +187,12 @@ io.on("connection", function(socket) {
           value: msg,
           playerName: users[socket.id].dispName
         });
-        console.log(
-          "スペ3プレイヤー名:" +
-            UserList[socket.id] +
-            "　出したカードの数：" +
-            validateCards.length
-        );
+        // console.log(
+        //   "スペ3プレイヤー名:" +
+        //     UserList[socket.id] +
+        //     "　出したカードの数：" +
+        //     validateCards.length
+        // );
         //ストアからカードを抜きだす
         removeCard(validateCards, socket.id ,msg.id);
         
@@ -240,12 +240,12 @@ io.on("connection", function(socket) {
         value: msg,
         playerName: users[socket.id].dispName
       });
-      console.log(
-        "8ぎりプレイヤー名:" +
-          UserList[socket.id] +
-          "　出したカードの数：" +
-          validateCards.length
-      );
+      // console.log(
+      //   "8ぎりプレイヤー名:" +
+      //     UserList[socket.id] +
+      //     "　出したカードの数：" +
+      //     validateCards.length
+      // );
       removeCard(validateCards, socket.id ,msg.id);
       return;
     }
@@ -273,12 +273,12 @@ io.on("connection", function(socket) {
     });
 
     //成績をここでつける
-    console.log(
-      "プレイヤー名:" +
-        UserList[socket.id] +
-        "　出したカードの数：" +
-        validateCards.length
-    );
+    // console.log(
+    //   "プレイヤー名:" +
+    //     UserList[socket.id] +
+    //     "　出したカードの数：" +
+    //     validateCards.length
+    // );
     removeCard(validateCards, socket.id ,msg.id);
     if(users[socket.id].card.length <= 0){
       //上がり
@@ -307,7 +307,7 @@ io.on("connection", function(socket) {
       io.to(orderList[currentTurn]).emit("finish", rankTable[rank]);
       io.to(store[msg.id].roomId).emit("finishNotification", {
         rank: users[orderList[currentTurn]].rank,
-        playerName: UserList[orderList[currentTurn]]
+        playerName: users[orderList[currentTurn]].dispName
       });
       rank++;
       logger.debug("現在のユーザーの状態:" + JSON.stringify(store[msg.id]['users'][orderList[currentTurn]]));
@@ -582,7 +582,7 @@ function notifyChangeTurn(currentTurnIndex, roomId){
         io.to(element).emit("order", {
           flag: false,
           skip: false,
-          playerName: UserList[orderList[nextTurn]]
+          playerName: users[orderList[nextTurn]].dispName
         });
       }
     });
