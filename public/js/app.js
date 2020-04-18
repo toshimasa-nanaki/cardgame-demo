@@ -226,7 +226,6 @@ $(function() {
       $("#send").prop("disabled", true);
       $("#pass").prop("disabled", true);
       $("#cardList input").prop("disabled", true);
-      //$("#order").text(msg.playerName + "の番です");
       $("#gameCommentaryArea").append(
         msg.playerName + "さんのターンです。<br />"
       );
@@ -272,15 +271,33 @@ $(function() {
   socket.on("changeStatus", function(msg) {
     switch (msg.type) {
       case "elevenback":
+        if(msg.value){
+          $("#gameCommentaryArea").append(
+          msg.playerName + "さんが11バックを発動しました。<br />"
+        );
+        } 
         $("#elevenback").text(msg.value ? "　11Back　" : "");
         break;
       case "revolution":
+        if(msg.value){
+          $("#gameCommentaryArea").append(
+          msg.playerName + "さんが革命を発動しました。<br />"
+        );
+        }
         $("#revolution").text(msg.value ? "　革命中　" : "");
         break;
       case "shibari":
+        if(msg.value){
+          $("#gameCommentaryArea").append(
+          msg.playerName + "さんがスートしばりを発動しました。<br />"
+        );
+        }
         $("#shibari").text(msg.value ? "　縛り　" : "");
         break;
       case "winjoker":
+        $("#gameCommentaryArea").append(
+          msg.playerName + "さんがスペ3返しを発動しました。場を流します。<br />"
+        );
         $("#other").text("JOKER討伐したので流しました。");
         $("#field").text("なし");
         for (let i = 0; i < msg.value.cards.length; i++) {
@@ -290,7 +307,9 @@ $(function() {
         $("#shibari").text("");
         break;
       case "doblejoker":
-        $("#other").text("ダブルJOKERなので流しました。");
+        $("#gameCommentaryArea").append(
+          msg.playerName + "さんがダブルJOKERを発動しました。場を流します。<br />"
+        );
         $("#field").text("なし");
         for (let i = 0; i < msg.value.cards.length; i++) {
           $("#" + msg.value.cards[i].type + msg.value.cards[i].number).remove();
@@ -299,7 +318,9 @@ $(function() {
         $("#shibari").text("");
         break;
       case "cut8":
-        $("#other").text("8切ました。");
+        $("#gameCommentaryArea").append(
+          msg.playerName + "さんが8切りを発動しました。場を流します。<br />"
+        );
         $("#field").text("なし");
         for (let i = 0; i < msg.value.cards.length; i++) {
           $("#" + msg.value.cards[i].type + msg.value.cards[i].number).remove();
@@ -308,7 +329,9 @@ $(function() {
         $("#shibari").text("");
         break;
       case "cutPass":
-        $("#other").text("パスが一周したので流しました");
+        $("#gameCommentaryArea").append(
+          msg.playerName + "さんでパスが一周したので場を流します。<br />"
+        );
         $("#field").text("なし");
         $("#elevenback").text("");
         $("#shibari").text("");

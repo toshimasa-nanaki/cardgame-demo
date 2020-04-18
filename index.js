@@ -203,7 +203,8 @@ io.on("connection", function(socket) {
         store[msg.id].shibari = true;
         io.to(store[msg.id].roomId).emit("changeStatus", {
           type: "shibari",
-          value: store[msg.id].shibari
+          value: store[msg.id].shibari,
+          playerName: users[socket.id].dispName
         });
       }
     }
@@ -217,7 +218,8 @@ io.on("connection", function(socket) {
       fieldClear(msg.id);
       io.to(store[msg.id].roomId).emit("changeStatus", {
         type: "doblejoker",
-        value: msg
+        value: msg,
+        playerName: users[socket.id].dispName
       });
       removeCard(validateCards, socket.id ,msg.id);
       return;
@@ -227,7 +229,8 @@ io.on("connection", function(socket) {
       store[msg.id].revolution = !store[msg.id].revolution;
       io.to(store[msg.id].roomId).emit("changeStatus", {
         type: "revolution",
-        value: store[msg.id].revolution
+        value: store[msg.id].revolution,
+        playerName: users[socket.id].dispName
       });
     }
     if (validateCards[0].number == 8 && resultCheckHand.type !== "stair") {
@@ -235,7 +238,8 @@ io.on("connection", function(socket) {
       fieldClear(msg.id);
       io.to(store[msg.id].roomId).emit("changeStatus", {
         type: "cut8",
-        value: msg
+        value: msg,
+        playerName: users[socket.id].dispName
       });
       console.log(
         "8ぎりプレイヤー名:" +
@@ -251,7 +255,8 @@ io.on("connection", function(socket) {
       store[msg.id].elevenback = !store[msg.id].elevenback;
       io.to(store[msg.id].roomId).emit("changeStatus", {
         type: "elevenback",
-        value: store[msg.id].elevenback
+        value: store[msg.id].elevenback,
+        playerName: users[socket.id].dispName
       });
     }
     store[msg.id].passCount = 0;
