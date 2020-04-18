@@ -206,6 +206,9 @@ $(function() {
         msg.playerName + "さんのターンです。<br />"
       );
     }
+    $("#gameCommentaryArea").scrollTop(
+      $("#gameCommentaryArea")[0].scrollHeight
+    );
   });
   socket.on("order", function(msg) {
     console.log("order accept");
@@ -230,7 +233,9 @@ $(function() {
         msg.playerName + "さんのターンです。<br />"
       );
     }
-    window.scrollTo(0, document.body.scrollHeight);
+    $("#gameCommentaryArea").scrollTop(
+      $("#gameCommentaryArea")[0].scrollHeight
+    );
   }); //カードを出したとき
   $("#send").click(function() {
     let sendCards = [];
@@ -298,7 +303,7 @@ $(function() {
         $("#gameCommentaryArea").append(
           msg.playerName + "さんがスペ3返しを発動しました。場を流します。<br />"
         );
-        $("#other").text("JOKER討伐したので流しました。");
+        //$("#other").text("JOKER討伐したので流しました。");
         $("#field").text("なし");
         for (let i = 0; i < msg.value.cards.length; i++) {
           $("#" + msg.value.cards[i].type + msg.value.cards[i].number).remove();
@@ -337,6 +342,9 @@ $(function() {
         $("#shibari").text("");
         break;
     }
+    $("#gameCommentaryArea").scrollTop(
+      $("#gameCommentaryArea")[0].scrollHeight
+    );
   });
   socket.on("finish", function(msg) {
     console.log("finish accept");
@@ -368,11 +376,17 @@ $(function() {
   socket.on("gameFinish", function(msg) {
     console.log("game finish");
     $("#gameCommentaryArea").append("10秒後に次のゲームを始めます。<br />");
+    $("#gameCommentaryArea").scrollTop(
+      $("#gameCommentaryArea")[0].scrollHeight
+    );
   });
   socket.on("nextGameStart", function(msg) {
     console.log("next game start");
     //$("#rematch").show();
     $("#gameCommentaryArea").append("10秒後に次のゲームを始めます。<br />");
+    $("#gameCommentaryArea").scrollTop(
+      $("#gameCommentaryArea")[0].scrollHeight
+    );
     sleep(10, function () {
       socket.emit("rematch", {
         id: $("input[name=roomRadios]:checked").val(),
