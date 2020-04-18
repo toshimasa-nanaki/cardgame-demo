@@ -169,7 +169,9 @@ io.on("connection", function(socket) {
     }
 
     /* 場のカードとの比較判定 */
+    logger.debug("場のカード:"+ JSON.stringify(fieldCards));
     if (fieldCards.length != 0) {
+      logger.debug("比較判定開始");
       if (fieldCards.length != validateCards.length) {
         //枚数が違うのはあり得ない
         io.to(socket.id).emit("validateError", {
@@ -275,12 +277,12 @@ io.on("connection", function(socket) {
       });
     }
     store[msg.id].passCount = 0;
-    fieldCards = validateCards;
+    store[msg.id]['fieldCards'] = validateCards;
     io.to(store[msg.id].roomId).emit("result", {
       card: validateCards,
       error: 0,
       reason: "",
-      result: fieldCards
+      result: store[msg.id]['fieldCards']
     });
 
     //成績をここでつける
