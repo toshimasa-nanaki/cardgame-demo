@@ -165,8 +165,13 @@ io.on("connection", function(socket) {
     //   });
     //   return;
     // }
-    if(!checkValidateHand){
-      
+    if(!checkValidateHand(validateCards)){
+      io.to(socket.id).emit("validateError", {
+        card: msg,
+        error: 1,
+        reason: "役ができていません"
+      });
+      return;
     }
 
     if (nowCard != "") {
@@ -644,7 +649,7 @@ function isAllSameNumber(sc){
 function isStairsCard(sc){
   //Jokerの数を確認
   let jokerCount = sc.filter(item => ~item.type.indexOf("joker")).length;
-  if(sc.length >= 3){
+  if(sc.length < 3){
     //3枚以上でなければ階段ではない
     return false;
   }
