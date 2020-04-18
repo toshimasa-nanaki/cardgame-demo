@@ -324,6 +324,7 @@ io.on("connection", function(socket) {
         playerName: UserList[orderList[currentTurn]]
       });
       rank++;
+      logger.debug("現在のユーザーの状態:" + JSON.stringify(store[msg.id]['users'][orderList[currentTurn]]));
       if (rank == orderList.length - 1) {
         //つまり全員終了
         let biri = Object.keys(users).filter(item => item.rank.length == 0)[0].id;
@@ -518,6 +519,7 @@ function gameInit(count, sockets, roomId) {
   store[roomId].elevenback = false;
   store[roomId].shibari = false;
   store[roomId].revolution = false;
+  store[roomId].stair = false;
   store[roomId]['order'] = [];
   
   //まずは順番決め
@@ -589,6 +591,7 @@ function fieldClear(roomId){
   store[roomId]['fieldCards'] = [];
   store[roomId].passCount = 0;
   store[roomId].elevenback = false;
+  store[roomId].stair = false;
   store[roomId].shibari = false;
 }
 
