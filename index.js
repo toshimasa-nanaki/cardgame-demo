@@ -168,7 +168,7 @@ io.on("connection", function(socket) {
     logger.debug("場のカード:"+ JSON.stringify(fieldCards));
     if (fieldCards.length != 0) {
       logger.debug("比較判定開始");
-      cardCompare(fieldCards, validateCards, resultCheckHand.type, msg.id, userId);
+      cardCompare(fieldCards, validateCards, resultCheckHand.type, msg.id);
       // if (fieldCards.length != validateCards.length) {
       //   //枚数が違うのはあり得ない
       //   io.to(socket.id).emit("validateError", {
