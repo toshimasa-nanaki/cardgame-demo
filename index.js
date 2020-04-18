@@ -111,7 +111,6 @@ io.on("connection", function(socket) {
     if (Object.keys(UserList).length == count) {
       //人数がそろった場合は、メンバー全員に通知する
       gameInit(count, UserList, joinInfo.roomId);
-      //io.to(joinInfo.roomId).emit("gameReady", UserList);
     }
   });
   //再戦
@@ -335,7 +334,7 @@ io.on("connection", function(socket) {
         io.to(biriId).emit("finish", rankTable[rank]);
         io.to(store[msg.id].roomId).emit("finishNotification", {
           rank: rankTable[rank],
-          playerName: UserList[biri]
+          playerName: store[msg.id]['users'][biriId].dispName
         });
         io.to(store[msg.id].roomId).emit("gameFinish", "");
       }

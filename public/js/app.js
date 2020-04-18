@@ -101,7 +101,10 @@ $(function() {
             "room_" +
             roomList[key].roomId +
             '">' +
-            roomList[key].roomDispName + "(定員：" + roomList[key].capacity + "人)" +
+            roomList[key].roomDispName +
+            "(定員：" +
+            roomList[key].capacity +
+            "人)" +
             "</label>"
         )
       );
@@ -109,9 +112,9 @@ $(function() {
     });
   }
   $("#joinRoom").click(function() {
-    let roomId = $('input[name=roomRadios]:checked').val();
+    let roomId = $("input[name=roomRadios]:checked").val();
     socket.emit("join", {
-      roomId: $('input[name=roomRadios]:checked').val(),
+      roomId: $("input[name=roomRadios]:checked").val(),
       playerName: $("#playerName").val()
     });
   });
@@ -120,26 +123,38 @@ $(function() {
     console.log("JoinedRoom");
     $("#roomSelectArea").hide();
     $("#gameArea").show();
-    Object.keys(joinMembers).forEach(function(key){
-      $("#gameCommentaryArea").append( joinMembers[key] + "さんが部屋に入りました<br />" );
-      $("#gameCommentaryArea").scrollTop( $("#gameCommentaryArea")[0].scrollHeight );
+    Object.keys(joinMembers).forEach(function(key) {
+      $("#gameCommentaryArea").append(
+        joinMembers[key] + "さんが部屋に入りました<br />"
+      );
+      $("#gameCommentaryArea").scrollTop(
+        $("#gameCommentaryArea")[0].scrollHeight
+      );
     });
   });
   socket.on("otherMemberJoinedRoom", function(joinMemberName) {
     //他のメンバーが部屋に入ったとき
     console.log("otherMemberJoinedRoom");
-    $("#gameCommentaryArea").append( joinMemberName + "さんが部屋に入りました<br />" );
-    $("#gameCommentaryArea").scrollTop( $("#gameCommentaryArea")[0].scrollHeight );
+    $("#gameCommentaryArea").append(
+      joinMemberName + "さんが部屋に入りました<br />"
+    );
+    $("#gameCommentaryArea").scrollTop(
+      $("#gameCommentaryArea")[0].scrollHeight
+    );
   });
   socket.on("connectError", function(msg) {
-    $('#errorModalBody').text("");
-    $('#errorModalBody').text(msg);
-    $('#errorModal').modal();
+    $("#errorModalBody").text("");
+    $("#errorModalBody").text(msg);
+    $("#errorModal").modal();
   });
   //ゲームの準備ができたことを受け取る
   socket.on("gameReady", function(msg) {
-    $("#gameCommentaryArea").append( "ゲームを開始します" + "<br />" );
-    $("#gameCommentaryArea").scrollTop( $("#gameCommentaryArea")[0].scrollHeight );
+    $("#gameCommentaryArea").append(
+      "第" + msg.gameNum + "回ゲームを開始します" + "<br />"
+    );
+    $("#gameCommentaryArea").scrollTop(
+      $("#gameCommentaryArea")[0].scrollHeight
+    );
     $("#gameFieldArea").show();
     $("#send").prop("disabled", true);
     $("#pass").prop("disabled", true);
@@ -168,7 +183,7 @@ $(function() {
       $("#order").text("あなたの番です");
       if (msg.skip) {
         socket.emit("pass", {
-          id: $('input[name=roomRadios]:checked').val()
+          id: $("input[name=roomRadios]:checked").val()
         });
       }
     } else {
@@ -187,7 +202,7 @@ $(function() {
       $("#order").text("あなたの番です");
       if (msg.skip) {
         socket.emit("pass", {
-          id: $('input[name=roomRadios]:checked').val()
+          id: $("input[name=roomRadios]:checked").val()
         });
       }
     } else {
@@ -197,8 +212,7 @@ $(function() {
       $("#order").text(msg.playerName + "の番です");
     }
     window.scrollTo(0, document.body.scrollHeight);
-  });
-　//カードを出したとき
+  }); //カードを出したとき
   $("#send").click(function() {
     let sendCards = [];
     let cardarr;
@@ -211,12 +225,12 @@ $(function() {
     //カードの確認をしてもらう
     socket.emit("validate", {
       cards: sendCards,
-      id: $('input[name=roomRadios]:checked').val()
+      id: $("input[name=roomRadios]:checked").val()
     });
   });
   $("#pass").click(function() {
     socket.emit("pass", {
-      id: $('input[name=roomRadios]:checked').val()
+      id: $("input[name=roomRadios]:checked").val()
     });
   });
   socket.on("validateError", function(msg) {
@@ -227,9 +241,7 @@ $(function() {
     let message = "現在のカード: ";
     for (let i = 0; i < msg.card.length; i++) {
       message =
-        message +
-        "　" +
-        DISPLAY_DIC[msg.result[i].type + msg.result[i].number];
+        message + "　" + DISPLAY_DIC[msg.result[i].type + msg.result[i].number];
       $("#" + msg.card[i].type + msg.card[i].number).remove();
     }
     $("#field").text(message);
@@ -323,6 +335,29 @@ $(function() {
     $("#elevenback").text("");
     $("#shibari").text("");
     $("#revolution").text("");
-    socket.emit("rematch", { id: $('input[name=roomRadios]:checked').val(), roomid: $('input[name=roomRadios]:checked').val() });
+    socket.emit("rematch", {
+      id: $("input[name=roomRadios]:checked").val(),
+      roomid: $("input[name=roomRadios]:checked").val()
+    });
   });
+  
+  // setIntervalを使う方法
+  function sleep(waitSec, callbackFunc) {
+    // 経過時間（秒）
+    var spanedSec = 0;
+
+    // 1秒間隔で無名関数を実行
+    var id = setInterval(function() {
+      spanedSec++;
+
+      // 経過時間 >= 待機時間の場合、待機終了。
+      if (spanedSec >= waitSec) {
+        // タイマー停止
+        clearInterval(id);
+
+        // 完了時、コールバック関数を実行
+        if (callbackFunc) callbackFunc();
+      }
+    }, 1000);
+  }
 });
