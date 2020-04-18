@@ -337,6 +337,7 @@ io.on("connection", function(socket) {
           playerName: store[msg.id]['users'][biriId].dispName
         });
         io.to(store[msg.id].roomId).emit("gameFinish", "");
+        io.to(biriId).emit("gameFinish", "");
       }
     }
     notifyChangeTurn(currentTurn, msg.id);
