@@ -159,7 +159,7 @@ $(function() {
     $("#rank").text("");
     $("#rematch").hide();
     $("#seiseki").text("");
-    $("#field").text("現在のカード：なし");
+    $("#field").text("なし");
     $("#other").text("");
     $("#elevenback").text("");
     $("#shibari").text("");
@@ -188,7 +188,10 @@ $(function() {
       $("#send").prop("disabled", false);
       $("#pass").prop("disabled", false);
       $("#cardList input").prop("disabled", false);
-      $("#order").text("あなたの番です");
+      //$("#order").text("あなたの番です");
+      $("#gameCommentaryArea").append(
+        "あなたのターンです。<br />"
+      );
       if (msg.skip) {
         socket.emit("pass", {
           id: $("input[name=roomRadios]:checked").val()
@@ -198,7 +201,10 @@ $(function() {
       $("#send").prop("disabled", true);
       $("#pass").prop("disabled", true);
       $("#cardList input").prop("disabled", true);
-      $("#order").text(msg.playerName + "の番です");
+      //$("#order").text(msg.playerName + "の番です");
+      $("#gameCommentaryArea").append(
+        msg.playerName + "さんのターンです。<br />"
+      );
     }
   });
   socket.on("order", function(msg) {
@@ -207,7 +213,10 @@ $(function() {
       $("#send").prop("disabled", false);
       $("#pass").prop("disabled", false);
       $("#cardList input").prop("disabled", false);
-      $("#order").text("あなたの番です");
+      //$("#order").text("あなたの番です");
+      $("#gameCommentaryArea").append(
+        "あなたのターンです。<br />"
+      );
       if (msg.skip) {
         socket.emit("pass", {
           id: $("input[name=roomRadios]:checked").val()
@@ -217,7 +226,10 @@ $(function() {
       $("#send").prop("disabled", true);
       $("#pass").prop("disabled", true);
       $("#cardList input").prop("disabled", true);
-      $("#order").text(msg.playerName + "の番です");
+      //$("#order").text(msg.playerName + "の番です");
+      $("#gameCommentaryArea").append(
+        msg.playerName + "さんのターンです。<br />"
+      );
     }
     window.scrollTo(0, document.body.scrollHeight);
   }); //カードを出したとき
@@ -246,7 +258,7 @@ $(function() {
     $("#errorMsg").text(msg.reason);
   });
   socket.on("result", function(msg) {
-    let message = "現在のカード: ";
+    let message = "";
     for (let i = 0; i < msg.card.length; i++) {
       message =
         message + "　" + DISPLAY_DIC[msg.result[i].type + msg.result[i].number];
@@ -270,7 +282,7 @@ $(function() {
         break;
       case "winjoker":
         $("#other").text("JOKER討伐したので流しました。");
-        $("#field").text("現在のカード: なし");
+        $("#field").text("なし");
         for (let i = 0; i < msg.value.cards.length; i++) {
           $("#" + msg.value.cards[i].type + msg.value.cards[i].number).remove();
         }
@@ -279,7 +291,7 @@ $(function() {
         break;
       case "doblejoker":
         $("#other").text("ダブルJOKERなので流しました。");
-        $("#field").text("現在のカード: なし");
+        $("#field").text("なし");
         for (let i = 0; i < msg.value.cards.length; i++) {
           $("#" + msg.value.cards[i].type + msg.value.cards[i].number).remove();
         }
@@ -288,7 +300,7 @@ $(function() {
         break;
       case "cut8":
         $("#other").text("8切ました。");
-        $("#field").text("現在のカード: なし");
+        $("#field").text("なし");
         for (let i = 0; i < msg.value.cards.length; i++) {
           $("#" + msg.value.cards[i].type + msg.value.cards[i].number).remove();
         }
@@ -297,7 +309,7 @@ $(function() {
         break;
       case "cutPass":
         $("#other").text("パスが一周したので流しました");
-        $("#field").text("現在のカード: なし");
+        $("#field").text("なし");
         $("#elevenback").text("");
         $("#shibari").text("");
         break;

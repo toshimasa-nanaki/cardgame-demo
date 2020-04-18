@@ -185,7 +185,8 @@ io.on("connection", function(socket) {
         fieldClear(msg.id);
         io.to(store[msg.id].roomId).emit("changeStatus", {
           type: "winjoker",
-          value: msg
+          value: msg,
+          playerName: users[socket.id].dispName
         });
         console.log(
           "スペ3プレイヤー名:" +
@@ -542,8 +543,8 @@ function notifyGameReady(roomId){
   io.to(orders[0]).emit("gameReady", { gameNum: store[roomId].gameNum,card: users[orders[0]].card, yourTurn: true, playerName: users[orders[0]].dispName });
   logger.debug("gameReadyのレスポンス(一番目)： " + JSON.stringify({ gameNum: store[roomId].gameNum,card: users[orders[0]].card, yourTurn: true, playerName: users[orders[0]].dispName}));
   for(let i = 1; i < store[roomId]['order'].length; i++){
-    io.to(orders[i]).emit("gameReady", { gameNum: store[roomId].gameNum,card: users[orders[i]].card, yourTurn: false, playerName: users[orders[i]].dispName });
-    logger.debug("gameReadyのレスポンス(二番目以降)： " + JSON.stringify({ card: users[orders[i]].card, yourTurn: false, playerName: users[orders[i]].dispName }));
+    io.to(orders[i]).emit("gameReady", { gameNum: store[roomId].gameNum,card: users[orders[i]].card, yourTurn: false, playerName: users[orders[0]].dispName });
+    logger.debug("gameReadyのレスポンス(二番目以降)： " + JSON.stringify({ card: users[orders[i]].card, yourTurn: false, playerName: users[orders[0]].dispName }));
   }
 }
 
