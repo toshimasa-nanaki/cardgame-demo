@@ -16,10 +16,14 @@ div#errorMsg {
 div#gameArea{
   display: none;
 }
+div#cardList {
+    font: 24px Helvetica, Arial;
+}
 div#gameCommentaryArea {
     padding:5px;
     border:solid 1px #000;
-    height:150px;
+    font: 13px Helvetica, Arial;
+    height:100px;
     overflow:auto;
 }
       div#gameFieldArea {
