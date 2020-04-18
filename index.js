@@ -173,11 +173,11 @@ io.on("connection", function(socket) {
           error: 1,
           reason: resultCardCompare.reason
         });
-      }
-    const effectCard = checkEffectCard(fieldCards, validateCards, resultCheckHand.type, msg.id);
+        return;
+    }
     if (fieldCards.length != 0) {
-      logger.debug("比較判定開始");
-      const resultCardCompare = cardCompareValidate(fieldCards, validateCards, resultCheckHand.type, msg.id);
+      // logger.debug("比較判定開始");
+      // const resultCardCompare = cardCompareValidate(fieldCards, validateCards, resultCheckHand.type, msg.id);
       
       // if (fieldCards.length != validateCards.length) {
       //   //枚数が違うのはあり得ない
@@ -253,16 +253,16 @@ io.on("connection", function(socket) {
       removeCard(validateCards, socket.id ,msg.id);
       return;
     }
-    if (validateCards.length == 4) {
-      //革命
+    if (validateCards.length >= 4 && resultCheckHand.type !== "stair") {
+      //革命(階段革命はない)
       store[msg.id].revolution = !store[msg.id].revolution;
       io.to(store[msg.id].roomId).emit("changeStatus", {
         type: "revolution",
         value: store[msg.id].revolution
       });
     }
-    if (validateCards[0].number == 8) {
-      //8ぎり
+    if (validateCards[0].number == 8 && resultCheckHand.type !== "stair") {
+      //8ぎり(階段のときは発生しない)
       fieldClear(msg.id);
       io.to(store[msg.id].roomId).emit("changeStatus", {
         type: "cut8",
@@ -277,7 +277,7 @@ io.on("connection", function(socket) {
       removeCard(validateCards, socket.id ,msg.id);
       return;
     }
-    if (validateCards[0].number == 11) {
+    if (validateCards[0].number == 11 && resultCheckHand.type !== "stair") {
       //11back
       store[msg.id].elevenback = !store[msg.id].elevenback;
       io.to(store[msg.id].roomId).emit("changeStatus", {
@@ -706,41 +706,6 @@ function isStairsCard(sc){
     }
   }
   return suit && stairNum;
-}
-
-function checkEffectCard(nc, sc, handType, roomId){
-  let result = [];
-  /**
-   * チェック順
-   * (1)♠3の勝利
-   * (2)
-   */
-  if (nc.length !== 0) {
-    //比較して初めて効果をつくるものはこちら
-    
-  }
-  if (
-        ~fieldCards[0].type.indexOf("joker") &&
-        validateCards[0].type == "spade" &&
-        validateCards[0].number == "3"
-      ) {
-        //JOKER討伐(誰も倒せないから流す)
-        fieldClear(msg.id);
-        io.to(store[msg.id].roomId).emit("changeStatus", {
-          type: "winjoker",
-          value: msg
-        });
-        console.log(
-          "スペ3プレイヤー名:" +
-            UserList[socket.id] +
-            "　出したカードの数：" +
-            validateCards.length
-        );
-        //ストアからカードを抜きだす
-        removeCard(validateCards, socket.id ,msg.id);
-        
-        return;
-      }
 }
 
 function cardCompareValidate(nc, sc, handType, roomId){
