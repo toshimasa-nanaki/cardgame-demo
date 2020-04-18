@@ -188,14 +188,14 @@ io.on("connection", function(socket) {
       //   return;
       // }
       //数字を比べる
-      if (!numComparison(fieldCards[0], validateCards[0], msg.id)) {
-        io.to(socket.id).emit("validateError", {
-          card: msg,
-          error: 1,
-          reason: "弱いカードはおけない"
-        });
-        return;
-      }
+      // if (!numComparison(fieldCards[0], validateCards[0], msg.id)) {
+      //   io.to(socket.id).emit("validateError", {
+      //     card: msg,
+      //     error: 1,
+      //     reason: "弱いカードはおけない"
+      //   });
+      //   return;
+      // }
       if (
         ~fieldCards[0].type.indexOf("joker") &&
         validateCards[0].type == "spade" &&
@@ -721,7 +721,7 @@ function cardCompare(nc, sc, handType, roomId){
     //階段の場合も一番弱いカード
     result.card = sc;
     result.error = 1;
-    result.reason = "diffSuitCards"
+    result.reason = "loseCards"
   }
   
   //1枚出しか、複数出しか、階段かで処理が変わる。
