@@ -156,7 +156,8 @@ io.on("connection", function(socket) {
     
     /* 受け取ったカードのみで判定可能な部分 */
     //役をチェック
-    if(!checkValidateHand(validateCards)){
+    let resultCheckHand = checkValidateHand(validateCards);
+    if(resultCheckHand.error !== 0){
       io.to(socket.id).emit("validateError", {
         card: msg,
         error: 1,
@@ -275,6 +276,10 @@ io.on("connection", function(socket) {
     }
     store[msg.id].passCount = 0;
     store[msg.id]['fieldCards'] = validateCards;
+    if(resultCheckHand.type === "stair"){
+      //階段役だった場合はフラグを立てる
+      store[msg.id].stair = true;
+    }
     io.to(store[msg.id].roomId).emit("result", {
       card: validateCards,
       error: 0,
@@ -611,20 +616,26 @@ function checkValidateHand(sc){
   //1枚だし
   //複数枚だし
   //階段(3枚以上、順番、同スート)
+  let result = {
+    error: 0,
+    type: ""
+  }
   if(sc.length === 1){
     //1枚だしは特に問題なし
     logger.debug("大富豪の役：1枚だし");
-    return true;
+    result.type = 'unit';
   }else if(isAllSameNumber(sc)){
     //複数枚だしで数字がそろっていること
     logger.debug("大富豪の役：複数枚だし");
-    return true;
+    result.type = 'multiple';
   }else if(isStairsCard(sc)){
     //階段
     logger.debug("大富豪の役：階段");
-    return true;
+    result.type = 'stair';
+  }else{
+    result.error = 1;
   }
-  return false;
+  return result;
 }
 
 function isAllSameNumber(sc){
