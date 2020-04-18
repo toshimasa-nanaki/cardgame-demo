@@ -168,7 +168,7 @@ io.on("connection", function(socket) {
     logger.debug("場のカード:"+ JSON.stringify(fieldCards));
     if (fieldCards.length != 0) {
       logger.debug("比較判定開始");
-      cardCompare(fieldCards, validateCards);
+      //cardCompare(fieldCards, validateCards, resultCheckHand.type);
       if (fieldCards.length != validateCards.length) {
         //枚数が違うのはあり得ない
         io.to(socket.id).emit("validateError", {
@@ -721,7 +721,7 @@ function isStairsCard(sc){
   return suit && stairNum;
 }
 
-function cardCompare(nc, sc){
+function cardCompare(nc, sc, handType){
   let result ={
     card: [],
     error: 0,
@@ -735,9 +735,20 @@ function cardCompare(nc, sc){
     return result;
   }
   //1枚出しか、複数出しか、階段かで処理が変わる。
-  if(){
+  if(handType === "unit"){
     
+  }else if(handType === "multiple"){
+    
+  }else if(handType === "stair"){
+    
+  }else{
+    //ありえない。
+    logger.error("存在しない役が発生しています");
+    result.card = [];
+    result.error = 1;
+    result.reason = "unexpectedError";
   }
+  return result;
 }
   
 
