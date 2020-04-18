@@ -716,11 +716,14 @@ function cardCompare(nc, sc, handType, roomId){
     result.reason = "diffSuitCards"
   }
   //数字の大小確認
-  if(store[roomId].stair){
-    //階段の場合のみ
-  }else{
-    //1枚だし、複数だし
+  if (!numComparison2(nc, sc, roomId)) {
+    //複数枚の時はすべての数字が同じなので1枚目をみれば良い
+    //階段の場合も一番弱いカード
+    result.card = sc;
+    result.error = 1;
+    result.reason = "diffSuitCards"
   }
+  
   //1枚出しか、複数出しか、階段かで処理が変わる。
   if(handType === "unit"){
     
@@ -736,6 +739,34 @@ function cardCompare(nc, sc, handType, roomId){
     result.reason = "unexpectedError";
   }
   return result;
+}
+
+function numComparison2(nc, sc, roomId) {
+  if(store[roomId].stair){
+    //階段の場合、革命または11Back時の動作が変わる。(一番大きい数字を見ないといけない)
+  }else{
+    
+  }
+  if (~nc.type.indexOf("joker") && sc.type == "spade" && sc.number == "3") {
+    //スペ3はジョーカーに勝てる
+    return true;
+  }
+  if (~sc.type.indexOf("joker") && nc.type == "spade" && nc.number == "3") {
+    //ジョーカーはスペ3に勝てない
+    return false;
+  }
+  if (store[roomId].elevenback && store[roomId].revolution) {
+    return nc.number < sc.number;
+  } else if (store[roomId].elevenback || store[roomId].revolution) {
+    //逆残
+    if (~sc.type.indexOf("joker")) {
+      //ジョーカーは必ず勝てる
+      return true;
+    }
+    return nc.number > sc.number;
+  } else {
+    return nc.number < sc.number;
+  }
 }
 
 function isSameType(ncs, scs) {
