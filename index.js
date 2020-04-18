@@ -168,7 +168,7 @@ io.on("connection", function(socket) {
     logger.debug("場のカード:"+ JSON.stringify(fieldCards));
     if (fieldCards.length != 0) {
       logger.debug("比較判定開始");
-      cardCompare(fieldCards, validateCards)
+      cardCompare(fieldCards, validateCards);
       if (fieldCards.length != validateCards.length) {
         //枚数が違うのはあり得ない
         io.to(socket.id).emit("validateError", {
@@ -720,6 +720,26 @@ function isStairsCard(sc){
   }
   return suit && stairNum;
 }
+
+function cardCompare(nc, sc){
+  let result ={
+    card: [],
+    error: 0,
+    reason: ""
+  }
+  //枚数が等しいことをチェック  
+  if (nc.length != sc.length) {
+    result.card = sc;
+    result.error = 1;
+    result.reason = "diffNumOfCards"
+    return result;
+  }
+  //1枚出しか、複数出しか、階段かで処理が変わる。
+  if(){
+    
+  }
+}
+  
 
 http.listen(port, function() {
   console.log("listening on *:" + port);
