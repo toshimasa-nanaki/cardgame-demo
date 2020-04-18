@@ -158,7 +158,7 @@ io.on("connection", function(socket) {
       io.to(socket.id).emit("validateError", {
         card: msg,
         error: 1,
-        reason: "役ができていません"
+        reason: "handError"
       });
       return;
     }

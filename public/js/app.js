@@ -11,6 +11,7 @@ $(function() {
     diffNumOfCards: "カードの枚数は合わせてください。",
     diffSuitCards: "スートしばりに合ったカードを出してください。",
     loseCards: "場のカードより強いものを出してください。",
+    handError: "役ができていません。"
   };
   const DISPLAY_DIC = {
     spade3: "♠3",
