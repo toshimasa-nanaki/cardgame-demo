@@ -742,7 +742,9 @@ function cardCompare(nc, sc, handType, roomId){
 }
 
 function numComparison2(nc, sc, roomId) {
-  if(store[roomId].stair){
+  let checkNC;
+  let checkSC;
+  if(store[roomId].stair && (store[roomId].elevenback || store[roomId].stair)){
     //階段の場合、革命または11Back時の動作が変わる。(一番大きい数字を見ないといけない)
   }else{
     
