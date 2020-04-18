@@ -344,6 +344,7 @@ io.on("connection", function(socket) {
           //TODO集計が必要
         }else{
           //次のゲームへ
+          store[msg.id].gameNum = store[msg.id].gameNum + 1;
           io.to(store[msg.id].roomId).emit("gameFinish", {gameNum: store[msg.id].gameNum + 1});
           io.to(lastId).emit("nextGameStart", {gameNum: store[msg.id].gameNum + 1});
         }
