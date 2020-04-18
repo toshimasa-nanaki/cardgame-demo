@@ -300,10 +300,10 @@ io.on("connection", function(socket) {
         (validateCards[0].number == 3 &&
           validateCards[0].type == "spade" &&
           validateCards.length == 1) ||
-        msg.cards[0].number == 8 ||
-        ~msg.cards[0].type.indexOf("joker") ||
-        (revolutionFlag && msg.cards[0].number == 3) ||
-        (!revolutionFlag && msg.cards[0].number == 2)
+        validateCards[0].number == 8 ||
+        ~validateCards[0].type.indexOf("joker") ||
+        (revolutionFlag && validateCards[0].number == 3) ||
+        (!revolutionFlag && validateCards[0].number == 2)
       ) {
         store[msg.id]['users'][socket.id].rank = rankTable[store[msg.id]['order'].length - 1];
         //ORDER[currentTurn].rank = rankTable[ORDER.length - 1];
@@ -636,7 +636,23 @@ function isAllSameNumber(sc){
 }
 
 function isStairsCard(sc){
-  
+  //Jokerの数を確認
+  let jokerCount = sc.filter(item => ~item.type.indexOf("joker")).length;
+  if(sc.length >= 3){
+    //3枚以上でなければ階段ではない
+    return false;
+  }
+  //Note 数字1枚、ジョーカー2枚は複数出しになるので意識しなくてよい。
+  let suit = false;
+  let stairNum = false;
+  for(let i=0; i < sc.length; i++){
+    //比較対象がない場合は抜ける。
+    if(i + 1 === sc.length){
+      break;
+    }
+    //比較対象がJokerの場合は終わり
+    if(sc[i + 1].type === "")
+  }
 }
 
 http.listen(port, function() {
