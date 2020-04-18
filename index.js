@@ -23,8 +23,8 @@ const ORIGINALCARDDATA = trump_init(TRUMPDATA);
 let gameStart = false;
 //let nowCard = "";
 //let ORDER = [];
-let elevenbackFlag = false;
-let revolutionFlag = false;
+//let elevenbackFlag = false;
+//let revolutionFlag = false;
 //let shibari = false;
 let stair = false;
 //let pass = 0;
@@ -193,7 +193,7 @@ io.on("connection", function(socket) {
         return;
       }
       //数字を比べる
-      if (!numComparison(fieldCards[0], validateCards[0])) {
+      if (!numComparison(fieldCards[0], validateCards[0], msg.id)) {
         io.to(socket.id).emit("validateError", {
           card: msg,
           error: 1,
@@ -248,10 +248,10 @@ io.on("connection", function(socket) {
     }
     if (validateCards.length == 4) {
       //革命
-      revolutionFlag = !revolutionFlag;
+      store[msg.id].revolution = !store[msg.id].revolution;
       io.to(store[msg.id].roomId).emit("changeStatus", {
         type: "revolution",
-        value: revolutionFlag
+        value: store[msg.id].revolution
       });
     }
     if (validateCards[0].number == 8) {
@@ -272,10 +272,10 @@ io.on("connection", function(socket) {
     }
     if (validateCards[0].number == 11) {
       //11back
-      elevenbackFlag = !elevenbackFlag;
+      store[msg.id].elevenback = !store[msg.id].elevenback;
       io.to(store[msg.id].roomId).emit("changeStatus", {
         type: "elevenback",
-        value: elevenbackFlag
+        value: store[msg.id].elevenback
       });
     }
     store[msg.id].passCount = 0;
@@ -309,8 +309,8 @@ io.on("connection", function(socket) {
           validateCards.length == 1) ||
         validateCards[0].number == 8 ||
         ~validateCards[0].type.indexOf("joker") ||
-        (revolutionFlag && validateCards[0].number == 3) ||
-        (!revolutionFlag && validateCards[0].number == 2)
+        (store[msg.id].revolution && validateCards[0].number == 3) ||
+        (!store[msg.id].revolution && validateCards[0].number == 2)
       ) {
         store[msg.id]['users'][socket.id].rank = rankTable[store[msg.id]['order'].length - 1];
         //ORDER[currentTurn].rank = rankTable[ORDER.length - 1];
@@ -469,7 +469,7 @@ function isSameType(ncs, scs) {
   return flag;
 }
 
-function numComparison(nc, sc) {
+function numComparison(nc, sc, roomId) {
   if (~nc.type.indexOf("joker") && sc.type == "spade" && sc.number == "3") {
     //スペ3はジョーカーに勝てる
     return true;
@@ -478,9 +478,9 @@ function numComparison(nc, sc) {
     //ジョーカーはスペ3に勝てない
     return false;
   }
-  if (elevenbackFlag && revolutionFlag) {
+  if (store[roomId].elevenback && store[roomId].revolution) {
     return nc.number < sc.number;
-  } else if (elevenbackFlag || revolutionFlag) {
+  } else if (store[roomId].elevenback || store[roomId].revolution) {
     //逆残
     if (~sc.type.indexOf("joker")) {
       //ジョーカーは必ず勝てる
@@ -515,9 +515,9 @@ function gameInit(count, sockets, roomId) {
   store[roomId]['fieldCards'] = [];
   rank = 0;
   createRankTable(count);
-  elevenbackFlag = false;
+  store[roomId].elevenback = false;
   store[roomId].shibari = false;
-  revolutionFlag = false;
+  store[roomId].revolution = false;
   store[roomId]['order'] = [];
   
   //まずは順番決め
@@ -588,7 +588,7 @@ function removeCard(sc, userId ,roomId){
 function fieldClear(roomId){
   store[roomId]['fieldCards'] = [];
   store[roomId].passCount = 0;
-  elevenbackFlag = false;
+  store[roomId].elevenback = false;
   store[roomId].shibari = false;
 }
 
