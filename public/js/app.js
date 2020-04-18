@@ -178,28 +178,6 @@ $(function() {
       $("#order").text(msg.playerName + "の番です");
     }
   });
-  // socket.on("gameInit", function(msg) {
-  //   $("#gameFieldArea").show();
-  //   $("#send").prop("disabled", true);
-  //   $("#pass").prop("disabled", true);
-  //   $("#cardList").empty();
-  //   msg.forEach(element => {
-  //     var check = $(
-  //       '<label id="' +
-  //         element.type +
-  //         element.number +
-  //         '">' +
-  //         DISPLAY_DIC[element.type + element.number] +
-  //         "</label>"
-  //     ).prepend(
-  //       $('<input type="checkbox" />').attr({
-  //         name: "cards",
-  //         value: element.type + "_" + element.number
-  //       })
-  //     );
-  //     $("#cardList").append(check);
-  //   });
-  // });
   socket.on("order", function(msg) {
     console.log("order accept");
     if (msg.flag) {
@@ -247,12 +225,12 @@ $(function() {
   });
   socket.on("result", function(msg) {
     let message = "現在のカード: ";
-    for (let i = 0; i < msg.card.cards.length; i++) {
+    for (let i = 0; i < msg.card.length; i++) {
       message =
         message +
         "　" +
-        DISPLAY_DIC[msg.result.cards[i].type + msg.result.cards[i].number];
-      $("#" + msg.card.cards[i].type + msg.card.cards[i].number).remove();
+        DISPLAY_DIC[msg.result[i].type + msg.result[i].number];
+      $("#" + msg.card[i].type + msg.card[i].number).remove();
     }
     $("#field").text(message);
     $("#other").text("");

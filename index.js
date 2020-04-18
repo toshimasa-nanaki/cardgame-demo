@@ -277,7 +277,7 @@ io.on("connection", function(socket) {
     store[msg.id].passCount = 0;
     fieldCards = validateCards;
     io.to(store[msg.id].roomId).emit("result", {
-      card: msg,
+      card: validateCards,
       error: 0,
       reason: "",
       result: fieldCards
@@ -508,7 +508,7 @@ function createRankTable(count) {
 }
 
 function gameInit(count, sockets, roomId) {
-  nowCard = "";
+  store[roomId]['fieldCards'] = [];
   rank = 0;
   createRankTable(count);
   elevenbackFlag = false;
@@ -582,7 +582,7 @@ function removeCard(sc, userId ,roomId){
 
 //流した場合の動作
 function fieldClear(roomId){
-  nowCard = "";
+  store[roomId]['fieldCards'] = [];
   store[roomId].passCount = 0;
   elevenbackFlag = false;
   shibari = false;
