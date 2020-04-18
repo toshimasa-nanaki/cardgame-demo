@@ -155,16 +155,7 @@ io.on("connection", function(socket) {
           return 0;
         });
     
-    //数字はすべて同じだよね？
-    //TODO 階段対応ができない
-    // if (!isSameNumber(validateCards)) {
-    //   io.to(socket.id).emit("validateError", {
-    //     card: msg,
-    //     error: 1,
-    //     reason: "数字は全部同じにしてね"
-    //   });
-    //   return;
-    // }
+    //
     if(!checkValidateHand(validateCards)){
       io.to(socket.id).emit("validateError", {
         card: msg,
