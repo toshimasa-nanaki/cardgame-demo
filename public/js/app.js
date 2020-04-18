@@ -1,13 +1,18 @@
 $(function() {
   var socket = io();
-  var RANKING_DIC = {
+  const RANKING_DIC = {
     daihugou: "大富豪",
     hugou: "富豪",
     heimin: "平民",
     hinmin: "貧民",
     daihinmin: "大貧民"
   };
-  var DISPLAY_DIC = {
+  const ERROR_DIC = {
+    diffNumOfCards: "カードの枚数は合わせてください。",
+    diffSuitCards: "スートしばりに合ったカードを出してください。",
+    loseCards: "場のカードより強いものを出してください。",
+  };
+  const DISPLAY_DIC = {
     spade3: "♠3",
     spade4: "♠4",
     spade5: "♠5",
@@ -259,7 +264,7 @@ $(function() {
   });
   socket.on("validateError", function(msg) {
     $("#errorMsg").show();
-    $("#errorMsg").text(msg.reason);
+    $("#errorMsg").text(ERROR_DIC[msg.reason]);
   });
   socket.on("result", function(msg) {
     let message = "";
