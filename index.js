@@ -327,7 +327,10 @@ io.on("connection", function(socket) {
       logger.debug("現在のユーザーの状態:" + JSON.stringify(store[msg.id]['users'][orderList[currentTurn]]));
       if (rank == orderList.length - 1) {
         //つまり全員終了
-        let biri = Object.keys(users).filter(item => item.rank.length == 0)[0].id;
+        let biri = Object.keys(users).filter(item => {
+          logger.debug("itemの値:" + JSON.stringify(store[msg.id]['users'][item]));
+          return store[msg.id]['users'][item].rank.length == 0;
+        })[0].id;
         console.log(biri);
         io.to(biri).emit("finish", rankTable[rank]);
         io.to(store[msg.id].roomId).emit("finishNotification", {
