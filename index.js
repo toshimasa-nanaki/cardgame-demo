@@ -148,9 +148,16 @@ io.on("connection", function(socket) {
     const orderList = store[msg.id]['order'];
     const users = store[msg.id]['users'];
     let currentTurn = orderList.indexOf(socket.id);
+    //最初に来たカードは昇順ソートしておく。(念のため)
+    let validateCards = msg.cards.sort(function(a, b) {
+          if (a.number < b.number) return -1;
+          if (a.number > b.number) return 1;
+          return 0;
+        });
+    
     //数字はすべて同じだよね？
     //TODO 階段対応ができない
-    if (!isSameNumber(msg.cards)) {
+    if (!isSameNumber(validateCards)) {
       io.to(socket.id).emit("validateError", {
         card: msg,
         error: 1,
@@ -160,7 +167,7 @@ io.on("connection", function(socket) {
     }
 
     if (nowCard != "") {
-      if (nowCard.cards.length != msg.cards.length) {
+      if (nowCard.cards.length != validateCards.length) {
         //枚数が違うのはあり得ない
         io.to(socket.id).emit("validateError", {
           card: msg,
@@ -170,7 +177,7 @@ io.on("connection", function(socket) {
         return;
       }
       //縛り
-      if (shibari && !isSameType(nowCard.cards, msg.cards)) {
+      if (shibari && !isSameType(nowCard.cards, validateCards)) {
         io.to(socket.id).emit("validateError", {
           card: msg,
           error: 1,
@@ -179,7 +186,7 @@ io.on("connection", function(socket) {
         return;
       }
       //数字を比べる
-      if (!numComparison(nowCard.cards[0], msg.cards[0])) {
+      if (!numComparison(nowCard.cards[0], validateCards[0])) {
         io.to(socket.id).emit("validateError", {
           card: msg,
           error: 1,
@@ -189,8 +196,8 @@ io.on("connection", function(socket) {
       }
       if (
         ~nowCard.cards[0].type.indexOf("joker") &&
-        msg.cards[0].type == "spade" &&
-        msg.cards[0].number == "3"
+        validateCards[0].type == "spade" &&
+        validateCards[0].number == "3"
       ) {
         //JOKER討伐(誰も倒せないから流す)
         fieldClear(msg.id);
@@ -202,15 +209,14 @@ io.on("connection", function(socket) {
           "スペ3プレイヤー名:" +
             UserList[socket.id] +
             "　出したカードの数：" +
-            msg.cards.length
+            validateCards.length
         );
         //ストアからカードを抜きだす
-        removeCard(msg.cards, socket.id ,msg.id);
+        removeCard(validateCards, socket.id ,msg.id);
         
-        //ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
         return;
       }
-      if (!shibari && isShibari(nowCard.cards, msg.cards)) {
+      if (!shibari && isShibari(nowCard.cards, validateCards)) {
         shibari = true;
         io.to(store[msg.id].roomId).emit("changeStatus", {
           type: "shibari",
@@ -220,9 +226,9 @@ io.on("connection", function(socket) {
     }
 
     if (
-      msg.cards.length == 2 &&
-      ~msg.cards[0].type.indexOf("joker") &&
-      ~msg.cards[1].type.indexOf("joker")
+      validateCards.length == 2 &&
+      ~validateCards[0].type.indexOf("joker") &&
+      ~validateCards[1].type.indexOf("joker")
     ) {
       //JOKER2枚だしは歯が立たないので流す
       fieldClear(msg.id);
@@ -230,11 +236,10 @@ io.on("connection", function(socket) {
         type: "doblejoker",
         value: msg
       });
-      removeCard(msg.cards, socket.id ,msg.id);
-      //ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
+      removeCard(validateCards, socket.id ,msg.id);
       return;
     }
-    if (msg.cards.length == 4) {
+    if (validateCards.length == 4) {
       //革命
       revolutionFlag = !revolutionFlag;
       io.to(store[msg.id].roomId).emit("changeStatus", {
@@ -242,7 +247,7 @@ io.on("connection", function(socket) {
         value: revolutionFlag
       });
     }
-    if (msg.cards[0].number == 8) {
+    if (validateCards[0].number == 8) {
       //8ぎり
       fieldClear(msg.id);
       io.to(store[msg.id].roomId).emit("changeStatus", {
@@ -253,13 +258,12 @@ io.on("connection", function(socket) {
         "8ぎりプレイヤー名:" +
           UserList[socket.id] +
           "　出したカードの数：" +
-          msg.cards.length
+          validateCards.length
       );
-      removeCard(msg.cards, socket.id ,msg.id);
-      //ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
+      removeCard(validateCards, socket.id ,msg.id);
       return;
     }
-    if (msg.cards[0].number == 11) {
+    if (validateCards[0].number == 11) {
       //11back
       elevenbackFlag = !elevenbackFlag;
       io.to(store[msg.id].roomId).emit("changeStatus", {
@@ -281,10 +285,9 @@ io.on("connection", function(socket) {
       "プレイヤー名:" +
         UserList[socket.id] +
         "　出したカードの数：" +
-        msg.cards.length
+        validateCards.length
     );
-    removeCard(msg.cards, socket.id ,msg.id);
-    //ORDER[currentTurn].card = ORDER[currentTurn].card - msg.cards.length;
+    removeCard(validateCards, socket.id ,msg.id);
     if(users[socket.id].card.length <= 0){
     //if (ORDER[currentTurn].card <= 0) {
       //上がり
@@ -294,9 +297,9 @@ io.on("connection", function(socket) {
       // ・革命時に3
       //・非革命時に2
       if (
-        (msg.cards[0].number == 3 &&
-          msg.cards[0].type == "spade" &&
-          msg.cards.length == 1) ||
+        (validateCards[0].number == 3 &&
+          validateCards[0].type == "spade" &&
+          validateCards.length == 1) ||
         msg.cards[0].number == 8 ||
         ~msg.cards[0].type.indexOf("joker") ||
         (revolutionFlag && msg.cards[0].number == 3) ||
