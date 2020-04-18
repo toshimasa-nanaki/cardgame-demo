@@ -551,6 +551,10 @@ function decideOrder(roomId){
   }else{
     //2回目以降は大貧民が一番。時計回りという概念がないので、とりあえず順位の逆順にする。(オリジナル)
     //TODO? 実際は大貧民から時計回り。
+    Object.keys(store[roomId]['users']).forEach(key => {
+      store[roomId]['order'].push(key);
+    });
+    //順番がきまったら、ユーザデータのrankを初期化する
   }
 }
 
