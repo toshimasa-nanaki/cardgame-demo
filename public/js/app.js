@@ -335,7 +335,7 @@ $(function() {
         break;
       case "cutPass":
         $("#gameCommentaryArea").append(
-          msg.playerName + "さんでパスが一周したので場を流します。<br />"
+          "パスが一周したので場を流します。<br />"
         );
         $("#field").text("なし");
         $("#elevenback").text("");
