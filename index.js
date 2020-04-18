@@ -157,13 +157,16 @@ io.on("connection", function(socket) {
     
     //数字はすべて同じだよね？
     //TODO 階段対応ができない
-    if (!isSameNumber(validateCards)) {
-      io.to(socket.id).emit("validateError", {
-        card: msg,
-        error: 1,
-        reason: "数字は全部同じにしてね"
-      });
-      return;
+    // if (!isSameNumber(validateCards)) {
+    //   io.to(socket.id).emit("validateError", {
+    //     card: msg,
+    //     error: 1,
+    //     reason: "数字は全部同じにしてね"
+    //   });
+    //   return;
+    // }
+    if(!checkValidateHand){
+      
     }
 
     if (nowCard != "") {
@@ -611,12 +614,15 @@ function checkValidateHand(sc){
   //階段(3枚以上、順番、同スート)
   if(sc.length === 1){
     //1枚だしは特に問題なし
+    logger.debug("大富豪の役：1枚だし");
     return true;
   }else if(isAllSameNumber(sc)){
     //複数枚だしで数字がそろっていること
+    logger.debug("大富豪の役：複数枚だし");
     return true;
   }else if(isStairsCard(sc)){
     //階段
+    logger.debug("大富豪の役：階段");
     return true;
   }
   return false;
@@ -661,19 +667,28 @@ function isStairsCard(sc){
       return false; //1回でもマークが違ったら階段ではない
     }
     //階段チェック
+    //Note 差が0のときはスートチェックで引っかかるので相手しない
     const diff = sc[i+1].number - sc[i].number;
     if(diff === 1){
       //差が1なら階段と判断
       stairNum = true;
     }else{
       if(jokerCount > 0){
-        
+        //Jokerで救えるか確認する
+        if(diff - 1 <= jokerCount){
+          stairNum = true;
+          jokerCount = jokerCount - (diff - 1);
+        }else{
+          //Jokerでも救うことができない
+          return false;
+        }
       }else{
         //Jokerがなく、差が1より大きいと階段ではない
         return false;
       }
     }
   }
+  return suit && stairNum;
 }
 
 http.listen(port, function() {
