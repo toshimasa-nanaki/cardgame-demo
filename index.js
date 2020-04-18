@@ -307,7 +307,6 @@ io.on("connection", function(socket) {
     );
     removeCard(validateCards, socket.id ,msg.id);
     if(users[socket.id].card.length <= 0){
-    //if (ORDER[currentTurn].card <= 0) {
       //上がり
       //まずは反則あがりをチェック
       //・スペ3一枚で上がってない？
@@ -403,7 +402,8 @@ function trump_init(trumpData) {
   for (var i = 0; i < trumpData["joker"]; i++) {
     cards.push({
       type: "joker" + (i + 1),
-      number: 99
+      number: 99,
+      cloneType: ""
     });
   }
   return cards;
@@ -742,20 +742,6 @@ function cardCompareValidate(nc, sc, handType, roomId){
     return result;
   }
   return result;
-//   //1枚出しか、複数出しか、階段かで処理が変わる。
-//   if(handType === "unit"){
-    
-//   }else if(handType === "multiple"){
-    
-//   }else if(handType === "stair"){
-    
-//   }else{
-//     //ありえない。
-//     logger.error("存在しない役が発生しています");
-//     result.card = [];
-//     result.error = 1;
-//     result.reason = "unexpectedError";
-//   }
   
 }
 
