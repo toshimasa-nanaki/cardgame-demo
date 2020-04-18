@@ -566,7 +566,8 @@ function decideOrder(roomId){
           if (a.rankNum < b.rankNum) return 1;
           return 0;
         }).forEach(key => {
-      store[roomId]['order'].push(key);
+      logger.debug("二回目以降key:" + key);
+      store[roomId]['order'].push(key.id);
     });
   }
 }
