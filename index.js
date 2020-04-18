@@ -25,7 +25,8 @@ let gameStart = false;
 //let ORDER = [];
 let elevenbackFlag = false;
 let revolutionFlag = false;
-let shibari = false;
+//let shibari = false;
+let stair = false;
 //let pass = 0;
 let seiseki = [];
 let rank = 0;
@@ -68,6 +69,7 @@ io.on("connection", function(socket) {
       elevenback: false,
       shibari: false,
       revolution: false,
+      stair: false,
       fieldCards:[]
     };
     store[createRoomId] = roomObj;
@@ -182,7 +184,7 @@ io.on("connection", function(socket) {
         return;
       }
       //縛り
-      if (shibari && !isSameType(fieldCards, validateCards)) {
+      if (store[msg.id].shibari && !isSameType(fieldCards, validateCards)) {
         io.to(socket.id).emit("validateError", {
           card: msg,
           error: 1,
@@ -221,11 +223,11 @@ io.on("connection", function(socket) {
         
         return;
       }
-      if (!shibari && isShibari(fieldCards, validateCards)) {
-        shibari = true;
+      if (!store[msg.id].shibari && isShibari(fieldCards, validateCards)) {
+        store[msg.id].shibari = true;
         io.to(store[msg.id].roomId).emit("changeStatus", {
           type: "shibari",
-          value: shibari
+          value: store[msg.id].shibari
         });
       }
     }
@@ -514,7 +516,7 @@ function gameInit(count, sockets, roomId) {
   rank = 0;
   createRankTable(count);
   elevenbackFlag = false;
-  shibari = false;
+  store[roomId].shibari = false;
   revolutionFlag = false;
   store[roomId]['order'] = [];
   
@@ -587,7 +589,7 @@ function fieldClear(roomId){
   store[roomId]['fieldCards'] = [];
   store[roomId].passCount = 0;
   elevenbackFlag = false;
-  shibari = false;
+  store[roomId].shibari = false;
 }
 
 function notifyChangeTurn(currentTurnIndex, roomId){
