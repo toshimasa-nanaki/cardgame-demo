@@ -744,30 +744,49 @@ function cardCompare(nc, sc, handType, roomId){
 function numComparison2(nc, sc, roomId) {
   let checkNC;
   let checkSC;
-  if(store[roomId].stair && (store[roomId].elevenback || store[roomId].stair)){
+  if(store[roomId].stair && (store[roomId].elevenback || store[roomId].revolution)){
     //階段の場合、革命または11Back時の動作が変わる。(一番大きい数字を見ないといけない)
+    nc.some(ele => {
+      if(~ele.type.indexOf("joker")){
+        return true;
+      }else{
+        checkNC = ele;
+      }
+    });
+    nc.some(ele => {
+      if(~ele.type.indexOf("joker")){
+        return true;
+      }else{
+        checkSC = ele;
+      }
+    });
   }else{
-    
+    checkNC = nc[0];
+    checkSC = sc[0];
   }
-  if (~nc.type.indexOf("joker") && sc.type == "spade" && sc.number == "3") {
+  if(~checkNC.type.indexOf("joker") && ~checkSC.type.indexOf("joker")){
+    //ジョーカーはジョーカーに勝てない
+    return false;
+  }
+  if (~checkNC.type.indexOf("joker") && checkSC.type == "spade" && checkSC.number == "3") {
     //スペ3はジョーカーに勝てる
     return true;
   }
-  if (~sc.type.indexOf("joker") && nc.type == "spade" && nc.number == "3") {
+  if (~checkSC.type.indexOf("joker") && checkNC.type == "spade" && checkNC.number == "3") {
     //ジョーカーはスペ3に勝てない
     return false;
   }
   if (store[roomId].elevenback && store[roomId].revolution) {
-    return nc.number < sc.number;
+    return checkNC.number < checkSC.number;
   } else if (store[roomId].elevenback || store[roomId].revolution) {
     //逆残
-    if (~sc.type.indexOf("joker")) {
+    if (~checkSC.type.indexOf("joker")) {
       //ジョーカーは必ず勝てる
       return true;
     }
-    return nc.number > sc.number;
+    return checkNC.number > checkSC.number;
   } else {
-    return nc.number < sc.number;
+    return checkNC.number < checkSC.number;
   }
 }
 
