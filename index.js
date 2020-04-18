@@ -203,7 +203,7 @@ io.on("connection", function(socket) {
           reason: resultCardCompare.reason
         });
       }
-      const effectCard = checkEffectCard();
+      const effectCard = checkEffectCard(fieldCards, validateCards, resultCheckHand.type, msg.id);
       if (
         ~fieldCards[0].type.indexOf("joker") &&
         validateCards[0].type == "spade" &&
@@ -702,6 +702,32 @@ function isStairsCard(sc){
     }
   }
   return suit && stairNum;
+}
+
+function checkEffectCard(nc, sc, handType, roomId){
+  let result = [];
+  if (
+        ~fieldCards[0].type.indexOf("joker") &&
+        validateCards[0].type == "spade" &&
+        validateCards[0].number == "3"
+      ) {
+        //JOKER討伐(誰も倒せないから流す)
+        fieldClear(msg.id);
+        io.to(store[msg.id].roomId).emit("changeStatus", {
+          type: "winjoker",
+          value: msg
+        });
+        console.log(
+          "スペ3プレイヤー名:" +
+            UserList[socket.id] +
+            "　出したカードの数：" +
+            validateCards.length
+        );
+        //ストアからカードを抜きだす
+        removeCard(validateCards, socket.id ,msg.id);
+        
+        return;
+      }
 }
 
 function cardCompareValidate(nc, sc, handType, roomId){
