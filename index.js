@@ -73,8 +73,6 @@ io.on("connection", function(socket) {
     io.emit("createdRoom", { [createRoomId]: roomObj });
   });
   socket.on("join", function(joinInfo) {
-    // const count =
-    //   typeof store[joinInfo.roomId].capacity === "undefined" ? 4 : store[joinInfo.id].capacity;
     console.log("部屋入り情報:" + JSON.stringify(joinInfo));
     const count = store[joinInfo.roomId].capacity;
     //if (socket.nsp.adapter.rooms[msg.id].length >= count) {
@@ -170,6 +168,7 @@ io.on("connection", function(socket) {
     logger.debug("場のカード:"+ JSON.stringify(fieldCards));
     if (fieldCards.length != 0) {
       logger.debug("比較判定開始");
+      cardCompare(fieldCards, validateCards)
       if (fieldCards.length != validateCards.length) {
         //枚数が違うのはあり得ない
         io.to(socket.id).emit("validateError", {
@@ -440,9 +439,6 @@ function isSameNumber(cards) {
     if (~cards[i].type.indexOf("joker")) {
       continue;
     }
-    // if (cards[i].type == "joker") {
-    //   continue;
-    // }
     if (base != cards[i].number) {
       return false;
     }
@@ -453,12 +449,6 @@ function isSameNumber(cards) {
 function isSameType(ncs, scs) {
   //まずジョーカーの数を数える
   let jokerCount = scs.filter(item => ~item.type.indexOf("joker")).length;
-  // if (
-  //   scs.some(item => ~item.type.indexOf("joker")) ||
-  //   ncs.some(item => ~item.type.indexOf("joker"))
-  // ) {
-  //   return true;
-  // }
   var flag = false;
   for (let i = 0; i < ncs.length; i++) {
     flag = scs.some(item => item.type === ncs[i].type);
