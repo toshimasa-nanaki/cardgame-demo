@@ -166,9 +166,19 @@ io.on("connection", function(socket) {
 
     /* 場のカードとの比較判定 */
     logger.debug("場のカード:"+ JSON.stringify(fieldCards));
+    const resultCardCompare = cardCompareValidate(fieldCards, validateCards, resultCheckHand.type, msg.id);
+    if(resultCardCompare.error != 0){
+        io.to(socket.id).emit("validateError", {
+          card: msg,
+          error: 1,
+          reason: resultCardCompare.reason
+        });
+      }
+    const effectCard = checkEffectCard(fieldCards, validateCards, resultCheckHand.type, msg.id);
     if (fieldCards.length != 0) {
       logger.debug("比較判定開始");
       const resultCardCompare = cardCompareValidate(fieldCards, validateCards, resultCheckHand.type, msg.id);
+      
       // if (fieldCards.length != validateCards.length) {
       //   //枚数が違うのはあり得ない
       //   io.to(socket.id).emit("validateError", {
@@ -196,14 +206,8 @@ io.on("connection", function(socket) {
       //   });
       //   return;
       // }
-      if(resultCardCompare.error != 0){
-        io.to(socket.id).emit("validateError", {
-          card: msg,
-          error: 1,
-          reason: resultCardCompare.reason
-        });
-      }
-      const effectCard = checkEffectCard(fieldCards, validateCards, resultCheckHand.type, msg.id);
+      
+      //const effectCard = checkEffectCard(fieldCards, validateCards, resultCheckHand.type, msg.id);
       if (
         ~fieldCards[0].type.indexOf("joker") &&
         validateCards[0].type == "spade" &&
@@ -706,6 +710,15 @@ function isStairsCard(sc){
 
 function checkEffectCard(nc, sc, handType, roomId){
   let result = [];
+  /**
+   * チェック順
+   * (1)♠3の勝利
+   * (2)
+   */
+  if (nc.length !== 0) {
+    //比較して初めて効果をつくるものはこちら
+    
+  }
   if (
         ~fieldCards[0].type.indexOf("joker") &&
         validateCards[0].type == "spade" &&
@@ -736,6 +749,10 @@ function cardCompareValidate(nc, sc, handType, roomId){
     error: 0,
     reason: ""
   }
+  if (nc.length === 0) {
+    //初回のカード(つまり比べるものがない)場合は問題なしとしてデフォルトで返す。
+    return result;
+  }
   //枚数が等しいことをチェック  
   if (nc.length != sc.length) {
     result.card = sc;
@@ -748,6 +765,7 @@ function cardCompareValidate(nc, sc, handType, roomId){
     result.card = sc;
     result.error = 1;
     result.reason = "diffSuitCards"
+    return result;
   }
   //数字の大小確認
   if (!numComparison2(nc, sc, roomId)) {
@@ -756,8 +774,9 @@ function cardCompareValidate(nc, sc, handType, roomId){
     result.card = sc;
     result.error = 1;
     result.reason = "loseCards"
+    return result;
   }
-  
+  return result;
 //   //1枚出しか、複数出しか、階段かで処理が変わる。
 //   if(handType === "unit"){
     
@@ -772,7 +791,7 @@ function cardCompareValidate(nc, sc, handType, roomId){
 //     result.error = 1;
 //     result.reason = "unexpectedError";
 //   }
-  return result;
+  
 }
 
 function numComparison2(nc, sc, roomId) {
