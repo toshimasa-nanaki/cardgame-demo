@@ -168,25 +168,25 @@ io.on("connection", function(socket) {
     logger.debug("場のカード:"+ JSON.stringify(fieldCards));
     if (fieldCards.length != 0) {
       logger.debug("比較判定開始");
-      //cardCompare(fieldCards, validateCards, resultCheckHand.type, msg.id, userId);
-      if (fieldCards.length != validateCards.length) {
-        //枚数が違うのはあり得ない
-        io.to(socket.id).emit("validateError", {
-          card: msg,
-          error: 1,
-          reason: "枚数が違うよね"
-        });
-        return;
-      }
-      //縛り
-      if (store[msg.id].shibari && !isSameType(fieldCards, validateCards)) {
-        io.to(socket.id).emit("validateError", {
-          card: msg,
-          error: 1,
-          reason: "縛りです"
-        });
-        return;
-      }
+      cardCompare(fieldCards, validateCards, resultCheckHand.type, msg.id, userId);
+      // if (fieldCards.length != validateCards.length) {
+      //   //枚数が違うのはあり得ない
+      //   io.to(socket.id).emit("validateError", {
+      //     card: msg,
+      //     error: 1,
+      //     reason: "枚数が違うよね"
+      //   });
+      //   return;
+      // }
+      // //縛り
+      // if (store[msg.id].shibari && !isSameType(fieldCards, validateCards)) {
+      //   io.to(socket.id).emit("validateError", {
+      //     card: msg,
+      //     error: 1,
+      //     reason: "縛りです"
+      //   });
+      //   return;
+      // }
       //数字を比べる
       if (!numComparison(fieldCards[0], validateCards[0], msg.id)) {
         io.to(socket.id).emit("validateError", {
@@ -446,32 +446,7 @@ function isSameNumber(cards) {
   return true;
 }
 
-function isSameType(ncs, scs) {
-  //まずジョーカーの数を数える
-  let jokerCount = scs.filter(item => ~item.type.indexOf("joker")).length;
-  var flag = false;
-  for (let i = 0; i < ncs.length; i++) {
-    flag = scs.some(item => item.type === ncs[i].type);
-    if (!flag) {
-      if (jokerCount > 0) {
-        //Joker置き換え
-        flag = true;
-        jokerCount--;
-        continue;
-      } else {
-        if (~ncs[i].type.indexOf("joker")) {
-          //相手がjokerだった場合は好きなマークで置き換え可能
-          flag = true;
-          continue;
-        } else {
-          //一回でも一致しなければfalse
-          return false;
-        }
-      }
-    }
-  }
-  return flag;
-}
+
 
 function numComparison(nc, sc, roomId) {
   if (~nc.type.indexOf("joker") && sc.type == "spade" && sc.number == "3") {
@@ -735,7 +710,17 @@ function cardCompare(nc, sc, handType, roomId){
     return result;
   }
   //スート縛りの確認
-  if (store[roomId].shibari && )
+  if (store[roomId].shibari && !isSameType(nc, sc)){
+    result.card = sc;
+    result.error = 1;
+    result.reason = "diffSuitCards"
+  }
+  //数字の大小確認
+  if(store[roomId].stair){
+    //階段の場合のみ
+  }else{
+    //1枚だし、複数だし
+  }
   //1枚出しか、複数出しか、階段かで処理が変わる。
   if(handType === "unit"){
     
@@ -752,7 +737,33 @@ function cardCompare(nc, sc, handType, roomId){
   }
   return result;
 }
-  
+
+function isSameType(ncs, scs) {
+  //まずジョーカーの数を数える
+  let jokerCount = scs.filter(item => ~item.type.indexOf("joker")).length;
+  var flag = false;
+  for (let i = 0; i < ncs.length; i++) {
+    flag = scs.some(item => item.type === ncs[i].type);
+    if (!flag) {
+      if (jokerCount > 0) {
+        //Joker置き換え
+        flag = true;
+        jokerCount--;
+        continue;
+      } else {
+        if (~ncs[i].type.indexOf("joker")) {
+          //相手がjokerだった場合は好きなマークで置き換え可能
+          flag = true;
+          continue;
+        } else {
+          //一回でも一致しなければfalse
+          return false;
+        }
+      }
+    }
+  }
+  return flag;
+}
 
 http.listen(port, function() {
   console.log("listening on *:" + port);
