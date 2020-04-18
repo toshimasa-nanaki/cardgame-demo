@@ -168,7 +168,7 @@ io.on("connection", function(socket) {
     logger.debug("場のカード:"+ JSON.stringify(fieldCards));
     if (fieldCards.length != 0) {
       logger.debug("比較判定開始");
-      cardCompare(fieldCards, validateCards, resultCheckHand.type, msg.id);
+      const resultCardCompare = cardCompareValidate(fieldCards, validateCards, resultCheckHand.type, msg.id);
       // if (fieldCards.length != validateCards.length) {
       //   //枚数が違うのはあり得ない
       //   io.to(socket.id).emit("validateError", {
@@ -196,6 +196,14 @@ io.on("connection", function(socket) {
       //   });
       //   return;
       // }
+      if(resultCardCompare.error != 0){
+        io.to(socket.id).emit("validateError", {
+          card: msg,
+          error: 1,
+          reason: resultCardCompare.reason
+        });
+      }
+      const effectCard = checkEffectCard();
       if (
         ~fieldCards[0].type.indexOf("joker") &&
         validateCards[0].type == "spade" &&
@@ -696,7 +704,7 @@ function isStairsCard(sc){
   return suit && stairNum;
 }
 
-function cardCompare(nc, sc, handType, roomId){
+function cardCompareValidate(nc, sc, handType, roomId){
   let result ={
     card: [],
     error: 0,
@@ -724,20 +732,20 @@ function cardCompare(nc, sc, handType, roomId){
     result.reason = "loseCards"
   }
   
-  //1枚出しか、複数出しか、階段かで処理が変わる。
-  if(handType === "unit"){
+//   //1枚出しか、複数出しか、階段かで処理が変わる。
+//   if(handType === "unit"){
     
-  }else if(handType === "multiple"){
+//   }else if(handType === "multiple"){
     
-  }else if(handType === "stair"){
+//   }else if(handType === "stair"){
     
-  }else{
-    //ありえない。
-    logger.error("存在しない役が発生しています");
-    result.card = [];
-    result.error = 1;
-    result.reason = "unexpectedError";
-  }
+//   }else{
+//     //ありえない。
+//     logger.error("存在しない役が発生しています");
+//     result.card = [];
+//     result.error = 1;
+//     result.reason = "unexpectedError";
+//   }
   return result;
 }
 
