@@ -326,8 +326,16 @@ $(function() {
     console.log("game finish");
     //$("#rematch").show();
     $("#gameCommentaryArea").append("10秒後に次のゲームを始めます。<br />");
+  });
+  socket.on("nextGameStart", function(msg) {
+    console.log("next game start");
+    //$("#rematch").show();
+    $("#gameCommentaryArea").append("10秒後に次のゲームを始めます。<br />");
     sleep(10, function () {
-      console.log('5秒経過しました！');
+      socket.emit("rematch", {
+        id: $("input[name=roomRadios]:checked").val(),
+        roomid: $("input[name=roomRadios]:checked").val()
+      });
     });
   });
   $("#rematch").click(function() {

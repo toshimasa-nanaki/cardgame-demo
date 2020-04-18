@@ -326,18 +326,24 @@ io.on("connection", function(socket) {
       logger.debug("現在のユーザーの状態:" + JSON.stringify(store[msg.id]['users'][orderList[currentTurn]]));
       if (rank == orderList.length - 1) {
         //つまり全員終了
-        let biriId = Object.keys(users).filter(item => {
+        let lastId = Object.keys(users).filter(item => {
           logger.debug("itemの値:" + JSON.stringify(store[msg.id]['users'][item]));
           return store[msg.id]['users'][item].rank.length == 0;
         });
-        logger.debug("最下位ユーザー:" + JSON.stringify(store[msg.id]['users'][biriId]));
-        io.to(biriId).emit("finish", rankTable[rank]);
+        logger.debug("最下位ユーザー:" + JSON.stringify(store[msg.id]['users'][lastId]));
+        io.to(lastId).emit("finish", rankTable[rank]);
         io.to(store[msg.id].roomId).emit("finishNotification", {
           rank: rankTable[rank],
-          playerName: store[msg.id]['users'][biriId].dispName
+          playerName: store[msg.id]['users'][lastId].dispName
         });
-        io.to(store[msg.id].roomId).emit("gameFinish", "");
-        io.to(biriId).emit("gameFinish", "");
+        if(store[msg.id].gameNum == 4){
+          //1セット終了
+          //TODO集計が必要
+        }else{
+          //次のゲームへ
+          io.to(store[msg.id].roomId).emit("gameFinish", {gameNum: store[msg.id].gameNum + 1});
+          io.to(lastId).emit("nextGameStart", {gameNum: store[msg.id].gameNum + 1});
+        }
       }
     }
     notifyChangeTurn(currentTurn, msg.id);
