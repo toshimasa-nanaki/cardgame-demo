@@ -156,6 +156,14 @@ $(function() {
       $("#gameCommentaryArea")[0].scrollHeight
     );
     $("#gameFieldArea").show();
+    $("#rank").text("");
+    $("#rematch").hide();
+    $("#seiseki").text("");
+    $("#field").text("現在のカード：なし");
+    $("#other").text("");
+    $("#elevenback").text("");
+    $("#shibari").text("");
+    $("#revolution").text("");
     $("#send").prop("disabled", true);
     $("#pass").prop("disabled", true);
     $("#cardList").empty();
