@@ -75,7 +75,7 @@ io.on("connection", function(socket) {
     console.log("部屋入り情報:" + JSON.stringify(joinInfo));
     const count = store[joinInfo.roomId].capacity;
     //if (socket.nsp.adapter.rooms[msg.id].length >= count) {
-    if (Object.keys(store[joinInfo.roomId]["users"]).length >= count) {
+    if (typeof store[joinInfo.roomId]["users"] !== "undefined" && Object.keys(store[joinInfo.roomId]["users"]).length >= count) {
       io.to(socket.id).emit("connectError", "もう部屋がいっぱいです");
       return;
     } else {

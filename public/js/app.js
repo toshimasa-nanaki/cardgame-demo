@@ -130,7 +130,7 @@ $(function() {
     $("#gameArea").show();
     Object.keys(joinMembers).forEach(function(key) {
       $("#gameCommentaryArea").append(
-        joinMembers[key] + "さんが部屋に入りました<br />"
+        joinMembers[key].dispName + "さんが部屋に入りました<br />"
       );
       $("#gameCommentaryArea").scrollTop(
         $("#gameCommentaryArea")[0].scrollHeight
