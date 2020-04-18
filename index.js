@@ -651,7 +651,28 @@ function isStairsCard(sc){
       break;
     }
     //比較対象がJokerの場合は終わり
-    if(sc[i + 1].type === "")
+    if(~sc[i + 1].type.indexOf("joker")){
+      break;
+    }
+    //スートチェック
+    if(sc[i+1].type === sc[i].type){
+      suit = true;
+    }else{  
+      return false; //1回でもマークが違ったら階段ではない
+    }
+    //階段チェック
+    const diff = sc[i+1].number - sc[i].number;
+    if(diff === 1){
+      //差が1なら階段と判断
+      stairNum = true;
+    }else{
+      if(jokerCount > 0){
+        
+      }else{
+        //Jokerがなく、差が1より大きいと階段ではない
+        return false;
+      }
+    }
   }
 }
 
