@@ -90,7 +90,8 @@ io.on("connection", function(socket) {
         store[joinInfo.roomId]["users"][socket.id] = {
           dispName: joinInfo.playerName,
           card: [],
-          rank: ""
+          rank: "",
+          rankNum: 0
         };
       }
       console.log(
@@ -312,9 +313,11 @@ io.on("connection", function(socket) {
         (!store[msg.id].revolution && validateCards[0].number == 2)
       ) {
         store[msg.id]['users'][socket.id].rank = rankTable[store[msg.id]['order'].length - 1];
+        store[msg.id]['users'][socket.id].rankNum = store[msg.id]['order'].length;
         //ORDER[currentTurn].rank = rankTable[ORDER.length - 1];
       } else {
         store[msg.id]['users'][socket.id].rank = rankTable[rank];
+        store[msg.id]['users'][socket.id].rankNum = rank;
         //ORDER[currentTurn].rank = rankTable[rank];
       }
       io.to(orderList[currentTurn]).emit("finish", rankTable[rank]);
@@ -551,10 +554,19 @@ function decideOrder(roomId){
   }else{
     //2回目以降は大貧民が一番。時計回りという概念がないので、とりあえず順位の逆順にする。(オリジナル)
     //TODO? 実際は大貧民から時計回り。
+    let userRank = [];
     Object.keys(store[roomId]['users']).forEach(key => {
+      userRank.push({"id": key, "rankNum": store[roomId]['users'][key].rankNum})
+      store[roomId]['users'][key].rankNum = 0;
+      store[roomId]['users'][key].rank="";
+    });
+    userRank.sort(function(a, b) {
+          if (a.rankNum > b.rankNum) return -1;
+          if (a.rankNum < b.rankNum) return 1;
+          return 0;
+        }).forEach(key => {
       store[roomId]['order'].push(key);
     });
-    //順番がきまったら、ユーザデータのrankを初期化する
   }
 }
 
