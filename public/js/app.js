@@ -274,6 +274,9 @@ $(function() {
       $("#" + msg.card[i].type + msg.card[i].number).remove();
     }
     $("#field").text(message);
+    $("#gameCommentaryArea").append(
+          msg.playerName + "さんが"+ message +"を出しました。<br />"
+    );      
     $("#other").text("");
     $("#errorMsg").hide();
     $("#errorMsg").text("");

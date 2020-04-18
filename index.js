@@ -22,7 +22,6 @@ var store = {};
 const ORIGINALCARDDATA = trump_init(TRUMPDATA);
 let gameStart = false;
 let stair = false;
-//let pass = 0;
 let seiseki = [];
 let rank = 0;
 let rankTable = [];
@@ -269,7 +268,8 @@ io.on("connection", function(socket) {
       card: validateCards,
       error: 0,
       reason: "",
-      result: store[msg.id]['fieldCards']
+      result: store[msg.id]['fieldCards'],
+      playerName: users[socket.id].dispName
     });
 
     //成績をここでつける
