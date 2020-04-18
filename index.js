@@ -21,7 +21,7 @@ var port = process.env.PORT || 3000;
 var store = {};
 const ORIGINALCARDDATA = trump_init(TRUMPDATA);
 let gameStart = false;
-let nowCard = "";
+//let nowCard = "";
 //let ORDER = [];
 let elevenbackFlag = false;
 let revolutionFlag = false;
@@ -67,7 +67,8 @@ io.on("connection", function(socket) {
       passCount: 0,
       elevenback: false,
       shibari: false,
-      revolution: false
+      revolution: false,
+      fieldCards:[]
     };
     store[createRoomId] = roomObj;
     //console.log("Store情報:  " + JSON.stringify(store));
@@ -154,8 +155,10 @@ io.on("connection", function(socket) {
           if (a.number > b.number) return 1;
           return 0;
         });
+    let fieldCards = store[msg.id]['fieldCards'];
     
-    //
+    /* 受け取ったカードのみで判定可能な部分 */
+    //役をチェック
     if(!checkValidateHand(validateCards)){
       io.to(socket.id).emit("validateError", {
         card: msg,
@@ -165,8 +168,9 @@ io.on("connection", function(socket) {
       return;
     }
 
-    if (nowCard != "") {
-      if (nowCard.cards.length != validateCards.length) {
+    /* 場のカードとの比較判定 */
+    if (fieldCards.length != 0) {
+      if (fieldCards.length != validateCards.length) {
         //枚数が違うのはあり得ない
         io.to(socket.id).emit("validateError", {
           card: msg,
@@ -176,7 +180,7 @@ io.on("connection", function(socket) {
         return;
       }
       //縛り
-      if (shibari && !isSameType(nowCard.cards, validateCards)) {
+      if (shibari && !isSameType(fieldCards, validateCards)) {
         io.to(socket.id).emit("validateError", {
           card: msg,
           error: 1,
@@ -185,7 +189,7 @@ io.on("connection", function(socket) {
         return;
       }
       //数字を比べる
-      if (!numComparison(nowCard.cards[0], validateCards[0])) {
+      if (!numComparison(fieldCards[0], validateCards[0])) {
         io.to(socket.id).emit("validateError", {
           card: msg,
           error: 1,
@@ -194,7 +198,7 @@ io.on("connection", function(socket) {
         return;
       }
       if (
-        ~nowCard.cards[0].type.indexOf("joker") &&
+        ~fieldCards[0].type.indexOf("joker") &&
         validateCards[0].type == "spade" &&
         validateCards[0].number == "3"
       ) {
@@ -215,7 +219,7 @@ io.on("connection", function(socket) {
         
         return;
       }
-      if (!shibari && isShibari(nowCard.cards, validateCards)) {
+      if (!shibari && isShibari(fieldCards, validateCards)) {
         shibari = true;
         io.to(store[msg.id].roomId).emit("changeStatus", {
           type: "shibari",
@@ -271,12 +275,12 @@ io.on("connection", function(socket) {
       });
     }
     store[msg.id].passCount = 0;
-    nowCard = msg;
+    fieldCards = validateCards;
     io.to(store[msg.id].roomId).emit("result", {
       card: msg,
       error: 0,
       reason: "",
-      result: nowCard
+      result: fieldCards
     });
 
     //成績をここでつける
