@@ -176,38 +176,6 @@ io.on("connection", function(socket) {
         return;
     }
     if (fieldCards.length != 0) {
-      // logger.debug("比較判定開始");
-      // const resultCardCompare = cardCompareValidate(fieldCards, validateCards, resultCheckHand.type, msg.id);
-      
-      // if (fieldCards.length != validateCards.length) {
-      //   //枚数が違うのはあり得ない
-      //   io.to(socket.id).emit("validateError", {
-      //     card: msg,
-      //     error: 1,
-      //     reason: "枚数が違うよね"
-      //   });
-      //   return;
-      // }
-      // //縛り
-      // if (store[msg.id].shibari && !isSameType(fieldCards, validateCards)) {
-      //   io.to(socket.id).emit("validateError", {
-      //     card: msg,
-      //     error: 1,
-      //     reason: "縛りです"
-      //   });
-      //   return;
-      // }
-      //数字を比べる
-      // if (!numComparison(fieldCards[0], validateCards[0], msg.id)) {
-      //   io.to(socket.id).emit("validateError", {
-      //     card: msg,
-      //     error: 1,
-      //     reason: "弱いカードはおけない"
-      //   });
-      //   return;
-      // }
-      
-      //const effectCard = checkEffectCard(fieldCards, validateCards, resultCheckHand.type, msg.id);
       if (
         ~fieldCards[0].type.indexOf("joker") &&
         validateCards[0].type == "spade" &&

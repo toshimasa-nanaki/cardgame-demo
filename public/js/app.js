@@ -332,7 +332,6 @@ $(function() {
   });
   socket.on("gameFinish", function(msg) {
     console.log("game finish");
-    //$("#rematch").show();
     $("#gameCommentaryArea").append("10秒後に次のゲームを始めます。<br />");
   });
   socket.on("nextGameStart", function(msg) {
