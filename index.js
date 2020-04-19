@@ -282,6 +282,7 @@ io.on("connection", function(socket) {
     removeCard(validateCards, socket.id ,msg.id);
     if(users[socket.id].card.length <= 0){
       //成績をチェックする。
+      checkRank(validateCards, msg.id);
       //上がり
       //まずは反則あがりをチェック
       //・スペ3一枚で上がってない？
@@ -338,6 +339,30 @@ io.on("connection", function(socket) {
     notifyChangeTurn(currentTurn, msg.id);
   });
 });
+
+function checkRank(sc, roomId){
+  let result = checkFoul();
+  if(isFoul()){
+    //反則上がりだった場合
+    
+  }
+}
+
+//反則上がりのチェック
+function checkFoul(sc, roomId){
+  let result = {
+    foul: false,
+    
+  }
+  if(sc.length == 1 && sc[0].number == 3 && sc[0].type == "spade"){
+    //・スペ3一枚で上がってない？
+    
+  }
+  
+      //・8またはJOKER含まれてない？
+      // ・革命時に3
+      //・非革命時に2
+}
 
 let uniqueId = function(digits) {
   var strong = typeof digits !== "undefined" ? digits : 1000;
