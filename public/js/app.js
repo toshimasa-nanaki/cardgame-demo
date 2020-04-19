@@ -370,7 +370,8 @@ $(function() {
       $("#" + msg.card[i].type + msg.card[i].number).remove();
       //場にカードを置く
       const imgUri = "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" + DISPLAY_IMAGE_ID[msg.result[i].type + msg.result[i].number] + ".png";
-      $("#field").append($('<img class="handCardImage" src="' + imgUri + '"></img>'));
+      let li = $('<li></li>').append($('<img class="fieldCardImage" src="' + imgUri + '"></img>'));
+      $("#field").append(li);
     }
     //$("#field").text(message);
     $("#gameCommentaryArea").append(
@@ -422,7 +423,7 @@ $(function() {
         $("#gameCommentaryArea").append(
           msg.playerName + "さんがダブルJOKERを発動しました。場を流します。<br />"
         );
-        $("#field").text("なし");
+        $("#field").empty();
         for (let i = 0; i < msg.value.cards.length; i++) {
           $("#" + msg.value.cards[i].type + msg.value.cards[i].number).remove();
         }
@@ -433,7 +434,7 @@ $(function() {
         $("#gameCommentaryArea").append(
           msg.playerName + "さんが8切りを発動しました。場を流します。<br />"
         );
-        $("#field").text("なし");
+        $("#field").empty();
         for (let i = 0; i < msg.value.cards.length; i++) {
           $("#" + msg.value.cards[i].type + msg.value.cards[i].number).remove();
         }
@@ -444,7 +445,7 @@ $(function() {
         $("#gameCommentaryArea").append(
           "パスが一周したので場を流します。<br />"
         );
-        $("#field").text("なし");
+       $("#field").empty();
         $("#elevenback").text("");
         $("#shibari").text("");
         break;
@@ -505,7 +506,7 @@ $(function() {
     $("#rank").text("");
     $("#rematch").hide();
     $("#seiseki").text("");
-    $("#field").text("現在のカード：なし");
+    $("#field").empty();
     $("#other").text("");
     $("#elevenback").text("");
     $("#shibari").text("");
