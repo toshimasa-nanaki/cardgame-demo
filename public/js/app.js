@@ -146,9 +146,9 @@ $(function() {
 //     // チェックを入れた状態にします。
 //     $(this).addClass('checked');
   });
-  $('.image_box .disabled_checkbox').click(function() {
-    return false;
-  });
+  // $('.image_box .disabled_checkbox').click(function() {
+  //   return false;
+  // });
   $("#requestRoomCreate").click(function() {
     //部屋作成時
     socket.emit("requestRoomCreate", {
@@ -259,31 +259,39 @@ $(function() {
       const imgUri = "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" + DISPLAY_IMAGE_ID[element.type + element.number] + ".png";
       //const svgInfo = $("#" + DISPLAY_IMAGE_ID[element.type + element.number])[0].innerHTML;
       //画像データを取得する
-      let img = $('<img class="handCardImage" src="' + imgUri + '"></img>');
+      let img = $('<img class="handCardImage" src="' + imgUri + '"></img>').on('click', function() {
+        if (!$(this).is('.checked')) {
+      // チェックが入っていない画像をクリックした場合、チェックを入れます。
+      $(this).addClass('checked');
+    } else {
+      // チェックが入っている画像をクリックした場合、チェックを外します。
+      $(this).removeClass('checked')
+    }
+      });
       var check = $('<input class="disabled_checkbox" type="checkbox" checked="" />').attr({
           name: "cards",
           value: element.type + "_" + element.number
-        });
+        }).on('click', function() {return false});
       let box = $('<div class="image_box"/>').append(img).append(check);
       let li = $('<li></li>').append(box);
       $("#cardList2").append(li);
     });
-    msg.card.forEach(element => {
-      var check = $(
-        '<label id="' +
-          element.type +
-          element.number +
-          '">' +
-          DISPLAY_DIC[element.type + element.number] +
-          "</label>"
-      ).prepend(
-        $('<input type="checkbox" />').attr({
-          name: "cards",
-          value: element.type + "_" + element.number
-        })
-      );
-      $("#cardList").append(check);
-    });
+    // msg.card.forEach(element => {
+    //   var check = $(
+    //     '<label id="' +
+    //       element.type +
+    //       element.number +
+    //       '">' +
+    //       DISPLAY_DIC[element.type + element.number] +
+    //       "</label>"
+    //   ).prepend(
+    //     $('<input type="checkbox" />').attr({
+    //       name: "cards",
+    //       value: element.type + "_" + element.number
+    //     })
+    //   );
+    //   $("#cardList").append(check);
+    // });
     console.log("order accept");
     if (msg.yourTurn) {
       $("#send").prop("disabled", false);
