@@ -125,10 +125,6 @@ $(function() {
     joker199: "JOKER",
     joker299: "JOKER"
   };
-  $("#svgArea").load("https://cdn.glitch.com/1e9ade85-2eff-47c4-a1d3-a43938390d3d%2Fsvg-cards.svg?v=1587262437456 svg", function(){
-		//SVGの処理
-    console.log("画像読み込み完了");
-	});
   // 画像がクリックされた時の処理です。
   $('img.handCardImage').click(function() {
     if (!$(this).is('.checked')) {
@@ -236,7 +232,8 @@ $(function() {
     $("#rank").text("");
     $("#rematch").hide();
     $("#seiseki").text("");
-    $("#field").text("なし");
+    //$("#field").text("なし");
+    $("#field").empty();
     $("#other").text("");
     $("#elevenback").text("");
     $("#shibari").text("");
@@ -365,12 +362,17 @@ $(function() {
   });
   socket.on("result", function(msg) {
     let message = "";
+    $("#field").empty();
     for (let i = 0; i < msg.card.length; i++) {
       message =
         message + "　" + DISPLAY_DIC[msg.result[i].type + msg.result[i].number];
+      //手札削除
       $("#" + msg.card[i].type + msg.card[i].number).remove();
+      //場にカードを置く
+      const imgUri = "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" + DISPLAY_IMAGE_ID[msg.result[i].type + msg.result[i].number] + ".png";
+      $("#field").append($('<img class="handCardImage" src="' + imgUri + '"></img>'));
     }
-    $("#field").text(message);
+    //$("#field").text(message);
     $("#gameCommentaryArea").append(
           msg.playerName + "さんが"+ message +"を出しました。<br />"
     );      
@@ -409,7 +411,7 @@ $(function() {
           msg.playerName + "さんがスペ3返しを発動しました。場を流します。<br />"
         );
         //$("#other").text("JOKER討伐したので流しました。");
-        $("#field").text("なし");
+        $("#field").empty();
         for (let i = 0; i < msg.value.cards.length; i++) {
           $("#" + msg.value.cards[i].type + msg.value.cards[i].number).remove();
         }
