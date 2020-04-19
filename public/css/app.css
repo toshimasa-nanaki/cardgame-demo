@@ -23,9 +23,9 @@ ul#cardList2 li .image_box {
 img.handCardImage{
   width:100%;
   height:100%;
-  transform: scale(1,1);
+/*   transform: scale(1,1);
   border: 2px solid blue;
-  box-sizing: border-box;
+  box-sizing: border-box; */
 }
 .image_box .disabled_checkbox {
   /* チェックボックスの位置は絶対位置にします。 */
@@ -33,6 +33,18 @@ img.handCardImage{
   /* チェックボックスは、親要素の右上から12pxの位置に配置します。 */
   top: 6px;
   right: 6px;
+  display: none;
+}
+.image_box img.handCardImage.checked {
+  /* チェックが入った状態だと、枠が表示されるようにします。 */
+  border: 6px solid blue;
+  /* 線をwidthとheightに含めるようにします。 */
+  box-sizing: border-box;
+}
+.image_box img.handCardImage.checked + .disabled_checkbox {
+  /* 画像にcheckedクラスが指定されたときは、
+  チェックボックスの非表示を解除します。 */
+  display: block;
 }
 span#field{
   font: 24px Helvetica, Arial;
