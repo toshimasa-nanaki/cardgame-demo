@@ -284,7 +284,7 @@ io.on("connection", function(socket) {
     removeCard(validateCards, socket.id ,msg.id);
     if(users[socket.id].card.length <= 0){
       //成績をチェックする。
-      checkRank(validateCards, msg.id, socket.id);
+      //checkRank(validateCards, msg.id, socket.id);
       //上がり
       //まずは反則あがりをチェック
       //・スペ3一枚で上がってない？
@@ -350,8 +350,23 @@ function checkRank(sc, roomId, userId){
     store[roomId]['users'][userId].rank = rankTable[store[roomId]['users'].length - 1];
     store[roomId]['users'][userId].rankNum = store[roomId]['users'].length;
     store[roomId]['users'][userId].rankReason = result.reason;
+    store[roomId]['users'][userId].finishTime = new Date().getTime();
   }else{
-    
+    let nextRank = 0;
+    Object.keys(store[roomId]['users']).sort(function(a,b){
+      if (a.rankNum < b.rankNum) return -1;
+      if (a.rankNum > b.rankNum) return 1;
+      return 0l
+    }).some(function(val){
+      if(val)
+    })
+    let validateCards = msg.cards.sort(function(a, b) {
+          if (a.number < b.number) return -1;
+          if (a.number > b.number) return 1;
+          return 0;
+        });
+    //store[roomId]['users'][userId].rankReason = result.reason;
+    store[roomId]['users'][userId].finishTime = new Date().getTime();
   }
 }
 
