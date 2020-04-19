@@ -177,6 +177,28 @@ $(function() {
     $("#send").prop("disabled", true);
     $("#pass").prop("disabled", true);
     $("#cardList").empty();
+    $("#cardList2").empty();
+    msg.card.forEach(element => {
+      const cardType = element.number + element.type;
+      const svgInfo = $("#" + element.number + '_' + element.type)[0].innerHTML;
+      //画像データを取得する
+      let svg = $('<svg class="handCardImage">' + svgInfo + '</svg>');
+      var check = $(
+        '<label id="' +
+          element.type +
+          element.number +
+          '">' +
+          DISPLAY_DIC[element.type + element.number] +
+          "</label>"
+      ).prepend(
+        $('<input type="checkbox" />').attr({
+          name: "cards",
+          value: element.type + "_" + element.number
+        })
+      );
+      let box = $('<div class="disabled_checkbox">')
+      $("#cardList").append(check);
+    });
     msg.card.forEach(element => {
       var check = $(
         '<label id="' +
