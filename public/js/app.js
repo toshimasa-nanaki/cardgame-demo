@@ -70,8 +70,8 @@ $(function() {
     joker299: "JOKER"
   };
   $("#test").click(function(){
-    var svg_doc = document.getElementById('mySvg').contentDocument;
-    var $svg = $(svg_doc).find('svg');
+    var group1 = document.getElementById("1_clover");
+    //var $svg = $(svg_doc).find('svg');
   });
   $("#svgArea").load("https://cdn.glitch.com/1e9ade85-2eff-47c4-a1d3-a43938390d3d%2Fsvg-cards.svg?v=1587262437456 svg", function(){
  
