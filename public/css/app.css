@@ -7,7 +7,7 @@
 /*       div#roomInputArea {
         display: none;
       } */
-#mySvg{
+div#svgArea{
   display: none;
 }
 span#field{
