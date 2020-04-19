@@ -238,7 +238,7 @@ $(function() {
       const cardType = element.number + element.type;
       const svgInfo = $("#" + DISPLAY_IMAGE_ID[element.type + element.number])[0].innerHTML;
       //画像データを取得する
-      let svg = $('<svg class="handCardImage" viewBox="0,0,150,250">' + svgInfo + '</svg>');
+      let svg = $('<svg class="handCardImage" viewBox="-.2 -236 2178.99 1216.19">' + svgInfo + '</svg>');
       var check = $('<input class="disabled_checkbox" type="checkbox" checked="" />').attr({
           name: "cards",
           value: element.type + "_" + element.number
