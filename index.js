@@ -1,6 +1,6 @@
 const TRUMPDATA = {
   card: [
-    { type: "clover", count: 13 },
+    { type: "club", count: 13 },
     { type: "spade", count: 13 },
     { type: "heart", count: 13 },
     { type: "diamond", count: 13 }
