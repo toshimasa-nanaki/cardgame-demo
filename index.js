@@ -284,31 +284,31 @@ io.on("connection", function(socket) {
     removeCard(validateCards, socket.id ,msg.id);
     if(users[socket.id].card.length <= 0){
       //成績をチェックする。
-      //checkRank(validateCards, msg.id, socket.id);
+      checkRank(validateCards, msg.id, socket.id);
       //上がり
       //まずは反則あがりをチェック
       //・スペ3一枚で上がってない？
       //・8またはJOKER含まれてない？
       // ・革命時に3
       //・非革命時に2
-      if (
-        (validateCards[0].number == 3 &&
-          validateCards[0].type == "spade" &&
-          validateCards.length == 1) ||
-        validateCards[0].number == 8 ||
-        ~validateCards[0].type.indexOf("joker") ||
-        (store[msg.id].revolution && validateCards[0].number == 3) ||
-        (!store[msg.id].revolution && validateCards[0].number == 2)
-      ) {
-        store[msg.id]['users'][socket.id].rank = rankTable[store[msg.id]['order'].length - 1];
-        store[msg.id]['users'][socket.id].rankNum = store[msg.id]['order'].length;
-        //ORDER[currentTurn].rank = rankTable[ORDER.length - 1];
-      } else {
-        store[msg.id]['users'][socket.id].rank = rankTable[rank];
-        store[msg.id]['users'][socket.id].rankNum = rank;
-        //ORDER[currentTurn].rank = rankTable[rank];
-      }
-      io.to(orderList[currentTurn]).emit("finish", rankTable[rank]);
+      // if (
+      //   (validateCards[0].number == 3 &&
+      //     validateCards[0].type == "spade" &&
+      //     validateCards.length == 1) ||
+      //   validateCards[0].number == 8 ||
+      //   ~validateCards[0].type.indexOf("joker") ||
+      //   (store[msg.id].revolution && validateCards[0].number == 3) ||
+      //   (!store[msg.id].revolution && validateCards[0].number == 2)
+      // ) {
+      //   store[msg.id]['users'][socket.id].rank = rankTable[store[msg.id]['order'].length - 1];
+      //   store[msg.id]['users'][socket.id].rankNum = store[msg.id]['order'].length;
+      //   //ORDER[currentTurn].rank = rankTable[ORDER.length - 1];
+      // } else {
+      //   store[msg.id]['users'][socket.id].rank = rankTable[rank];
+      //   store[msg.id]['users'][socket.id].rankNum = rank;
+      //   //ORDER[currentTurn].rank = rankTable[rank];
+      // }
+      io.to(orderList[currentTurn]).emit("finish", rankTable[store[msg.id]['users'][socket.id].rankNum - 1]);
       io.to(store[msg.id].roomId).emit("finishNotification", {
         rank: users[orderList[currentTurn]].rank,
         playerName: users[orderList[currentTurn]].dispName
@@ -354,17 +354,21 @@ function checkRank(sc, roomId, userId){
   }else{
     let nextRank = 0;
     Object.keys(store[roomId]['users']).sort(function(a,b){
-      if (a.rankNum < b.rankNum) return -1;
-      if (a.rankNum > b.rankNum) return 1;
-      return 0l
+      if (a.rankNum > b.rankNum) return -1;
+      if (a.rankNum < b.rankNum) return 1;
+      return 0;
     }).some(function(val){
-      if(val)
-    })
-    let validateCards = msg.cards.sort(function(a, b) {
-          if (a.number < b.number) return -1;
-          if (a.number > b.number) return 1;
-          return 0;
-        });
+      if(val.rankNum != 4){
+        nextRank = val.rankNum;
+        return true;
+      }
+    });
+    if(nextRank == 0){
+      //まだ誰もあがっていないといこと。
+      nextRank = 1;
+    }
+    store[roomId]['users'][userId].rank = rankTable[nextRank - 1];
+    store[roomId]['users'][userId].rankNum = nextRank;
     //store[roomId]['users'][userId].rankReason = result.reason;
     store[roomId]['users'][userId].finishTime = new Date().getTime();
   }
