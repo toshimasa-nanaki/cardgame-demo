@@ -20,7 +20,7 @@ ul#cardList2 li .image_box {
   /* チェックボックスの親要素にrelativeを指定しておきます。 */
   position: relative;
 }
-svg .handCardImage{
+svg.handCardImage{
   width:100%;
   height:100%;
   transform: scale(1,1);
@@ -31,8 +31,8 @@ svg .handCardImage{
   /* チェックボックスの位置は絶対位置にします。 */
   position: absolute;
   /* チェックボックスは、親要素の右上から12pxの位置に配置します。 */
-  top: 12px;
-  right: 12px;
+  top: 6px;
+  right: 6px;
 }
 span#field{
   font: 24px Helvetica, Arial;
