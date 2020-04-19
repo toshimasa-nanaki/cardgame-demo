@@ -7,6 +7,9 @@
 /*       div#roomInputArea {
         display: none;
       } */
+#mySvg{
+  display: none;
+}
 span#field{
   font: 24px Helvetica, Arial;
 }
