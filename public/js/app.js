@@ -138,17 +138,8 @@ $(function() {
       // チェックが入っている画像をクリックした場合、チェックを外します。
       $(this).removeClass('checked')
     }
-//     var $imageList = $('.image_list');
-
-//   // 現在の選択を解除します。
-//   //$imageList.find('img.thumbnail.checked').removeClass('checked');
-
-//     // チェックを入れた状態にします。
-//     $(this).addClass('checked');
   });
-  // $('.image_box .disabled_checkbox').click(function() {
-  //   return false;
-  // });
+
   $("#requestRoomCreate").click(function() {
     //部屋作成時
     socket.emit("requestRoomCreate", {
@@ -259,7 +250,9 @@ $(function() {
       const imgUri = "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" + DISPLAY_IMAGE_ID[element.type + element.number] + ".png";
       //const svgInfo = $("#" + DISPLAY_IMAGE_ID[element.type + element.number])[0].innerHTML;
       //画像データを取得する
-      let img = $('<img class="handCardImage" src="' + imgUri + '"></img>').on('click', function() {
+      let img = $('<img class="handCardImage" src="' + imgUri + '"></img>').attr({
+          value: element.type + "_" + element.number
+        }).on('click', function() {
         if (!$(this).is('.checked')) {
       // チェックが入っていない画像をクリックした場合、チェックを入れます。
       $(this).addClass('checked');
@@ -273,7 +266,7 @@ $(function() {
           value: element.type + "_" + element.number
         }).on('click', function() {return false});
       let box = $('<div class="image_box"/>').append(img).append(check);
-      let li = $('<li></li>').append(box);
+      let li = $('<li id="' + element.type + element.number + '"></li>').append(box);
       $("#cardList2").append(li);
     });
     // msg.card.forEach(element => {
@@ -349,9 +342,9 @@ $(function() {
   $("#send").click(function() {
     let sendCards = [];
     let cardarr;
-    $('input:checkbox[name="cards"]:checked').each(function() {
+    $('img.handCardImage.checked').each(function() {
       cardarr = $(this)
-        .val()
+        .attr("value")
         .split("_");
       sendCards.push({ type: cardarr[0], number: Number(cardarr[1]) });
     });
