@@ -14,11 +14,11 @@ $(function() {
     handError: "役ができていません。"
   };
   const DISPLAY_IMAGE_ID = {
-    spade3: "3_spade",
-    spade4: "4_spade",
-    spade5: "5_spade",
-    spade6: "6_spade",
-    spade7: "7_spade",
+    spade3: "spade_3",
+    spade4: "spade_4",
+    spade5: "spade_5",
+    spade6: "spade_6",
+    spade7: "spade_7",
     spade8: "8_spade",
     spade9: "9_spade",
     spade10: "10_spade",
@@ -236,14 +236,15 @@ $(function() {
     $("#cardList2").empty();
     msg.card.forEach(element => {
       const cardType = element.number + element.type;
-      const svgInfo = $("#" + DISPLAY_IMAGE_ID[element.type + element.number])[0].innerHTML;
+      const imgUri = "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" + DISPLAY_IMAGE_ID[element.type + element.number] + ".png";
+      //const svgInfo = $("#" + DISPLAY_IMAGE_ID[element.type + element.number])[0].innerHTML;
       //画像データを取得する
-      let svg = $('<svg class="handCardImage" viewBox="-.2 -236 2178.99 1216.19">' + svgInfo + '</svg>');
+      let img = $('<img class="handCardImage" src="' + imgUri + '"></img>');
       var check = $('<input class="disabled_checkbox" type="checkbox" checked="" />').attr({
           name: "cards",
           value: element.type + "_" + element.number
         });
-      let box = $('<div class="image_box"/>').append(svg).append(check);
+      let box = $('<div class="image_box"/>').append(img).append(check);
       let li = $('<li></li>').append(box);
       $("#cardList2").append(li);
     });
