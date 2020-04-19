@@ -88,7 +88,9 @@ io.on("connection", function(socket) {
           dispName: joinInfo.playerName,
           card: [],
           rank: "",
-          rankNum: 0
+          rankNum: 0,
+          rankReason: "",
+          finishTime: 0
         };
       }
       console.log(
@@ -282,7 +284,7 @@ io.on("connection", function(socket) {
     removeCard(validateCards, socket.id ,msg.id);
     if(users[socket.id].card.length <= 0){
       //成績をチェックする。
-      checkRank(validateCards, msg.id);
+      checkRank(validateCards, msg.id, socket.id);
       //上がり
       //まずは反則あがりをチェック
       //・スペ3一枚で上がってない？
@@ -340,10 +342,15 @@ io.on("connection", function(socket) {
   });
 });
 
-function checkRank(sc, roomId){
+function checkRank(sc, roomId, userId){
   let result = checkFoul();
-  if(isFoul()){
+  if(result.foul){
     //反則上がりだった場合
+    //rankはとりあえず大貧民扱いとする。(あとで再計算する)
+    store[roomId]['users'][userId].rank = rankTable[store[roomId]['users'].length - 1];
+    store[roomId]['users'][userId].rankNum = store[roomId]['users'].length;
+    store[roomId]['users'][userId].rankReason = result.reason;
+  }else{
     
   }
 }
@@ -392,12 +399,21 @@ function checkFoul(sc, roomId){
     result.reason = "card8Finish"
     return result;
   }
-  //革命時に3を含んでない？
-  //非革命時に2を含んでない？
-  if(store[roomId].revolution )
-  }else{
-    
+  
+  //革命時に3を含んでない?
+  if(store[roomId].revolution && flag3){
+    result.foul = true;
+    result.reason = "card3Finish"
+    return result;
   }
+  
+  //非革命時に2を含んでない？
+  if(!store[roomId].revolution && flag2){
+    result.foul = true;
+    result.reason = "card2Finish"
+    return result;
+  }
+  return result;
 }
 
 let uniqueId = function(digits) {
