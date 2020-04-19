@@ -352,16 +352,52 @@ function checkRank(sc, roomId){
 function checkFoul(sc, roomId){
   let result = {
     foul: false,
-    
+    reason: ""
   }
   if(sc.length == 1 && sc[0].number == 3 && sc[0].type == "spade"){
     //・スペ3一枚で上がってない？
+    result.foul = true;
+    result.reason = "spade3Finish"
+    return result;
+  }
+  //最後に出したカードに8またはジョーカーが含まれていない？(階段の場合は8は許される)
+  //あとで使う2と3も確認しておく
+  let flag8 = false;
+  let flagJoker = false;
+  let flag2 = false;
+  let flag3 = false;
+  sc.forEach(ele => {
+    if(ele.number == 8){
+      flag8 = true;
+    }
+    if(~ele.type.indexOf("Joker")){
+      flagJoker = true;
+    }
+    if(ele.number == 2){
+      flag2 =true;
+    }
+    if(ele.number == 3){
+      flag3 = true;
+    }
+  });
+  if(flagJoker){
+    //最後に出したカードにJOKERを含む
+    result.foul = true;
+    result.reason = "jokerFinish"
+    return result;
+  }
+  if(!store[roomId].stair && flag8){
+    //非階段状態で最後に出したカードに8を含む
+    result.foul = true;
+    result.reason = "card8Finish"
+    return result;
+  }
+  //革命時に3を含んでない？
+  //非革命時に2を含んでない？
+  if(store[roomId].revolution )
+  }else{
     
   }
-  
-      //・8またはJOKER含まれてない？
-      // ・革命時に3
-      //・非革命時に2
 }
 
 let uniqueId = function(digits) {
