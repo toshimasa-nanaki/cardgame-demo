@@ -15,8 +15,8 @@ ul#cardList2 li {
   display: inline-block;
 }
 ul#cardList2 li .image_box {
-  width: 50px;
-  height: 60px;
+  width: 60px;
+  height: 70px;
   /* チェックボックスの親要素にrelativeを指定しておきます。 */
   position: relative;
 }
@@ -25,8 +25,8 @@ ul#field li {
   display: inline-block;
 }
 ul#field li .fieldCardImage {
-  width: 50px;
-  height: 60px;
+  width: 90px;
+  height: 100px;
 }
 img.handCardImage{
   width:100%;
@@ -45,7 +45,7 @@ img.handCardImage{
 }
 .image_box img.handCardImage.checked {
   /* チェックが入った状態だと、枠が表示されるようにします。 */
-  border: 6px solid blue;
+  border: 3px solid blue;
   /* 線をwidthとheightに含めるようにします。 */
   box-sizing: border-box;
 }
