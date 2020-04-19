@@ -281,6 +281,7 @@ io.on("connection", function(socket) {
     // );
     removeCard(validateCards, socket.id ,msg.id);
     if(users[socket.id].card.length <= 0){
+      //成績をチェックする。
       //上がり
       //まずは反則あがりをチェック
       //・スペ3一枚で上がってない？
@@ -742,6 +743,7 @@ function numComparison2(nc, sc, roomId) {
     checkNC = nc[0];
     checkSC = sc[0];
   }
+  logger.debug("numComparison2の比較対象checkNC：" +　checkNC + "　checkSC:" + checkSC);
   if(~checkNC.type.indexOf("joker") && ~checkSC.type.indexOf("joker")){
     //ジョーカーはジョーカーに勝てない
     return false;
@@ -755,8 +757,10 @@ function numComparison2(nc, sc, roomId) {
     return false;
   }
   if (store[roomId].elevenback && store[roomId].revolution) {
+    logger.debug("11backかつ革命中");
     return checkNC.number < checkSC.number;
   } else if (store[roomId].elevenback || store[roomId].revolution) {
+    logger.debug("11backまたは革命中");
     //逆残
     if (~checkSC.type.indexOf("joker")) {
       //ジョーカーは必ず勝てる
