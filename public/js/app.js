@@ -229,6 +229,7 @@ $(function() {
       $("#gameCommentaryArea")[0].scrollHeight
     );
     $("#gameFieldArea").show();
+    $("#gameController").show();
     $("#rank").text("");
     $("#rematch").hide();
     $("#seiseki").text("");
@@ -456,7 +457,8 @@ $(function() {
   });
   socket.on("finish", function(msg) {
     console.log("finish accept");
-    $("#gameFieldArea").toggle();
+    $("#gameController").hide();
+    //$("#gameFieldArea").toggle();
     switch (msg) {
       case "daihugou":
         $("#seiseki").text("大富豪です！！！");
