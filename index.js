@@ -342,14 +342,16 @@ io.on("connection", function(socket) {
           //次のゲームへ
           store[msg.id]['order'] = reverseRank;
           Object.keys(store[msg.id]['users']).forEach(function(key){
-            store[msg.id]['scoreTable'].forEach(function(ele){
+            store[msg.id]['scoreTable'].some(function(ele){
               if(store[msg.id]['users'][key].rank === ele.rankId){
                 store[msg.id]['users'][key].point = store[msg.id]['users'][key].point + ele.point;
+                logger.debug(store[msg.id]['users'][key].dispName + "の現在のポイント: " + store[msg.id]['users'][key].point);
+                return true;
               }
             });
           });
           store[msg.id].gameNum = store[msg.id].gameNum + 1;
-          io.to(store[msg.id].roomId).emit("gameFinish", {gameNum: store[msg.id].gameNum + 1});
+          io.to(store[msg.id].roomId).emit("gameFinish", {gameNum: store[msg.id].gameNum + 1, ranking: reverseRank});
           io.to(lastId).emit("nextGameStart", {gameNum: store[msg.id].gameNum + 1});
         }
       }
