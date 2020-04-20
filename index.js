@@ -328,6 +328,9 @@ io.on("connection", function(socket) {
           logger.debug("itemの値:" + JSON.stringify(store[msg.id]['users'][item]));
           return store[msg.id]['users'][item].rank.length == 0;
         });
+        store[msg.id]['users'][lastId].rank = store[msg.id]['scoreTable'][store[msg.id]['users'].length - 1].rankId;
+        store[msg.id]['users'][lastId].rankNum = store[msg.id]['users'].length;
+        store[msg.id]['users'][lastId].finishTime = new Date().getTime();
         logger.debug("最下位ユーザー:" + JSON.stringify(store[msg.id]['users'][lastId]));
         io.to(lastId).emit("finish", {rankReason :store[msg.id]['users'][lastId].rankReason});
         io.to(store[msg.id].roomId).emit("finishNotification", {
@@ -640,7 +643,7 @@ function createRankTable(count) {
   } else if (count == 3) {
     return [{rankId:"hugou", point: 1}, {rankId:"heimin", point: 0}, {rankId:"hinmin", point: -1}];
   } else if (count == 4) {
-    return [{rankId:"daihugou", point: 2}, {rankId:"hugou", point: 1}, {rankId:"heimin", point: 0}, {rankId:"hinmin", point: -1}];
+    return [{rankId:"daihugou", point: 2}, {rankId:"hugou", point: 1}, {rankId:"hinmin", point: 0}, {rankId:"daihinmin", point: -1}];
   } else {
     let rankTable = [{rankId:"daihugou", point: 2}, {rankId:"hugou", point: 1}];
     for (let i = 0; i < count - 4; i++) {
