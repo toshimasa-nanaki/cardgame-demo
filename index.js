@@ -87,7 +87,8 @@ io.on("connection", function(socket) {
             rank: "",
             rankNum: 0,
             rankReason: "",
-            finishTime: 0
+            finishTime: 0,
+            point:0
           }
         };
       } else {
@@ -97,7 +98,8 @@ io.on("connection", function(socket) {
           rank: "",
           rankNum: 0,
           rankReason: "",
-          finishTime: 0
+          finishTime: 0,
+          point:0
         };
       }
       console.log(
@@ -337,13 +339,13 @@ io.on("connection", function(socket) {
           rank: rankTable[rank],
           playerName: store[msg.id]['users'][lastId].dispName
         });
-        aggregateBattlePhase(msg.id);
+        const reverseRank = aggregateBattlePhase(msg.id);
         if(store[msg.id].gameNum == 4){
           //1セット終了
           //TODO集計が必要
         }else{
           //次のゲームへ
-          
+          store[msg.id]['order'] = reverseRank;
           store[msg.id].gameNum = store[msg.id].gameNum + 1;
           io.to(store[msg.id].roomId).emit("gameFinish", {gameNum: store[msg.id].gameNum + 1});
           io.to(lastId).emit("nextGameStart", {gameNum: store[msg.id].gameNum + 1});
@@ -359,8 +361,8 @@ function aggregateBattlePhase(roomId){
   let loseUsers = Object.keys(store[roomId]['users']).filter(function(key){
     return store[roomId]['users'][key].rankNum === 4
   }).sort(function(a, b) {
-          if (a.finishTime < b.finishTime) return -1;
-          if (a.finishTime > b.finishTime) return 1;
+          if (store[roomId]['users'][a].rankNum.finishTime < store[roomId]['users'][b].rankNum.finishTime) return -1;
+          if (store[roomId]['users'][a].finishTime > store[roomId]['users'][b].finishTime) return 1;
           return 0;
         });
   if(loseUsers.length != 1){
@@ -383,7 +385,12 @@ function aggregateBattlePhase(roomId){
       store[roomId]['users'][fallingOutCityUserKey].rank = rankTable[store[roomId]['users'].length - pos - 1];
     }
   }
-  
+  //順位の逆順で返すと何かと楽そうなのでそうする。
+  return Object.keys(store[roomId]['users']).sort(function(a, b) {
+          if (store[roomId]['users'][a].rankNum.finishTime > store[roomId]['users'][b].rankNum.finishTime) return -1;
+          if (store[roomId]['users'][a].finishTime < store[roomId]['users'][b].finishTime) return 1;
+          return 0;
+        });
 }
 
 function checkRank(sc, roomId, userId){
