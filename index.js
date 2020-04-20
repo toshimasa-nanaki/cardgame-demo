@@ -337,12 +337,13 @@ io.on("connection", function(socket) {
           rank: rankTable[rank],
           playerName: store[msg.id]['users'][lastId].dispName
         });
+        aggregateBattlePhase(msg.id);
         if(store[msg.id].gameNum == 4){
           //1セット終了
           //TODO集計が必要
         }else{
           //次のゲームへ
-          aggregate
+          
           store[msg.id].gameNum = store[msg.id].gameNum + 1;
           io.to(store[msg.id].roomId).emit("gameFinish", {gameNum: store[msg.id].gameNum + 1});
           io.to(lastId).emit("nextGameStart", {gameNum: store[msg.id].gameNum + 1});
@@ -352,6 +353,13 @@ io.on("connection", function(socket) {
     notifyChangeTurn(currentTurn, msg.id);
   });
 });
+
+function aggregateBattlePhase(roomId){
+  //ユーザデータを全検索し、最下位のメンバをfinishTimeの昇順に並べる。
+  let loseUsers = Object.keys(store[roomId]['users']).filter(function(key){
+    return store[roomId]['users'][key].rankNum === 4
+  }).
+}
 
 function checkRank(sc, roomId, userId){
   let result = checkFoul(sc, roomId);
