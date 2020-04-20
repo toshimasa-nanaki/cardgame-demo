@@ -351,7 +351,12 @@ io.on("connection", function(socket) {
             });
           });
           store[msg.id].gameNum = store[msg.id].gameNum + 1;
-          io.to(store[msg.id].roomId).emit("gameFinish", {gameNum: store[msg.id].gameNum + 1, ranking: reverseRank});
+          let displayRanking = [];
+          reverseRank.forEach(function(key){
+            io.to(store[msg.id].roomId).emit({rank: store[msg.id]['users'][key].rank});
+            displayRanking.
+          });
+          //io.to(store[msg.id].roomId).emit("gameFinish", {gameNum: store[msg.id].gameNum + 1, ranking: reverseRank});
           io.to(lastId).emit("nextGameStart", {gameNum: store[msg.id].gameNum + 1});
         }
       }

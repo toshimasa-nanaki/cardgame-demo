@@ -514,6 +514,9 @@ $(function() {
   socket.on("nextGameStart", function(msg) {
     console.log("next game start");
     //$("#rematch").show();
+    msg.ranking.forEach(function(key){
+      
+    });
     $("#gameCommentaryArea").append("10秒後に次のゲームを始めます。<br />");
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
