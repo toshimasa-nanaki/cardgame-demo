@@ -423,14 +423,14 @@ function checkRank(sc, roomId, userId){
       return 0;
     }).some(function(val){
       if(store[roomId]['users'][val].rankNum != 4){
-        nextRank = store[roomId]['users'][val].rankNum;
+        nextRank = store[roomId]['users'][val].rankNum + 1;
         return true;
       }
     });
-    if(nextRank == 0){
-      //まだ誰もあがっていないといこと。
-      nextRank = 1;
-    }
+    // if(nextRank == 0){
+    //   //まだ誰もあがっていないといこと。
+    //   nextRank = 1;
+    // }
     store[roomId]['users'][userId].rank = store[roomId]['scoreTable'][nextRank - 1].rankId;
     store[roomId]['users'][userId].rankNum = nextRank;
     //store[roomId]['users'][userId].rankReason = result.reason;
