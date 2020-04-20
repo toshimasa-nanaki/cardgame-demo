@@ -411,7 +411,7 @@ function checkRank(sc, roomId, userId){
   if(result.foul){
     //反則上がりだった場合
     //rankはとりあえず大貧民扱いとする。(あとで再計算する)
-    store[roomId]['users'][userId].rank = store[roomId]['scoreTable'][store[roomId]['users'].length - 1];
+    store[roomId]['users'][userId].rank = store[roomId]['scoreTable'][store[roomId]['users'].length - 1].rankId;
     store[roomId]['users'][userId].rankNum = store[roomId]['users'].length;
     store[roomId]['users'][userId].rankReason = result.reason;
     store[roomId]['users'][userId].finishTime = new Date().getTime();
@@ -431,7 +431,7 @@ function checkRank(sc, roomId, userId){
       //まだ誰もあがっていないといこと。
       nextRank = 1;
     }
-    store[roomId]['users'][userId].rank = store[roomId]['scoreTable'][nextRank - 1];
+    store[roomId]['users'][userId].rank = store[roomId]['scoreTable'][nextRank - 1].rankId;
     store[roomId]['users'][userId].rankNum = nextRank;
     //store[roomId]['users'][userId].rankReason = result.reason;
     store[roomId]['users'][userId].finishTime = new Date().getTime();
