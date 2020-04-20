@@ -328,8 +328,9 @@ io.on("connection", function(socket) {
           logger.debug("itemの値:" + JSON.stringify(store[msg.id]['users'][item]));
           return store[msg.id]['users'][item].rank.length == 0;
         });
-        store[msg.id]['users'][lastId].rank = store[msg.id]['scoreTable'][store[msg.id]['users'].length - 1].rankId;
-        store[msg.id]['users'][lastId].rankNum = store[msg.id]['users'].length;
+        logger.debug("最下位ユーザーに入るscoreTable:" + JSON.stringify(store[msg.id]['scoreTable']));
+        store[msg.id]['users'][lastId].rank = store[msg.id]['scoreTable'][Object.keys(store[msg.id]['users']).length - 1].rankId;
+        store[msg.id]['users'][lastId].rankNum = Object.keys(store[msg.id]['users']).length;
         store[msg.id]['users'][lastId].finishTime = new Date().getTime();
         logger.debug("最下位ユーザー:" + JSON.stringify(store[msg.id]['users'][lastId]));
         io.to(lastId).emit("finish", {rankReason :store[msg.id]['users'][lastId].rankReason});
@@ -388,16 +389,16 @@ function aggregateBattlePhase(roomId){
     loseUsers.forEach(key => {
       if(store[roomId]['users'][key].rankReason != "fallingOutCity"){
         //都落ちでない場合は、反則負けで早く上がったものから悪い順位になる。
-        store[roomId]['users'][key].rankNum = store[roomId]['users'].length - pos;
-        store[roomId]['users'][key].rank = store[roomId]['scoreTable'][store[roomId]['users'].length - pos - 1];
+        store[roomId]['users'][key].rankNum = Object.keys(store[roomId]['users']).length - pos;
+        store[roomId]['users'][key].rank = store[roomId]['scoreTable'][Object.keys(store[roomId]['users']).length - pos - 1];
         pos++;
       }else{
         fallingOutCityUserKey = key;
       }
     });
     if(fallingOutCityUserKey != ""){
-      store[roomId]['users'][fallingOutCityUserKey].rankNum = store[roomId]['users'].length - pos;
-      store[roomId]['users'][fallingOutCityUserKey].rank = store[roomId]['scoreTable'][store[roomId]['users'].length - pos - 1];
+      store[roomId]['users'][fallingOutCityUserKey].rankNum = Object.keys(store[roomId]['users']).length - pos;
+      store[roomId]['users'][fallingOutCityUserKey].rank = store[roomId]['scoreTable'][Object.keys(store[roomId]['users'].length - pos - 1];
     }
   }
   //順位の逆順で返すと何かと楽そうなのでそうする。
