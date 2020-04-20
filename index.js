@@ -313,8 +313,8 @@ io.on("connection", function(socket) {
       io.to(orderList[currentTurn]).emit("finish", {rankReason :store[msg.id]['users'][socket.id].rankReason});
       //みんなに知らせる
       io.to(store[msg.id].roomId).emit("finishNotification", {
-        rank: users[orderList[currentTurn]].rank,
-        playerName: users[orderList[currentTurn]].dispName
+        playerName: users[orderList[currentTurn]].dispName,
+        rankReason: store[msg.id]['users'][socket.id].rankReason
       });
       rank++;
       logger.debug("現在のユーザーの状態:" + JSON.stringify(store[msg.id]['users'][orderList[currentTurn]]));

@@ -14,10 +14,12 @@ $(function() {
     handError: "役ができていません。"
   };
   const LOSE_REASON_DIC = {
-    diffNumOfCards: "カードの枚数は合わせてください。",
-    diffSuitCards: "スートしばりに合ったカードを出してください。",
-    loseCards: "場のカードより強いものを出してください。",
-    handError: "役ができていません。"
+    spade3Finish: "スペ3あがりのため、反則負けとなりました。",
+    jokerFinish: "ジョーカーあがりのため、反則負けとなりました。",
+    card8Finish: "非階段状態での8あがりのため、反則負けとなりました。",
+    card3Finish: "革命状態での3あがりのため、反則負けとなりました。",
+    card2Finish: "非革命状態での2あがりのため、反則負けとなりました。",
+    fallingOutCity: "都落ちのため、負けとなりました。"
   };
   const DISPLAY_IMAGE_ID = {
     spade3: "spade_3",
@@ -463,7 +465,6 @@ $(function() {
   });
   socket.on("finish", function(msg) {
     console.log("finish accept");
-    ul id="cardList2"></ul>
     $("#cardList2").empty();
     $("#gameController").hide();
     if(msg.rankReason !== ""){
@@ -492,10 +493,16 @@ $(function() {
   });
   socket.on("finishNotification", function(msg) {
     console.log("finish accept notification");
-    $("#gameCommentaryArea").append("ゲームが終了したため、観戦モードに移行します。<br />");
-    $("#rank").append(
-      $("<li>").text(RANKING_DIC[msg.rank] + "：" + msg.playerName)
-    );
+    if(msg.rankReason !== ""){
+      //何か問題があったと判断
+      $("#gameCommentaryArea").append(msg.playerName + "さんが、" + LOSE_REASON_DIC[msg.rankReason]);
+    }else{
+      $("#gameCommentaryArea").append(msg.playerName + "さんがあがりました。");
+    }
+    // $("#gameCommentaryArea").append("ゲームが終了したため、観戦モードに移行します。<br />");
+    // $("#rank").append(
+    //   $("<li>").text(RANKING_DIC[msg.rank] + "：" + msg.playerName)
+    // );
   });
   socket.on("gameFinish", function(msg) {
     console.log("game finish");
