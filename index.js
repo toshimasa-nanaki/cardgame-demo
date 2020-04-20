@@ -398,7 +398,7 @@ function aggregateBattlePhase(roomId){
     });
     if(fallingOutCityUserKey != ""){
       store[roomId]['users'][fallingOutCityUserKey].rankNum = Object.keys(store[roomId]['users']).length - pos;
-      store[roomId]['users'][fallingOutCityUserKey].rank = store[roomId]['scoreTable'][Object.keys(store[roomId]['users'].length - pos - 1];
+      store[roomId]['users'][fallingOutCityUserKey].rank = store[roomId]['scoreTable'][Object.keys(store[roomId]['users']).length - pos - 1];
     }
   }
   //順位の逆順で返すと何かと楽そうなのでそうする。
@@ -415,8 +415,8 @@ function checkRank(sc, roomId, userId){
   if(result.foul){
     //反則上がりだった場合
     //rankはとりあえず大貧民扱いとする。(あとで再計算する)
-    store[roomId]['users'][userId].rank = store[roomId]['scoreTable'][store[roomId]['users'].length - 1].rankId;
-    store[roomId]['users'][userId].rankNum = store[roomId]['users'].length;
+    store[roomId]['users'][userId].rank = store[roomId]['scoreTable'][Object.keys(store[roomId]['users']).length - 1].rankId;
+    store[roomId]['users'][userId].rankNum = Object.keys(store[roomId]['users']).length;
     store[roomId]['users'][userId].rankReason = result.reason;
     store[roomId]['users'][userId].finishTime = new Date().getTime();
   }else{
