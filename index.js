@@ -358,7 +358,27 @@ function aggregateBattlePhase(roomId){
   //ユーザデータを全検索し、最下位のメンバをfinishTimeの昇順に並べる。
   let loseUsers = Object.keys(store[roomId]['users']).filter(function(key){
     return store[roomId]['users'][key].rankNum === 4
-  }).
+  }).sort(function(a, b) {
+          if (a.finishTime < b.finishTime) return -1;
+          if (a.finishTime > b.finishTime) return 1;
+          return 0;
+        });
+  if(loseUsers.length != 1){
+    //0はありえないので考慮しない。
+    logger.debug("4位の人数: " + loseUsers.length );
+    let pos = 0;
+    const fallingOutCityUserKey = "";
+    loseUsers.forEach(key => {
+      if(store[roomId]['users'][key].rankReason != "fallingOutCity"){
+        //都落ちでない場合は、反則負けで早く上がったものから悪い順位になる。
+        store[roomId]['users'][key].rankNum = store[roomId]['users'].length - pos;
+        store[roomId]['users'][key].rank = rankTable[store[roomId]['users'].length - pos - 1];
+        pos++;
+      }else{
+        fallingOutCityUserKey = key;
+      }
+    })
+  }
 }
 
 function checkRank(sc, roomId, userId){
