@@ -13,6 +13,12 @@ $(function() {
     loseCards: "場のカードより強いものを出してください。",
     handError: "役ができていません。"
   };
+  const LOSE_REASON_DIC = {
+    diffNumOfCards: "カードの枚数は合わせてください。",
+    diffSuitCards: "スートしばりに合ったカードを出してください。",
+    loseCards: "場のカードより強いものを出してください。",
+    handError: "役ができていません。"
+  };
   const DISPLAY_IMAGE_ID = {
     spade3: "spade_3",
     spade4: "spade_4",
@@ -457,28 +463,36 @@ $(function() {
   });
   socket.on("finish", function(msg) {
     console.log("finish accept");
+    ul id="cardList2"></ul>
+    $("#cardList2").empty();
     $("#gameController").hide();
-    //$("#gameFieldArea").toggle();
-    switch (msg) {
-      case "daihugou":
-        $("#seiseki").text("大富豪です！！！");
-        break;
-      case "hugou":
-        $("#seiseki").text("富豪です！！！");
-        break;
-      case "heimin":
-        $("#seiseki").text("平民です！！！");
-        break;
-      case "hinmin":
-        $("#seiseki").text("貧民です！！！");
-        break;
-      case "daihinmin":
-        $("#seiseki").text("大貧民です！！！");
-        break;
+    if(msg.rankReason !== ""){
+      //何か問題があったと判断
+      $("#gameCommentaryArea").append(LOSE_REASON_DIC[msg.rankReason]);
     }
+    $("#gameCommentaryArea").append("ゲームが終了したため、観戦モードに移行します。<br />");
+    //$("#gameFieldArea").toggle();
+    // switch (msg) {
+    //   case "daihugou":
+    //     $("#seiseki").text("大富豪です！！！");
+    //     break;
+    //   case "hugou":
+    //     $("#seiseki").text("富豪です！！！");
+    //     break;
+    //   case "heimin":
+    //     $("#seiseki").text("平民です！！！");
+    //     break;
+    //   case "hinmin":
+    //     $("#seiseki").text("貧民です！！！");
+    //     break;
+    //   case "daihinmin":
+    //     $("#seiseki").text("大貧民です！！！");
+    //     break;
+    // }
   });
   socket.on("finishNotification", function(msg) {
     console.log("finish accept notification");
+    $("#gameCommentaryArea").append("ゲームが終了したため、観戦モードに移行します。<br />");
     $("#rank").append(
       $("<li>").text(RANKING_DIC[msg.rank] + "：" + msg.playerName)
     );

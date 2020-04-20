@@ -309,7 +309,8 @@ io.on("connection", function(socket) {
       //   //ORDER[currentTurn].rank = rankTable[rank];
       // }
       //個人に知らせる
-      io.to(orderList[currentTurn]).emit("finish", rankTable[store[msg.id]['users'][socket.id].rankNum - 1]);
+      //io.to(orderList[currentTurn]).emit("finish", rankTable[store[msg.id]['users'][socket.id].rankNum - 1]);
+      io.to(orderList[currentTurn]).emit("finish", {rankReason :store[msg.id]['users'][socket.id].rankReason});
       //みんなに知らせる
       io.to(store[msg.id].roomId).emit("finishNotification", {
         rank: users[orderList[currentTurn]].rank,
