@@ -506,7 +506,12 @@ $(function() {
   });
   socket.on("gameFinish", function(msg) {
     console.log("game finish");
+    $("#gameCommentaryArea").append("あなたは、" + RANKING_DIC[msg.rank] + "です。<br />");
+    msg.ranking.forEach(function(ele){
+      $("#gameCommentaryArea").append(ele.dispName + ":" + RANKING_DIC[ele.rank] + "<br />");
+    });
     $("#gameCommentaryArea").append("10秒後に次のゲームを始めます。<br />");
+    
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );
@@ -517,7 +522,7 @@ $(function() {
     msg.ranking.forEach(function(key){
       
     });
-    $("#gameCommentaryArea").append("10秒後に次のゲームを始めます。<br />");
+    //$("#gameCommentaryArea").append("10秒後に次のゲームを始めます。<br />");
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );

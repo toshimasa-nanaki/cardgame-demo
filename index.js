@@ -353,11 +353,14 @@ io.on("connection", function(socket) {
           store[msg.id].gameNum = store[msg.id].gameNum + 1;
           let displayRanking = [];
           reverseRank.forEach(function(key){
-            io.to(store[msg.id].roomId).emit({rank: store[msg.id]['users'][key].rank});
-            displayRanking.
+            displayRanking.unshift({rank: store[msg.id]['users'][key].rank, dispName: store[msg.id]['users'][key].dispName});
           });
-          //io.to(store[msg.id].roomId).emit("gameFinish", {gameNum: store[msg.id].gameNum + 1, ranking: reverseRank});
-          io.to(lastId).emit("nextGameStart", {gameNum: store[msg.id].gameNum + 1});
+//           reverseRank.forEach(function(key){
+//             io.to(store[msg.id].roomId).emit({rank: store[msg.id]['users'][key].rank});
+            
+//           });
+          io.to(store[msg.id].roomId).emit("gameFinish", {gameNum: store[msg.id].gameNum + 1, ranking: displayRanking});
+          io.to(lastId).emit("nextGameStart", {gameNum: store[msg.id].gameNum + 1, ranking: displayRanking});
         }
       }
     }
