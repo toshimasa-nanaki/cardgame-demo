@@ -377,8 +377,13 @@ function aggregateBattlePhase(roomId){
       }else{
         fallingOutCityUserKey = key;
       }
-    })
+    });
+    if(fallingOutCityUserKey != ""){
+      store[roomId]['users'][fallingOutCityUserKey].rankNum = store[roomId]['users'].length - pos;
+      store[roomId]['users'][fallingOutCityUserKey].rank = rankTable[store[roomId]['users'].length - pos - 1];
+    }
   }
+  
 }
 
 function checkRank(sc, roomId, userId){
