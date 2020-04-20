@@ -81,7 +81,14 @@ io.on("connection", function(socket) {
     } else {
       if (typeof store[joinInfo.roomId]["users"] === "undefined") {
         store[joinInfo.roomId]["users"] = {
-          [socket.id]: { dispName: joinInfo.playerName, card: [], rank: "" }
+          [socket.id]: { 
+            dispName: joinInfo.playerName,
+            card: [],
+            rank: "",
+            rankNum: 0,
+            rankReason: "",
+            finishTime: 0
+          }
         };
       } else {
         store[joinInfo.roomId]["users"][socket.id] = {
@@ -335,6 +342,7 @@ io.on("connection", function(socket) {
           //TODO集計が必要
         }else{
           //次のゲームへ
+          aggregate
           store[msg.id].gameNum = store[msg.id].gameNum + 1;
           io.to(store[msg.id].roomId).emit("gameFinish", {gameNum: store[msg.id].gameNum + 1});
           io.to(lastId).emit("nextGameStart", {gameNum: store[msg.id].gameNum + 1});
