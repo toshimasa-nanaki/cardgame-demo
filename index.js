@@ -346,7 +346,7 @@ io.on("connection", function(socket) {
 });
 
 function checkRank(sc, roomId, userId){
-  let result = checkFoul();
+  let result = checkFoul(sc, roomId);
   if(result.foul){
     //反則上がりだった場合
     //rankはとりあえず大貧民扱いとする。(あとで再計算する)
