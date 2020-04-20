@@ -20,9 +20,9 @@ logger.level = 'debug';
 var port = process.env.PORT || 3000;
 var store = {};
 const ORIGINALCARDDATA = trump_init(TRUMPDATA);
-let gameStart = false;
-let stair = false;
-let seiseki = [];
+//let gameStart = false;
+//let stair = false;
+//let seiseki = [];
 let rank = 0;
 let rankTable = [];
 //let UserList = {};
@@ -64,7 +64,8 @@ io.on("connection", function(socket) {
       shibari: false,
       revolution: false,
       stair: false,
-      fieldCards:[]
+      fieldCards:[],
+      scoreTable:[]
     };
     store[createRoomId] = roomObj;
     //console.log("Store情報:  " + JSON.stringify(store));
@@ -386,6 +387,7 @@ function aggregateBattlePhase(roomId){
     }
   }
   //順位の逆順で返すと何かと楽そうなのでそうする。
+  //またこの時にサクッとpoint計上しておく
   return Object.keys(store[roomId]['users']).sort(function(a, b) {
           if (store[roomId]['users'][a].rankNum.finishTime > store[roomId]['users'][b].rankNum.finishTime) return -1;
           if (store[roomId]['users'][a].finishTime < store[roomId]['users'][b].finishTime) return 1;
@@ -607,27 +609,41 @@ function numComparison(nc, sc, roomId) {
 
 function createRankTable(count) {
   //初期化しておく
-  rankTable = [];
+  // rankTable = [];
+  // if (count == 2) {
+  //   rankTable = ["hugou", "hinmin"];
+  // } else if (count == 3) {
+  //   rankTable = ["hugou", "heimin", "hinmin"];
+  // } else if (count == 4) {
+  //   rankTable = ["daihugou", "hugou", "hinmin", "daihinmin"];
+  // } else {
+  //   rankTable = ["daihugou", "hugou"];
+  //   for (let i = 0; i < count - 4; i++) {
+  //     rankTable.push("heimin");
+  //   }
+  //   rankTable.push("hinmin");
+  //   rankTable.push("daihinmin");
+  // }
   if (count == 2) {
-    rankTable = ["hugou", "hinmin"];
+    rankTable = [{rankId:"hugou", point: 1}, {rankId:"hinmin", point: 0}];
   } else if (count == 3) {
-    rankTable = ["hugou", "heimin", "hinmin"];
+    rankTable = [{rankId:"hugou", point: 1}, {rankId:"heimin", point: 0}, {rankId:"hinmin", point: -1}];
   } else if (count == 4) {
-    rankTable = ["daihugou", "hugou", "hinmin", "daihinmin"];
+    rankTable = [{rankId:"daihugou", point: 2}, {rankId:"hugou", point: 1}, {rankId:"heimin", point: 0}, {rankId:"hinmin", point: -1}];
   } else {
-    rankTable = ["daihugou", "hugou"];
+    rankTable = [{rankId:"daihugou", point: 2}, {rankId:"hugou", point: 1}];
     for (let i = 0; i < count - 4; i++) {
-      rankTable.push("heimin");
+      rankTable.push({rankId:"heimin", point: 0});
     }
-    rankTable.push("hinmin");
-    rankTable.push("daihinmin");
+    rankTable.push({rankId:"heimin", point: -1});
+    rankTable.push({rankId:"hinmin", point: -2});
   }
 }
 
 function gameInit(count, sockets, roomId) {
   store[roomId]['fieldCards'] = [];
   rank = 0;
-  createRankTable(count);
+  store[roomId].scoreTable = createRankTable(count);
   store[roomId].elevenback = false;
   store[roomId].shibari = false;
   store[roomId].revolution = false;
