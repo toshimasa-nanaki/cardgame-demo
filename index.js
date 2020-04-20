@@ -373,7 +373,7 @@ function aggregateBattlePhase(roomId){
   let loseUsers = Object.keys(store[roomId]['users']).filter(function(key){
     return store[roomId]['users'][key].rankNum === 4
   }).sort(function(a, b) {
-          if (store[roomId]['users'][a].rankNum.finishTime < store[roomId]['users'][b].rankNum.finishTime) return -1;
+          if (store[roomId]['users'][a].finishTime < store[roomId]['users'][b].finishTime) return -1;
           if (store[roomId]['users'][a].finishTime > store[roomId]['users'][b].finishTime) return 1;
           return 0;
         });
