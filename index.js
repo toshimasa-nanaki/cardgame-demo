@@ -24,7 +24,7 @@ const ORIGINALCARDDATA = trump_init(TRUMPDATA);
 //let stair = false;
 //let seiseki = [];
 let rank = 0;
-let rankTable = [];
+//let rankTable = [];
 //let UserList = {};
 
 app.get("/", function(req, res) {
@@ -284,13 +284,7 @@ io.on("connection", function(socket) {
       playerName: users[socket.id].dispName
     });
 
-    //成績をここでつける
-    // console.log(
-    //   "プレイヤー名:" +
-    //     UserList[socket.id] +
-    //     "　出したカードの数：" +
-    //     validateCards.length
-    // );
+
     removeCard(validateCards, socket.id ,msg.id);
     if(users[socket.id].card.length <= 0){
       //成績をチェックする。
@@ -335,10 +329,10 @@ io.on("connection", function(socket) {
           return store[msg.id]['users'][item].rank.length == 0;
         });
         logger.debug("最下位ユーザー:" + JSON.stringify(store[msg.id]['users'][lastId]));
-        io.to(lastId).emit("finish", rankTable[rank]);
+        io.to(lastId).emit("finish", {rankReason :store[msg.id]['users'][lastId].rankReason});
         io.to(store[msg.id].roomId).emit("finishNotification", {
-          rank: rankTable[rank],
-          playerName: store[msg.id]['users'][lastId].dispName
+          playerName: users[lastId].dispName,
+          rankReason: store[msg.id]['users'][lastId].rankReason
         });
         const reverseRank = aggregateBattlePhase(msg.id);
         if(store[msg.id].gameNum == 4){
@@ -347,6 +341,9 @@ io.on("connection", function(socket) {
         }else{
           //次のゲームへ
           store[msg.id]['order'] = reverseRank;
+          Object.keys(store[msg.id]['users']).forEach(function(key){
+            store[]
+          });
           store[msg.id].gameNum = store[msg.id].gameNum + 1;
           io.to(store[msg.id].roomId).emit("gameFinish", {gameNum: store[msg.id].gameNum + 1});
           io.to(lastId).emit("nextGameStart", {gameNum: store[msg.id].gameNum + 1});
@@ -375,7 +372,7 @@ function aggregateBattlePhase(roomId){
       if(store[roomId]['users'][key].rankReason != "fallingOutCity"){
         //都落ちでない場合は、反則負けで早く上がったものから悪い順位になる。
         store[roomId]['users'][key].rankNum = store[roomId]['users'].length - pos;
-        store[roomId]['users'][key].rank = rankTable[store[roomId]['users'].length - pos - 1];
+        store[roomId]['users'][key].rank = store[roomId]['scoreTable'][store[roomId]['users'].length - pos - 1];
         pos++;
       }else{
         fallingOutCityUserKey = key;
@@ -383,7 +380,7 @@ function aggregateBattlePhase(roomId){
     });
     if(fallingOutCityUserKey != ""){
       store[roomId]['users'][fallingOutCityUserKey].rankNum = store[roomId]['users'].length - pos;
-      store[roomId]['users'][fallingOutCityUserKey].rank = rankTable[store[roomId]['users'].length - pos - 1];
+      store[roomId]['users'][fallingOutCityUserKey].rank = store[roomId]['scoreTable'][store[roomId]['users'].length - pos - 1];
     }
   }
   //順位の逆順で返すと何かと楽そうなのでそうする。
@@ -400,7 +397,7 @@ function checkRank(sc, roomId, userId){
   if(result.foul){
     //反則上がりだった場合
     //rankはとりあえず大貧民扱いとする。(あとで再計算する)
-    store[roomId]['users'][userId].rank = rankTable[store[roomId]['users'].length - 1];
+    store[roomId]['users'][userId].rank = store[roomId]['scoreTable'][store[roomId]['users'].length - 1];
     store[roomId]['users'][userId].rankNum = store[roomId]['users'].length;
     store[roomId]['users'][userId].rankReason = result.reason;
     store[roomId]['users'][userId].finishTime = new Date().getTime();
@@ -420,7 +417,7 @@ function checkRank(sc, roomId, userId){
       //まだ誰もあがっていないといこと。
       nextRank = 1;
     }
-    store[roomId]['users'][userId].rank = rankTable[nextRank - 1];
+    store[roomId]['users'][userId].rank = store[roomId]['scoreTable'][nextRank - 1];
     store[roomId]['users'][userId].rankNum = nextRank;
     //store[roomId]['users'][userId].rankReason = result.reason;
     store[roomId]['users'][userId].finishTime = new Date().getTime();
@@ -625,18 +622,19 @@ function createRankTable(count) {
   //   rankTable.push("daihinmin");
   // }
   if (count == 2) {
-    rankTable = [{rankId:"hugou", point: 1}, {rankId:"hinmin", point: 0}];
+    return [{rankId:"hugou", point: 1}, {rankId:"hinmin", point: 0}];
   } else if (count == 3) {
-    rankTable = [{rankId:"hugou", point: 1}, {rankId:"heimin", point: 0}, {rankId:"hinmin", point: -1}];
+    return [{rankId:"hugou", point: 1}, {rankId:"heimin", point: 0}, {rankId:"hinmin", point: -1}];
   } else if (count == 4) {
-    rankTable = [{rankId:"daihugou", point: 2}, {rankId:"hugou", point: 1}, {rankId:"heimin", point: 0}, {rankId:"hinmin", point: -1}];
+    return [{rankId:"daihugou", point: 2}, {rankId:"hugou", point: 1}, {rankId:"heimin", point: 0}, {rankId:"hinmin", point: -1}];
   } else {
-    rankTable = [{rankId:"daihugou", point: 2}, {rankId:"hugou", point: 1}];
+    let rankTable = [{rankId:"daihugou", point: 2}, {rankId:"hugou", point: 1}];
     for (let i = 0; i < count - 4; i++) {
       rankTable.push({rankId:"heimin", point: 0});
     }
     rankTable.push({rankId:"heimin", point: -1});
     rankTable.push({rankId:"hinmin", point: -2});
+    return rankTable;
   }
 }
 
