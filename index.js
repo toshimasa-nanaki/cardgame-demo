@@ -343,7 +343,9 @@ io.on("connection", function(socket) {
           store[msg.id]['order'] = reverseRank;
           Object.keys(store[msg.id]['users']).forEach(function(key){
             store[msg.id]['scoreTable'].forEach(function(ele){
-              
+              if(store[msg.id]['users'][key].rank === ele.rankId){
+                store[msg.id]['users'][key].point = store[msg.id]['users'][key].point + ele.point;
+              }
             });
           });
           store[msg.id].gameNum = store[msg.id].gameNum + 1;
