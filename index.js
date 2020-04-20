@@ -418,12 +418,12 @@ function checkRank(sc, roomId, userId){
   }else{
     let nextRank = 0;
     Object.keys(store[roomId]['users']).sort(function(a,b){
-      if (a.rankNum > b.rankNum) return -1;
-      if (a.rankNum < b.rankNum) return 1;
+      if (store[roomId]['users'][a].rankNum > store[roomId]['users'][b].rankNum) return -1;
+      if (store[roomId]['users'][a].rankNum < store[roomId]['users'][b].rankNum) return 1;
       return 0;
     }).some(function(val){
-      if(val.rankNum != 4){
-        nextRank = val.rankNum;
+      if(store[roomId]['users'][val].rankNum != 4){
+        nextRank = store[roomId]['users'][val].rankNum;
         return true;
       }
     });
