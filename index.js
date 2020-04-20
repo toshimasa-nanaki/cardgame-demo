@@ -342,7 +342,9 @@ io.on("connection", function(socket) {
           //次のゲームへ
           store[msg.id]['order'] = reverseRank;
           Object.keys(store[msg.id]['users']).forEach(function(key){
-            store[]
+            store[msg.id]['scoreTable'].forEach(function(ele){
+              
+            });
           });
           store[msg.id].gameNum = store[msg.id].gameNum + 1;
           io.to(store[msg.id].roomId).emit("gameFinish", {gameNum: store[msg.id].gameNum + 1});
