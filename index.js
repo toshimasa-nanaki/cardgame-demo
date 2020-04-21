@@ -1035,7 +1035,7 @@ function numComparison2(nc, sc, roomId) {
         checkNC = ele;
       }
     });
-    nc.some(ele => {
+    sc.some(ele => {
       if (~ele.type.indexOf("joker")) {
         return true;
       } else {
@@ -1074,6 +1074,8 @@ function numComparison2(nc, sc, roomId) {
     return checkNC.number < checkSC.number;
   } else if (store[roomId].elevenback || store[roomId].revolution) {
     logger.debug("11backまたは革命中");
+    logger.debug("比較させてねcheckNC" + JSON.stringify(checkNC));
+    logger.debug("比較させてねcheckSC" + JSON.stringify(checkSC));
     //逆残
     if (~checkSC.type.indexOf("joker")) {
       //ジョーカーは必ず勝てる
