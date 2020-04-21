@@ -323,7 +323,7 @@ io.on("connection", function(socket) {
         rankReason: store[msg.id]['users'][socket.id].rankReason
       });
       store[msg.id].finishNum = store[msg.id].finishNum + 1;
-      store[msg.id]['order'].splice(currentTurn, 1);
+      //store[msg.id]['order'].splice(currentTurn, 1);
       logger.debug("現在のユーザーの状態:" + JSON.stringify(store[msg.id]['users'][orderList[currentTurn]]));
       if (store[msg.id].finishNum == Object.keys(users).length - 1) {
         //ビリ以外は全員終了
@@ -741,9 +741,15 @@ function fieldClear(roomId){
 
 function notifyChangeTurn(currentTurnIndex, roomId){
   const orderList = store[roomId]['order'];
+  logger.debug("orderList:" + orderList);
   const users = store[roomId]['users'];
+  store[roomId]['order'].splice(currentTurnIndex, 1);
+  logger.debug("変更後orderList:" + orderList);
   let nextTurn = currentTurnIndex != orderList.length - 1 ? currentTurnIndex + 1 : 0;
-    orderList.forEach(function(element) {
+  // Object.keys(users).forEach(ele => {
+  //   if()
+  // });
+    Object.keys(users).forEach(function(element) {
       if (element != orderList[nextTurn]) {
         io.to(element).emit("order", {
           flag: false,
