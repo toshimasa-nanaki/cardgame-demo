@@ -461,9 +461,9 @@ $(function() {
     console.log("finish accept notification");
     if(msg.rankReason !== ""){
       //何か問題があったと判断
-      $("#gameCommentaryArea").append(msg.playerName + "さんが、" + LOSE_REASON_DIC[msg.rankReason]);
+      $("#gameCommentaryArea").append(msg.playerName + "さんが、" + LOSE_REASON_DIC[msg.rankReason] + "<br />");
     }else{
-      $("#gameCommentaryArea").append(msg.playerName + "さんがあがりました。");
+      $("#gameCommentaryArea").append(msg.playerName + "さんがあがりました。<br />");
     }
   });
   socket.on("gameFinish", function(msg) {

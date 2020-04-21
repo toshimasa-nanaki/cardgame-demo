@@ -10,7 +10,7 @@ const TRUMPDATA = {
 };
 
 const DEBUG_TRUMPDATA = {
-  total: 12,
+  total: 8,
   card: [
     { type: "club", count: 2 },
     { type: "spade", count: 2 },
@@ -691,6 +691,7 @@ function handOutCards(count, roomId){
   const shuffleCards = sort_at_random(ORIGINALCARDDATA);
   const perNum = Math.floor(TRUMP_TEMP.total / count);
   let remainder = TRUMP_TEMP.total % count;
+  logger.debug("perNum:" + perNum + " remainder:" + remainder);
   let pos = 0;
   Object.keys(store[roomId]['users']).forEach(key => {
       store[roomId]['users'][key].card = shuffleCards
@@ -702,6 +703,7 @@ function handOutCards(count, roomId){
         });
     pos = remainder > 0 ? pos + perNum + 1 : pos + perNum;
     remainder--;
+    logger.debug("for文の中"+" perNum:" + perNum + " remainder:" + remainder);
     logger.debug(key +"の持ちカード： " + JSON.stringify(store[roomId]['users'][key].card));
   });
 }
