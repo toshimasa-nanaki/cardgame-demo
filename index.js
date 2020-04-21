@@ -346,24 +346,7 @@ io.on("connection", function(socket) {
           rankReason: store[msg.id]['users'][lastId].rankReason
         });
         const reverseRank = aggregateBattlePhase(msg.id);
-        if(store[msg.id].gameNum == 4){
-          //1セット終了
-          //第四ゲームの成績を先に出しておく。
-          Object.keys(store[msg.id]['users']).forEach(function(key){
-            store[msg.id]['scoreTable'].some(function(ele){
-              if(store[msg.id]['users'][key].rank === ele.rankId){
-                store[msg.id]['users'][key].point = store[msg.id]['users'][key].point + ele.point;
-                logger.debug(store[msg.id]['users'][key].dispName + "の現在のポイント: " + store[msg.id]['users'][key].point);
-                return true;
-              }
-            });
-          });
-          //TODO集計が必要
-          aggregateBattleSet(msg.id);
-          return;
-        }else{
-          //次のゲームへ
-          store[msg.id]['order'] = reverseRank;
+        store[msg.id]['order'] = reverseRank;
           Object.keys(store[msg.id]['users']).forEach(function(key){
             store[msg.id]['scoreTable'].some(function(ele){
               if(store[msg.id]['users'][key].rank === ele.rankId){
@@ -377,6 +360,18 @@ io.on("connection", function(socket) {
           reverseRank.forEach(function(key){
             displayRanking.unshift({rank: store[msg.id]['users'][key].rank, dispName: store[msg.id]['users'][key].dispName});
           });
+        if(store[msg.id].gameNum == 4){
+          //1セット終了
+          //TODO集計が必要
+          let overallGrade = aggregateBattleSet(msg.id);
+          let displayOverAllRanking = [];
+          overallGrade.forEach(function(key){
+            displayOverAllRanking.push({dispName: store[msg.id]['users'][key].dispName});
+          });
+          io.to(store[msg.id].roomId).emit("gameSet", {gameNum: store[msg.id].gameNum, ranking: displayRanking, overall: displayOverAllRanking});
+          return;
+        }else{
+          //次のゲームへ
           io.to(store[msg.id].roomId).emit("gameFinish", {gameNum: store[msg.id].gameNum, ranking: displayRanking});
           io.to(lastId).emit("nextGameStart", {gameNum: store[msg.id].gameNum + 1, ranking: displayRanking});
           store[msg.id].gameNum = store[msg.id].gameNum + 1;
@@ -389,21 +384,11 @@ io.on("connection", function(socket) {
 });
 
 //ゲームセットの成績統計
-function aggregateBattleSet(roomId){
-  //ユーザデータを全検索し、最下位のメンバをfinishTimeの昇順に並べる。
-  let loseUsers = Object.keys(store[roomId]['users']).filter(function(key){
-    return store[roomId]['users'][key].rankNum === 4
-  }).sort(function(a, b) {
-          if (store[roomId]['users'][a].finishTime < store[roomId]['users'][b].finishTime) return -1;
-          if (store[roomId]['users'][a].finishTime > store[roomId]['users'][b].finishTime) return 1;
-          return 0;
-        });
- 
-  //順位の逆順で返すと何かと楽そうなのでそうする。
-  //またこの時にサクッとpoint計上しておく
+function aggregateBattleSet(roomId){ 
+  //ポイント降順で返す。(ランキング順)
   return Object.keys(store[roomId]['users']).sort(function(a, b) {
-          if (store[roomId]['users'][a].rankNum.finishTime > store[roomId]['users'][b].rankNum.finishTime) return -1;
-          if (store[roomId]['users'][a].finishTime < store[roomId]['users'][b].finishTime) return 1;
+          if (store[roomId]['users'][a].point > store[roomId]['users'][b].point) return -1;
+          if (store[roomId]['users'][a].point < store[roomId]['users'][b].point) return 1;
           return 0;
         });
 }
@@ -440,7 +425,7 @@ function aggregateBattlePhase(roomId){
   //順位の逆順で返すと何かと楽そうなのでそうする。
   //またこの時にサクッとpoint計上しておく
   return Object.keys(store[roomId]['users']).sort(function(a, b) {
-          if (store[roomId]['users'][a].rankNum.finishTime > store[roomId]['users'][b].rankNum.finishTime) return -1;
+          if (store[roomId]['users'][a].finishTime > store[roomId]['users'][b].finishTime) return -1;
           if (store[roomId]['users'][a].finishTime < store[roomId]['users'][b].finishTime) return 1;
           return 0;
         });

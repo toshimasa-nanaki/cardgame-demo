@@ -499,6 +499,30 @@ $(function() {
       });
     });
   });
+  socket.on("gameSet", function(msg) {
+    console.log("game set");
+    //$("#rematch").show();
+    $("#gameCommentaryArea").append("あなたは、" + RANKING_DIC[msg.rank] + "です。<br />");
+    let mes = "";
+    msg.ranking.forEach(function(ele){
+      $("#gameCommentaryArea").append(ele.dispName + "さん : " + RANKING_DIC[ele.rank] + "<br />");
+      mes = mes + RANKING_DIC[ele.rank] + " : " + ele.dispName + "さん<br />";
+    });
+      $("#battleResult"+ msg.gameNum).append(mes);
+    $("#battle"+ msg.gameNum).show();
+    
+    //$("#gameCommentaryArea").append("10秒後に次のゲームを始めます。<br />");
+    $("#gameCommentaryArea").scrollTop(
+      $("#gameCommentaryArea")[0].scrollHeight
+    );
+    // sleep(10, function () {
+    //   socket.emit("rematch", {
+    //     id: $("input[name=roomRadios]:checked").val(),
+    //     roomid: $("input[name=roomRadios]:checked").val()
+    //   });
+    // });
+  });
+  
   $("#rematch").click(function() {
     $("#rank").text("");
     $("#rematch").hide();
