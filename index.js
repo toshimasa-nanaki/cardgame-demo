@@ -362,7 +362,6 @@ io.on("connection", function(socket) {
           });
         if(store[msg.id].gameNum == 4){
           //1セット終了
-          //TODO集計が必要
           let overallGrade = aggregateBattleSet(msg.id);
           let displayOverAllRanking = [];
           overallGrade.forEach(function(key){

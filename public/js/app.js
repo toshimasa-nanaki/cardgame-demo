@@ -515,12 +515,13 @@ $(function() {
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );
-    // sleep(10, function () {
-    //   socket.emit("rematch", {
-    //     id: $("input[name=roomRadios]:checked").val(),
-    //     roomid: $("input[name=roomRadios]:checked").val()
-    //   });
-    // });
+    
+    $("#gameCommentaryArea").append("総合成績は以下の通りです");
+    let rank = 1;
+    msg.overall.forEach(function(ele){
+      $("#gameCommentaryArea").append(rank + "位:" + ele.dispName + "さん<br />");
+      rank++;
+    });
   });
   
   $("#rematch").click(function() {
