@@ -525,7 +525,10 @@ $(function() {
     });
   });
   socket.on("releaseRoom", (info)=>{
-    console.log("部屋がリリースされました")
+    console.log("部屋がリリースされました");
+    $("#errorModalBody").text("");
+    $("#errorModalBody").text(msg);
+    $("#errorModal").modal();
   });
   
   $("#rematch").click(function() {
