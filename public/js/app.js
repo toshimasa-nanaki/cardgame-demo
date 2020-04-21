@@ -474,7 +474,8 @@ $(function() {
       $("#gameCommentaryArea").append(ele.dispName + "さん : " + RANKING_DIC[ele.rank] + "<br />");
       mes = mes + RANKING_DIC[ele.rank] + " : " + ele.dispName + "さん<br />";
     });
-      $("#battleResult1").append(mes);
+      $("#battleResult"+ msg.gameNum).append(mes);
+    $("#battle"+ msg.gameNum).show();
     $("#gameCommentaryArea").append("10秒後に次のゲームを始めます。<br />");
     
     $("#gameCommentaryArea").scrollTop(

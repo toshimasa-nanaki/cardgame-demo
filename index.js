@@ -367,7 +367,7 @@ io.on("connection", function(socket) {
           reverseRank.forEach(function(key){
             displayRanking.unshift({rank: store[msg.id]['users'][key].rank, dispName: store[msg.id]['users'][key].dispName});
           });
-          io.to(store[msg.id].roomId).emit("gameFinish", {gameNum: store[msg.id].gameNum + 1, ranking: displayRanking});
+          io.to(store[msg.id].roomId).emit("gameFinish", {gameNum: store[msg.id].gameNum, ranking: displayRanking});
           io.to(lastId).emit("nextGameStart", {gameNum: store[msg.id].gameNum + 1, ranking: displayRanking});
           return;
         }

@@ -7,6 +7,9 @@
 /*       div#roomInputArea {
         display: none;
       } */
+div#battle1,div#battle2,div#battle3,div#battle4 {
+  display:none;
+}
 div#svgArea{
   display: none;
 }
