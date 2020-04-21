@@ -42,9 +42,9 @@ app.get("/", function(req, res) {
 app.use("/css", express.static("public/css"));
 app.use("/js", express.static("public/js"));
 
-io.on("connection", function(socket) {
+io.on("connection", socket => {
   //最初の接続時に現在のルーム一覧を送る
-  console.log(JSON.stringify(store));
+  logger.debug(JSON.stringify(store));
   io.to(socket.id).emit("showRoomList", store);
 
   socket.on("disconnect", function() {
@@ -117,13 +117,6 @@ io.on("connection", function(socket) {
           point: 0
         };
       }
-      console.log(
-        "User追加後のStore情報:  " +
-          JSON.stringify(store[joinInfo.roomId]["users"])
-      );
-      //store[joinInfo.roomId]['users'] = {'dispName': joinInfo.playerName, 'card': 0, 'rank': ''}
-      //console.log("Store情報:  " + JSON.stringify(store));
-      //UserList[socket.id] = joinInfo.playerName;
       socket.join(joinInfo.roomId);
       io.to(socket.id).emit("joinedRoom", store[joinInfo.roomId]["users"]);
       Object.keys(store[joinInfo.roomId]["users"]).forEach(function(key) {
