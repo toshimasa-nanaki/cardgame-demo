@@ -146,15 +146,16 @@ io.on("connection", function(socket) {
     }
   });
   socket.on("pass", function(msg) {
+    const orderList = store[msg.id]['order'];
+    const users = store[msg.id]['users'];
     store[msg.id].passCount = store[msg.id].passCount + 1;
-    const count = store[msg.id].capacity;
-    if (store[msg.id].passCount >= count - 1) {
+    //const count = store[msg.id].capacity;
+    if (store[msg.id].passCount >= orderList.length - 1) {
       //パスで一周した場合流す
       fieldClear(msg.id);
       io.to(store[msg.id].roomId).emit("changeStatus", { type: "cutPass" });
     }
-    const orderList = store[msg.id]['order'];
-    const users = store[msg.id]['users'];
+    
     let currentTurn = orderList.indexOf(socket.id);
 
     notifyChangeTurn(currentTurn, msg.id);
@@ -345,6 +346,7 @@ io.on("connection", function(socket) {
         if(store[msg.id].gameNum == 4){
           //1セット終了
           //TODO集計が必要
+          return;
         }else{
           //次のゲームへ
           store[msg.id]['order'] = reverseRank;
@@ -364,6 +366,7 @@ io.on("connection", function(socket) {
           });
           io.to(store[msg.id].roomId).emit("gameFinish", {gameNum: store[msg.id].gameNum + 1, ranking: displayRanking});
           io.to(lastId).emit("nextGameStart", {gameNum: store[msg.id].gameNum + 1, ranking: displayRanking});
+          return;
         }
       }
     }
