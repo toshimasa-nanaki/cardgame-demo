@@ -20,7 +20,7 @@ const DEBUG_TRUMPDATA = {
   joker: 0
 };
 //debug用フラグ
-const debug = true;
+const debug = false;
 const TRUMP_TEMP = debug ? DEBUG_TRUMPDATA : TRUMPDATA;
 
 var express = require("express");

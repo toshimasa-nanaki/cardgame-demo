@@ -133,6 +133,14 @@ $(function() {
     joker199: "JOKER",
     joker299: "JOKER"
   };
+  function mypreload() {    
+    Object.keys(DISPLAY_IMAGE_ID).forEach(key =>{
+      //const imgUri = "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" + DISPLAY_IMAGE_ID[element.type + element.number] + ".png";
+      $("<img>").attr("src", "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" + DISPLAY_IMAGE_ID[key] + ".png");
+    });
+  }
+  //関数の呼び出し。引数には先読みしておく画像のパスを指定  
+  mypreload();
   // 画像がクリックされた時の処理です。
   $('img.handCardImage').click(function() {
     if (!$(this).is('.checked')) {
