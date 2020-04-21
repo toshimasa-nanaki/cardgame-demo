@@ -326,6 +326,7 @@ io.on("connection", function(socket) {
         rankReason: store[msg.id]['users'][socket.id].rankReason
       });
       store[msg.id].finishNum = store[msg.id].finishNum + 1;
+      store[msg.id].passCount = -1;
       //store[msg.id]['order'].splice(currentTurn, 1);
       logger.debug("現在のユーザーの状態:" + JSON.stringify(store[msg.id]['users'][orderList[currentTurn]]));
       if (store[msg.id].finishNum == Object.keys(users).length - 1) {
