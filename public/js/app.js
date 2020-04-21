@@ -524,6 +524,9 @@ $(function() {
       rank++;
     });
   });
+  socket.on("releaseRoom", (info)=>{
+    
+  });
   
   $("#rematch").click(function() {
     $("#rank").text("");

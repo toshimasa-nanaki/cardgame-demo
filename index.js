@@ -55,7 +55,9 @@ io.on("connection", socket => {
         logger.warn(store[roomId]["users"][socket.id].dispName + "が" + store[roomId].roomDispName + "から退出");
         delete store[roomId]["users"][socket.id];
         socket.leave(roomId);
-        io.to(store[roomId].roomId).emit("releaseRoom", {reason : });
+        if(store[roomId].startedGame){
+          io.to(store[roomId].roomId).emit("releaseRoom", {reason : "goOutRoom"});
+        }
       }
     }
     // roomIds.forEach(roomId => {
@@ -84,7 +86,7 @@ io.on("connection", socket => {
       scoreTable: [],
       finishNum: 0,
       order: [],
-      startGame: false
+      startedGame: false
     };
     store[createRoomId] = roomObj;
     logger.info("createdRoom:  " + roomObj.roomDispName);
@@ -741,6 +743,7 @@ function gameInit(count, sockets, roomId) {
   store[roomId].revolution = false;
   store[roomId].stair = false;
   store[roomId]["order"] = [];
+  store[roomId].startedGame = true;
 
   //まずは順番決め
   decideOrder(roomId);
