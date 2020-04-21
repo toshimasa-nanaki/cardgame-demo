@@ -35,12 +35,6 @@ logger.level = 'debug';
 var port = process.env.PORT || 3000;
 var store = {};
 const ORIGINALCARDDATA = trump_init(TRUMP_TEMP);
-//let gameStart = false;
-//let stair = false;
-//let seiseki = [];
-let rank = 0;
-//let rankTable = [];
-//let UserList = {};
 
 app.get("/", function(req, res) {
   res.sendFile(__dirname + "/index.html");
@@ -81,7 +75,8 @@ io.on("connection", function(socket) {
       stair: false,
       fieldCards:[],
       scoreTable:[],
-      finishNum;
+      finishNum: 0,
+      order: []
     };
     store[createRoomId] = roomObj;
     //console.log("Store情報:  " + JSON.stringify(store));
@@ -327,10 +322,11 @@ io.on("connection", function(socket) {
         playerName: users[orderList[currentTurn]].dispName,
         rankReason: store[msg.id]['users'][socket.id].rankReason
       });
-      rank++;
+      store[msg.id].finishNum = store[msg.id].finishNum + 1;
+      store[msg.id]['order'].splice(currentTurn, 1);
       logger.debug("現在のユーザーの状態:" + JSON.stringify(store[msg.id]['users'][orderList[currentTurn]]));
-      if (rank == Object.keys(users).length - 1) {
-        //つまり全員終了
+      if (store[msg.id].finishNum == Object.keys(users).length - 1) {
+        //ビリ以外は全員終了
         let lastId = Object.keys(users).filter(item => {
           logger.debug("itemの値:" + JSON.stringify(store[msg.id]['users'][item]));
           return store[msg.id]['users'][item].rank.length == 0;
@@ -645,7 +641,8 @@ function createRankTable(count) {
 
 function gameInit(count, sockets, roomId) {
   store[roomId]['fieldCards'] = [];
-  rank = 0;
+  
+  store[roomId].finishNum = 0;
   store[roomId].scoreTable = createRankTable(count);
   store[roomId].elevenback = false;
   store[roomId].shibari = false;
