@@ -741,14 +741,9 @@ function fieldClear(roomId){
 
 function notifyChangeTurn(currentTurnIndex, roomId){
   const orderList = store[roomId]['order'];
-  logger.debug("orderList:" + orderList);
   const users = store[roomId]['users'];
-  store[roomId]['order'].splice(currentTurnIndex, 1);
-  logger.debug("変更後orderList:" + orderList);
   let nextTurn = currentTurnIndex != orderList.length - 1 ? currentTurnIndex + 1 : 0;
-  // Object.keys(users).forEach(ele => {
-  //   if()
-  // });
+
     Object.keys(users).forEach(function(element) {
       if (element != orderList[nextTurn]) {
         io.to(element).emit("order", {
@@ -762,6 +757,10 @@ function notifyChangeTurn(currentTurnIndex, roomId){
       flag: true,
       skip: users[orderList[nextTurn]].rank != "" ? true : false
     });
+  if(users[orderList[currentTurnIndex]].rankNum != 0){
+    //現在のユーザがすでに上がっている場合
+    store[roomId]['order'].splice(currentTurnIndex, 1);
+  }
 }
 
 // 大富豪の役を満たしているか
