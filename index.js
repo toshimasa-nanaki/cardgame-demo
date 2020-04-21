@@ -60,14 +60,6 @@ io.on("connection", socket => {
         }
       }
     }
-    // roomIds.forEach(roomId => {
-    //   if (~Object.keys(store[roomId].users).indexOf(socket.id)) {
-    //     logger.warn(socket.id + "が" + roomId + "から退出");
-    //     delete store[roomId]["users"][socket.id];
-    //     //delete UserList[socket.id];
-    //     socket.leave(roomId);
-    //   }
-    // });
   });
   socket.on("requestRoomCreate", roomInfo => {
     const createRoomId = uniqueId();
@@ -111,7 +103,8 @@ io.on("connection", socket => {
             rankNum: 0,
             rankReason: "",
             finishTime: 0,
-            point: 0
+            point: 0,
+            firstPlace: false
           }
         };
       } else {
@@ -122,7 +115,8 @@ io.on("connection", socket => {
           rankNum: 0,
           rankReason: "",
           finishTime: 0,
-          point: 0
+          point: 0,
+          firstPlace: false
         };
       }
       socket.join(joinInfo.roomId);

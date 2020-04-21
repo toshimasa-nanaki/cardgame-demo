@@ -11,7 +11,8 @@ $(function() {
     diffNumOfCards: "カードの枚数は合わせてください。",
     diffSuitCards: "スートしばりに合ったカードを出してください。",
     loseCards: "場のカードより強いものを出してください。",
-    handError: "役ができていません。"
+    handError: "役ができていません。",
+    goOutRoom: "プレイヤーの数が減ったため部屋を解散します。"
   };
   const LOSE_REASON_DIC = {
     spade3Finish: "スペ3あがりのため、反則負けとなりました。",
@@ -535,16 +536,11 @@ $(function() {
   socket.on("releaseRoom", (info)=>{
     console.log("部屋がリリースされました");
     $("#releaseRoomModalBody").text("");
-    $("#ereleaseRoomModalBody").text(info.reason);
-    $("#releaseRoomModal").modal({backdrop: "static"});
+    $("#ereleaseRoomModalBody").text(ERROR_DIC[info.reason]);
+    $("#releaseRoomModal").modal({backdrop: "static", keyboard: false});
   });
   $("#releaseRoomModalButton").click(()=>{
     location.reload();
-  });
-  $("#test").click(()=>{
-    $("#releaseRoomModalBody").text("");
-    $("#ereleaseRoomModalBody").text("test");
-    $("#releaseRoomModal").modal({backdrop: "static"});
   });
   
   $("#rematch").click(function() {
