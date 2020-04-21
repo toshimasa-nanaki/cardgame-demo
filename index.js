@@ -409,8 +409,10 @@ function aggregateBattlePhase(roomId){
     loseUsers.forEach(key => {
       if(store[roomId]['users'][key].rankReason != "fallingOutCity"){
         //都落ちでない場合は、反則負けで早く上がったものから悪い順位になる。
+        logger.debug("入れる前: " + JSON.stringify(store[roomId]['users'][key]));
         store[roomId]['users'][key].rankNum = Object.keys(store[roomId]['users']).length - pos;
-        store[roomId]['users'][key].rank = store[roomId]['scoreTable'][Object.keys(store[roomId]['users']).length - pos - 1];
+        store[roomId]['users'][key].rank = store[roomId]['scoreTable'][Object.keys(store[roomId]['users']).length - pos - 1].rankId;
+        logger.debug("入れた後: " + JSON.stringify(store[roomId]['users'][key]));
         pos++;
       }else{
         fallingOutCityUserKey = key;
