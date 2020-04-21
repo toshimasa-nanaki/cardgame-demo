@@ -526,9 +526,17 @@ $(function() {
   });
   socket.on("releaseRoom", (info)=>{
     console.log("部屋がリリースされました");
-    $("#errorModalBody").text("");
-    $("#errorModalBody").text(msg);
-    $("#errorModal").modal();
+    $("#releaseRoomModalBody").text("");
+    $("#ereleaseRoomModalBody").text(info.reason);
+    $("#releaseRoomModal").modal({backdrop: "static"});
+  });
+  $("#releaseRoomModalButton").click(()=>{
+    location.reload();
+  });
+  $("#test").click(()=>{
+    $("#releaseRoomModalBody").text("");
+    $("#ereleaseRoomModalBody").text("test");
+    $("#releaseRoomModal").modal({backdrop: "static"});
   });
   
   $("#rematch").click(function() {
