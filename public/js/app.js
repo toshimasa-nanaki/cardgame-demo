@@ -525,7 +525,7 @@ $(function() {
     });
   });
   socket.on("releaseRoom", (info)=>{
-    
+    console.log("部屋がリリースされました")
   });
   
   $("#rematch").click(function() {
