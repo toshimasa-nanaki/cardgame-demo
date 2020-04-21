@@ -257,12 +257,6 @@ io.on("connection", function(socket) {
         value: msg,
         playerName: users[socket.id].dispName
       });
-      // console.log(
-      //   "8ぎりプレイヤー名:" +
-      //     UserList[socket.id] +
-      //     "　出したカードの数：" +
-      //     validateCards.length
-      // );
       removeCard(validateCards, socket.id ,msg.id);
       return;
     }
@@ -294,31 +288,6 @@ io.on("connection", function(socket) {
     if(users[socket.id].card.length <= 0){
       //成績をチェックする。
       checkRank(validateCards, msg.id, socket.id);
-      //上がり
-      //まずは反則あがりをチェック
-      //・スペ3一枚で上がってない？
-      //・8またはJOKER含まれてない？
-      // ・革命時に3
-      //・非革命時に2
-      // if (
-      //   (validateCards[0].number == 3 &&
-      //     validateCards[0].type == "spade" &&
-      //     validateCards.length == 1) ||
-      //   validateCards[0].number == 8 ||
-      //   ~validateCards[0].type.indexOf("joker") ||
-      //   (store[msg.id].revolution && validateCards[0].number == 3) ||
-      //   (!store[msg.id].revolution && validateCards[0].number == 2)
-      // ) {
-      //   store[msg.id]['users'][socket.id].rank = rankTable[store[msg.id]['order'].length - 1];
-      //   store[msg.id]['users'][socket.id].rankNum = store[msg.id]['order'].length;
-      //   //ORDER[currentTurn].rank = rankTable[ORDER.length - 1];
-      // } else {
-      //   store[msg.id]['users'][socket.id].rank = rankTable[rank];
-      //   store[msg.id]['users'][socket.id].rankNum = rank;
-      //   //ORDER[currentTurn].rank = rankTable[rank];
-      // }
-      //個人に知らせる
-      //io.to(orderList[currentTurn]).emit("finish", rankTable[store[msg.id]['users'][socket.id].rankNum - 1]);
       io.to(orderList[currentTurn]).emit("finish", {rankReason :store[msg.id]['users'][socket.id].rankReason});
       //みんなに知らせる
       io.to(store[msg.id].roomId).emit("finishNotification", {
@@ -426,8 +395,8 @@ function aggregateBattlePhase(roomId){
   //順位の逆順で返すと何かと楽そうなのでそうする。
   //またこの時にサクッとpoint計上しておく
   return Object.keys(store[roomId]['users']).sort(function(a, b) {
-          if (store[roomId]['users'][a].finishTime > store[roomId]['users'][b].finishTime) return -1;
-          if (store[roomId]['users'][a].finishTime < store[roomId]['users'][b].finishTime) return 1;
+          if (store[roomId]['users'][a].rankNum > store[roomId]['users'][b].rankNum) return -1;
+          if (store[roomId]['users'][a].rankNum < store[roomId]['users'][b].rankNum) return 1;
           return 0;
         });
 }
