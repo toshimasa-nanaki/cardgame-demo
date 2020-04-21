@@ -275,22 +275,6 @@ $(function() {
       let li = $('<li id="' + element.type + element.number + '"></li>').append(box);
       $("#cardList2").append(li);
     });
-    // msg.card.forEach(element => {
-    //   var check = $(
-    //     '<label id="' +
-    //       element.type +
-    //       element.number +
-    //       '">' +
-    //       DISPLAY_DIC[element.type + element.number] +
-    //       "</label>"
-    //   ).prepend(
-    //     $('<input type="checkbox" />').attr({
-    //       name: "cards",
-    //       value: element.type + "_" + element.number
-    //     })
-    //   );
-    //   $("#cardList").append(check);
-    // });
     console.log("order accept");
     if (msg.yourTurn) {
       $("#send").prop("disabled", false);
@@ -472,24 +456,6 @@ $(function() {
       $("#gameCommentaryArea").append(LOSE_REASON_DIC[msg.rankReason]);
     }
     $("#gameCommentaryArea").append("ゲームが終了したため、観戦モードに移行します。<br />");
-    //$("#gameFieldArea").toggle();
-    // switch (msg) {
-    //   case "daihugou":
-    //     $("#seiseki").text("大富豪です！！！");
-    //     break;
-    //   case "hugou":
-    //     $("#seiseki").text("富豪です！！！");
-    //     break;
-    //   case "heimin":
-    //     $("#seiseki").text("平民です！！！");
-    //     break;
-    //   case "hinmin":
-    //     $("#seiseki").text("貧民です！！！");
-    //     break;
-    //   case "daihinmin":
-    //     $("#seiseki").text("大貧民です！！！");
-    //     break;
-    // }
   });
   socket.on("finishNotification", function(msg) {
     console.log("finish accept notification");
@@ -499,10 +465,6 @@ $(function() {
     }else{
       $("#gameCommentaryArea").append(msg.playerName + "さんがあがりました。");
     }
-    // $("#gameCommentaryArea").append("ゲームが終了したため、観戦モードに移行します。<br />");
-    // $("#rank").append(
-    //   $("<li>").text(RANKING_DIC[msg.rank] + "：" + msg.playerName)
-    // );
   });
   socket.on("gameFinish", function(msg) {
     console.log("game finish");

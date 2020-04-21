@@ -12,10 +12,10 @@ const TRUMPDATA = {
 const DEBUG_TRUMPDATA = {
   total: 12,
   card: [
-    { type: "club", count: 3 },
-    { type: "spade", count: 3 },
-    { type: "heart", count: 3 },
-    { type: "diamond", count: 3 }
+    { type: "club", count: 2 },
+    { type: "spade", count: 2 },
+    { type: "heart", count: 2 },
+    { type: "diamond", count: 2 }
   ],
   joker: 0
 };
@@ -80,7 +80,8 @@ io.on("connection", function(socket) {
       revolution: false,
       stair: false,
       fieldCards:[],
-      scoreTable:[]
+      scoreTable:[],
+      finishNum;
     };
     store[createRoomId] = roomObj;
     //console.log("Store情報:  " + JSON.stringify(store));
@@ -211,12 +212,6 @@ io.on("connection", function(socket) {
           value: msg,
           playerName: users[socket.id].dispName
         });
-        // console.log(
-        //   "スペ3プレイヤー名:" +
-        //     UserList[socket.id] +
-        //     "　出したカードの数：" +
-        //     validateCards.length
-        // );
         //ストアからカードを抜きだす
         removeCard(validateCards, socket.id ,msg.id);
         
@@ -334,7 +329,7 @@ io.on("connection", function(socket) {
       });
       rank++;
       logger.debug("現在のユーザーの状態:" + JSON.stringify(store[msg.id]['users'][orderList[currentTurn]]));
-      if (rank == orderList.length - 1) {
+      if (rank == Object.keys(users).length - 1) {
         //つまり全員終了
         let lastId = Object.keys(users).filter(item => {
           logger.debug("itemの値:" + JSON.stringify(store[msg.id]['users'][item]));
@@ -371,10 +366,6 @@ io.on("connection", function(socket) {
           reverseRank.forEach(function(key){
             displayRanking.unshift({rank: store[msg.id]['users'][key].rank, dispName: store[msg.id]['users'][key].dispName});
           });
-//           reverseRank.forEach(function(key){
-//             io.to(store[msg.id].roomId).emit({rank: store[msg.id]['users'][key].rank});
-            
-//           });
           io.to(store[msg.id].roomId).emit("gameFinish", {gameNum: store[msg.id].gameNum + 1, ranking: displayRanking});
           io.to(lastId).emit("nextGameStart", {gameNum: store[msg.id].gameNum + 1, ranking: displayRanking});
         }
@@ -635,22 +626,6 @@ function numComparison(nc, sc, roomId) {
 }
 
 function createRankTable(count) {
-  //初期化しておく
-  // rankTable = [];
-  // if (count == 2) {
-  //   rankTable = ["hugou", "hinmin"];
-  // } else if (count == 3) {
-  //   rankTable = ["hugou", "heimin", "hinmin"];
-  // } else if (count == 4) {
-  //   rankTable = ["daihugou", "hugou", "hinmin", "daihinmin"];
-  // } else {
-  //   rankTable = ["daihugou", "hugou"];
-  //   for (let i = 0; i < count - 4; i++) {
-  //     rankTable.push("heimin");
-  //   }
-  //   rankTable.push("hinmin");
-  //   rankTable.push("daihinmin");
-  // }
   if (count == 2) {
     return [{rankId:"hugou", point: 1}, {rankId:"hinmin", point: 0}];
   } else if (count == 3) {
