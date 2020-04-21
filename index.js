@@ -150,8 +150,10 @@ io.on("connection", function(socket) {
     const users = store[msg.id]['users'];
     store[msg.id].passCount = store[msg.id].passCount + 1;
     //const count = store[msg.id].capacity;
-    if (store[msg.id].passCount >= orderList.length) {
+    logger.debug("今のpassCount:" + store[msg.id].passCount + " 今のorderList長さ" + orderList.length);
+    if (store[msg.id].passCount >= orderList.length - 1) {
       //パスで一周した場合流す
+      logger.debug("流します");
       fieldClear(msg.id);
       io.to(store[msg.id].roomId).emit("changeStatus", { type: "cutPass" });
     }
