@@ -47,20 +47,27 @@ io.on("connection", socket => {
   logger.debug(JSON.stringify(store));
   io.to(socket.id).emit("showRoomList", store);
 
-  socket.on("disconnect", function() {
+  socket.on("disconnect", () => {
     //TODO ゲームがすでに始まっている場合は解散
-    console.log(Object.keys(store));
     const roomIds = Object.keys(store);
+    for (const roomId of roomIds) {
+      if (~Object.keys(store[roomId]['users']).indexOf(socket.id)) {
+        logger.warn(socket.id + "が" + roomId + "から退出");
+        delete store[roomId]["users"][socket.id];
+        //delete UserList[socket.id];
+        socket.leave(roomId);
+      }
+    }
     roomIds.forEach(roomId => {
       if (~Object.keys(store[roomId].users).indexOf(socket.id)) {
-        console.log(socket.id + "が" + roomId + "から退出");
+        logger.warn(socket.id + "が" + roomId + "から退出");
         delete store[roomId]["users"][socket.id];
         //delete UserList[socket.id];
         socket.leave(roomId);
       }
     });
   });
-  socket.on("requestRoomCreate", function(roomInfo) {
+  socket.on("requestRoomCreate", roomInfo => {
     const createRoomId = uniqueId();
     const roomObj = {
       roomId: createRoomId,
@@ -79,12 +86,10 @@ io.on("connection", socket => {
       order: []
     };
     store[createRoomId] = roomObj;
-    //console.log("Store情報:  " + JSON.stringify(store));
     logger.info("createdRoom:  " + roomObj.roomDispName);
     io.emit("createdRoom", { [createRoomId]: roomObj });
   });
-  socket.on("join", function(joinInfo) {
-    console.log("部屋入り情報:" + JSON.stringify(joinInfo));
+  socket.on("join", joinInfo => {
     const count = store[joinInfo.roomId].capacity;
     //if (socket.nsp.adapter.rooms[msg.id].length >= count) {
     if (
