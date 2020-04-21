@@ -189,8 +189,9 @@ $(function() {
             "</label>"
         )
       );
-      $("#selectRoomList").append(div);
+      $("#selectRoomList").prepend(div);
     });
+    $('#selectRoomList > :first > input').prop('checked', true);
   }
   $("#joinRoom").click(function() {
     let roomId = $("input[name=roomRadios]:checked").val();
