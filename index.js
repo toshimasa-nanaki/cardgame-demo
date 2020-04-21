@@ -1,4 +1,5 @@
 const TRUMPDATA = {
+  total: 54,
   card: [
     { type: "club", count: 13 },
     { type: "spade", count: 13 },
@@ -7,6 +8,20 @@ const TRUMPDATA = {
   ],
   joker: 2
 };
+
+const DEBUG_TRUMPDATA = {
+  total: 12,
+  card: [
+    { type: "club", count: 3 },
+    { type: "spade", count: 3 },
+    { type: "heart", count: 3 },
+    { type: "diamond", count: 3 }
+  ],
+  joker: 0
+};
+//debug用フラグ
+const debug = true;
+const TRUMP_TEMP = debug ? DEBUG_TRUMPDATA : TRUMPDATA;
 
 var express = require("express");
 var app = require("express")();
@@ -19,7 +34,7 @@ logger.level = 'debug';
 // io.set('heartbeat timeout', 15000);
 var port = process.env.PORT || 3000;
 var store = {};
-const ORIGINALCARDDATA = trump_init(TRUMPDATA);
+const ORIGINALCARDDATA = trump_init(TRUMP_TEMP);
 //let gameStart = false;
 //let stair = false;
 //let seiseki = [];
@@ -126,9 +141,6 @@ io.on("connection", function(socket) {
   //再戦
   socket.on("rematch", function(msg) {
     const count = store[msg.id].capacity;
-    // typeof store[msg.id].capacity === "undefined" ? 4 : store[msg.id].capacity;
-
-    //if (socket.nsp.adapter.rooms[msg.id].length == count) {
     if (Object.keys(store[msg.id]["users"]).length == count) {
       //人数がそろっているのか確認
       gameInit(count, socket.nsp.adapter.rooms[msg.id].sockets, msg.id);
@@ -705,8 +717,8 @@ function decideOrder(roomId){
 
 function handOutCards(count, roomId){
   const shuffleCards = sort_at_random(ORIGINALCARDDATA);
-  const perNum = Math.floor(54 / count);
-  let remainder = 54 % count;
+  const perNum = Math.floor(TRUMP_TEMP.total / count);
+  let remainder = TRUMP_TEMP.total % count;
   let pos = 0;
   Object.keys(store[roomId]['users']).forEach(key => {
       store[roomId]['users'][key].card = shuffleCards
