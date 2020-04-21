@@ -362,13 +362,13 @@ io.on("connection", function(socket) {
               }
             });
           });
-          store[msg.id].gameNum = store[msg.id].gameNum + 1;
           let displayRanking = [];
           reverseRank.forEach(function(key){
             displayRanking.unshift({rank: store[msg.id]['users'][key].rank, dispName: store[msg.id]['users'][key].dispName});
           });
           io.to(store[msg.id].roomId).emit("gameFinish", {gameNum: store[msg.id].gameNum, ranking: displayRanking});
           io.to(lastId).emit("nextGameStart", {gameNum: store[msg.id].gameNum + 1, ranking: displayRanking});
+          store[msg.id].gameNum = store[msg.id].gameNum + 1;
           return;
         }
       }
