@@ -52,20 +52,20 @@ io.on("connection", socket => {
     const roomIds = Object.keys(store);
     for (const roomId of roomIds) {
       if (~Object.keys(store[roomId]['users']).indexOf(socket.id)) {
-        logger.warn(socket.id + "が" + roomId + "から退出");
+        logger.warn(store[roomId]["users"][socket.id].dispName + "が" + store[roomId].roomDispName + "から退出");
         delete store[roomId]["users"][socket.id];
-        //delete UserList[socket.id];
         socket.leave(roomId);
+        io.to(store[roomId].roomId).emit("releaseRoom", {reason : });
       }
     }
-    roomIds.forEach(roomId => {
-      if (~Object.keys(store[roomId].users).indexOf(socket.id)) {
-        logger.warn(socket.id + "が" + roomId + "から退出");
-        delete store[roomId]["users"][socket.id];
-        //delete UserList[socket.id];
-        socket.leave(roomId);
-      }
-    });
+    // roomIds.forEach(roomId => {
+    //   if (~Object.keys(store[roomId].users).indexOf(socket.id)) {
+    //     logger.warn(socket.id + "が" + roomId + "から退出");
+    //     delete store[roomId]["users"][socket.id];
+    //     //delete UserList[socket.id];
+    //     socket.leave(roomId);
+    //   }
+    // });
   });
   socket.on("requestRoomCreate", roomInfo => {
     const createRoomId = uniqueId();
@@ -83,7 +83,8 @@ io.on("connection", socket => {
       fieldCards: [],
       scoreTable: [],
       finishNum: 0,
-      order: []
+      order: [],
+      startGame: false
     };
     store[createRoomId] = roomObj;
     logger.info("createdRoom:  " + roomObj.roomDispName);
