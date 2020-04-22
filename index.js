@@ -801,13 +801,7 @@ function gameInit(count, sockets, roomId) {
       //2人の時などは献上はなし
       notifyGameReady(roomId);
     }
-    
-    io.to(store[roomId]["order"][0]).emit("gameReady", {
-      gameNum: store[roomId].gameNum,
-      card: users[orders[0]].card,
-      yourTurn: true,
-      playerName: users[orders[0]].dispName
-    });
+
   }
   
 }
@@ -815,15 +809,16 @@ function gameInit(count, sockets, roomId) {
 function notifyGiveCard(roomId, memberCount){
   if(memberCount ===3){
     //3人のとき
-    io.to(store[roomId]["order"][0]).emit("gameReady", {
-      gameNum: store[roomId].gameNum,
-      card: users[orders[0]].card,
-      yourTurn: true,
-      playerName: users[orders[0]].dispName
-    });
+    let giveToLowerStatus2 = 
+    let giveToLowerStatus2
+    io.to(store[roomId]["order"][2]).emit("giveToLowerStatus1", {});
+    io.to(store[roomId]["order"][0]).emit("giveToHigherStatus1", {targetCard: []);
   }else{
     //4人以上
-    
+    io.to(store[roomId]["order"][memberCount-1]).emit("giveToLowerStatus2", {});
+    io.to(store[roomId]["order"][0]).emit("giveToHigherStatus2", {});
+    io.to(store[roomId]["order"][memberCount-2]).emit("giveToLowerStatus1", {});
+    io.to(store[roomId]["order"][1]).emit("giveToHigherStatus1", {});
   }
 }
 
