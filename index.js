@@ -78,7 +78,8 @@ io.on("connection", socket => {
       scoreTable: [],
       finishNum: 0,
       order: [],
-      startedGame: false
+      startedGame: false,
+      rankCount: 1,
     };
     store[createRoomId] = roomObj;
     logger.info("createdRoom:  " + roomObj.roomDispName);
@@ -356,13 +357,15 @@ io.on("connection", socket => {
           "最下位ユーザーに入るscoreTable:" +
             JSON.stringify(store[msg.id]["scoreTable"])
         );
-        store[msg.id]["users"][lastId].rank =
-          store[msg.id]["scoreTable"][
-            Object.keys(store[msg.id]["users"]).length - 1
-          ].rankId;
-        store[msg.id]["users"][lastId].rankNum = Object.keys(
-          store[msg.id]["users"]
-        ).length;
+        store[msg.id]["users"][lastId].rank =store[msg.id]["scoreTable"][
+        store[msg.id]["users"][lastId].rankNum = store[msg.id].rankCount
+        // store[msg.id]["users"][lastId].rank =
+        //   store[msg.id]["scoreTable"][
+        //     Object.keys(store[msg.id]["users"]).length - 1
+        //   ].rankId;
+        // store[msg.id]["users"][lastId].rankNum = Object.keys(
+        //   store[msg.id]["users"]
+        // ).length;
         store[msg.id]["users"][lastId].finishTime = new Date().getTime();
         logger.debug(
           "最下位ユーザー:" + JSON.stringify(store[msg.id]["users"][lastId])
@@ -561,6 +564,7 @@ function checkRank(sc, roomId, userId) {
     // }
     //store[roomId]['users'][userId].rankReason = result.reason;
     store[roomId]["users"][userId].finishTime = new Date().getTime();
+    store[roomId].rankCount = store[roomId].rankCount + 1;
   }
 }
 
