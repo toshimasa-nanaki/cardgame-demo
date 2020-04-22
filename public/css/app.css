@@ -57,6 +57,9 @@ img.handCardImage{
   チェックボックスの非表示を解除します。 */
   display: block;
 }
+div#gameController2{
+  display: none;
+}
 span#field{
   font: 24px Helvetica, Arial;
 }

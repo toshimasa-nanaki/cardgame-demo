@@ -577,4 +577,33 @@ $(function() {
       }
     }, 1000);
   }
+  
+  socket.on("giveToLowerStatus2", (info)=>{
+    $("#gameController2").show();
+    $("#ereleaseRoomModalBody").text(ERROR_DIC[info.reason]);
+    $("#releaseRoomModal").modal({backdrop: "static", keyboard: false});
+  });
+  socket.on("giveToHigherStatus2", (info)=>{
+    console.log("部屋がリリースされました");
+    $("#releaseRoomModalBody").text("");
+    $("#ereleaseRoomModalBody").text(ERROR_DIC[info.reason]);
+    $("#releaseRoomModal").modal({backdrop: "static", keyboard: false});
+  });
+  socket.on("giveToLowerStatus1", (info)=>{
+    console.log("部屋がリリースされました");
+    $("#releaseRoomModalBody").text("");
+    $("#ereleaseRoomModalBody").text(ERROR_DIC[info.reason]);
+    $("#releaseRoomModal").modal({backdrop: "static", keyboard: false});
+  });
+  socket.on("giveToHigherStatus1", (info)=>{
+    console.log("部屋がリリースされました");
+    $("#releaseRoomModalBody").text("");
+    $("#ereleaseRoomModalBody").text(ERROR_DIC[info.reason]);
+    $("#releaseRoomModal").modal({backdrop: "static", keyboard: false});
+  });
+  
+  // io.to(HigherUser2).emit("giveToLowerStatus2", {});
+  //   io.to(LowerUser2).emit("giveToHigherStatus2", {targetCard: [store[roomId]['users'][LowerUser2].slice(-1)[0], store[roomId]['users'][LowerUser2].slice(-2)[0]]});
+  //   io.to(HigherUser1).emit("giveToLowerStatus1", {});
+  //   io.to(LowerUser1).emit("giveToHigherStatus1", {targetCard: [store[roomId]['users'][LowerUser1].slice(-1)[0]]});
 });

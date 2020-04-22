@@ -809,16 +809,20 @@ function gameInit(count, sockets, roomId) {
 function notifyGiveCard(roomId, memberCount){
   if(memberCount ===3){
     //3人のとき
-    let giveToLowerStatus2 = 
-    let giveToLowerStatus2
-    io.to(store[roomId]["order"][2]).emit("giveToLowerStatus1", {});
-    io.to(store[roomId]["order"][0]).emit("giveToHigherStatus1", {targetCard: []);
+    const LowerUser1 = store[roomId]["order"][0]
+    const HigherUser1 = store[roomId]["order"][2]
+    io.to(HigherUser1).emit("giveToLowerStatus1", {});
+    io.to(LowerUser1).emit("giveToHigherStatus1", {targetCard: [store[roomId]['users'][LowerUser1].slice(-1)[0]]});
   }else{
     //4人以上
-    io.to(store[roomId]["order"][memberCount-1]).emit("giveToLowerStatus2", {});
-    io.to(store[roomId]["order"][0]).emit("giveToHigherStatus2", {});
-    io.to(store[roomId]["order"][memberCount-2]).emit("giveToLowerStatus1", {});
-    io.to(store[roomId]["order"][1]).emit("giveToHigherStatus1", {});
+    const LowerUser1 = store[roomId]["order"][1]
+    const HigherUser1 = store[roomId]["order"][memberCount-2]
+    const LowerUser2 = store[roomId]["order"][0]
+    const HigherUser2 = store[roomId]["order"][memberCount-1]
+    io.to(HigherUser2).emit("giveToLowerStatus2", {});
+    io.to(LowerUser2).emit("giveToHigherStatus2", {targetCard: [store[roomId]['users'][LowerUser2].slice(-1)[0], store[roomId]['users'][LowerUser2].slice(-2)[0]]});
+    io.to(HigherUser1).emit("giveToLowerStatus1", {});
+    io.to(LowerUser1).emit("giveToHigherStatus1", {targetCard: [store[roomId]['users'][LowerUser1].slice(-1)[0]]});
   }
 }
 
