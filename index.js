@@ -321,12 +321,12 @@ io.on("connection", socket => {
             store[msg.id]["users"][key].firstPlace = false;
             store[msg.id]["users"][key].rankReason = "fallingOutCity";
             store[msg.id]["users"][key].finishTime = new Date().getTime();
-            io.to(orderList[key]).emit("finish", {
+            io.to(key).emit("finish", {
               rankReason: store[msg.id]["users"][key].rankReason
             });
             //みんなに知らせる
             io.to(store[msg.id].roomId).emit("finishNotification", {
-              playerName: users[orderList[key]].dispName,
+              playerName: users[key].dispName,
               rankReason: store[msg.id]["users"][key].rankReason
             });
           }
