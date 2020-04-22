@@ -20,7 +20,7 @@ const DEBUG_TRUMPDATA = {
   joker: 0
 };
 //debug用フラグ
-const debug = false;
+const debug = true;
 const TRUMP_TEMP = debug ? DEBUG_TRUMPDATA : TRUMPDATA;
 
 var express = require("express");
@@ -303,16 +303,19 @@ io.on("connection", socket => {
         playerName: users[orderList[currentTurn]].dispName,
         rankReason: store[msg.id]["users"][socket.id].rankReason
       });
+      logger.debug("都落ち判定前：" + JSON.stringify(store[msg.id]["users"]));
       if(store[msg.id].gameNum != 1 &&
-        store[msg.id][users].length >= 4 && 
-        !store[msg.id][users][socket.id].firstPlace && 
-         store[msg.id][users][socket.id].rankNum == 1){
+        Object.keys(store[msg.id]["users"]).length >= 4 && 
+        !store[msg.id]["users"][socket.id].firstPlace && 
+         store[msg.id]["users"][socket.id].rankNum == 1){
         //都落ちが発生。
         //前回一位じゃなかったものが一位になっている場合は、都落ちが発生する。
-        Object.keys(store[msg.id][users]).forEach(key => {
-          if(store[msg.id][users][key].firstPlace){
+        logger.debug("都落ち発生！！！");
+        logger.debug("今の都落ち候補:" + JSON.stringify(store[msg.id]["users"]));
+        Object.keys(store[msg.id]["users"]).forEach(key => {
+          if(store[msg.id]["users"][key].firstPlace){
             //都落ちなので、ゲーム終了。とりあえず大貧民にしておく
-            store[msg.id]["users"][key].rankNum = Object.keys(store[msg.id][users]).length;
+            store[msg.id]["users"][key].rankNum = Object.keys(store[msg.id]["users"]).length;
             store[msg.id]["users"][key].rank =
               store[msg.id]["scoreTable"][Object.keys(store[msg.id]["users"]).length - 1].rankId;
             store[msg.id]["users"][key].firstPlace = false;
