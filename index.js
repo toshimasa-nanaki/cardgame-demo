@@ -329,6 +329,8 @@ io.on("connection", socket => {
               playerName: users[key].dispName,
               rankReason: store[msg.id]["users"][key].rankReason
             });
+            store[msg.id].finishNum = store[msg.id].finishNum + 1;
+            store[msg.id]["order"].splice(store[msg.id]["order"].indexOf(key), 1);
           }
         });
       }
@@ -464,7 +466,7 @@ function aggregateBattlePhase(roomId) {
     //0はありえないので考慮しない。
     logger.debug("4位の人数: " + loseUsers.length);
     let pos = 0;
-    const fallingOutCityUserKey = "";
+    let fallingOutCityUserKey = "";
     loseUsers.forEach(key => {
       if (store[roomId]["users"][key].rankReason != "fallingOutCity") {
         //都落ちでない場合は、反則負けで早く上がったものから悪い順位になる。
