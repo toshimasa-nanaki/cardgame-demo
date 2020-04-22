@@ -441,6 +441,11 @@ function aggregateBattlePhase(roomId) {
         );
         store[roomId]["users"][key].rankNum =
           Object.keys(store[roomId]["users"]).length - pos;
+        if(store[roomId]["users"][key].rankNum === 1){
+          //(ないとは思うが)一位だった場合は都落ちフラグ
+          store[roomId]["users"][key].firstPlace = true;
+          //Note 反則負け判断時にいったんフラグをfalseにしているので、ここで見直すことはしない
+        }
         store[roomId]["users"][key].rank =
           store[roomId]["scoreTable"][
             Object.keys(store[roomId]["users"]).length - pos - 1
@@ -485,6 +490,8 @@ function checkRank(sc, roomId, userId) {
     store[roomId]["users"][userId].rankNum = Object.keys(
       store[roomId]["users"]
     ).length;
+    //都落ちフラグは外しておく。(ないとは思うが、全員が反則上がりだった場合、大富豪になる可能性もある。そのときは別途firstPlaceを再計算する)
+    store[roomId]["users"][userId].firstPlace = false;
     store[roomId]["users"][userId].rankReason = result.reason;
     store[roomId]["users"][userId].finishTime = new Date().getTime();
   } else {
@@ -514,6 +521,9 @@ function checkRank(sc, roomId, userId) {
     if(nextRank === 1){
       //一位だった場合は都落ちのためのフラグを立てておく。
       store[roomId]["users"][userId].firstPlace = true;
+    }else if(store[roomId]["users"][userId].firstPlace){
+      //一位以外は外しておく
+      store[roomId]["users"][userId].firstPlace = false;
     }
     //store[roomId]['users'][userId].rankReason = result.reason;
     store[roomId]["users"][userId].finishTime = new Date().getTime();
