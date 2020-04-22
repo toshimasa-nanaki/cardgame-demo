@@ -359,13 +359,6 @@ io.on("connection", socket => {
         );
         store[msg.id]["users"][lastId].rank =store[msg.id]["scoreTable"][store[msg.id].rankCount-1].rankId;
         store[msg.id]["users"][lastId].rankNum = store[msg.id].rankCount
-        // store[msg.id]["users"][lastId].rank =
-        //   store[msg.id]["scoreTable"][
-        //     Object.keys(store[msg.id]["users"]).length - 1
-        //   ].rankId;
-        // store[msg.id]["users"][lastId].rankNum = Object.keys(
-        //   store[msg.id]["users"]
-        // ).length;
         store[msg.id]["users"][lastId].finishTime = new Date().getTime();
         logger.debug(
           "最下位ユーザー:" + JSON.stringify(store[msg.id]["users"][lastId])
