@@ -346,7 +346,9 @@ $(function() {
     );
   });
   socket.on("giveToHigherStatus2", msg =>{
-    
+    $("#gameCommentaryArea").append(
+        "大富豪に"　+  msg.targetCard +"<br />"
+    );
   });
   socket.on("giveToLowerStatus2", msg =>{
     
