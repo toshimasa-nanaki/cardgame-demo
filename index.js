@@ -105,7 +105,8 @@ io.on("connection", socket => {
             rankReason: "",
             finishTime: 0,
             point: 0,
-            firstPlace: false
+            firstPlace: false,
+            giveCard: []
           }
         };
       } else {
@@ -117,7 +118,8 @@ io.on("connection", socket => {
           rankReason: "",
           finishTime: 0,
           point: 0,
-          firstPlace: false
+          firstPlace: false,
+          giveCard: []
         };
       }
       socket.join(joinInfo.roomId);
@@ -860,6 +862,7 @@ function notifyGiveCard(roomId, memberCount){
     const HigherUser1 = store[roomId]["order"][2]
     io.to(HigherUser1).emit("giveToLowerStatus1", {});
     io.to(LowerUser1).emit("giveToHigherStatus1", {targetCard: [store[roomId]['users'][LowerUser1].slice(-1)[0]]});
+    store[roomId]['users'][LowerUser1].giveCard.push(store[roomId]['users'][LowerUser1].slice(-1)[0]);
   }else{
     //4人以上
     const LowerUser1 = store[roomId]["order"][1]
@@ -870,6 +873,9 @@ function notifyGiveCard(roomId, memberCount){
     io.to(LowerUser2).emit("giveToHigherStatus2", {targetCard: [store[roomId]['users'][LowerUser2].slice(-1)[0], store[roomId]['users'][LowerUser2].slice(-2)[0]]});
     io.to(HigherUser1).emit("giveToLowerStatus1", {});
     io.to(LowerUser1).emit("giveToHigherStatus1", {targetCard: [store[roomId]['users'][LowerUser1].slice(-1)[0]]});
+    store[roomId]['users'][LowerUser1].giveCard.push(store[roomId]['users'][LowerUser1].slice(-1)[0]);
+    store[roomId]['users'][LowerUser2].giveCard.push(store[roomId]['users'][LowerUser2].slice(-1)[0]);
+    store[roomId]['users'][LowerUser2].giveCard.push(store[roomId]['users'][LowerUser2].slice(-2)[0]);
   }
 }
 
