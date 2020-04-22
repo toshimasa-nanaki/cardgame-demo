@@ -507,13 +507,14 @@ function checkRank(sc, roomId, userId) {
           return true;
         }
       });
-    // if(nextRank == 0){
-    //   //まだ誰もあがっていないといこと。
-    //   nextRank = 1;
-    // }
+
     store[roomId]["users"][userId].rank =
       store[roomId]["scoreTable"][nextRank - 1].rankId;
     store[roomId]["users"][userId].rankNum = nextRank;
+    if(nextRank === 1){
+      //一位だった場合は都落ちのためのフラグを立てておく。
+      store[roomId]["users"][userId].firstPlace = true;
+    }
     //store[roomId]['users'][userId].rankReason = result.reason;
     store[roomId]["users"][userId].finishTime = new Date().getTime();
   }
