@@ -317,6 +317,46 @@ $(function() {
       $("#gameCommentaryArea")[0].scrollHeight
     );
   });
+  socket.on("notNeedGiveCard", msg =>{
+    console.log("order accept");
+    if (msg.yourTurn) {
+      $("#send").prop("disabled", false);
+      $("#pass").prop("disabled", false);
+      $("#cardList input").prop("disabled", false);
+      //$("#order").text("あなたの番です");
+      $("#gameCommentaryArea").append(
+        "あなたのターンです。<br />"
+      );
+      if (msg.skip) {
+        socket.emit("pass", {
+          id: $("input[name=roomRadios]:checked").val()
+        });
+      }
+    } else {
+      $("#send").prop("disabled", true);
+      $("#pass").prop("disabled", true);
+      $("#cardList input").prop("disabled", true);
+      //$("#order").text(msg.playerName + "の番です");
+      $("#gameCommentaryArea").append(
+        msg.playerName + "さんのターンです。<br />"
+      );
+    }
+    $("#gameCommentaryArea").scrollTop(
+      $("#gameCommentaryArea")[0].scrollHeight
+    );
+  });
+  socket.on("giveToHigherStatus2", msg =>{
+    
+  });
+  socket.on("giveToLowerStatus2", msg =>{
+    
+  });
+  socket.on("giveToHigherStatus1", msg =>{
+    
+  });
+  socket.on("giveToLowerStatus1", msg =>{
+    
+  });
   socket.on("order", function(msg) {
     console.log("order accept");
     if (msg.flag) {

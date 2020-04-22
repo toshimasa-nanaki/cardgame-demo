@@ -174,8 +174,11 @@ io.on("connection", socket => {
         io.to(socket.id).emit("giveToHigherStatus1", { targetCard: [store[msg.id]['users'][socket.id].slice(-1)[0]]});
       }else if(store[msg.id]["order"].indexOf(socket.id) == 2){
         //富豪？
+        io.to(socket.id).emit("giveToLowerStatus1", {});
+      }else{
+        io.to(socket.id).emit("giveCardWaiting", {});
       }
-    }else{
+    }else if (store[msg.id]["order"].length >= 4){
       if(store[msg.id]["order"].indexOf(socket.id) == 0){
         //大貧民？
         io.to(socket.id).emit("giveToHigherStatus2", { targetCard: [store[msg.id]['users'][socket.id].slice(-1)[0], store[msg.id]['users'][socket.id].slice(-2)[0]] });
@@ -188,15 +191,18 @@ io.on("connection", socket => {
       }else if(store[msg.id]["order"].indexOf(socket.id) == store[msg.id]["order"].length - 2){
         //富豪？
         io.to(socket.id).emit("giveToLowerStatus1", {});
+      }else{
+        io.to(socket.id).emit("giveCardWaiting", {});
       }
+    }else{
+      io.to(socket.id).emit("notNeedGiveCard", {});
     }
     
-    
   });
-  io.to(HigherUser2).emit("giveToLowerStatus2", {});
-    io.to(LowerUser2).emit("giveToHigherStatus2", {targetCard: [store[roomId]['users'][LowerUser2].slice(-1)[0], store[roomId]['users'][LowerUser2].slice(-2)[0]]});
-    io.to(HigherUser1).emit("giveToLowerStatus1", {});
-    io.to(LowerUser1).emit("giveToHigherStatus1", {targetCard: [store[roomId]['users'][LowerUser1].slice(-1)[0]]});
+  // io.to(HigherUser2).emit("giveToLowerStatus2", {});
+  //   io.to(LowerUser2).emit("giveToHigherStatus2", {targetCard: [store[roomId]['users'][LowerUser2].slice(-1)[0], store[roomId]['users'][LowerUser2].slice(-2)[0]]});
+  //   io.to(HigherUser1).emit("giveToLowerStatus1", {});
+  //   io.to(LowerUser1).emit("giveToHigherStatus1", {targetCard: [store[roomId]['users'][LowerUser1].slice(-1)[0]]});
   
   socket.on("validate", function(msg) {
     const orderList = store[msg.id]["order"];
