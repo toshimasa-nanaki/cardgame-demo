@@ -287,7 +287,7 @@ $(function() {
       $("#cardList2").append(li);
     });
     if(msg.gameNum >= 2){
-      socket.emit("giveCardReady", {});
+      socket.emit("giveCardReady", {id: $("input[name=roomRadios]:checked").val()});
       return;
     }
     console.log("order accept");
