@@ -463,7 +463,7 @@ $(function() {
     $("#gameController").hide();
     if(msg.rankReason !== ""){
       //何か問題があったと判断
-      $("#gameCommentaryArea").append(LOSE_REASON_DIC[msg.rankReason]);
+      $("#gameCommentaryArea").append(LOSE_REASON_DIC[msg.rankReason] + "<br/>");
     }
     $("#gameCommentaryArea").append("ゲームが終了したため、観戦モードに移行します。<br />");
   });

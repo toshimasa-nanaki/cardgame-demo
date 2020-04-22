@@ -312,11 +312,20 @@ io.on("connection", socket => {
         Object.keys(store[msg.id][users]).forEach(key => {
           if(store[msg.id][users][key].firstPlace){
             //都落ちなので、ゲーム終了。とりあえず大貧民にしておく
-            store[msg.id]["users"][key].rankNum = false;
-            store[msg.id]["users"][key].rank = ;
+            store[msg.id]["users"][key].rankNum = Object.keys(store[msg.id][users]).length;
+            store[msg.id]["users"][key].rank =
+              store[msg.id]["scoreTable"][Object.keys(store[msg.id]["users"]).length - 1].rankId;
             store[msg.id]["users"][key].firstPlace = false;
-            store[msg.id]["users"][key].rankReason = result.reason;
+            store[msg.id]["users"][key].rankReason = "fallingOutCity";
             store[msg.id]["users"][key].finishTime = new Date().getTime();
+            io.to(orderList[key]).emit("finish", {
+              rankReason: store[msg.id]["users"][key].rankReason
+            });
+            //みんなに知らせる
+            io.to(store[msg.id].roomId).emit("finishNotification", {
+              playerName: users[orderList[key]].dispName,
+              rankReason: store[msg.id]["users"][key].rankReason
+            });
           }
         });
       }
@@ -526,7 +535,7 @@ function checkRank(sc, roomId, userId) {
         return 0;
       })
       .some(function(val) {
-        if (store[roomId]["users"][val].rankNum != 4) {
+        if (store[roomId]["users"][val].rankNum != Object.keys(store[roomId]["users"]).length) {
           nextRank = store[roomId]["users"][val].rankNum + 1;
           return true;
         }
