@@ -303,6 +303,23 @@ io.on("connection", socket => {
         playerName: users[orderList[currentTurn]].dispName,
         rankReason: store[msg.id]["users"][socket.id].rankReason
       });
+      if(store[msg.id].gameNum != 1 &&
+        store[msg.id][users].length >= 4 && 
+        !store[msg.id][users][socket.id].firstPlace && 
+         store[msg.id][users][socket.id].rankNum == 1){
+        //都落ちが発生。
+        //前回一位じゃなかったものが一位になっている場合は、都落ちが発生する。
+        Object.keys(store[msg.id][users]).forEach(key => {
+          if(store[msg.id][users][key].firstPlace){
+            //都落ちなので、ゲーム終了。とりあえず大貧民にしておく
+            store[msg.id]["users"][key].rankNum = false;
+            store[msg.id]["users"][key].rank = ;
+            store[msg.id]["users"][key].firstPlace = false;
+            store[msg.id]["users"][key].rankReason = result.reason;
+            store[msg.id]["users"][key].finishTime = new Date().getTime();
+          }
+        });
+      }
       store[msg.id].finishNum = store[msg.id].finishNum + 1;
       store[msg.id].passCount = -1;
       //store[msg.id]['order'].splice(currentTurn, 1);
