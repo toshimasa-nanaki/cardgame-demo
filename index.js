@@ -789,7 +789,42 @@ function gameInit(count, sockets, roomId) {
   handOutCards(count, roomId);
 
   //準備完了通知
-  notifyGameReady(roomId);
+  if(store[roomId].gameNum == 1){
+    //1回目のゲームの場合は完了通知を送る。
+    notifyGameReady(roomId);
+  }else{
+    //2回目以降はまず献上が先に実施される。(Orderが降順になっているので、それを利用する)
+    if(Object.keys(store[roomId]["users"]).length >= 3){
+      //3人以上の時
+      notifyGiveCard(roomId, Object.keys(store[roomId]["users"]).length);
+    }else{
+      //2人の時などは献上はなし
+      notifyGameReady(roomId);
+    }
+    
+    io.to(store[roomId]["order"][0]).emit("gameReady", {
+      gameNum: store[roomId].gameNum,
+      card: users[orders[0]].card,
+      yourTurn: true,
+      playerName: users[orders[0]].dispName
+    });
+  }
+  
+}
+
+function notifyGiveCard(roomId, memberCount){
+  if(memberCount ===3){
+    //3人のとき
+    io.to(store[roomId]["order"][0]).emit("gameReady", {
+      gameNum: store[roomId].gameNum,
+      card: users[orders[0]].card,
+      yourTurn: true,
+      playerName: users[orders[0]].dispName
+    });
+  }else{
+    //4人以上
+    
+  }
 }
 
 function decideOrder(roomId) {
