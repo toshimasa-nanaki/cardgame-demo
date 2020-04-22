@@ -332,6 +332,9 @@ io.on("connection", socket => {
           }
         });
       }
+      if(store[msg.id]["users"][socket.id].rankNum == 1){
+        store[msg.id]["users"][socket.id].firstPlace = true;
+      }
       store[msg.id].finishNum = store[msg.id].finishNum + 1;
       store[msg.id].passCount = -1;
       //store[msg.id]['order'].splice(currentTurn, 1);
@@ -547,13 +550,13 @@ function checkRank(sc, roomId, userId) {
     store[roomId]["users"][userId].rank =
       store[roomId]["scoreTable"][nextRank - 1].rankId;
     store[roomId]["users"][userId].rankNum = nextRank;
-    if(nextRank === 1){
-      //一位だった場合は都落ちのためのフラグを立てておく。
-      store[roomId]["users"][userId].firstPlace = true;
-    }else if(store[roomId]["users"][userId].firstPlace){
-      //一位以外は外しておく
-      store[roomId]["users"][userId].firstPlace = false;
-    }
+    // if(nextRank === 1){
+    //   //一位だった場合は都落ちのためのフラグを立てておく。
+    //   store[roomId]["users"][userId].firstPlace = true;
+    // }else if(store[roomId]["users"][userId].firstPlace){
+    //   //一位以外は外しておく
+    //   store[roomId]["users"][userId].firstPlace = false;
+    // }
     //store[roomId]['users'][userId].rankReason = result.reason;
     store[roomId]["users"][userId].finishTime = new Date().getTime();
   }
