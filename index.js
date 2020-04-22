@@ -357,7 +357,7 @@ io.on("connection", socket => {
           "最下位ユーザーに入るscoreTable:" +
             JSON.stringify(store[msg.id]["scoreTable"])
         );
-        store[msg.id]["users"][lastId].rank =store[msg.id]["scoreTable"][
+        store[msg.id]["users"][lastId].rank =store[msg.id]["scoreTable"][store[msg.id].rankCount-1].rankId;
         store[msg.id]["users"][lastId].rankNum = store[msg.id].rankCount
         // store[msg.id]["users"][lastId].rank =
         //   store[msg.id]["scoreTable"][
@@ -562,7 +562,7 @@ function checkRank(sc, roomId, userId) {
     //   //一位以外は外しておく
     //   store[roomId]["users"][userId].firstPlace = false;
     // }
-    //store[roomId]['users'][userId].rankReason = result.reason;
+    store[roomId]['users'][userId].rankReason = result.reason;
     store[roomId]["users"][userId].finishTime = new Date().getTime();
     store[roomId].rankCount = store[roomId].rankCount + 1;
   }
@@ -787,6 +787,7 @@ function gameInit(count, sockets, roomId) {
   store[roomId].stair = false;
   store[roomId]["order"] = [];
   store[roomId].startedGame = true;
+  store[roomId].rankCount = 1;
 
   //まずは順番決め
   decideOrder(roomId);
