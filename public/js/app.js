@@ -347,14 +347,16 @@ $(function() {
   });
   socket.on("giveToHigherStatus2", msg =>{
     $("#gameCommentaryArea").append(
-        "大富豪に"　+  msg.targetCard +"<br />"
+        "大富豪に"　+  DISPLAY_DIC[msg.targetCard[0].type + msg.targetCard[0].number] + "と" + DISPLAY_DIC[msg.targetCard[1].type + msg.targetCard[1].number] +"を渡します。<br />"
     );
   });
   socket.on("giveToLowerStatus2", msg =>{
     
   });
   socket.on("giveToHigherStatus1", msg =>{
-    
+    $("#gameCommentaryArea").append(
+        "富豪に"　+  DISPLAY_DIC[msg.targetCard[0].type + msg.targetCard[0].number] + "を渡します。<br />"
+    );
   });
   socket.on("giveToLowerStatus1", msg =>{
     
