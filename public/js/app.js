@@ -247,7 +247,9 @@ $(function() {
       $("#gameCommentaryArea")[0].scrollHeight
     );
     $("#gameFieldArea").show();
-    $("#gameController").show();
+    if(msg.gameNum == 1){
+      $("#gameController").show();
+    }
     $("#rank").text("");
     $("#rematch").hide();
     $("#seiseki").text("");
@@ -264,7 +266,6 @@ $(function() {
     msg.card.forEach(element => {
       const cardType = element.number + element.type;
       const imgUri = "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" + DISPLAY_IMAGE_ID[element.type + element.number] + ".png";
-      //const svgInfo = $("#" + DISPLAY_IMAGE_ID[element.type + element.number])[0].innerHTML;
       //画像データを取得する
       let img = $('<img class="handCardImage" src="' + imgUri + '"></img>').attr({
           value: element.type + "_" + element.number
@@ -285,6 +286,10 @@ $(function() {
       let li = $('<li id="' + element.type + element.number + '"></li>').append(box);
       $("#cardList2").append(li);
     });
+    if(msg.gameNum >= 2){
+      socket.emit("giveCardReady", {});
+      return;
+    }
     console.log("order accept");
     if (msg.yourTurn) {
       $("#send").prop("disabled", false);
