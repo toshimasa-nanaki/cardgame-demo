@@ -167,37 +167,45 @@ io.on("connection", socket => {
     notifyChangeTurn(currentTurn, msg.id);
   });
   socket.on("giveCardReady", (msg) => {
-    //それぞれのidに対して譲渡モードに移行するかどうか送る。
-    if(store[msg.id]["order"].length == 3){
-      if(store[msg.id]["order"].indexOf(socket.id) == 0){
-        //貧民？
-        io.to(socket.id).emit("giveToHigherStatus1", { targetCard: [store[msg.id]['users'][socket.id].slice(-1)[0]]});
-      }else if(store[msg.id]["order"].indexOf(socket.id) == 2){
-        //富豪？
-        io.to(socket.id).emit("giveToLowerStatus1", {});
-      }else{
-        io.to(socket.id).emit("giveCardWaiting", {});
-      }
-    }else if (store[msg.id]["order"].length >= 4){
-      if(store[msg.id]["order"].indexOf(socket.id) == 0){
-        //大貧民？
-        io.to(socket.id).emit("giveToHigherStatus2", { targetCard: [store[msg.id]['users'][socket.id].slice(-1)[0], store[msg.id]['users'][socket.id].slice(-2)[0]] });
-      }else if(store[msg.id]["order"].indexOf(socket.id) == store[msg.id]["order"].length - 1){
-        //大富豪？
-        io.to(socket.id).emit("giveToLowerStatus2", {});
-      }else if(store[msg.id]["order"].indexOf(socket.id) == 1){
-        //貧民？
-        io.to(socket.id).emit("giveToHigherStatus1", { targetCard: [store[msg.id]['users'][socket.id].slice(-1)[0]]});
-      }else if(store[msg.id]["order"].indexOf(socket.id) == store[msg.id]["order"].length - 2){
-        //富豪？
-        io.to(socket.id).emit("giveToLowerStatus1", {});
-      }else{
-        io.to(socket.id).emit("giveCardWaiting", {});
-      }
-    }else{
-      io.to(socket.id).emit("notNeedGiveCard", {});
-    }
+//     //それぞれのidに対して譲渡モードに移行するかどうか送る。
+//     if(store[msg.id]["order"].length == 3){
+//       if(store[msg.id]["order"].indexOf(socket.id) == 0){
+//         //貧民？
+//         io.to(socket.id).emit("giveToHigherStatus1", { targetCard: [store[msg.id]['users'][socket.id].slice(-1)[0]]});
+//       }else if(store[msg.id]["order"].indexOf(socket.id) == 2){
+//         //富豪？
+//         io.to(socket.id).emit("giveToLowerStatus1", {});
+//       }else{
+//         io.to(socket.id).emit("giveCardWaiting", {});
+//       }
+//     }else if (store[msg.id]["order"].length >= 4){
+//       if(store[msg.id]["order"].indexOf(socket.id) == 0){
+//         //大貧民？
+//         io.to(socket.id).emit("giveToHigherStatus2", { targetCard: [store[msg.id]['users'][socket.id].slice(-1)[0], store[msg.id]['users'][socket.id].slice(-2)[0]] });
+//       }else if(store[msg.id]["order"].indexOf(socket.id) == store[msg.id]["order"].length - 1){
+//         //大富豪？
+//         io.to(socket.id).emit("giveToLowerStatus2", {});
+//       }else if(store[msg.id]["order"].indexOf(socket.id) == 1){
+//         //貧民？
+//         io.to(socket.id).emit("giveToHigherStatus1", { targetCard: [store[msg.id]['users'][socket.id].slice(-1)[0]]});
+//       }else if(store[msg.id]["order"].indexOf(socket.id) == store[msg.id]["order"].length - 2){
+//         //富豪？
+//         io.to(socket.id).emit("giveToLowerStatus1", {});
+//       }else{
+//         io.to(socket.id).emit("giveCardWaiting", {});
+//       }
+//     }else{
+//       io.to(socket.id).emit("notNeedGiveCard", {});
+//     }
     
+  });
+  socket.on("giveToLowerStatus2", (msg) => {
+    //大富豪から大貧民への送り
+    notifyGameReady(msg.id);
+  });
+  socket.on("giveToLowerStatus1", (msg) => {
+    //富豪から貧民への送り
+    notifyGameReady(msg.id);
   });
   // io.to(HigherUser2).emit("giveToLowerStatus2", {});
   //   io.to(LowerUser2).emit("giveToHigherStatus2", {targetCard: [store[roomId]['users'][LowerUser2].slice(-1)[0], store[roomId]['users'][LowerUser2].slice(-2)[0]]});

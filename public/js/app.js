@@ -286,10 +286,10 @@ $(function() {
       let li = $('<li id="' + element.type + element.number + '"></li>').append(box);
       $("#cardList2").append(li);
     });
-    if(msg.gameNum >= 2){
-      socket.emit("giveCardReady", {id: $("input[name=roomRadios]:checked").val()});
-      return;
-    }
+    // if(msg.gameNum >= 2){
+    //   socket.emit("giveCardReady", {id: $("input[name=roomRadios]:checked").val()});
+    //   return;
+    // }
     console.log("order accept");
     if (msg.yourTurn) {
       $("#send").prop("disabled", false);
@@ -351,7 +351,9 @@ $(function() {
     );
   });
   socket.on("giveToLowerStatus2", msg =>{
-    
+    $("#gameCommentaryArea").append(
+        "大貧民に渡すカードを選んでください。<br />"
+    );
   });
   socket.on("giveToHigherStatus1", msg =>{
     $("#gameCommentaryArea").append(
@@ -359,7 +361,9 @@ $(function() {
     );
   });
   socket.on("giveToLowerStatus1", msg =>{
-    
+    $("#gameCommentaryArea").append(
+        "貧民に渡すカードを選んでください。<br />"
+    );
   });
   socket.on("order", function(msg) {
     console.log("order accept");
