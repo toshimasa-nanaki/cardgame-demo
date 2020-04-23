@@ -80,6 +80,7 @@ io.on("connection", socket => {
       order: [],
       startedGame: false,
       rankCount: 1,
+      giveCardCount: 0
     };
     store[createRoomId] = roomObj;
     logger.info("createdRoom:  " + roomObj.roomDispName);
@@ -169,36 +170,6 @@ io.on("connection", socket => {
     notifyChangeTurn(currentTurn, msg.id);
   });
   socket.on("giveCardReady", (msg) => {
-//     //それぞれのidに対して譲渡モードに移行するかどうか送る。
-//     if(store[msg.id]["order"].length == 3){
-//       if(store[msg.id]["order"].indexOf(socket.id) == 0){
-//         //貧民？
-//         io.to(socket.id).emit("giveToHigherStatus1", { targetCard: [store[msg.id]['users'][socket.id].slice(-1)[0]]});
-//       }else if(store[msg.id]["order"].indexOf(socket.id) == 2){
-//         //富豪？
-//         io.to(socket.id).emit("giveToLowerStatus1", {});
-//       }else{
-//         io.to(socket.id).emit("giveCardWaiting", {});
-//       }
-//     }else if (store[msg.id]["order"].length >= 4){
-//       if(store[msg.id]["order"].indexOf(socket.id) == 0){
-//         //大貧民？
-//         io.to(socket.id).emit("giveToHigherStatus2", { targetCard: [store[msg.id]['users'][socket.id].slice(-1)[0], store[msg.id]['users'][socket.id].slice(-2)[0]] });
-//       }else if(store[msg.id]["order"].indexOf(socket.id) == store[msg.id]["order"].length - 1){
-//         //大富豪？
-//         io.to(socket.id).emit("giveToLowerStatus2", {});
-//       }else if(store[msg.id]["order"].indexOf(socket.id) == 1){
-//         //貧民？
-//         io.to(socket.id).emit("giveToHigherStatus1", { targetCard: [store[msg.id]['users'][socket.id].slice(-1)[0]]});
-//       }else if(store[msg.id]["order"].indexOf(socket.id) == store[msg.id]["order"].length - 2){
-//         //富豪？
-//         io.to(socket.id).emit("giveToLowerStatus1", {});
-//       }else{
-//         io.to(socket.id).emit("giveCardWaiting", {});
-//       }
-//     }else{
-//       io.to(socket.id).emit("notNeedGiveCard", {});
-//     }
     
   });
   socket.on("giveToLowerStatus2", (msg) => {
@@ -209,10 +180,6 @@ io.on("connection", socket => {
     //富豪から貧民への送り
     notifyGameReady(msg.id);
   });
-  // io.to(HigherUser2).emit("giveToLowerStatus2", {});
-  //   io.to(LowerUser2).emit("giveToHigherStatus2", {targetCard: [store[roomId]['users'][LowerUser2].slice(-1)[0], store[roomId]['users'][LowerUser2].slice(-2)[0]]});
-  //   io.to(HigherUser1).emit("giveToLowerStatus1", {});
-  //   io.to(LowerUser1).emit("giveToHigherStatus1", {targetCard: [store[roomId]['users'][LowerUser1].slice(-1)[0]]});
   
   socket.on("validate", function(msg) {
     const orderList = store[msg.id]["order"];
@@ -487,8 +454,8 @@ io.on("connection", socket => {
       //もらうカードを増やす
       store[msg.id]['users'][socket.id].card.push(store[msg.id]['users'][store[msg.id]['order'][yourOrder]].giveCard[0]);
       //もらったカードは向こうのユーザーから消す
-      store[msg.id]['users'][store[msg.id]['order'][yourOrder]].giveCard = [];
-      removeCard(msg.cards, store[msg.id]['order'][yourOrder], msg.id);
+      removeCard(store[msg.id]['users'][store[msg.id]['order'][yourOrder]].giveCard, store[msg.id]['order'][yourOrder], msg.id);
+      store[msg.id]['users'][store[msg.id]['order'][yourOrder]].giveCard = [];      
       //こちらのカードを相手に渡す。
       store[msg.id]['users'][store[msg.id]['order'][yourOrder]].card.push(msg.cards[0]);
     }else{
@@ -497,8 +464,8 @@ io.on("connection", socket => {
         store[msg.id]['users'][socket.id].card.push(store[msg.id]['users'][store[msg.id]['order'][yourOrder]].giveCard[0]);
         store[msg.id]['users'][socket.id].card.push(store[msg.id]['users'][store[msg.id]['order'][yourOrder]].giveCard[1]);
         //もらったカードは向こうのユーザーから消す
+        removeCard(store[msg.id]['users'][store[msg.id]['order'][yourOrder]].giveCard, store[msg.id]['order'][yourOrder], msg.id);
         store[msg.id]['users'][store[msg.id]['order'][yourOrder]].giveCard = [];
-        removeCard(msg.cards, store[msg.id]['order'][yourOrder], msg.id);
         //こちらのカードを相手に渡す。
         store[msg.id]['users'][store[msg.id]['order'][yourOrder]].card.push(msg.cards[0]);
         store[msg.id]['users'][store[msg.id]['order'][yourOrder]].card.push(msg.cards[1]);
@@ -506,8 +473,8 @@ io.on("connection", socket => {
         //貧民とのやりとり
         store[msg.id]['users'][socket.id].card.push(store[msg.id]['users'][store[msg.id]['order'][yourOrder]].giveCard[0]);
         //もらったカードは向こうのユーザーから消す
+        removeCard(store[msg.id]['users'][store[msg.id]['order'][yourOrder]].giveCard, store[msg.id]['order'][yourOrder], msg.id);
         store[msg.id]['users'][store[msg.id]['order'][yourOrder]].giveCard = [];
-        removeCard(msg.cards, store[msg.id]['order'][yourOrder], msg.id);
         //こちらのカードを相手に渡す。
         store[msg.id]['users'][store[msg.id]['order'][yourOrder]].card.push(msg.cards[0]);
       }

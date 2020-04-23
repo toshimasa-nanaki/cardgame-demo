@@ -35,7 +35,7 @@ ul#giveCardList li {
   /* liが横並びになるようにします。 */
   display: inline-block;
 }
-ul#giveCardList li .giveCardImage {
+ul#giveCardList li .giveCardViewImage {
   width: 90px;
   height: 100px;
 }

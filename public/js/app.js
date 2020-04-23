@@ -349,7 +349,7 @@ $(function() {
     $("#giveCard").show();
     msg.targetCard.forEach(element => {
       const imgUri = "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" + DISPLAY_IMAGE_ID[element.type + element.number] + ".png";
-      let li = $('<li></li>').append($('<img class="giveCardImage" src="' + imgUri + '"></img>'));
+      let li = $('<li></li>').append($('<img class="giveCardViewImage" src="' + imgUri + '"></img>'));
       $("#giveCardList").append(li);
     });
     $("#giveCardCommentaryArea").append(
@@ -390,7 +390,7 @@ $(function() {
     $("#giveCard").show();
     msg.targetCard.forEach(element => {
       const imgUri = "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" + DISPLAY_IMAGE_ID[element.type + element.number] + ".png";
-      let li = $('<li></li>').append($('<img class="giveCardImage" src="' + imgUri + '"></img>'));
+      let li = $('<li></li>').append($('<img class="giveCardViewImage" src="' + imgUri + '"></img>'));
       $("#giveCardList").append(li);
     });
     $("#giveCardCommentaryArea").append(
@@ -441,6 +441,10 @@ $(function() {
       cards: giveCards,
       id: $("input[name=roomRadios]:checked").val()
     });
+    $("#giveCardCommentaryArea").append(
+        "カードの譲渡処理が終了するまでお待ちください。<br />"
+    );
+    $("#gameController2").hide();
   });
   
   socket.on("order", function(msg) {
