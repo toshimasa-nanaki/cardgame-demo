@@ -1,4 +1,5 @@
-import { store, io } from './index';
+//import { store, io } from './index';
+var item = require('./index.js');
 const log4js = require("log4js");
 const logger = log4js.getLogger();
 // const app = require("express")();
@@ -7,21 +8,21 @@ const logger = log4js.getLogger();
 
 exports.load_common_event = function(socket) {
   socket.on("disconnect", () => {
-    const roomIds = Object.keys(store);
+    const roomIds = Object.keys(item.store);
     for (const roomId of roomIds) {
-      if (~Object.keys(store[roomId]["users"]).indexOf(socket.id)) {
+      if (~Object.keys(item.store[roomId]["users"]).indexOf(socket.id)) {
         logger.warn(
-          store[roomId]["users"][socket.id].dispName +
+          item.store[roomId]["users"][socket.id].dispName +
             "が" +
-            store[roomId].roomDispName +
+            item.store[roomId].roomDispName +
             "から退出"
         );
-        logger.debug("storeの状態" + JSON.stringify(store));
-        delete store[roomId]["users"][socket.id];
+        logger.debug("storeの状態" + JSON.stringify(item.store));
+        delete item.store[roomId]["users"][socket.id];
         socket.leave(roomId);
-        if (store[roomId].startedGame) {
-          logger.debug("送る" + JSON.stringify(roomId) + "と" + store[roomId].roomId);
-          io.to(store[roomId].roomId).emit("releaseRoom", {
+        if (item.store[roomId].startedGame) {
+          logger.debug("送る" + JSON.stringify(roomId) + "と" + item.store[roomId].roomId);
+          item.io.to(item.store[roomId].roomId).emit("releaseRoom", {
             reason: "goOutRoom"
           });
         }

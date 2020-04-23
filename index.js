@@ -28,6 +28,7 @@ var express = require("express");
 var app = require("express")();
 var http = require("http").Server(app);
 let io = require("socket.io")(http);
+exports.io = io;
 const log4js = require("log4js");
 const logger = log4js.getLogger();
 var SocketEvent = require('./socketEvent');
@@ -35,7 +36,8 @@ logger.level = "debug";
 // io.set('heartbeat interval', 5000);
 // io.set('heartbeat timeout', 15000);
 var port = process.env.PORT || 3000;
-export let store = {};
+let store = {};
+exports.store = store;
 const ORIGINALCARDDATA = trump_init(TRUMP_TEMP);
 
 app.get("/", function(req, res) {
