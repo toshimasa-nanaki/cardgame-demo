@@ -140,7 +140,7 @@ $(function() {
       $("<img>").attr("src", "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" + DISPLAY_IMAGE_ID[key] + ".png");
     });
   }
-  //関数の呼び出し。引数には先読みしておく画像のパスを指定  
+  //関数の呼び出し。
   mypreload();
   // 画像がクリックされた時の処理です。
   $('img.handCardImage').click(function() {
@@ -358,6 +358,9 @@ $(function() {
     $("#gameCommentaryArea").append(
         "大富豪に上記の"　+  DISPLAY_DIC[msg.targetCard[0].type + msg.targetCard[0].number] + "と" + DISPLAY_DIC[msg.targetCard[1].type + msg.targetCard[1].number] +"を渡します。<br />"
     );
+    $("#gameCommentaryArea").scrollTop(
+      $("#gameCommentaryArea")[0].scrollHeight
+    );
   });
   socket.on("giveToLowerStatus2", msg =>{
     $("#giveCard").show();
@@ -388,6 +391,9 @@ $(function() {
     $("#gameCommentaryArea").append(
         "大貧民に渡すカードを選んでください。<br />"
     );
+    $("#gameCommentaryArea").scrollTop(
+      $("#gameCommentaryArea")[0].scrollHeight
+    );
   });
   socket.on("giveToHigherStatus1", msg =>{
     $("#giveCard").show();
@@ -398,6 +404,9 @@ $(function() {
     });
     $("#gameCommentaryArea").append(
         "富豪に上記の"　+  DISPLAY_DIC[msg.targetCard[0].type + msg.targetCard[0].number] + "を渡します。<br />"
+    );
+    $("#gameCommentaryArea").scrollTop(
+      $("#gameCommentaryArea")[0].scrollHeight
     );
   });
   socket.on("giveToLowerStatus1", msg =>{
@@ -429,6 +438,9 @@ $(function() {
     $("#gameCommentaryArea").append(
         "貧民に渡すカードを選んでください。<br />"
     );
+    $("#gameCommentaryArea").scrollTop(
+      $("#gameCommentaryArea")[0].scrollHeight
+    );
   });
   $("#give").click(function() {
     let giveCards = [];
@@ -446,6 +458,9 @@ $(function() {
     });
     $("#gameCommentaryArea").append(
         "カードの譲渡処理が終了するまでお待ちください。<br />"
+    );
+    $("#gameCommentaryArea").scrollTop(
+      $("#gameCommentaryArea")[0].scrollHeight
     );
     $("#gameController2").hide();
   });
@@ -624,7 +639,7 @@ $(function() {
     });
       $("#battleResult"+ msg.gameNum).append(mes);
     $("#battle"+ msg.gameNum).show();
-    $("#gameCommentaryArea").append("10秒後に次のゲームを始めます。<br />");
+    //$("#gameCommentaryArea").append("10秒後に次のゲームを始めます。<br />");
     
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
@@ -640,12 +655,16 @@ $(function() {
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );
-    sleep(10, function () {
-      socket.emit("rematch", {
+    socket.emit("rematch", {
         id: $("input[name=roomRadios]:checked").val(),
         roomid: $("input[name=roomRadios]:checked").val()
       });
-    });
+    // sleep(10, function () {
+    //   socket.emit("rematch", {
+    //     id: $("input[name=roomRadios]:checked").val(),
+    //     roomid: $("input[name=roomRadios]:checked").val()
+    //   });
+    // });
   });
   socket.on("gameSet", function(msg) {
     console.log("game set");
@@ -716,32 +735,4 @@ $(function() {
     }, 1000);
   }
   
-  // socket.on("giveToLowerStatus2", (info)=>{
-  //   $("#gameController2").show();
-  //   $("#ereleaseRoomModalBody").text(ERROR_DIC[info.reason]);
-  //   $("#releaseRoomModal").modal({backdrop: "static", keyboard: false});
-  // });
-  // socket.on("giveToHigherStatus2", (info)=>{
-  //   console.log("部屋がリリースされました");
-  //   $("#releaseRoomModalBody").text("");
-  //   $("#ereleaseRoomModalBody").text(ERROR_DIC[info.reason]);
-  //   $("#releaseRoomModal").modal({backdrop: "static", keyboard: false});
-  // });
-  // socket.on("giveToLowerStatus1", (info)=>{
-  //   console.log("部屋がリリースされました");
-  //   $("#releaseRoomModalBody").text("");
-  //   $("#ereleaseRoomModalBody").text(ERROR_DIC[info.reason]);
-  //   $("#releaseRoomModal").modal({backdrop: "static", keyboard: false});
-  // });
-  // socket.on("giveToHigherStatus1", (info)=>{
-  //   console.log("部屋がリリースされました");
-  //   $("#releaseRoomModalBody").text("");
-  //   $("#ereleaseRoomModalBody").text(ERROR_DIC[info.reason]);
-  //   $("#releaseRoomModal").modal({backdrop: "static", keyboard: false});
-  // });
-  
-  // io.to(HigherUser2).emit("giveToLowerStatus2", {});
-  //   io.to(LowerUser2).emit("giveToHigherStatus2", {targetCard: [store[roomId]['users'][LowerUser2].slice(-1)[0], store[roomId]['users'][LowerUser2].slice(-2)[0]]});
-  //   io.to(HigherUser1).emit("giveToLowerStatus1", {});
-  //   io.to(LowerUser1).emit("giveToHigherStatus1", {targetCard: [store[roomId]['users'][LowerUser1].slice(-1)[0]]});
 });
