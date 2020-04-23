@@ -31,6 +31,16 @@ ul#field li .fieldCardImage {
   width: 90px;
   height: 100px;
 }
+ul#giveCardList li {
+  /* liが横並びになるようにします。 */
+  display: inline-block;
+}
+ul#giveCardList li .image_box {
+  width: 60px;
+  height: 70px;
+  /* チェックボックスの親要素にrelativeを指定しておきます。 */
+  position: relative;
+}
 img.giveCardImage{
   width:100%;
   height:100%;

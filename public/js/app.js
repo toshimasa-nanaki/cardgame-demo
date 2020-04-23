@@ -358,6 +358,7 @@ $(function() {
   });
   socket.on("giveToLowerStatus2", msg =>{
     $("#giveCard").show();
+    $("#gameController2").show();
     msg.targetCard.forEach(element => {
       const cardType = element.number + element.type;
       const imgUri = "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" + DISPLAY_IMAGE_ID[element.type + element.number] + ".png";
@@ -398,6 +399,7 @@ $(function() {
   });
   socket.on("giveToLowerStatus1", msg =>{
     $("#giveCard").show();
+    $("#gameController2").show();
     msg.targetCard.forEach(element => {
       const cardType = element.number + element.type;
       const imgUri = "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" + DISPLAY_IMAGE_ID[element.type + element.number] + ".png";
