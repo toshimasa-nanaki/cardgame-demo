@@ -247,9 +247,11 @@ $(function() {
       $("#gameCommentaryArea")[0].scrollHeight
     );
     $("#gameFieldArea").show();
-    if(msg.gameNum == 1){
-      $("#gameController").show();
-    }
+//     if(msg.gameNum == 1){
+      
+//     }
+    $("#gameController").show();
+    $("#giveCardCommentaryArea").hide();
     $("#rank").text("");
     $("#rematch").hide();
     $("#seiseki").text("");
