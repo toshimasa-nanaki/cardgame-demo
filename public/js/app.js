@@ -247,6 +247,7 @@ $(function() {
       $("#gameCommentaryArea")[0].scrollHeight
     );
     $("#gameFieldArea").show();
+    
 //     if(msg.gameNum == 1){
       
 //     }
@@ -266,6 +267,7 @@ $(function() {
     $("#pass").prop("disabled", true);
     $("#cardList").empty();
     $("#cardList2").empty();
+    $("#giveCardList").empty();
     msg.card.forEach(element => {
       const cardType = element.number + element.type;
       const imgUri = "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" + DISPLAY_IMAGE_ID[element.type + element.number] + ".png";
@@ -631,6 +633,7 @@ $(function() {
   });
   socket.on("gameFinish", function(msg) {
     console.log("game finish");
+    $("#field").empty();
     $("#gameCommentaryArea").append("あなたは、" + RANKING_DIC[msg.rank] + "です。<br />");
     let mes = "";
     msg.ranking.forEach(function(ele){
@@ -668,8 +671,9 @@ $(function() {
   });
   socket.on("gameSet", function(msg) {
     console.log("game set");
-    //$("#rematch").show();
-    $("#gameCommentaryArea").append("あなたは、" + RANKING_DIC[msg.rank] + "です。<br />");
+    //TODO 渡し方次第な気がする。
+    //$("#gameCommentaryArea").append("あなたは、" + RANKING_DIC[msg.rank] + "です。<br />");
+    $("#gameCommentaryArea").append("第" + msg.gameNum + "回の結果は以下の通りです。<br />");
     let mes = "";
     msg.ranking.forEach(function(ele){
       $("#gameCommentaryArea").append(ele.dispName + "さん : " + RANKING_DIC[ele.rank] + "<br />");
@@ -683,7 +687,7 @@ $(function() {
       $("#gameCommentaryArea")[0].scrollHeight
     );
     
-    $("#gameCommentaryArea").append("総合成績は以下の通りです");
+    $("#gameCommentaryArea").append("総合成績は以下の通りです。<br />");
     let rank = 1;
     msg.overall.forEach(function(ele){
       $("#gameCommentaryArea").append(rank + "位:" + ele.dispName + "さん<br />");
