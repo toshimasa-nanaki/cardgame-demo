@@ -473,6 +473,11 @@ io.on("connection", socket => {
     }
     notifyChangeTurn(currentTurn, msg.id);
   });
+  socket.on("selectedGiveCard", (msg) => {
+    //選択したカードを交換して、ゲームをスタートする。
+    
+    notifyGameReady(msg.id);
+  });
 });
 
 //ゲームセットの成績統計

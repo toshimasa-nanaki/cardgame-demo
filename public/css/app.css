@@ -31,6 +31,26 @@ ul#field li .fieldCardImage {
   width: 90px;
   height: 100px;
 }
+img.giveCardImage{
+  width:100%;
+  height:100%;
+/*   transform: scale(1,1);
+  border: 2px solid blue;
+  box-sizing: border-box; */
+}
+.image_box img.giveCardImage.checked {
+  /* チェックが入った状態だと、枠が表示されるようにします。 */
+  border: 3px solid blue;
+  /* 線をwidthとheightに含めるようにします。 */
+  box-sizing: border-box;
+}
+.image_box img.giveCardImage.checked + .disabled_checkbox {
+  /* 画像にcheckedクラスが指定されたときは、
+  チェックボックスの非表示を解除します。 */
+  display: block;
+}
+
+
 img.handCardImage{
   width:100%;
   height:100%;

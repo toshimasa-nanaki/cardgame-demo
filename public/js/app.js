@@ -381,7 +381,7 @@ $(function() {
       const cardType = element.number + element.type;
       const imgUri = "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" + DISPLAY_IMAGE_ID[element.type + element.number] + ".png";
       //画像データを取得する
-      let img = $('<img class="handCardImage" src="' + imgUri + '"></img>').attr({
+      let img = $('<img class="giveCardImage" src="' + imgUri + '"></img>').attr({
           value: element.type + "_" + element.number
         }).on('click', function() {
         if (!$(this).is('.checked')) {
@@ -405,8 +405,34 @@ $(function() {
     );
   });
   socket.on("giveToHigherStatus1", msg =>{
+    msg.targetCard.forEach(element => {
+      const imgUri = "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" + DISPLAY_IMAGE_ID[element.type + element.number] + ".png";
+      let li = $('<li></li>').append($('<img class="fieldCardImage" src="' + imgUri + '"></img>'));
+      $("#giveCardList").append(li);
+    //   const cardType = element.number + element.type;
+    //   const imgUri = "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" + DISPLAY_IMAGE_ID[element.type + element.number] + ".png";
+    //   //画像データを取得する
+    //   let img = $('<img class="handCardImage" src="' + imgUri + '"></img>').attr({
+    //       value: element.type + "_" + element.number
+    //     }).on('click', function() {
+    //     if (!$(this).is('.checked')) {
+    //   // チェックが入っていない画像をクリックした場合、チェックを入れます。
+    //   $(this).addClass('checked');
+    // } else {
+    //   // チェックが入っている画像をクリックした場合、チェックを外します。
+    //   $(this).removeClass('checked')
+    // }
+    //   });
+    //   var check = $('<input class="disabled_checkbox" type="checkbox" checked="" />').attr({
+    //       name: "cards",
+    //       value: element.type + "_" + element.number
+    //     }).on('click', function() {return false});
+    //   let box = $('<div class="image_box"/>').append(img).append(check);
+    //   let li = $('<li id="' + element.type + element.number + '"></li>').append(box);
+    //   $("#giveCardList").append(li);
+    });
     $("#giveCardCommentaryArea").append(
-        "富豪に"　+  DISPLAY_DIC[msg.targetCard[0].type + msg.targetCard[0].number] + "を渡します。<br />"
+        "富豪に上記の"　+  DISPLAY_DIC[msg.targetCard[0].type + msg.targetCard[0].number] + "を渡します。<br />"
     );
   });
   socket.on("giveToLowerStatus1", msg =>{
@@ -414,7 +440,7 @@ $(function() {
       const cardType = element.number + element.type;
       const imgUri = "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" + DISPLAY_IMAGE_ID[element.type + element.number] + ".png";
       //画像データを取得する
-      let img = $('<img class="handCardImage" src="' + imgUri + '"></img>').attr({
+      let img = $('<img class="giveCardImage" src="' + imgUri + '"></img>').attr({
           value: element.type + "_" + element.number
         }).on('click', function() {
         if (!$(this).is('.checked')) {
@@ -437,6 +463,22 @@ $(function() {
         "貧民に渡すカードを選んでください。<br />"
     );
   });
+  $("#give").click(function() {
+    let giveCards = [];
+    let cardarr;
+    $('img.giveCardImage.checked').each(function() {
+      cardarr = $(this)
+        .attr("value")
+        .split("_");
+      giveCards.push({ type: cardarr[0], number: Number(cardarr[1]) });
+    });
+    //カードの確認をしてもらう
+    socket.emit("selectedGiveCard", {
+      cards: giveCards,
+      id: $("input[name=roomRadios]:checked").val()
+    });
+  });
+  
   socket.on("order", function(msg) {
     console.log("order accept");
     if (msg.flag) {
