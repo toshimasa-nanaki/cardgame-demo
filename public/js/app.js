@@ -1,6 +1,6 @@
 $(function() {
   var socket = io();
-  const debugMode = true;
+  const debugMode =  true;
   const debugLog = (debugMode)? console.log.bind(console) : ()=>{};
   const RANKING_DIC = {
     daihugou: "大富豪",
@@ -227,7 +227,7 @@ $(function() {
   });
   socket.on("otherMemberJoinedRoom", function(joinMemberName) {
     //他のメンバーが部屋に入ったとき
-    console.log("otherMemberJoinedRoom");
+    debugLog("otherMemberJoinedRoom");
     $("#gameCommentaryArea").append(
       joinMemberName + "さんが部屋に入りました<br />"
     );
@@ -297,7 +297,7 @@ $(function() {
     //   socket.emit("giveCardReady", {id: $("input[name=roomRadios]:checked").val()});
     //   return;
     // }
-    console.log("order accept");
+    debugLog("order accept");
     if (msg.yourTurn) {
       $("#send").prop("disabled", false);
       $("#pass").prop("disabled", false);
@@ -325,7 +325,7 @@ $(function() {
     );
   });
   socket.on("notNeedGiveCard", msg =>{
-    console.log("order accept");
+    debugLog("order accept");
     if (msg.yourTurn) {
       $("#send").prop("disabled", false);
       $("#pass").prop("disabled", false);
@@ -470,7 +470,7 @@ $(function() {
   });
   
   socket.on("order", function(msg) {
-    console.log("order accept");
+    debugLog("order accept");
     if (msg.flag) {
       $("#send").prop("disabled", false);
       $("#pass").prop("disabled", false);
@@ -615,7 +615,7 @@ $(function() {
     );
   });
   socket.on("finish", function(msg) {
-    console.log("finish accept");
+    debugLog("finish accept");
     $("#cardList2").empty();
     $("#gameController").hide();
     if(msg.rankReason !== ""){
@@ -625,7 +625,7 @@ $(function() {
     $("#gameCommentaryArea").append("ゲームが終了したため、観戦モードに移行します。<br />");
   });
   socket.on("finishNotification", function(msg) {
-    console.log("finish accept notification");
+    debugLog("finish accept notification");
     if(msg.rankReason !== ""){
       //何か問題があったと判断
       $("#gameCommentaryArea").append(msg.playerName + "さんが、" + LOSE_REASON_DIC[msg.rankReason] + "<br />");
@@ -634,7 +634,7 @@ $(function() {
     }
   });
   socket.on("gameFinish", function(msg) {
-    console.log("game finish");
+    debugLog("game finish");
     $("#field").empty();
     $("#gameCommentaryArea").append("あなたは、" + RANKING_DIC[msg.rank] + "です。<br />");
     let mes = "";
@@ -651,7 +651,7 @@ $(function() {
     );
   });
   socket.on("nextGameStart", function(msg) {
-    console.log("next game start");
+    debugLog("next game start");
     //$("#rematch").show();
     msg.ranking.forEach(function(key){
       
@@ -672,7 +672,7 @@ $(function() {
     // });
   });
   socket.on("gameSet", function(msg) {
-    console.log("game set");
+    debugLog("game set");
     //TODO 渡し方次第な気がする。
     //$("#gameCommentaryArea").append("あなたは、" + RANKING_DIC[msg.rank] + "です。<br />");
     $("#gameCommentaryArea").append("第" + msg.gameNum + "回の結果は以下の通りです。<br />");
@@ -697,7 +697,7 @@ $(function() {
     });
   });
   socket.on("releaseRoom", (info)=>{
-    console.log("部屋がリリースされました");
+    debugLog("部屋がリリースされました");
     $("#releaseRoomModalBody").text("");
     $("#releaseRoomModalBody").text(ERROR_DIC[info.reason]);
     $("#releaseRoomModal").modal({backdrop: "static", keyboard: false});
