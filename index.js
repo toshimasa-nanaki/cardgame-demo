@@ -485,14 +485,33 @@ io.on("connection", socket => {
     //人数により相手が異なる。
     if(store[msg.id].capacity === 3){
       //もらうカードを増やす
-      store[msg.id]['users'][socket.id].card.push(store[msg.id]['users'][store[msg.id]['order'][2]].giveCard[0]);
+      store[msg.id]['users'][socket.id].card.push(store[msg.id]['users'][store[msg.id]['order'][yourOrder]].giveCard[0]);
       //もらったカードは向こうのユーザーから消す
-      store[msg.id]['users'][store[msg.id]['order'][2]].giveCard = [];
+      store[msg.id]['users'][store[msg.id]['order'][yourOrder]].giveCard = [];
+      removeCard(msg.cards, store[msg.id]['order'][yourOrder], msg.id);
       //こちらのカードを相手に渡す。
-      store[msg.id]['users'][store[msg.id]['order'][2]].card.push(msg.cards[0]);
+      store[msg.id]['users'][store[msg.id]['order'][yourOrder]].card.push(msg.cards[0]);
     }else{
-      store[msg.id]['users'][socket.id].card.push(store[msg.id]['users'][store[msg.id]['order'][0]].giveCard[0]);
-      store[msg.id]['users'][socket.id].card.push(store[msg.id]['users'][store[msg.id]['order'][0]].giveCard[1]);
+      if(yourOrder === 0){
+        //大貧民とのやりとり
+        store[msg.id]['users'][socket.id].card.push(store[msg.id]['users'][store[msg.id]['order'][yourOrder]].giveCard[0]);
+        store[msg.id]['users'][socket.id].card.push(store[msg.id]['users'][store[msg.id]['order'][yourOrder]].giveCard[1]);
+        //もらったカードは向こうのユーザーから消す
+        store[msg.id]['users'][store[msg.id]['order'][yourOrder]].giveCard = [];
+        removeCard(msg.cards, store[msg.id]['order'][yourOrder], msg.id);
+        //こちらのカードを相手に渡す。
+        store[msg.id]['users'][store[msg.id]['order'][yourOrder]].card.push(msg.cards[0]);
+        store[msg.id]['users'][store[msg.id]['order'][yourOrder]].card.push(msg.cards[1]);
+      }else if(yourOrder === 1){
+        //貧民とのやりとり
+        store[msg.id]['users'][socket.id].card.push(store[msg.id]['users'][store[msg.id]['order'][yourOrder]].giveCard[0]);
+        //もらったカードは向こうのユーザーから消す
+        store[msg.id]['users'][store[msg.id]['order'][yourOrder]].giveCard = [];
+        removeCard(msg.cards, store[msg.id]['order'][yourOrder], msg.id);
+        //こちらのカードを相手に渡す。
+        store[msg.id]['users'][store[msg.id]['order'][yourOrder]].card.push(msg.cards[0]);
+      }
+      
     }
     notifyGameReady(msg.id);
   });
@@ -884,7 +903,7 @@ function notifyGiveCard(roomId, memberCount){
     const LowerUser1 = store[roomId]["order"][0]
     const HigherUser1 = store[roomId]["order"][2]
     io.to(HigherUser1).emit("giveToLowerStatus1", {targetCard: store[roomId]['users'][HigherUser1].card});
-    io.to(LowerUser1).emit("giveToHigherStatus1", {targetCard: [store[roomId]['users'][LowerUser1].slice(-1)[0]]});
+    io.to(LowerUser1).emit("giveToHigherStatus1", {targetCard: [store[roomId]['users'][LowerUser1].card.slice(-1)[0]]});
     store[roomId]['users'][LowerUser1].giveCard.push(store[roomId]['users'][LowerUser1].slice(-1)[0]);
   }else{
     //4人以上
@@ -893,12 +912,12 @@ function notifyGiveCard(roomId, memberCount){
     const LowerUser2 = store[roomId]["order"][0]
     const HigherUser2 = store[roomId]["order"][memberCount-1]
     io.to(HigherUser2).emit("giveToLowerStatus2", {targetCard: store[roomId]['users'][HigherUser2].card});
-    io.to(LowerUser2).emit("giveToHigherStatus2", {targetCard: [store[roomId]['users'][LowerUser2].slice(-1)[0], store[roomId]['users'][LowerUser2].slice(-2)[0]]});
+    io.to(LowerUser2).emit("giveToHigherStatus2", {targetCard: [store[roomId]['users'][LowerUser2].card.slice(-1)[0], store[roomId]['users'][LowerUser2].card.slice(-2)[0]]});
     io.to(HigherUser1).emit("giveToLowerStatus1", {targetCard: store[roomId]['users'][HigherUser1].card});
-    io.to(LowerUser1).emit("giveToHigherStatus1", {targetCard: [store[roomId]['users'][LowerUser1].slice(-1)[0]]});
-    store[roomId]['users'][LowerUser1].giveCard.push(store[roomId]['users'][LowerUser1].slice(-1)[0]);
-    store[roomId]['users'][LowerUser2].giveCard.push(store[roomId]['users'][LowerUser2].slice(-1)[0]);
-    store[roomId]['users'][LowerUser2].giveCard.push(store[roomId]['users'][LowerUser2].slice(-2)[0]);
+    io.to(LowerUser1).emit("giveToHigherStatus1", {targetCard: [store[roomId]['users'][LowerUser1].card.slice(-1)[0]]});
+    store[roomId]['users'][LowerUser1].giveCard.push(store[roomId]['users'][LowerUser1].card.slice(-1)[0]);
+    store[roomId]['users'][LowerUser2].giveCard.push(store[roomId]['users'][LowerUser2].card.slice(-1)[0]);
+    store[roomId]['users'][LowerUser2].giveCard.push(store[roomId]['users'][LowerUser2].card.slice(-2)[0]);
   }
 }
 
