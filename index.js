@@ -860,7 +860,7 @@ function notifyGiveCard(roomId, memberCount){
     //3人のとき
     const LowerUser1 = store[roomId]["order"][0]
     const HigherUser1 = store[roomId]["order"][2]
-    io.to(HigherUser1).emit("giveToLowerStatus1", {});
+    io.to(HigherUser1).emit("giveToLowerStatus1", {targetCard: store[roomId]['users'][HigherUser1].card});
     io.to(LowerUser1).emit("giveToHigherStatus1", {targetCard: [store[roomId]['users'][LowerUser1].slice(-1)[0]]});
     store[roomId]['users'][LowerUser1].giveCard.push(store[roomId]['users'][LowerUser1].slice(-1)[0]);
   }else{
@@ -869,9 +869,9 @@ function notifyGiveCard(roomId, memberCount){
     const HigherUser1 = store[roomId]["order"][memberCount-2]
     const LowerUser2 = store[roomId]["order"][0]
     const HigherUser2 = store[roomId]["order"][memberCount-1]
-    io.to(HigherUser2).emit("giveToLowerStatus2", {});
+    io.to(HigherUser2).emit("giveToLowerStatus2", {targetCard: store[roomId]['users'][HigherUser2].card});
     io.to(LowerUser2).emit("giveToHigherStatus2", {targetCard: [store[roomId]['users'][LowerUser2].slice(-1)[0], store[roomId]['users'][LowerUser2].slice(-2)[0]]});
-    io.to(HigherUser1).emit("giveToLowerStatus1", {});
+    io.to(HigherUser1).emit("giveToLowerStatus1", {targetCard: store[roomId]['users'][HigherUser1].card});
     io.to(LowerUser1).emit("giveToHigherStatus1", {targetCard: [store[roomId]['users'][LowerUser1].slice(-1)[0]]});
     store[roomId]['users'][LowerUser1].giveCard.push(store[roomId]['users'][LowerUser1].slice(-1)[0]);
     store[roomId]['users'][LowerUser2].giveCard.push(store[roomId]['users'][LowerUser2].slice(-1)[0]);
