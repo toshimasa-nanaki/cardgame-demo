@@ -1,6 +1,6 @@
 $(function() {
   var socket = io();
-  const debugMode =  true;
+  const debugMode =  location.search.substring(1) === "debug=true" ? true : false;
   const debugLog = (debugMode)? console.log.bind(console) : ()=>{};
   const RANKING_DIC = {
     daihugou: "大富豪",
