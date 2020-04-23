@@ -1,5 +1,7 @@
 $(function() {
   var socket = io();
+  const debugMode = true;
+  const debugLog = (debugMode)? console.log.bind(console) : ()=>{};
   const RANKING_DIC = {
     daihugou: "大富豪",
     hugou: "富豪",
@@ -162,20 +164,20 @@ $(function() {
   });
   socket.on("createdRoom", function(roomList) {
     //部屋作成完了後
-    console.log("CreatedRoom");
+    debugLog("CreatedRoom");
     createSelectRoomRadioButton(roomList);
   });
 
   socket.on("showRoomList", function(roomList) {
     //サーバ接続時に部屋一覧を渡す
-    console.log("ShowRoom");
+    debugLog("ShowRoom");
     createSelectRoomRadioButton(roomList);
   });
 
   // 部屋一覧のラジオボタン生成
   function createSelectRoomRadioButton(roomList) {
     Object.keys(roomList).forEach(function(key) {
-      console.log(roomList[key]);
+      debugLog(roomList[key]);
       const div = $('<div class="form-check"></div>');
       div.append(
         $('<input type="radio" />').attr({
@@ -211,7 +213,7 @@ $(function() {
   });
   socket.on("joinedRoom", function(joinMembers) {
     //部屋ジョイン後
-    console.log("JoinedRoom");
+    debugLog("JoinedRoom");
     $("#roomSelectArea").hide();
     $("#gameArea").show();
     Object.keys(joinMembers).forEach(function(key) {
