@@ -1,12 +1,16 @@
-      * {
+/*       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-      }
+      } */
       /*       body { font: 13px Helvetica, Arial; } */
 /*       div#roomInputArea {
         display: none;
       } */
+body {
+  min-height: 75rem;
+  padding-top: 4.5rem;
+}
 div#battle1,div#battle2,div#battle3,div#battle4 {
   display:none;
 }
