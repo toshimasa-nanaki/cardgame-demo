@@ -478,7 +478,16 @@ io.on("connection", socket => {
     
     //あげたカードを消す
     removeCard(msg.cards, socket.id, msg.id);
-    if()
+    //自分のランク
+    let myOrder = store[msg.id]['order'].indexOf(socket.id);
+    //let lower = store[msg.id]['order']
+    //人数により相手が異なる。
+    if(store[msg.id].capacity === 3){
+      //もらうカードを増やす
+      store[msg.id]['users'][socket.id].card.push(store[msg.id]['users'][store[msg.id]['order'][0]]);
+    }else{
+      
+    }
     notifyGameReady(msg.id);
   });
 });
