@@ -79,6 +79,16 @@ div#gameCommentaryArea {
     height:100px;
     overflow:auto;
 }
+div#giveCardCommentaryArea {
+    padding:5px;
+    border:solid 1px #000;
+    font: 13px Helvetica, Arial;
+    height:100px;
+    overflow:auto;
+}
+div#giveCard{
+  display: none;
+}
       div#gameFieldArea {
         display: none;
       }
