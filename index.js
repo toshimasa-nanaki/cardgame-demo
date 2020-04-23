@@ -20,8 +20,8 @@ const DEBUG_TRUMPDATA = {
   joker: 0
 };
 //debug用フラグ
-const debug = false;
-console.log(typeof)
+const debug = process.env.DEBUG === "true" ? true : false;
+
 const TRUMP_TEMP = debug ? DEBUG_TRUMPDATA : TRUMPDATA;
 
 var express = require("express");
@@ -44,7 +44,6 @@ app.use("/css", express.static("public/css"));
 app.use("/js", express.static("public/js"));
 
 io.on("connection", socket => {
-  logger.debug(process.env.DEBUG);
   //最初の接続時に現在のルーム一覧を送る
   logger.debug(JSON.stringify(store));
   io.to(socket.id).emit("showRoomList", store);
