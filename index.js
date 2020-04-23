@@ -458,6 +458,13 @@ io.on("connection", socket => {
       store[msg.id]['users'][store[msg.id]['order'][yourOrder]].giveCard = [];      
       //こちらのカードを相手に渡す。
       store[msg.id]['users'][store[msg.id]['order'][yourOrder]].card.push(msg.cards[0]);
+      
+      store[msg.id].giveCardCount = store[msg.id].giveCardCount + 1;
+      if(store[msg.id].giveCardCount == 1){
+        notifyGameReady(msg.id);
+      }else{
+        //TODO 何か送ってもいいかもしれないが、いったん保留で
+      }
     }else{
       if(yourOrder === 0){
         //大貧民とのやりとり
@@ -478,9 +485,16 @@ io.on("connection", socket => {
         //こちらのカードを相手に渡す。
         store[msg.id]['users'][store[msg.id]['order'][yourOrder]].card.push(msg.cards[0]);
       }
+      store[msg.id].giveCardCount = store[msg.id].giveCardCount + 1;
+      
+      if(store[msg.id].giveCardCount == 2){
+        notifyGameReady(msg.id);
+      }else{
+        //TODO 何か送ってもいいかもしれないが、いったん保留で
+      }
       
     }
-    notifyGameReady(msg.id);
+    
   });
 });
 
@@ -941,6 +955,7 @@ function handOutCards(count, roomId) {
 }
 
 function notifyGameReady(roomId) {
+  store[roomId].giveCardCount =  0;
   const orders = store[roomId]["order"];
   const users = store[roomId]["users"];
   io.to(orders[0]).emit("gameReady", {
