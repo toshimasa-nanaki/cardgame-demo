@@ -476,6 +476,9 @@ io.on("connection", socket => {
   socket.on("selectedGiveCard", (msg) => {
     //選択したカードを交換して、ゲームをスタートする。
     
+    //あげたカードを消す
+    removeCard(msg.cards, socket.id, msg.id);
+    if()
     notifyGameReady(msg.id);
   });
 });
