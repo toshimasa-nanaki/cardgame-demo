@@ -58,6 +58,9 @@ io.on("connection", socket => {
         if(store[roomId].startedGame){
           io.to(store[roomId].roomId).emit("releaseRoom", {reason : "goOutRoom"});
         }
+        //TODO 部屋の状態もおかしくなるので削除する
+        //delete store[roomId];
+        
       }
     }
   });
