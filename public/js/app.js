@@ -251,7 +251,8 @@ $(function() {
       
 //     }
     $("#gameController").show();
-    $("#giveCardCommentaryArea").hide();
+    $("#giveCard").hide();
+    // $("#giveCardCommentaryArea").hide();
     $("#rank").text("");
     $("#rematch").hide();
     $("#seiseki").text("");
@@ -354,7 +355,7 @@ $(function() {
       let li = $('<li></li>').append($('<img class="giveCardViewImage" src="' + imgUri + '"></img>'));
       $("#giveCardList").append(li);
     });
-    $("#giveCardCommentaryArea").append(
+    $("#gameCommentaryArea").append(
         "大富豪に上記の"　+  DISPLAY_DIC[msg.targetCard[0].type + msg.targetCard[0].number] + "と" + DISPLAY_DIC[msg.targetCard[1].type + msg.targetCard[1].number] +"を渡します。<br />"
     );
   });
@@ -384,7 +385,7 @@ $(function() {
       let li = $('<li id="' + element.type + element.number + '"></li>').append(box);
       $("#giveCardList").append(li);
     });
-    $("#giveCardCommentaryArea").append(
+    $("#gameCommentaryArea").append(
         "大貧民に渡すカードを選んでください。<br />"
     );
   });
@@ -395,7 +396,7 @@ $(function() {
       let li = $('<li></li>').append($('<img class="giveCardViewImage" src="' + imgUri + '"></img>'));
       $("#giveCardList").append(li);
     });
-    $("#giveCardCommentaryArea").append(
+    $("#gameCommentaryArea").append(
         "富豪に上記の"　+  DISPLAY_DIC[msg.targetCard[0].type + msg.targetCard[0].number] + "を渡します。<br />"
     );
   });
@@ -425,7 +426,7 @@ $(function() {
       let li = $('<li id="' + element.type + element.number + '"></li>').append(box);
       $("#giveCardList").append(li);
     });
-    $("#giveCardCommentaryArea").append(
+    $("#gameCommentaryArea").append(
         "貧民に渡すカードを選んでください。<br />"
     );
   });
@@ -443,7 +444,7 @@ $(function() {
       cards: giveCards,
       id: $("input[name=roomRadios]:checked").val()
     });
-    $("#giveCardCommentaryArea").append(
+    $("#gameCommentaryArea").append(
         "カードの譲渡処理が終了するまでお待ちください。<br />"
     );
     $("#gameController2").hide();
@@ -673,7 +674,7 @@ $(function() {
   socket.on("releaseRoom", (info)=>{
     console.log("部屋がリリースされました");
     $("#releaseRoomModalBody").text("");
-    $("#ereleaseRoomModalBody").text(ERROR_DIC[info.reason]);
+    $("#releaseRoomModalBody").text(ERROR_DIC[info.reason]);
     $("#releaseRoomModal").modal({backdrop: "static", keyboard: false});
   });
   $("#releaseRoomModalButton").click(()=>{
