@@ -27,7 +27,7 @@ const TRUMP_TEMP = debug ? DEBUG_TRUMPDATA : TRUMPDATA;
 var express = require("express");
 var app = require("express")();
 var http = require("http").Server(app);
-var io = require("socket.io")(http);
+let io = require("socket.io")(http);
 const log4js = require("log4js");
 const logger = log4js.getLogger();
 var SocketEvent = require('./socketEvent');
@@ -35,7 +35,7 @@ logger.level = "debug";
 // io.set('heartbeat interval', 5000);
 // io.set('heartbeat timeout', 15000);
 var port = process.env.PORT || 3000;
-var store = {};
+export let store = {};
 const ORIGINALCARDDATA = trump_init(TRUMP_TEMP);
 
 app.get("/", function(req, res) {
@@ -49,24 +49,24 @@ io.on("connection", socket => {
   logger.debug(JSON.stringify(store));
   io.to(socket.id).emit("showRoomList", store);
 
-  socket.on("disconnect", () => {
-    //TODO ゲームがすでに始まっている場合は解散
-    const roomIds = Object.keys(store);
-    for (const roomId of roomIds) {
-      if (~Object.keys(store[roomId]['users']).indexOf(socket.id)) {
-        logger.warn(store[roomId]["users"][socket.id].dispName + "が" + store[roomId].roomDispName + "から退出");
-        delete store[roomId]["users"][socket.id];
-        socket.leave(roomId);
-        if(store[roomId].startedGame){
-          io.to(store[roomId].roomId).emit("releaseRoom", {reason : "goOutRoom"});
-        }
-        //TODO 部屋の状態もおかしくなるので削除する
-        //delete store[roomId];
+//   socket.on("disconnect", () => {
+//     //TODO ゲームがすでに始まっている場合は解散
+//     const roomIds = Object.keys(store);
+//     for (const roomId of roomIds) {
+//       if (~Object.keys(store[roomId]['users']).indexOf(socket.id)) {
+//         logger.warn(store[roomId]["users"][socket.id].dispName + "が" + store[roomId].roomDispName + "から退出");
+//         delete store[roomId]["users"][socket.id];
+//         socket.leave(roomId);
+//         if(store[roomId].startedGame){
+//           io.to(store[roomId].roomId).emit("releaseRoom", {reason : "goOutRoom"});
+//         }
+//         //TODO 部屋の状態もおかしくなるので削除する
+//         //delete store[roomId];
         
-      }
-    }
-  });
-  SocketEvent.load_common_event(socket, store);
+//       }
+//     }
+//   });
+  SocketEvent.load_common_event(socket, io);
   socket.on("requestRoomCreate", roomInfo => {
     const createRoomId = uniqueId();
     const roomObj = {
