@@ -24,11 +24,11 @@ const debug = process.env.DEBUG === "true" ? true : false;
 
 const TRUMP_TEMP = debug ? DEBUG_TRUMPDATA : TRUMPDATA;
 
-// var express = require("express");
-// var app = require("express")();
-// var http = require("http").Server(app);
-// let io = require("socket.io")(http);
-// exports.io = io;
+var express = require("express");
+var app = require("express")();
+var http = require("http").Server(app);
+let io = require("socket.io")(http);
+exports.io = io;
 
 const socketEvent = require('./socketEvent');
 const commonUtil = require('./commonUtil');
@@ -40,15 +40,15 @@ let store = {};
 exports.store = store;
 const ORIGINALCARDDATA = trump_init(TRUMP_TEMP);
 
-// app.get("/", function(req, res) {
-//   res.sendFile(__dirname + "/index.html");
-// });
-// app.use("/css", express.static("public/css"));
-// app.use("/js", express.static("public/js"));
+app.get("/", function(req, res) {
+  res.sendFile(__dirname + "/index.html");
+});
+app.use("/css", express.static("public/css"));
+app.use("/js", express.static("public/js"));
 
 commonUtil.io.on("connection", socket => {
   //最初の接続時に現在のルーム一覧を送る
-  commonUtil.logger.debug(JSON.stringify(store));
+  LOGGER.debug(JSON.stringify(store));
   commonUtil.io.to(socket.id).emit("showRoomList", store);
 
 //   socket.on("disconnect", () => {
