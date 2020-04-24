@@ -1,3 +1,5 @@
+"use strict";
+
 const commonUtil = require("./commonUtil.js");
 const storeData = require("./storeData.js");
 const index = require("./index.js");
@@ -29,8 +31,8 @@ module.exports.createRoom = roomInfo => {
   const createRoomId = commonUtil.createUniqueId();
   let roomObj = roomObjectTemp;
   roomObj["roomId"] = createRoomId;
-  roomObj["roomDispName"] = roomInfo.dispName == "" ? createDefaultRoomName() : roomInfo.dispName;
-  roomObj["capacity"] = roomInfo.capacity;
+  roomObj["roomDispName"] = roomInfo.dispName === "" ? createDefaultRoomName() : roomInfo.dispName;
+  roomObj["capacity"] = roomInfo.capacity === "" ? 4 : roomInfo.capacity;
   storeData.persistentData[createRoomId] = roomObj;
   LOGGER.info("createdRoom:  " + roomObj.roomDispName);
   io.emit("createdRoom", { [createRoomId]: roomObj });

@@ -1,3 +1,5 @@
+"use strict";
+
 const commonUtil = require("./commonUtil.js");
 const storeData = require("./storeData.js");
 const loggerUtil = require("./loggerUtil.js");
