@@ -5,6 +5,8 @@
 // const http = require("http").Server(app);
 // const io = require("socket.io")(http);
 const storeData = require("./storeData.js");
+const index = require("./index.js");
+const io = index.io;
 module.exports.load_common_event = (socket)=> {
   socket.on("disconnect", () => {
     const roomIds = Object.keys(storeData.persistentData);
@@ -21,13 +23,16 @@ module.exports.load_common_event = (socket)=> {
         socket.leave(roomId);
         if (storeData.persistentData[roomId].startedGame) {
           console.log("送る" + JSON.stringify(roomId) + "と" + storeData.persistentData[roomId].roomId);
-          // io.to(store[roomId].roomId).emit("releaseRoom", {
-          //   reason: "goOutRoom"
-          // });
+          io.to(storeData.persistentData[roomId].roomId).emit("releaseRoom", {
+            reason: "goOutRoom"
+          });
         }
         //TODO 部屋の状態もおかしくなるので削除する
         //delete store[roomId];
       }
     }
 });
+};
+
+module.exports.load_common_event = (socket)=> {
 };

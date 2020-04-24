@@ -2,22 +2,20 @@ const commonUtil = require("./commonUtil.js");
 const storeData = require("./storeData.js");
 const loggerUtil = require("./loggerUtil.js");
 const LOGGER = loggerUtil.logger;
-
-//debug用フラグ
-const debug = process.env.DEBUG === "true" ? true : false;
-
-const TRUMP_TEMP = debug ? commonUtil.DEBUG_TRUMPDATA : commonUtil.TRUMPDATA;
-
 var express = require("express");
 var app = require("express")();
 var http = require("http").Server(app);
 module.exports.io = require("socket.io")(http);
+const io = module.exports.io;
 
 var SocketEvent = require("./socketEvent");
 //LOGGER.level = "debug";
 // io.set('heartbeat interval', 5000);
 // io.set('heartbeat timeout', 15000);
 var port = process.env.PORT || 3000;
+//debug用フラグ
+const debug = process.env.DEBUG === "true" ? true : false;
+const TRUMP_TEMP = debug ? commonUtil.DEBUG_TRUMPDATA : commonUtil.TRUMPDATA;
 //let store = {};
 const ORIGINALCARDDATA = trump_init(TRUMP_TEMP);
 
@@ -27,10 +25,10 @@ app.get("/", function(req, res) {
 app.use("/css", express.static("public/css"));
 app.use("/js", express.static("public/js"));
 
-module.exports.io.on("connection", socket => {
+io.on("connection", socket => {
   //最初の接続時に現在のルーム一覧を送る
   LOGGER.debug(JSON.stringify(storeData.persistentData));
-  module.exports.io.to(socket.id).emit("showRoomList", storeData.persistentData);
+  io.to(socket.id).emit("showRoomList", storeData.persistentData);
 
   // socket.on("disconnect", () => {
   //   //TODO ゲームがすでに始まっている場合は解散
@@ -80,12 +78,12 @@ module.exports.io.on("connection", socket => {
     };
     storeData.persistentData[createRoomId] = roomObj;
     LOGGER.info("createdRoom:  " + roomObj.roomDispName);
-    module.exports.io.emit("createdRoom", { [createRoomId]: roomObj });
+    io.emit("createdRoom", { [createRoomId]: roomObj });
   });
   socket.on("join", joinInfo => {
     const roomCapacity = storeData.persistentData[joinInfo.roomId].capacity;
     if (Object.keys(storeData.persistentData[joinInfo.roomId]["users"]).length >= roomCapacity) {
-      module.exports.io.to(socket.id).emit("connectError", "roomFull");
+      io.to(socket.id).emit("connectError", "roomFull");
       return;
     }
     storeData.persistentData[joinInfo.roomId]["users"][socket.id] = {
@@ -100,9 +98,9 @@ module.exports.io.on("connection", socket => {
       giveCard: []
     };
     socket.join(joinInfo.roomId);
-    module.exports.io.to(socket.id).emit("joinedRoom", storeData.persistentData[joinInfo.roomId]["users"]);
+    io.to(socket.id).emit("joinedRoom", storeData.persistentData[joinInfo.roomId]["users"]);
     for (let [key, value] of Object.entries(storeData.persistentData[joinInfo.roomId]["users"])) {
-      if (key !== socket.id) module.exports.io.to(key).emit("otherMemberJoinedRoom", joinInfo.playerName);
+      if (key !== socket.id) io.to(key).emit("otherMemberJoinedRoom", joinInfo.playerName);
     }
     const currentPlayerNum = Object.keys(storeData.persistentData[joinInfo.roomId]["users"]).length;
     if (currentPlayerNum === roomCapacity) {
@@ -136,7 +134,7 @@ module.exports.io.on("connection", socket => {
       //パスで一周した場合流す
       LOGGER.debug("流します");
       fieldClear(msg.id);
-      module.exports.io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", { type: "cutPass" });
+      io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", { type: "cutPass" });
     }
 
     let currentTurn = orderList.indexOf(socket.id);
@@ -169,7 +167,7 @@ module.exports.io.on("connection", socket => {
     //役をチェック
     let resultCheckHand = checkValidateHand(validateCards);
     if (resultCheckHand.error !== 0) {
-      module.exports.io.to(socket.id).emit("validateError", {
+      io.to(socket.id).emit("validateError", {
         card: msg,
         error: 1,
         reason: "handError"
@@ -186,7 +184,7 @@ module.exports.io.on("connection", socket => {
       msg.id
     );
     if (resultCardCompare.error != 0) {
-      module.exports.io.to(socket.id).emit("validateError", {
+      io.to(socket.id).emit("validateError", {
         card: msg,
         error: 1,
         reason: resultCardCompare.reason
@@ -201,7 +199,7 @@ module.exports.io.on("connection", socket => {
       ) {
         //JOKER討伐(誰も倒せないから流す)
         fieldClear(msg.id);
-        module.exports.io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
+        io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
           type: "winjoker",
           value: msg,
           playerName: users[socket.id].dispName
@@ -213,7 +211,7 @@ module.exports.io.on("connection", socket => {
       }
       if (!storeData.persistentData[msg.id].shibari && isShibari(fieldCards, validateCards)) {
         storeData.persistentData[msg.id].shibari = true;
-        module.exports.io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
+        io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
           type: "shibari",
           value: storeData.persistentData[msg.id].shibari,
           playerName: users[socket.id].dispName
@@ -228,7 +226,7 @@ module.exports.io.on("connection", socket => {
     ) {
       //JOKER2枚だしは歯が立たないので流す
       fieldClear(msg.id);
-      module.exports.io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
+      io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
         type: "doblejoker",
         value: msg,
         playerName: users[socket.id].dispName
@@ -239,7 +237,7 @@ module.exports.io.on("connection", socket => {
     if (validateCards.length >= 4 && resultCheckHand.type !== "stair") {
       //革命(階段革命はない)
       storeData.persistentData[msg.id].revolution = !storeData.persistentData[msg.id].revolution;
-      module.exports.io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
+      io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
         type: "revolution",
         value: storeData.persistentData[msg.id].revolution,
         playerName: users[socket.id].dispName
@@ -248,7 +246,7 @@ module.exports.io.on("connection", socket => {
     if (validateCards[0].number == 8 && resultCheckHand.type !== "stair") {
       //8ぎり(階段のときは発生しない)
       fieldClear(msg.id);
-      module.exports.io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
+      io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
         type: "cut8",
         value: msg,
         playerName: users[socket.id].dispName
@@ -259,7 +257,7 @@ module.exports.io.on("connection", socket => {
     if (validateCards[0].number == 11 && resultCheckHand.type !== "stair") {
       //11back
       storeData.persistentData[msg.id].elevenback = !storeData.persistentData[msg.id].elevenback;
-      module.exports.io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
+      io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
         type: "elevenback",
         value: storeData.persistentData[msg.id].elevenback,
         playerName: users[socket.id].dispName
@@ -271,7 +269,7 @@ module.exports.io.on("connection", socket => {
       //階段役だった場合はフラグを立てる
       storeData.persistentData[msg.id].stair = true;
     }
-    module.exports.io.to(storeData.persistentData[msg.id].roomId).emit("result", {
+    io.to(storeData.persistentData[msg.id].roomId).emit("result", {
       card: validateCards,
       error: 0,
       reason: "",
@@ -283,11 +281,11 @@ module.exports.io.on("connection", socket => {
     if (users[socket.id].card.length <= 0) {
       //成績をチェックする。
       checkRank(validateCards, msg.id, socket.id);
-      module.exports.io.to(orderList[currentTurn]).emit("finish", {
+      io.to(orderList[currentTurn]).emit("finish", {
         rankReason: storeData.persistentData[msg.id]["users"][socket.id].rankReason
       });
       //みんなに知らせる
-      module.exports.io.to(storeData.persistentData[msg.id].roomId).emit("finishNotification", {
+      io.to(storeData.persistentData[msg.id].roomId).emit("finishNotification", {
         playerName: users[orderList[currentTurn]].dispName,
         rankReason: storeData.persistentData[msg.id]["users"][socket.id].rankReason
       });
@@ -317,11 +315,11 @@ module.exports.io.on("connection", socket => {
             storeData.persistentData[msg.id]["users"][key].firstPlace = false;
             storeData.persistentData[msg.id]["users"][key].rankReason = "fallingOutCity";
             storeData.persistentData[msg.id]["users"][key].finishTime = new Date().getTime();
-            module.exports.io.to(key).emit("finish", {
+            io.to(key).emit("finish", {
               rankReason: storeData.persistentData[msg.id]["users"][key].rankReason
             });
             //みんなに知らせる
-            module.exports.io.to(storeData.persistentData[msg.id].roomId).emit("finishNotification", {
+            io.to(storeData.persistentData[msg.id].roomId).emit("finishNotification", {
               playerName: users[key].dispName,
               rankReason: storeData.persistentData[msg.id]["users"][key].rankReason
             });
