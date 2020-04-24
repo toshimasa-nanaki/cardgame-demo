@@ -14,7 +14,8 @@ $(function() {
     diffSuitCards: "スートしばりに合ったカードを出してください。",
     loseCards: "場のカードより強いものを出してください。",
     handError: "役ができていません。",
-    goOutRoom: "プレイヤーの数が減ったため部屋を解散します。"
+    goOutRoom: "プレイヤーの数が減ったため部屋を解散します。",
+    roomFull: "この部屋は既に定員に達しています。"
   };
   const LOSE_REASON_DIC = {
     spade3Finish: "スペ3あがりのため、反則負けとなりました。",
@@ -237,7 +238,7 @@ $(function() {
   });
   socket.on("connectError", function(msg) {
     $("#errorModalBody").text("");
-    $("#errorModalBody").text(msg);
+    $("#errorModalBody").text(ERROR_DIC[msg]);
     $("#errorModal").modal();
   });
   //ゲームの準備ができたことを受け取る
