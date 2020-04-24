@@ -54,6 +54,7 @@ io.on("connection", socket => {
   //   }
   // });
   SocketEvent.load_common_event(socket);
+  SocketEvent.load_room_event(socket);
   // socket.on("requestRoomCreate", roomInfo => {
   //   const createRoomId = commonUtil.createUniqueId();
   //   const roomObj = {
@@ -705,22 +706,22 @@ function checkFoul(sc, roomId) {
 //   );
 // };
 
-let createdDefaultRoomName = function() {
-  let now = new Date();
-  return (
-    now.getFullYear() +
-    "_" +
-    (now.getMonth() + 1) +
-    "_" +
-    now.getDate() +
-    "_" +
-    now.getHours() +
-    ":" +
-    now.getMinutes() +
-    ":" +
-    now.getSeconds()
-  );
-};
+// let createdDefaultRoomName = function() {
+//   let now = new Date();
+//   return (
+//     now.getFullYear() +
+//     "_" +
+//     (now.getMonth() + 1) +
+//     "_" +
+//     now.getDate() +
+//     "_" +
+//     now.getHours() +
+//     ":" +
+//     now.getMinutes() +
+//     ":" +
+//     now.getSeconds()
+//   );
+// };
 
 function trump_init(trumpData) {
   var cards = [];

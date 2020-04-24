@@ -1,5 +1,9 @@
 const commonUtil = require("./commonUtil.js");
 const storeData = require("./storeData.js");
+const index = require("./index.js");
+const loggerUtil = require("./loggerUtil.js");
+const LOGGER = loggerUtil.logger;
+const io = index.io;
 
 let roomObjectTemp = {
   roomId: "", //部屋を一意に決めるID
@@ -16,34 +20,20 @@ let roomObjectTemp = {
   finishNum: 0, //上がったプレイヤーの数
   order: [], //順番
   startedGame: false, //ゲームが開始されているか否かのフラグ
-  rankCount: 1, //
-  giveCardCount: 0,
-  users: {}
+  rankCount: 1, //次に割り当てられる順位
+  giveCardCount: 0, //カードを譲渡を実施した回数(最大2回想定)
+  users: {} //ユーザ情報
 };
 
 module.exports.createRoom = roomInfo => {
   const createRoomId = commonUtil.createUniqueId();
-  const roomObj = {
-    roomId: createRoomId,
-    roomDispName:
-      roomInfo.dispName == "" ? createDefaultRoomName() : roomInfo.dispName,
-    capacity: roomInfo.capacity,
-    gameNum: 1,
-    passCount: 0,
-    elevenback: false,
-    shibari: false,
-    revolution: false,
-    stair: false,
-    fieldCards: [],
-    scoreTable: [],
-    finishNum: 0,
-    order: [],
-    startedGame: false,
-    rankCount: 1,
-    giveCardCount: 0,
-    users: {}
-  };
+  let roomObj = roomObjectTemp;
+  roomObj["roomId"] = createRoomId;
+  roomObj["roomDispName"] = roomInfo.dispName == "" ? createDefaultRoomName() : roomInfo.dispName;
+  roomObj["capacity"] = roomInfo.capacity;
   storeData.persistentData[createRoomId] = roomObj;
+  LOGGER.info("createdRoom:  " + roomObj.roomDispName);
+  io.emit("createdRoom", { [createRoomId]: roomObj });
 };
 
 module.exports.roomJoin = () => {};
