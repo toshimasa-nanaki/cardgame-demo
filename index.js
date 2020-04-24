@@ -31,8 +31,8 @@ let io = require("socket.io")(http);
 exports.io = io;
 
 const socketEvent = require('./socketEvent');
-const commonUtil = require('./commonUtil');
-const LOGGER = commonUtil.logger;
+// const commonUtil = require('./commonUtil');
+// const LOGGER = commonUtil.logger;
 // io.set('heartbeat interval', 5000);
 // io.set('heartbeat timeout', 15000);
 var port = process.env.PORT || 3000;

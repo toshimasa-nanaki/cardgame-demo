@@ -1,7 +1,7 @@
 //import { store, io } from './index';
 var item = require('./index.js');
-const commonUtil = require('./commonUtil');
-const LOGGER = commonUtil.logger;
+// const commonUtil = require('./commonUtil');
+// const LOGGER = commonUtil.logger;
 // const app = require("express")();
 // const http = require("http").Server(app);
 // const io = require("socket.io")(http);
@@ -11,17 +11,17 @@ exports.load_common_event = function(socket) {
     const roomIds = Object.keys(item.store);
     for (const roomId of roomIds) {
       if (~Object.keys(item.store[roomId]["users"]).indexOf(socket.id)) {
-        LOGGER.warn(
-          item.store[roomId]["users"][socket.id].dispName +
-            "が" +
-            item.store[roomId].roomDispName +
-            "から退出"
-        );
-        LOGGER.debug("storeの状態" + JSON.stringify(item.store));
+        //LOGGER.warn(
+        //   item.store[roomId]["users"][socket.id].dispName +
+        //     "が" +
+        //     item.store[roomId].roomDispName +
+        //     "から退出"
+        // );
+        //LOGGER.debug("storeの状態" + JSON.stringify(item.store));
         delete item.store[roomId]["users"][socket.id];
         socket.leave(roomId);
         if (item.store[roomId].startedGame) {
-          LOGGER.debug("送る" + JSON.stringify(roomId) + "と" + item.store[roomId].roomId);
+          //LOGGER.debug("送る" + JSON.stringify(roomId) + "と" + item.store[roomId].roomId);
           item.io.to(item.store[roomId].roomId).emit("releaseRoom", {
             reason: "goOutRoom"
           });
@@ -34,12 +34,12 @@ exports.load_common_event = function(socket) {
   
 exports.load_room_event = function(socket) {
   socket.on("requestRoomCreate", roomInfo => {
-    const createRoomId = uniqueId();
+    //const createRoomId = uniqueId();
     const roomObj = {
-      roomId: createRoomId,
-      roomDispName:
-        roomInfo.dispName == "" ? createdDefaultRoomName() : roomInfo.dispName,
-      capacity: roomInfo.capacity == "" ? 4 : roomInfo.capacity,
+    //  roomId: createRoomId,
+    //  roomDispName:
+   //     roomInfo.dispName == "" ? createdDefaultRoomName() : roomInfo.dispName,
+   //   capacity: roomInfo.capacity == "" ? 4 : roomInfo.capacity,
       gameNum: 1,
       passCount: 0,
       elevenback: false,
@@ -54,9 +54,9 @@ exports.load_room_event = function(socket) {
       rankCount: 1,
       giveCardCount: 0
     };
-    item.store[createRoomId] = roomObj;
-    LOGGER.info("createdRoom:  " + roomObj.roomDispName);
-    io.emit("createdRoom", { [createRoomId]: roomObj });
+    // item.store[createRoomId] = roomObj;
+    // LOGGER.info("createdRoom:  " + roomObj.roomDispName);
+    // io.emit("createdRoom", { [createRoomId]: roomObj });
   });
 };
 };
