@@ -56,7 +56,7 @@ exports.load_room_event = function(socket) {
     };
     item.store[createRoomId] = roomObj;
     LOGGER.info("createdRoom:  " + roomObj.roomDispName);
-    commonUtil.io.emit("createdRoom", { [createRoomId]: roomObj });
+    io.emit("createdRoom", { [createRoomId]: roomObj });
   });
 };
 };

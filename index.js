@@ -46,10 +46,10 @@ app.get("/", function(req, res) {
 app.use("/css", express.static("public/css"));
 app.use("/js", express.static("public/js"));
 
-commonUtil.io.on("connection", socket => {
+io.on("connection", socket => {
   //最初の接続時に現在のルーム一覧を送る
   LOGGER.debug(JSON.stringify(store));
-  commonUtil.io.to(socket.id).emit("showRoomList", store);
+  io.to(socket.id).emit("showRoomList", store);
 
 //   socket.on("disconnect", () => {
 //     //TODO ゲームがすでに始まっている場合は解散
@@ -92,7 +92,7 @@ commonUtil.io.on("connection", socket => {
     };
     store[createRoomId] = roomObj;
     LOGGER.info("createdRoom:  " + roomObj.roomDispName);
-    commonUtil.io.emit("createdRoom", { [createRoomId]: roomObj });
+    io.emit("createdRoom", { [createRoomId]: roomObj });
   });
   socket.on("join", joinInfo => {
     const count = store[joinInfo.roomId].capacity;
@@ -101,7 +101,7 @@ commonUtil.io.on("connection", socket => {
       typeof store[joinInfo.roomId]["users"] !== "undefined" &&
       Object.keys(store[joinInfo.roomId]["users"]).length >= count
     ) {
-      commonUtil.io.to(socket.id).emit("connectError", "もう部屋がいっぱいです");
+      io.to(socket.id).emit("connectError", "もう部屋がいっぱいです");
       return;
     } else {
       if (typeof store[joinInfo.roomId]["users"] === "undefined") {
@@ -132,10 +132,10 @@ commonUtil.io.on("connection", socket => {
         };
       }
       socket.join(joinInfo.roomId);
-      commonUtil.io.to(socket.id).emit("joinedRoom", store[joinInfo.roomId]["users"]);
+      io.to(socket.id).emit("joinedRoom", store[joinInfo.roomId]["users"]);
       Object.keys(store[joinInfo.roomId]["users"]).forEach(function(key) {
         if (key != socket.id) {
-          commonUtil.io.to(key).emit("otherMemberJoinedRoom", joinInfo.playerName);
+          io.to(key).emit("otherMemberJoinedRoom", joinInfo.playerName);
         }
       });
     }
@@ -170,7 +170,7 @@ commonUtil.io.on("connection", socket => {
       //パスで一周した場合流す
       LOGGER.debug("流します");
       fieldClear(msg.id);
-      commonUtil.io.to(store[msg.id].roomId).emit("changeStatus", { type: "cutPass" });
+      io.to(store[msg.id].roomId).emit("changeStatus", { type: "cutPass" });
     }
 
     let currentTurn = orderList.indexOf(socket.id);
@@ -205,7 +205,7 @@ commonUtil.io.on("connection", socket => {
     //役をチェック
     let resultCheckHand = checkValidateHand(validateCards);
     if (resultCheckHand.error !== 0) {
-      commonUtil.io.to(socket.id).emit("validateError", {
+      io.to(socket.id).emit("validateError", {
         card: msg,
         error: 1,
         reason: "handError"
@@ -222,7 +222,7 @@ commonUtil.io.on("connection", socket => {
       msg.id
     );
     if (resultCardCompare.error != 0) {
-      commonUtil.io.to(socket.id).emit("validateError", {
+      io.to(socket.id).emit("validateError", {
         card: msg,
         error: 1,
         reason: resultCardCompare.reason
@@ -237,7 +237,7 @@ commonUtil.io.on("connection", socket => {
       ) {
         //JOKER討伐(誰も倒せないから流す)
         fieldClear(msg.id);
-        commonUtil.io.to(store[msg.id].roomId).emit("changeStatus", {
+        io.to(store[msg.id].roomId).emit("changeStatus", {
           type: "winjoker",
           value: msg,
           playerName: users[socket.id].dispName
@@ -249,7 +249,7 @@ commonUtil.io.on("connection", socket => {
       }
       if (!store[msg.id].shibari && isShibari(fieldCards, validateCards)) {
         store[msg.id].shibari = true;
-        commonUtil.io.to(store[msg.id].roomId).emit("changeStatus", {
+        io.to(store[msg.id].roomId).emit("changeStatus", {
           type: "shibari",
           value: store[msg.id].shibari,
           playerName: users[socket.id].dispName
@@ -264,7 +264,7 @@ commonUtil.io.on("connection", socket => {
     ) {
       //JOKER2枚だしは歯が立たないので流す
       fieldClear(msg.id);
-      commonUtil.io.to(store[msg.id].roomId).emit("changeStatus", {
+      io.to(store[msg.id].roomId).emit("changeStatus", {
         type: "doblejoker",
         value: msg,
         playerName: users[socket.id].dispName
@@ -275,7 +275,7 @@ commonUtil.io.on("connection", socket => {
     if (validateCards.length >= 4 && resultCheckHand.type !== "stair") {
       //革命(階段革命はない)
       store[msg.id].revolution = !store[msg.id].revolution;
-      commonUtil.io.to(store[msg.id].roomId).emit("changeStatus", {
+      io.to(store[msg.id].roomId).emit("changeStatus", {
         type: "revolution",
         value: store[msg.id].revolution,
         playerName: users[socket.id].dispName
@@ -284,7 +284,7 @@ commonUtil.io.on("connection", socket => {
     if (validateCards[0].number == 8 && resultCheckHand.type !== "stair") {
       //8ぎり(階段のときは発生しない)
       fieldClear(msg.id);
-      commonUtil.io.to(store[msg.id].roomId).emit("changeStatus", {
+      io.to(store[msg.id].roomId).emit("changeStatus", {
         type: "cut8",
         value: msg,
         playerName: users[socket.id].dispName
@@ -295,7 +295,7 @@ commonUtil.io.on("connection", socket => {
     if (validateCards[0].number == 11 && resultCheckHand.type !== "stair") {
       //11back
       store[msg.id].elevenback = !store[msg.id].elevenback;
-      commonUtil.io.to(store[msg.id].roomId).emit("changeStatus", {
+      io.to(store[msg.id].roomId).emit("changeStatus", {
         type: "elevenback",
         value: store[msg.id].elevenback,
         playerName: users[socket.id].dispName
@@ -307,7 +307,7 @@ commonUtil.io.on("connection", socket => {
       //階段役だった場合はフラグを立てる
       store[msg.id].stair = true;
     }
-    commonUtil.io.to(store[msg.id].roomId).emit("result", {
+    io.to(store[msg.id].roomId).emit("result", {
       card: validateCards,
       error: 0,
       reason: "",
@@ -319,11 +319,11 @@ commonUtil.io.on("connection", socket => {
     if (users[socket.id].card.length <= 0) {
       //成績をチェックする。
       checkRank(validateCards, msg.id, socket.id);
-      commonUtil.io.to(orderList[currentTurn]).emit("finish", {
+      io.to(orderList[currentTurn]).emit("finish", {
         rankReason: store[msg.id]["users"][socket.id].rankReason
       });
       //みんなに知らせる
-      commonUtil.io.to(store[msg.id].roomId).emit("finishNotification", {
+      io.to(store[msg.id].roomId).emit("finishNotification", {
         playerName: users[orderList[currentTurn]].dispName,
         rankReason: store[msg.id]["users"][socket.id].rankReason
       });
@@ -344,11 +344,11 @@ commonUtil.io.on("connection", socket => {
             store[msg.id]["users"][key].firstPlace = false;
             store[msg.id]["users"][key].rankReason = "fallingOutCity";
             store[msg.id]["users"][key].finishTime = new Date().getTime();
-            commonUtil.io.to(key).emit("finish", {
+            io.to(key).emit("finish", {
               rankReason: store[msg.id]["users"][key].rankReason
             });
             //みんなに知らせる
-            commonUtil.io.to(store[msg.id].roomId).emit("finishNotification", {
+            io.to(store[msg.id].roomId).emit("finishNotification", {
               playerName: users[key].dispName,
               rankReason: store[msg.id]["users"][key].rankReason
             });
@@ -385,10 +385,10 @@ commonUtil.io.on("connection", socket => {
         LOGGER.debug(
           "最下位ユーザー:" + JSON.stringify(store[msg.id]["users"][lastId])
         );
-        commonUtil.io.to(lastId).emit("finish", {
+        io.to(lastId).emit("finish", {
           rankReason: store[msg.id]["users"][lastId].rankReason
         });
-        commonUtil.io.to(store[msg.id].roomId).emit("finishNotification", {
+        io.to(store[msg.id].roomId).emit("finishNotification", {
           playerName: users[lastId].dispName,
           rankReason: store[msg.id]["users"][lastId].rankReason
         });
@@ -424,7 +424,7 @@ commonUtil.io.on("connection", socket => {
               dispName: store[msg.id]["users"][key].dispName
             });
           });
-          commonUtil.io.to(store[msg.id].roomId).emit("gameSet", {
+          io.to(store[msg.id].roomId).emit("gameSet", {
             gameNum: store[msg.id].gameNum,
             ranking: displayRanking,
             overall: displayOverAllRanking
@@ -432,11 +432,11 @@ commonUtil.io.on("connection", socket => {
           return;
         } else {
           //次のゲームへ
-          commonUtil.io.to(store[msg.id].roomId).emit("gameFinish", {
+          io.to(store[msg.id].roomId).emit("gameFinish", {
             gameNum: store[msg.id].gameNum,
             ranking: displayRanking
           });
-          commonUtil.io.to(lastId).emit("nextGameStart", {
+          io.to(lastId).emit("nextGameStart", {
             gameNum: store[msg.id].gameNum + 1,
             ranking: displayRanking
           });
@@ -890,8 +890,8 @@ function notifyGiveCard(roomId, memberCount){
     //3人のとき
     const LowerUser1 = store[roomId]["order"][0]
     const HigherUser1 = store[roomId]["order"][2]
-    commonUtil.io.to(HigherUser1).emit("giveToLowerStatus1", {targetCard: store[roomId]['users'][HigherUser1].card});
-    commonUtil.io.to(LowerUser1).emit("giveToHigherStatus1", {targetCard: [store[roomId]['users'][LowerUser1].card.slice(-1)[0]]});
+    io.to(HigherUser1).emit("giveToLowerStatus1", {targetCard: store[roomId]['users'][HigherUser1].card});
+    io.to(LowerUser1).emit("giveToHigherStatus1", {targetCard: [store[roomId]['users'][LowerUser1].card.slice(-1)[0]]});
     store[roomId]['users'][LowerUser1].giveCard.push(store[roomId]['users'][LowerUser1].slice(-1)[0]);
   }else{
     //4人以上
@@ -899,10 +899,10 @@ function notifyGiveCard(roomId, memberCount){
     const HigherUser1 = store[roomId]["order"][memberCount-2]
     const LowerUser2 = store[roomId]["order"][0]
     const HigherUser2 = store[roomId]["order"][memberCount-1]
-    commonUtil.io.to(HigherUser2).emit("giveToLowerStatus2", {targetCard: store[roomId]['users'][HigherUser2].card});
-    commonUtil.io.to(LowerUser2).emit("giveToHigherStatus2", {targetCard: [store[roomId]['users'][LowerUser2].card.slice(-1)[0], store[roomId]['users'][LowerUser2].card.slice(-2)[0]]});
-    commonUtil.io.to(HigherUser1).emit("giveToLowerStatus1", {targetCard: store[roomId]['users'][HigherUser1].card});
-    commonUtil.io.to(LowerUser1).emit("giveToHigherStatus1", {targetCard: [store[roomId]['users'][LowerUser1].card.slice(-1)[0]]});
+    io.to(HigherUser2).emit("giveToLowerStatus2", {targetCard: store[roomId]['users'][HigherUser2].card});
+    io.to(LowerUser2).emit("giveToHigherStatus2", {targetCard: [store[roomId]['users'][LowerUser2].card.slice(-1)[0], store[roomId]['users'][LowerUser2].card.slice(-2)[0]]});
+    io.to(HigherUser1).emit("giveToLowerStatus1", {targetCard: store[roomId]['users'][HigherUser1].card});
+    io.to(LowerUser1).emit("giveToHigherStatus1", {targetCard: [store[roomId]['users'][LowerUser1].card.slice(-1)[0]]});
     store[roomId]['users'][LowerUser1].giveCard.push(store[roomId]['users'][LowerUser1].card.slice(-1)[0]);
     store[roomId]['users'][LowerUser2].giveCard.push(store[roomId]['users'][LowerUser2].card.slice(-1)[0]);
     store[roomId]['users'][LowerUser2].giveCard.push(store[roomId]['users'][LowerUser2].card.slice(-2)[0]);
@@ -965,7 +965,7 @@ function notifyGameReady(roomId) {
   store[roomId].giveCardCount =  0;
   const orders = store[roomId]["order"];
   const users = store[roomId]["users"];
-  commonUtil.io.to(orders[0]).emit("gameReady", {
+  io.to(orders[0]).emit("gameReady", {
     gameNum: store[roomId].gameNum,
     card: users[orders[0]].card,
     yourTurn: true,
@@ -981,7 +981,7 @@ function notifyGameReady(roomId) {
       })
   );
   for (let i = 1; i < store[roomId]["order"].length; i++) {
-    commonUtil.io.to(orders[i]).emit("gameReady", {
+    io.to(orders[i]).emit("gameReady", {
       gameNum: store[roomId].gameNum,
       card: users[orders[i]].card,
       yourTurn: false,
@@ -1032,14 +1032,14 @@ function notifyChangeTurn(currentTurnIndex, roomId) {
 
   Object.keys(users).forEach(function(element) {
     if (element != orderList[nextTurn]) {
-      commonUtil.io.to(element).emit("order", {
+      io.to(element).emit("order", {
         flag: false,
         skip: false,
         playerName: users[orderList[nextTurn]].dispName
       });
     }
   });
-  commonUtil.io.to(orderList[nextTurn]).emit("order", {
+  io.to(orderList[nextTurn]).emit("order", {
     flag: true,
     skip: users[orderList[nextTurn]].rank != "" ? true : false
   });
