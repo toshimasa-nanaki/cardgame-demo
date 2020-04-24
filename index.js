@@ -102,8 +102,8 @@ io.on("connection", socket => {
     io.emit("createdRoom", { [createRoomId]: roomObj });
   });
   socket.on("join", joinInfo => {
-    const count = store[joinInfo.roomId].capacity;
-    if (Object.keys(store[joinInfo.roomId]["users"]).length >= count) {
+    const roomCapacity = store[joinInfo.roomId].capacity;
+    if (Object.keys(store[joinInfo.roomId]["users"]).length >= roomCapacity) {
       io.to(socket.id).emit("connectError", "roomFull");
       return;
     }
@@ -120,14 +120,13 @@ io.on("connection", socket => {
     };
     socket.join(joinInfo.roomId);
     io.to(socket.id).emit("joinedRoom", store[joinInfo.roomId]["users"]);
-    Object.keys(store[joinInfo.roomId]["users"]).forEach(function(key) {
-      if (key != socket.id) {
-        io.to(key).emit("otherMemberJoinedRoom", joinInfo.playerName);
-      }
-    });
-    if (Object.keys(store[joinInfo.roomId]["users"]).length == count) {
-      //人数がそろった場合は、メンバー全員に通知する
-      gameInit(count, store[joinInfo.roomId]["users"], joinInfo.roomId);
+    for (let [key, value] of Object.entries(store[joinInfo.roomId]["users"])) {
+      if (key !== socket.id) io.to(key).emit("otherMemberJoinedRoom", joinInfo.playerName);
+    }
+    const currentPlayerNum = Object.keys(store[joinInfo.roomId]["users"]).length;
+    if (currentPlayerNum === roomCapacity) {
+      logger.info("There were members in the room.");
+      gameInit(currentPlayerNum, store[joinInfo.roomId]["users"], joinInfo.roomId);
     }
   });
   //再戦
