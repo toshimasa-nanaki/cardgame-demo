@@ -28,16 +28,14 @@ var express = require("express");
 var app = require("express")();
 var http = require("http").Server(app);
 let io = require("socket.io")(http);
-exports.io = io;
-
-const socketEvent = require('./socketEvent');
-// const commonUtil = require('./commonUtil');
-// const LOGGER = commonUtil.logger;
+const log4js = require("log4js");
+const logger = log4js.getLogger();
+var SocketEvent = require('./socketEvent');
+logger.level = "debug";
 // io.set('heartbeat interval', 5000);
 // io.set('heartbeat timeout', 15000);
 var port = process.env.PORT || 3000;
-let store = {};
-exports.store = store;
+export let store = {};
 const ORIGINALCARDDATA = trump_init(TRUMP_TEMP);
 
 app.get("/", function(req, res) {
@@ -48,7 +46,7 @@ app.use("/js", express.static("public/js"));
 
 io.on("connection", socket => {
   //最初の接続時に現在のルーム一覧を送る
-  LOGGER.debug(JSON.stringify(store));
+  logger.debug(JSON.stringify(store));
   io.to(socket.id).emit("showRoomList", store);
 
 //   socket.on("disconnect", () => {
@@ -68,7 +66,7 @@ io.on("connection", socket => {
 //       }
 //     }
 //   });
-  socketEvent.load_common_event(socket);
+  SocketEvent.load_common_event(socket, io);
   socket.on("requestRoomCreate", roomInfo => {
     const createRoomId = uniqueId();
     const roomObj = {
@@ -91,7 +89,7 @@ io.on("connection", socket => {
       giveCardCount: 0
     };
     store[createRoomId] = roomObj;
-    LOGGER.info("createdRoom:  " + roomObj.roomDispName);
+    logger.info("createdRoom:  " + roomObj.roomDispName);
     io.emit("createdRoom", { [createRoomId]: roomObj });
   });
   socket.on("join", joinInfo => {
@@ -160,7 +158,7 @@ io.on("connection", socket => {
     const users = store[msg.id]["users"];
     store[msg.id].passCount = store[msg.id].passCount + 1;
     //const count = store[msg.id].capacity;
-    LOGGER.debug(
+    logger.debug(
       "今のpassCount:" +
         store[msg.id].passCount +
         " 今のorderList長さ" +
@@ -168,7 +166,7 @@ io.on("connection", socket => {
     );
     if (store[msg.id].passCount >= orderList.length - 1) {
       //パスで一周した場合流す
-      LOGGER.debug("流します");
+      logger.debug("流します");
       fieldClear(msg.id);
       io.to(store[msg.id].roomId).emit("changeStatus", { type: "cutPass" });
     }
@@ -214,7 +212,7 @@ io.on("connection", socket => {
     }
 
     /* 場のカードとの比較判定 */
-    LOGGER.debug("場のカード:" + JSON.stringify(fieldCards));
+    logger.debug("場のカード:" + JSON.stringify(fieldCards));
     const resultCardCompare = cardCompareValidate(
       fieldCards,
       validateCards,
@@ -327,14 +325,15 @@ io.on("connection", socket => {
         playerName: users[orderList[currentTurn]].dispName,
         rankReason: store[msg.id]["users"][socket.id].rankReason
       });
-      LOGGER.debug("都落ち判定前：" + JSON.stringify(store[msg.id]["users"]));
+      logger.debug("都落ち判定前：" + JSON.stringify(store[msg.id]["users"]));
       if(store[msg.id].gameNum != 1 &&
         Object.keys(store[msg.id]["users"]).length >= 4 && 
         !store[msg.id]["users"][socket.id].firstPlace && 
          store[msg.id]["users"][socket.id].rankNum == 1){
         //都落ちが発生。
         //前回一位じゃなかったものが一位になっている場合は、都落ちが発生する。
-        LOGGER.debug("今の都落ち候補:" + JSON.stringify(store[msg.id]["users"]));
+        logger.debug("都落ち発生！！！");
+        logger.debug("今の都落ち候補:" + JSON.stringify(store[msg.id]["users"]));
         Object.keys(store[msg.id]["users"]).forEach(key => {
           if(store[msg.id]["users"][key].firstPlace){
             //都落ちなので、ゲーム終了。とりあえず大貧民にしておく
@@ -363,26 +362,26 @@ io.on("connection", socket => {
       store[msg.id].finishNum = store[msg.id].finishNum + 1;
       store[msg.id].passCount = -1;
       //store[msg.id]['order'].splice(currentTurn, 1);
-      LOGGER.debug(
+      logger.debug(
         "現在のユーザーの状態:" +
           JSON.stringify(store[msg.id]["users"][orderList[currentTurn]])
       );
       if (store[msg.id].finishNum == Object.keys(users).length - 1) {
         //ビリ以外は全員終了
         let lastId = Object.keys(users).filter(item => {
-          LOGGER.debug(
+          logger.debug(
             "itemの値:" + JSON.stringify(store[msg.id]["users"][item])
           );
           return store[msg.id]["users"][item].rank.length == 0;
         });
-        LOGGER.debug(
+        logger.debug(
           "最下位ユーザーに入るscoreTable:" +
             JSON.stringify(store[msg.id]["scoreTable"])
         );
         store[msg.id]["users"][lastId].rank =store[msg.id]["scoreTable"][store[msg.id].rankCount-1].rankId;
         store[msg.id]["users"][lastId].rankNum = store[msg.id].rankCount
         store[msg.id]["users"][lastId].finishTime = new Date().getTime();
-        LOGGER.debug(
+        logger.debug(
           "最下位ユーザー:" + JSON.stringify(store[msg.id]["users"][lastId])
         );
         io.to(lastId).emit("finish", {
@@ -399,7 +398,7 @@ io.on("connection", socket => {
             if (store[msg.id]["users"][key].rank === ele.rankId) {
               store[msg.id]["users"][key].point =
                 store[msg.id]["users"][key].point + ele.point;
-              LOGGER.debug(
+              logger.debug(
                 store[msg.id]["users"][key].dispName +
                   "の現在のポイント: " +
                   store[msg.id]["users"][key].point
@@ -538,13 +537,13 @@ function aggregateBattlePhase(roomId) {
     });
   if (loseUsers.length != 1) {
     //0はありえないので考慮しない。
-    LOGGER.debug("4位の人数: " + loseUsers.length);
+    logger.debug("4位の人数: " + loseUsers.length);
     let pos = 0;
     let fallingOutCityUserKey = "";
     loseUsers.forEach(key => {
       if (store[roomId]["users"][key].rankReason != "fallingOutCity") {
         //都落ちでない場合は、反則負けで早く上がったものから悪い順位になる。
-        LOGGER.debug(
+        logger.debug(
           "入れる前: " + JSON.stringify(store[roomId]["users"][key])
         );
         store[roomId]["users"][key].rankNum =
@@ -558,7 +557,7 @@ function aggregateBattlePhase(roomId) {
           store[roomId]["scoreTable"][
             Object.keys(store[roomId]["users"]).length - pos - 1
           ].rankId;
-        LOGGER.debug(
+        logger.debug(
           "入れた後: " + JSON.stringify(store[roomId]["users"][key])
         );
         pos++;
@@ -915,7 +914,7 @@ function decideOrder(roomId) {
     Object.keys(store[roomId]["users"]).forEach(key => {
       store[roomId]["order"].push(key);
     });
-    LOGGER.debug("第1回ゲームの順序: " + store[roomId]["order"]);
+    logger.debug("第1回ゲームの順序: " + store[roomId]["order"]);
   } else {
     //2回目以降は大貧民が一番。時計回りという概念がないので、とりあえず順位の逆順にする。(オリジナル)
     //TODO? 実際は大貧民から時計回り。
@@ -932,7 +931,7 @@ function decideOrder(roomId) {
         return 0;
       })
       .forEach(key => {
-        LOGGER.debug("二回目以降key:" + key);
+        logger.debug("二回目以降key:" + key);
         store[roomId]["order"].push(key.id);
       });
   }
@@ -942,7 +941,7 @@ function handOutCards(count, roomId) {
   const shuffleCards = sort_at_random(ORIGINALCARDDATA);
   const perNum = Math.floor(TRUMP_TEMP.total / count);
   let remainder = TRUMP_TEMP.total % count;
-  LOGGER.debug("perNum:" + perNum + " remainder:" + remainder);
+  logger.debug("perNum:" + perNum + " remainder:" + remainder);
   let pos = 0;
   Object.keys(store[roomId]["users"]).forEach(key => {
     store[roomId]["users"][key].card = shuffleCards
@@ -954,8 +953,8 @@ function handOutCards(count, roomId) {
       });
     pos = remainder > 0 ? pos + perNum + 1 : pos + perNum;
     remainder--;
-    LOGGER.debug("for文の中" + " perNum:" + perNum + " remainder:" + remainder);
-    LOGGER.debug(
+    logger.debug("for文の中" + " perNum:" + perNum + " remainder:" + remainder);
+    logger.debug(
       key + "の持ちカード： " + JSON.stringify(store[roomId]["users"][key].card)
     );
   });
@@ -971,7 +970,7 @@ function notifyGameReady(roomId) {
     yourTurn: true,
     playerName: users[orders[0]].dispName
   });
-  LOGGER.debug(
+  logger.debug(
     "gameReadyのレスポンス(一番目)： " +
       JSON.stringify({
         gameNum: store[roomId].gameNum,
@@ -987,7 +986,7 @@ function notifyGameReady(roomId) {
       yourTurn: false,
       playerName: users[orders[0]].dispName
     });
-    LOGGER.debug(
+    logger.debug(
       "gameReadyのレスポンス(二番目以降)： " +
         JSON.stringify({
           card: users[orders[i]].card,
@@ -1000,7 +999,7 @@ function notifyGameReady(roomId) {
 
 function removeCard(sc, userId, roomId) {
   //let arr = [];
-  LOGGER.debug(
+  logger.debug(
     "カード削除前: " + JSON.stringify(store[roomId]["users"][userId].card)
   );
   sc.forEach(v => {
@@ -1010,7 +1009,7 @@ function removeCard(sc, userId, roomId) {
       return v.type !== ele.type || v.number !== ele.number;
     });
   });
-  LOGGER.debug(
+  logger.debug(
     "カード削除後: " + JSON.stringify(store[roomId]["users"][userId].card)
   );
 }
@@ -1060,15 +1059,15 @@ function checkValidateHand(sc) {
   };
   if (sc.length === 1) {
     //1枚だしは特に問題なし
-    LOGGER.debug("大富豪の役：1枚だし");
+    logger.debug("大富豪の役：1枚だし");
     result.type = "unit";
   } else if (isAllSameNumber(sc)) {
     //複数枚だしで数字がそろっていること
-    LOGGER.debug("大富豪の役：複数枚だし");
+    logger.debug("大富豪の役：複数枚だし");
     result.type = "multiple";
   } else if (isStairsCard(sc)) {
     //階段
-    LOGGER.debug("大富豪の役：階段");
+    logger.debug("大富豪の役：階段");
     result.type = "stair";
   } else {
     result.error = 1;
@@ -1201,7 +1200,7 @@ function numComparison2(nc, sc, roomId) {
     checkNC = nc[0];
     checkSC = sc[0];
   }
-  LOGGER.debug(
+  logger.debug(
     "numComparison2の比較対象checkNC：" + checkNC + "　checkSC:" + checkSC
   );
   if (~checkNC.type.indexOf("joker") && ~checkSC.type.indexOf("joker")) {
@@ -1225,12 +1224,12 @@ function numComparison2(nc, sc, roomId) {
     return false;
   }
   if (store[roomId].elevenback && store[roomId].revolution) {
-    LOGGER.debug("11backかつ革命中");
+    logger.debug("11backかつ革命中");
     return checkNC.number < checkSC.number;
   } else if (store[roomId].elevenback || store[roomId].revolution) {
-    LOGGER.debug("11backまたは革命中");
-    LOGGER.debug("比較させてねcheckNC" + JSON.stringify(checkNC));
-    LOGGER.debug("比較させてねcheckSC" + JSON.stringify(checkSC));
+    logger.debug("11backまたは革命中");
+    logger.debug("比較させてねcheckNC" + JSON.stringify(checkNC));
+    logger.debug("比較させてねcheckSC" + JSON.stringify(checkSC));
     //逆残
     if (~checkSC.type.indexOf("joker")) {
       //ジョーカーは必ず勝てる
@@ -1269,4 +1268,6 @@ function isSameType(ncs, scs) {
   return flag;
 }
 
-
+http.listen(port, function() {
+  console.log("listening on *:" + port);
+});
