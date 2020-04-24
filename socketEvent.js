@@ -6,6 +6,9 @@
 // const io = require("socket.io")(http);
 const storeData = require("./storeData.js");
 const index = require("./index.js");
+const commonUtil = require("./commonUtil.js");
+const loggerUtil = require("./loggerUtil.js");
+const LOGGER = loggerUtil.logger;
 const io = index.io;
 module.exports.load_common_event = (socket)=> {
   socket.on("disconnect", () => {
@@ -34,5 +37,10 @@ module.exports.load_common_event = (socket)=> {
 });
 };
 
-module.exports.load_common_event = (socket)=> {
+module.exports.load_room_event = (socket)=> {
+  socket.on("requestRoomCreate", roomInfo => {
+    
+    LOGGER.info("createdRoom:  " + roomObj.roomDispName);
+    io.emit("createdRoom", { [createRoomId]: roomObj });
+  });
 };

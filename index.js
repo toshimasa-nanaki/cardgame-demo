@@ -54,32 +54,32 @@ io.on("connection", socket => {
   //   }
   // });
   SocketEvent.load_common_event(socket);
-  socket.on("requestRoomCreate", roomInfo => {
-    const createRoomId = commonUtil.createUniqueId();
-    const roomObj = {
-      roomId: createRoomId,
-      roomDispName:
-        roomInfo.dispName == "" ? createdDefaultRoomName() : roomInfo.dispName,
-      capacity: roomInfo.capacity == "" ? 4 : roomInfo.capacity,
-      gameNum: 1,
-      passCount: 0,
-      elevenback: false,
-      shibari: false,
-      revolution: false,
-      stair: false,
-      fieldCards: [],
-      scoreTable: [],
-      finishNum: 0,
-      order: [],
-      startedGame: false,
-      rankCount: 1,
-      giveCardCount: 0,
-      users: {}
-    };
-    storeData.persistentData[createRoomId] = roomObj;
-    LOGGER.info("createdRoom:  " + roomObj.roomDispName);
-    io.emit("createdRoom", { [createRoomId]: roomObj });
-  });
+  // socket.on("requestRoomCreate", roomInfo => {
+  //   const createRoomId = commonUtil.createUniqueId();
+  //   const roomObj = {
+  //     roomId: createRoomId,
+  //     roomDispName:
+  //       roomInfo.dispName == "" ? createdDefaultRoomName() : roomInfo.dispName,
+  //     capacity: roomInfo.capacity == "" ? 4 : roomInfo.capacity,
+  //     gameNum: 1,
+  //     passCount: 0,
+  //     elevenback: false,
+  //     shibari: false,
+  //     revolution: false,
+  //     stair: false,
+  //     fieldCards: [],
+  //     scoreTable: [],
+  //     finishNum: 0,
+  //     order: [],
+  //     startedGame: false,
+  //     rankCount: 1,
+  //     giveCardCount: 0,
+  //     users: {}
+  //   };
+  //   storeData.persistentData[createRoomId] = roomObj;
+  //   LOGGER.info("createdRoom:  " + roomObj.roomDispName);
+  //   io.emit("createdRoom", { [createRoomId]: roomObj });
+  // });
   socket.on("join", joinInfo => {
     const roomCapacity = storeData.persistentData[joinInfo.roomId].capacity;
     if (Object.keys(storeData.persistentData[joinInfo.roomId]["users"]).length >= roomCapacity) {
