@@ -31,7 +31,7 @@ let io = require("socket.io")(http);
 exports.io = io;
 const log4js = require("log4js");
 const logger = log4js.getLogger();
-var SocketEvent = require('./socketEvent');
+const socketEvent = require('./socketEvent');
 logger.level = "debug";
 // io.set('heartbeat interval', 5000);
 // io.set('heartbeat timeout', 15000);
@@ -68,7 +68,7 @@ io.on("connection", socket => {
 //       }
 //     }
 //   });
-  SocketEvent.load_common_event(socket, io);
+  socketEvent.load_common_event(socket, io);
   socket.on("requestRoomCreate", roomInfo => {
     const createRoomId = uniqueId();
     const roomObj = {
