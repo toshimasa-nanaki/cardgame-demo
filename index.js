@@ -1,28 +1,30 @@
-const TRUMPDATA = {
-  total: 54,
-  card: [
-    { type: "club", count: 13 },
-    { type: "spade", count: 13 },
-    { type: "heart", count: 13 },
-    { type: "diamond", count: 13 }
-  ],
-  joker: 2
-};
+// const TRUMPDATA = {
+//   total: 54,
+//   card: [
+//     { type: "club", count: 13 },
+//     { type: "spade", count: 13 },
+//     { type: "heart", count: 13 },
+//     { type: "diamond", count: 13 }
+//   ],
+//   joker: 2
+// };
 
-const DEBUG_TRUMPDATA = {
-  total: 8,
-  card: [
-    { type: "club", count: 2 },
-    { type: "spade", count: 2 },
-    { type: "heart", count: 2 },
-    { type: "diamond", count: 2 }
-  ],
-  joker: 0
-};
+// const DEBUG_TRUMPDATA = {
+//   total: 8,
+//   card: [
+//     { type: "club", count: 2 },
+//     { type: "spade", count: 2 },
+//     { type: "heart", count: 2 },
+//     { type: "diamond", count: 2 }
+//   ],
+//   joker: 0
+// };
+const commonUtil = require('./commonUtil.js');
+
 //debug用フラグ
 const debug = process.env.DEBUG === "true" ? true : false;
 
-const TRUMP_TEMP = debug ? DEBUG_TRUMPDATA : TRUMPDATA;
+const TRUMP_TEMP = debug ? commonUtil.DEBUG_TRUMPDATA : commonUtil.TRUMPDATA;
 
 var express = require("express");
 var app = require("express")();
@@ -68,7 +70,7 @@ io.on("connection", socket => {
   });
   //SocketEvent.load_common_event(socket, io);
   socket.on("requestRoomCreate", roomInfo => {
-    const createRoomId = uniqueId();
+    const createRoomId = commonUtil.createUniqueId();
     const roomObj = {
       roomId: createRoomId,
       roomDispName:
@@ -94,7 +96,6 @@ io.on("connection", socket => {
   });
   socket.on("join", joinInfo => {
     const count = store[joinInfo.roomId].capacity;
-    //if (socket.nsp.adapter.rooms[msg.id].length >= count) {
     if (
       typeof store[joinInfo.roomId]["users"] !== "undefined" &&
       Object.keys(store[joinInfo.roomId]["users"]).length >= count
@@ -699,12 +700,12 @@ function checkFoul(sc, roomId) {
   return result;
 }
 
-let uniqueId = function(digits) {
-  var strong = typeof digits !== "undefined" ? digits : 1000;
-  return (
-    Date.now().toString(16) + Math.floor(strong * Math.random()).toString(16)
-  );
-};
+// let uniqueId = function(digits) {
+//   var strong = typeof digits !== "undefined" ? digits : 1000;
+//   return (
+//     Date.now().toString(16) + Math.floor(strong * Math.random()).toString(16)
+//   );
+// };
 
 let createdDefaultRoomName = function() {
   let now = new Date();

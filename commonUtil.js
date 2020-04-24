@@ -1,4 +1,4 @@
-const TRUMPDATA = {
+module.exports.TRUMPDATA = {
   total: 54,
   card: [
     { type: "club", count: 13 },
@@ -9,7 +9,7 @@ const TRUMPDATA = {
   joker: 2
 };
 
-const DEBUG_TRUMPDATA = {
+module.exports.DEBUG_TRUMPDATA = {
   total: 8,
   card: [
     { type: "club", count: 2 },
@@ -18,4 +18,11 @@ const DEBUG_TRUMPDATA = {
     { type: "diamond", count: 2 }
   ],
   joker: 0
+};
+
+module.exports.createUniqueId = function(digits) {
+  var strong = typeof digits !== "undefined" ? digits : 1000;
+  return (
+    Date.now().toString(16) + Math.floor(strong * Math.random()).toString(16)
+  );
 };
