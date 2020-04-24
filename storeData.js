@@ -1,1 +1,1 @@
-let store = {};
+module.exports.persistentData = {};

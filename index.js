@@ -20,6 +20,7 @@
 //   joker: 0
 // };
 const commonUtil = require("./commonUtil.js");
+const storeData = require("./storeData.js");
 
 //debug用フラグ
 const debug = process.env.DEBUG === "true" ? true : false;
@@ -37,7 +38,7 @@ logger.level = "debug";
 // io.set('heartbeat interval', 5000);
 // io.set('heartbeat timeout', 15000);
 var port = process.env.PORT || 3000;
-let store = {};
+//let store = {};
 const ORIGINALCARDDATA = trump_init(TRUMP_TEMP);
 
 app.get("/", function(req, res) {
@@ -48,8 +49,8 @@ app.use("/js", express.static("public/js"));
 
 io.on("connection", socket => {
   //最初の接続時に現在のルーム一覧を送る
-  logger.debug(JSON.stringify(store));
-  io.to(socket.id).emit("showRoomList", store);
+  logger.debug(JSON.stringify(storeData.persistentData));
+  io.to(socket.id).emit("showRoomList", storeData.persistentData);
 
   // socket.on("disconnect", () => {
   //   //TODO ゲームがすでに始まっている場合は解散
@@ -97,17 +98,17 @@ io.on("connection", socket => {
       giveCardCount: 0,
       users: {}
     };
-    store[createRoomId] = roomObj;
+    storeData.persistentData[createRoomId] = roomObj;
     logger.info("createdRoom:  " + roomObj.roomDispName);
     io.emit("createdRoom", { [createRoomId]: roomObj });
   });
   socket.on("join", joinInfo => {
-    const roomCapacity = store[joinInfo.roomId].capacity;
-    if (Object.keys(store[joinInfo.roomId]["users"]).length >= roomCapacity) {
+    const roomCapacity = storeData.persistentData[joinInfo.roomId].capacity;
+    if (Object.keys(storeData.persistentData[joinInfo.roomId]["users"]).length >= roomCapacity) {
       io.to(socket.id).emit("connectError", "roomFull");
       return;
     }
-    store[joinInfo.roomId]["users"][socket.id] = {
+    storeData.persistentData[joinInfo.roomId]["users"][socket.id] = {
       dispName: joinInfo.playerName,
       card: [],
       rank: "",
@@ -119,20 +120,20 @@ io.on("connection", socket => {
       giveCard: []
     };
     socket.join(joinInfo.roomId);
-    io.to(socket.id).emit("joinedRoom", store[joinInfo.roomId]["users"]);
-    for (let [key, value] of Object.entries(store[joinInfo.roomId]["users"])) {
+    io.to(socket.id).emit("joinedRoom", storeData.persistentData[joinInfo.roomId]["users"]);
+    for (let [key, value] of Object.entries(storeData.persistentData[joinInfo.roomId]["users"])) {
       if (key !== socket.id) io.to(key).emit("otherMemberJoinedRoom", joinInfo.playerName);
     }
-    const currentPlayerNum = Object.keys(store[joinInfo.roomId]["users"]).length;
+    const currentPlayerNum = Object.keys(storeData.persistentData[joinInfo.roomId]["users"]).length;
     if (currentPlayerNum === roomCapacity) {
       logger.info("There were members in the room.");
-      gameInit(currentPlayerNum, store[joinInfo.roomId]["users"], joinInfo.roomId);
+      gameInit(currentPlayerNum, storeData.persistentData[joinInfo.roomId]["users"], joinInfo.roomId);
     }
   });
   //再戦
   socket.on("rematch", function(msg) {
-    const count = store[msg.id].capacity;
-    if (Object.keys(store[msg.id]["users"]).length == count) {
+    const count = storeData.persistentData[msg.id].capacity;
+    if (Object.keys(storeData.persistentData[msg.id]["users"]).length == count) {
       //人数がそろっているのか確認
       gameInit(count, socket.nsp.adapter.rooms[msg.id].sockets, msg.id);
     } else {
@@ -141,21 +142,21 @@ io.on("connection", socket => {
     }
   });
   socket.on("pass", function(msg) {
-    const orderList = store[msg.id]["order"];
-    const users = store[msg.id]["users"];
-    store[msg.id].passCount = store[msg.id].passCount + 1;
+    const orderList = storeData.persistentData[msg.id]["order"];
+    const users = storeData.persistentData[msg.id]["users"];
+    storeData.persistentData[msg.id].passCount = storeData.persistentData[msg.id].passCount + 1;
     //const count = store[msg.id].capacity;
     logger.debug(
       "今のpassCount:" +
-        store[msg.id].passCount +
+        storeData.persistentData[msg.id].passCount +
         " 今のorderList長さ" +
         orderList.length
     );
-    if (store[msg.id].passCount >= orderList.length - 1) {
+    if (storeData.persistentData[msg.id].passCount >= orderList.length - 1) {
       //パスで一周した場合流す
       logger.debug("流します");
       fieldClear(msg.id);
-      io.to(store[msg.id].roomId).emit("changeStatus", { type: "cutPass" });
+      io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", { type: "cutPass" });
     }
 
     let currentTurn = orderList.indexOf(socket.id);
@@ -173,8 +174,8 @@ io.on("connection", socket => {
   });
 
   socket.on("validate", function(msg) {
-    const orderList = store[msg.id]["order"];
-    const users = store[msg.id]["users"];
+    const orderList = storeData.persistentData[msg.id]["order"];
+    const users = storeData.persistentData[msg.id]["users"];
     let currentTurn = orderList.indexOf(socket.id);
     //最初に来たカードは昇順ソートしておく。(念のため)
     let validateCards = msg.cards.sort(function(a, b) {
@@ -182,7 +183,7 @@ io.on("connection", socket => {
       if (a.number > b.number) return 1;
       return 0;
     });
-    let fieldCards = store[msg.id]["fieldCards"];
+    let fieldCards = storeData.persistentData[msg.id]["fieldCards"];
 
     /* 受け取ったカードのみで判定可能な部分 */
     //役をチェック
@@ -220,7 +221,7 @@ io.on("connection", socket => {
       ) {
         //JOKER討伐(誰も倒せないから流す)
         fieldClear(msg.id);
-        io.to(store[msg.id].roomId).emit("changeStatus", {
+        io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
           type: "winjoker",
           value: msg,
           playerName: users[socket.id].dispName
@@ -230,9 +231,9 @@ io.on("connection", socket => {
 
         return;
       }
-      if (!store[msg.id].shibari && isShibari(fieldCards, validateCards)) {
-        store[msg.id].shibari = true;
-        io.to(store[msg.id].roomId).emit("changeStatus", {
+      if (!storeData.persistentData[msg.id].shibari && isShibari(fieldCards, validateCards)) {
+        storeData.persistentData[msg.id].shibari = true;
+        io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
           type: "shibari",
           value: store[msg.id].shibari,
           playerName: users[socket.id].dispName
@@ -247,7 +248,7 @@ io.on("connection", socket => {
     ) {
       //JOKER2枚だしは歯が立たないので流す
       fieldClear(msg.id);
-      io.to(store[msg.id].roomId).emit("changeStatus", {
+      io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
         type: "doblejoker",
         value: msg,
         playerName: users[socket.id].dispName
@@ -257,17 +258,17 @@ io.on("connection", socket => {
     }
     if (validateCards.length >= 4 && resultCheckHand.type !== "stair") {
       //革命(階段革命はない)
-      store[msg.id].revolution = !store[msg.id].revolution;
-      io.to(store[msg.id].roomId).emit("changeStatus", {
+      storeData.persistentData[msg.id].revolution = !storeData.persistentData[msg.id].revolution;
+      io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
         type: "revolution",
-        value: store[msg.id].revolution,
+        value: storeData.persistentData[msg.id].revolution,
         playerName: users[socket.id].dispName
       });
     }
     if (validateCards[0].number == 8 && resultCheckHand.type !== "stair") {
       //8ぎり(階段のときは発生しない)
       fieldClear(msg.id);
-      io.to(store[msg.id].roomId).emit("changeStatus", {
+      io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
         type: "cut8",
         value: msg,
         playerName: users[socket.id].dispName
@@ -277,24 +278,24 @@ io.on("connection", socket => {
     }
     if (validateCards[0].number == 11 && resultCheckHand.type !== "stair") {
       //11back
-      store[msg.id].elevenback = !store[msg.id].elevenback;
-      io.to(store[msg.id].roomId).emit("changeStatus", {
+      storeData.persistentData[msg.id].elevenback = !storeData.persistentData[msg.id].elevenback;
+      io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
         type: "elevenback",
-        value: store[msg.id].elevenback,
+        value: storeData.persistentData[msg.id].elevenback,
         playerName: users[socket.id].dispName
       });
     }
-    store[msg.id].passCount = 0;
-    store[msg.id]["fieldCards"] = validateCards;
+    storeData.persistentData[msg.id].passCount = 0;
+    storeData.persistentData[msg.id]["fieldCards"] = validateCards;
     if (resultCheckHand.type === "stair") {
       //階段役だった場合はフラグを立てる
-      store[msg.id].stair = true;
+      storeData.persistentData[msg.id].stair = true;
     }
-    io.to(store[msg.id].roomId).emit("result", {
+    io.to(storeData.persistentData[msg.id].roomId).emit("result", {
       card: validateCards,
       error: 0,
       reason: "",
-      result: store[msg.id]["fieldCards"],
+      result: storeData.persistentData[msg.id]["fieldCards"],
       playerName: users[socket.id].dispName
     });
 
@@ -303,102 +304,102 @@ io.on("connection", socket => {
       //成績をチェックする。
       checkRank(validateCards, msg.id, socket.id);
       io.to(orderList[currentTurn]).emit("finish", {
-        rankReason: store[msg.id]["users"][socket.id].rankReason
+        rankReason: storeData.persistentData[msg.id]["users"][socket.id].rankReason
       });
       //みんなに知らせる
-      io.to(store[msg.id].roomId).emit("finishNotification", {
+      io.to(storeData.persistentData[msg.id].roomId).emit("finishNotification", {
         playerName: users[orderList[currentTurn]].dispName,
-        rankReason: store[msg.id]["users"][socket.id].rankReason
+        rankReason: storeData.persistentData[msg.id]["users"][socket.id].rankReason
       });
       logger.debug("都落ち判定前：" + JSON.stringify(store[msg.id]["users"]));
       if (
-        store[msg.id].gameNum != 1 &&
-        Object.keys(store[msg.id]["users"]).length >= 4 &&
-        !store[msg.id]["users"][socket.id].firstPlace &&
-        store[msg.id]["users"][socket.id].rankNum == 1
+        storeData.persistentData[msg.id].gameNum != 1 &&
+        Object.keys(storeData.persistentData[msg.id]["users"]).length >= 4 &&
+        !storeData.persistentData[msg.id]["users"][socket.id].firstPlace &&
+        storeData.persistentData[msg.id]["users"][socket.id].rankNum == 1
       ) {
         //都落ちが発生。
         //前回一位じゃなかったものが一位になっている場合は、都落ちが発生する。
         logger.debug("都落ち発生！！！");
         logger.debug(
-          "今の都落ち候補:" + JSON.stringify(store[msg.id]["users"])
+          "今の都落ち候補:" + JSON.stringify(storeData.persistentData[msg.id]["users"])
         );
-        Object.keys(store[msg.id]["users"]).forEach(key => {
-          if (store[msg.id]["users"][key].firstPlace) {
+        Object.keys(storeData.persistentData[msg.id]["users"]).forEach(key => {
+          if (storeData.persistentData[msg.id]["users"][key].firstPlace) {
             //都落ちなので、ゲーム終了。とりあえず大貧民にしておく
-            store[msg.id]["users"][key].rankNum = Object.keys(
-              store[msg.id]["users"]
+            storeData.persistentData[msg.id]["users"][key].rankNum = Object.keys(
+              storeData.persistentData[msg.id]["users"]
             ).length;
-            store[msg.id]["users"][key].rank =
-              store[msg.id]["scoreTable"][
-                Object.keys(store[msg.id]["users"]).length - 1
+            storeData.persistentData[msg.id]["users"][key].rank =
+              storeData.persistentData[msg.id]["scoreTable"][
+                Object.keys(storeData.persistentData[msg.id]["users"]).length - 1
               ].rankId;
-            store[msg.id]["users"][key].firstPlace = false;
-            store[msg.id]["users"][key].rankReason = "fallingOutCity";
-            store[msg.id]["users"][key].finishTime = new Date().getTime();
+            storeData.persistentData[msg.id]["users"][key].firstPlace = false;
+            storeData.persistentData[msg.id]["users"][key].rankReason = "fallingOutCity";
+            storeData.persistentData[msg.id]["users"][key].finishTime = new Date().getTime();
             io.to(key).emit("finish", {
-              rankReason: store[msg.id]["users"][key].rankReason
+              rankReason: storeData.persistentData[msg.id]["users"][key].rankReason
             });
             //みんなに知らせる
-            io.to(store[msg.id].roomId).emit("finishNotification", {
+            io.to(storeData.persistentData[msg.id].roomId).emit("finishNotification", {
               playerName: users[key].dispName,
-              rankReason: store[msg.id]["users"][key].rankReason
+              rankReason: storeData.persistentData[msg.id]["users"][key].rankReason
             });
-            store[msg.id].finishNum = store[msg.id].finishNum + 1;
-            store[msg.id]["order"].splice(
-              store[msg.id]["order"].indexOf(key),
+            storeData.persistentData[msg.id].finishNum = storeData.persistentData[msg.id].finishNum + 1;
+            storeData.persistentData[msg.id]["order"].splice(
+              storeData.persistentData[msg.id]["order"].indexOf(key),
               1
             );
           }
         });
       }
-      if (store[msg.id]["users"][socket.id].rankNum == 1) {
-        store[msg.id]["users"][socket.id].firstPlace = true;
+      if (storeData.persistentData[msg.id]["users"][socket.id].rankNum == 1) {
+        storeData.persistentData[msg.id]["users"][socket.id].firstPlace = true;
       }
-      store[msg.id].finishNum = store[msg.id].finishNum + 1;
-      store[msg.id].passCount = -1;
-      //store[msg.id]['order'].splice(currentTurn, 1);
+      storeData.persistentData[msg.id].finishNum = storeData.persistentData[msg.id].finishNum + 1;
+      storeData.persistentData[msg.id].passCount = -1;
+
       logger.debug(
         "現在のユーザーの状態:" +
-          JSON.stringify(store[msg.id]["users"][orderList[currentTurn]])
+          JSON.stringify(storeData.persistentData[msg.id]["users"][orderList[currentTurn]])
       );
-      if (store[msg.id].finishNum == Object.keys(users).length - 1) {
+      if (storeData.persistentData[msg.id].finishNum == Object.keys(users).length - 1) {
         //ビリ以外は全員終了
         let lastId = Object.keys(users).filter(item => {
           logger.debug(
-            "itemの値:" + JSON.stringify(store[msg.id]["users"][item])
+            "itemの値:" + JSON.stringify(storeData.persistentData[msg.id]["users"][item])
           );
-          return store[msg.id]["users"][item].rank.length == 0;
+          return storeData.persistentData[msg.id]["users"][item].rank.length == 0;
         });
         logger.debug(
           "最下位ユーザーに入るscoreTable:" +
-            JSON.stringify(store[msg.id]["scoreTable"])
+            JSON.stringify(storeData.persistentData[msg.id]["scoreTable"])
         );
-        store[msg.id]["users"][lastId].rank =
-          store[msg.id]["scoreTable"][store[msg.id].rankCount - 1].rankId;
-        store[msg.id]["users"][lastId].rankNum = store[msg.id].rankCount;
-        store[msg.id]["users"][lastId].finishTime = new Date().getTime();
+        storeData.persistentData[msg.id]["users"][lastId].rank =
+          storeData.persistentData[msg.id]["scoreTable"][storeData.persistentData[msg.id].rankCount - 1].rankId;
+        storeData.persistentData[msg.id]["users"][lastId].rankNum = storeData.persistentData[msg.id].rankCount;
+        storeData.persistentData[msg.id]["users"][lastId].finishTime = new Date().getTime();
         logger.debug(
-          "最下位ユーザー:" + JSON.stringify(store[msg.id]["users"][lastId])
+          "最下位ユーザー:" + JSON.stringify(storeData.persistentData[msg.id]["users"][lastId])
         );
         io.to(lastId).emit("finish", {
-          rankReason: store[msg.id]["users"][lastId].rankReason
+          rankReason: storeData.persistentData[msg.id]["users"][lastId].rankReason
         });
-        io.to(store[msg.id].roomId).emit("finishNotification", {
+        io.to(storeData.persistentData[msg.id].roomId).emit("finishNotification", {
           playerName: users[lastId].dispName,
-          rankReason: store[msg.id]["users"][lastId].rankReason
+          rankReason: storeData.persistentData[msg.id]["users"][lastId].rankReason
         });
         const reverseRank = aggregateBattlePhase(msg.id);
-        store[msg.id]["order"] = reverseRank;
-        Object.keys(store[msg.id]["users"]).forEach(function(key) {
-          store[msg.id]["scoreTable"].some(function(ele) {
-            if (store[msg.id]["users"][key].rank === ele.rankId) {
-              store[msg.id]["users"][key].point =
-                store[msg.id]["users"][key].point + ele.point;
+        storeData.persistentData[msg.id]["order"] = reverseRank;
+        Object.keys(storeData.persistentData[msg.id]["users"]).forEach(function(key) {
+          storeData.persistentData[msg.id]["scoreTable"].some(function(ele) {
+            if (storeData.persistentData[msg.id]["users"][key].rank === ele.rankId) {
+              storeData.persistentData[msg.id]["users"][key].point =
+                storeData.persistentData[msg.id]["users"][key].point + ele.point;
               logger.debug(
-                store[msg.id]["users"][key].dispName +
+                storeData.persistentData[msg.id]["users"][key].dispName +
                   "の現在のポイント: " +
-                  store[msg.id]["users"][key].point
+                  storeData.persistentData[msg.id]["users"][key].point
               );
               return true;
             }
@@ -407,36 +408,36 @@ io.on("connection", socket => {
         let displayRanking = [];
         reverseRank.forEach(function(key) {
           displayRanking.unshift({
-            rank: store[msg.id]["users"][key].rank,
-            dispName: store[msg.id]["users"][key].dispName
+            rank: storeData.persistentData[msg.id]["users"][key].rank,
+            dispName: storeData.persistentData[msg.id]["users"][key].dispName
           });
         });
-        if (store[msg.id].gameNum == 4) {
+        if (storeData.persistentData[msg.id].gameNum == 4) {
           //1セット終了
           let overallGrade = aggregateBattleSet(msg.id);
           let displayOverAllRanking = [];
           overallGrade.forEach(function(key) {
             displayOverAllRanking.push({
-              dispName: store[msg.id]["users"][key].dispName
+              dispName: storeData.persistentData[msg.id]["users"][key].dispName
             });
           });
-          io.to(store[msg.id].roomId).emit("gameSet", {
-            gameNum: store[msg.id].gameNum,
+          io.to(storeData.persistentData[msg.id].roomId).emit("gameSet", {
+            gameNum: storeData.persistentData[msg.id].gameNum,
             ranking: displayRanking,
             overall: displayOverAllRanking
           });
           return;
         } else {
           //次のゲームへ
-          io.to(store[msg.id].roomId).emit("gameFinish", {
-            gameNum: store[msg.id].gameNum,
+          io.to(storeData.persistentData[msg.id].roomId).emit("gameFinish", {
+            gameNum: storeData.persistentData[msg.id].gameNum,
             ranking: displayRanking
           });
           io.to(lastId).emit("nextGameStart", {
-            gameNum: store[msg.id].gameNum + 1,
+            gameNum: storeData.persistentData[msg.id].gameNum + 1,
             ranking: displayRanking
           });
-          store[msg.id].gameNum = store[msg.id].gameNum + 1;
+          storeData.persistentData[msg.id].gameNum = storeData.persistentData[msg.id].gameNum + 1;
           return;
         }
       }
@@ -449,29 +450,29 @@ io.on("connection", socket => {
     //あげたカードを消す
     removeCard(msg.cards, socket.id, msg.id);
     //自分のランク
-    let myOrder = store[msg.id]["order"].indexOf(socket.id);
-    let yourOrder = store[msg.id].capacity - myOrder - 1;
+    let myOrder = storeData.persistentData[msg.id]["order"].indexOf(socket.id);
+    let yourOrder = storeData.persistentData[msg.id].capacity - myOrder - 1;
     //let lower = store[msg.id]['order']
     //人数により相手が異なる。
-    if (store[msg.id].capacity === 3) {
+    if (storeData.persistentData[msg.id].capacity === 3) {
       //もらうカードを増やす
-      store[msg.id]["users"][socket.id].card.push(
-        store[msg.id]["users"][store[msg.id]["order"][yourOrder]].giveCard[0]
+      storeData.persistentData[msg.id]["users"][socket.id].card.push(
+        storeData.persistentData[msg.id]["users"][storeData.persistentData[msg.id]["order"][yourOrder]].giveCard[0]
       );
       //もらったカードは向こうのユーザーから消す
       removeCard(
-        store[msg.id]["users"][store[msg.id]["order"][yourOrder]].giveCard,
-        store[msg.id]["order"][yourOrder],
+        storeData.persistentData[msg.id]["users"][storeData.persistentData[msg.id]["order"][yourOrder]].giveCard,
+        storeData.persistentData[msg.id]["order"][yourOrder],
         msg.id
       );
-      store[msg.id]["users"][store[msg.id]["order"][yourOrder]].giveCard = [];
+      storeData.persistentData[msg.id]["users"][storeData.persistentData[msg.id]["order"][yourOrder]].giveCard = [];
       //こちらのカードを相手に渡す。
-      store[msg.id]["users"][store[msg.id]["order"][yourOrder]].card.push(
+      storeData.persistentData[msg.id]["users"][storeData.persistentData[msg.id]["order"][yourOrder]].card.push(
         msg.cards[0]
       );
 
-      store[msg.id].giveCardCount = store[msg.id].giveCardCount + 1;
-      if (store[msg.id].giveCardCount == 1) {
+      storeData.persistentData[msg.id].giveCardCount = storeData.persistentData[msg.id].giveCardCount + 1;
+      if (storeData.persistentData[msg.id].giveCardCount == 1) {
         notifyGameReady(msg.id);
       } else {
         //TODO 何か送ってもいいかもしれないが、いったん保留で
@@ -479,46 +480,46 @@ io.on("connection", socket => {
     } else {
       if (yourOrder === 0) {
         //大貧民とのやりとり
-        store[msg.id]["users"][socket.id].card.push(
-          store[msg.id]["users"][store[msg.id]["order"][yourOrder]].giveCard[0]
+        storeData.persistentData[msg.id]["users"][socket.id].card.push(
+          storeData.persistentData[msg.id]["users"][storeData.persistentData[msg.id]["order"][yourOrder]].giveCard[0]
         );
-        store[msg.id]["users"][socket.id].card.push(
-          store[msg.id]["users"][store[msg.id]["order"][yourOrder]].giveCard[1]
+        storeData.persistentData[msg.id]["users"][socket.id].card.push(
+          storeData.persistentData[msg.id]["users"][storeData.persistentData[msg.id]["order"][yourOrder]].giveCard[1]
         );
         //もらったカードは向こうのユーザーから消す
         removeCard(
-          store[msg.id]["users"][store[msg.id]["order"][yourOrder]].giveCard,
-          store[msg.id]["order"][yourOrder],
+          storeData.persistentData[msg.id]["users"][storeData.persistentData[msg.id]["order"][yourOrder]].giveCard,
+          storeData.persistentData[msg.id]["order"][yourOrder],
           msg.id
         );
-        store[msg.id]["users"][store[msg.id]["order"][yourOrder]].giveCard = [];
+        storeData.persistentData[msg.id]["users"][storeData.persistentData[msg.id]["order"][yourOrder]].giveCard = [];
         //こちらのカードを相手に渡す。
-        store[msg.id]["users"][store[msg.id]["order"][yourOrder]].card.push(
+        storeData.persistentData[msg.id]["users"][storeData.persistentData[msg.id]["order"][yourOrder]].card.push(
           msg.cards[0]
         );
-        store[msg.id]["users"][store[msg.id]["order"][yourOrder]].card.push(
+        storeData.persistentData[msg.id]["users"][storeData.persistentData[msg.id]["order"][yourOrder]].card.push(
           msg.cards[1]
         );
       } else if (yourOrder === 1) {
         //貧民とのやりとり
-        store[msg.id]["users"][socket.id].card.push(
-          store[msg.id]["users"][store[msg.id]["order"][yourOrder]].giveCard[0]
+        storeData.persistentData[msg.id]["users"][socket.id].card.push(
+          storeData.persistentData[msg.id]["users"][storeData.persistentData[msg.id]["order"][yourOrder]].giveCard[0]
         );
         //もらったカードは向こうのユーザーから消す
         removeCard(
-          store[msg.id]["users"][store[msg.id]["order"][yourOrder]].giveCard,
-          store[msg.id]["order"][yourOrder],
+          storeData.persistentData[msg.id]["users"][storeData.persistentData[msg.id]["order"][yourOrder]].giveCard,
+          storeData.persistentData[msg.id]["order"][yourOrder],
           msg.id
         );
-        store[msg.id]["users"][store[msg.id]["order"][yourOrder]].giveCard = [];
+        storeData.persistentData[msg.id]["users"][storeData.persistentData[msg.id]["order"][yourOrder]].giveCard = [];
         //こちらのカードを相手に渡す。
-        store[msg.id]["users"][store[msg.id]["order"][yourOrder]].card.push(
+        storeData.persistentData[msg.id]["users"][storeData.persistentData[msg.id]["order"][yourOrder]].card.push(
           msg.cards[0]
         );
       }
-      store[msg.id].giveCardCount = store[msg.id].giveCardCount + 1;
+      storeData.persistentData[msg.id].giveCardCount = storeData.persistentData[msg.id].giveCardCount + 1;
 
-      if (store[msg.id].giveCardCount == 2) {
+      if (storeData.persistentData[msg.id].giveCardCount == 2) {
         notifyGameReady(msg.id);
       } else {
         //TODO 何か送ってもいいかもしれないが、いったん保留で
@@ -530,10 +531,10 @@ io.on("connection", socket => {
 //ゲームセットの成績統計
 function aggregateBattleSet(roomId) {
   //ポイント降順で返す。(ランキング順)
-  return Object.keys(store[roomId]["users"]).sort(function(a, b) {
-    if (store[roomId]["users"][a].point > store[roomId]["users"][b].point)
+  return Object.keys(storeData.persistentData[roomId]["users"]).sort(function(a, b) {
+    if (storeData.persistentData[roomId]["users"][a].point > storeData.persistentData[roomId]["users"][b].point)
       return -1;
-    if (store[roomId]["users"][a].point < store[roomId]["users"][b].point)
+    if (storeData.persistentData[roomId]["users"][a].point < storeData.persistentData[roomId]["users"][b].point)
       return 1;
     return 0;
   });
@@ -541,19 +542,19 @@ function aggregateBattleSet(roomId) {
 
 function aggregateBattlePhase(roomId) {
   //ユーザデータを全検索し、最下位のメンバをfinishTimeの昇順に並べる。
-  let loseUsers = Object.keys(store[roomId]["users"])
+  let loseUsers = Object.keys(storeData.persistentData[roomId]["users"])
     .filter(function(key) {
-      return store[roomId]["users"][key].rankNum === 4;
+      return storeData.persistentData[roomId]["users"][key].rankNum === 4;
     })
     .sort(function(a, b) {
       if (
-        store[roomId]["users"][a].finishTime <
-        store[roomId]["users"][b].finishTime
+        storeData.persistentData[roomId]["users"][a].finishTime <
+        storeData.persistentData[roomId]["users"][b].finishTime
       )
         return -1;
       if (
-        store[roomId]["users"][a].finishTime >
-        store[roomId]["users"][b].finishTime
+        storeData.persistentData[roomId]["users"][a].finishTime >
+        storeData.persistentData[roomId]["users"][b].finishTime
       )
         return 1;
       return 0;
@@ -564,24 +565,24 @@ function aggregateBattlePhase(roomId) {
     let pos = 0;
     let fallingOutCityUserKey = "";
     loseUsers.forEach(key => {
-      if (store[roomId]["users"][key].rankReason != "fallingOutCity") {
+      if (storeData.persistentData[roomId]["users"][key].rankReason != "fallingOutCity") {
         //都落ちでない場合は、反則負けで早く上がったものから悪い順位になる。
         logger.debug(
-          "入れる前: " + JSON.stringify(store[roomId]["users"][key])
+          "入れる前: " + JSON.stringify(storeData.persistentData[roomId]["users"][key])
         );
-        store[roomId]["users"][key].rankNum =
-          Object.keys(store[roomId]["users"]).length - pos;
-        if (store[roomId]["users"][key].rankNum === 1) {
+        storeData.persistentData[roomId]["users"][key].rankNum =
+          Object.keys(storeData.persistentData[roomId]["users"]).length - pos;
+        if (storeData.persistentData[roomId]["users"][key].rankNum === 1) {
           //(ないとは思うが)一位だった場合は都落ちフラグ
-          store[roomId]["users"][key].firstPlace = true;
+          storeData.persistentData[roomId]["users"][key].firstPlace = true;
           //Note 反則負け判断時にいったんフラグをfalseにしているので、ここで見直すことはしない
         }
-        store[roomId]["users"][key].rank =
-          store[roomId]["scoreTable"][
-            Object.keys(store[roomId]["users"]).length - pos - 1
+        storeData.persistentData[roomId]["users"][key].rank =
+          storeData.persistentData[roomId]["scoreTable"][
+            Object.keys(storeData.persistentData[roomId]["users"]).length - pos - 1
           ].rankId;
         logger.debug(
-          "入れた後: " + JSON.stringify(store[roomId]["users"][key])
+          "入れた後: " + JSON.stringify(storeData.persistentData[roomId]["users"][key])
         );
         pos++;
       } else {
@@ -589,20 +590,20 @@ function aggregateBattlePhase(roomId) {
       }
     });
     if (fallingOutCityUserKey != "") {
-      store[roomId]["users"][fallingOutCityUserKey].rankNum =
-        Object.keys(store[roomId]["users"]).length - pos;
-      store[roomId]["users"][fallingOutCityUserKey].rank =
-        store[roomId]["scoreTable"][
-          Object.keys(store[roomId]["users"]).length - pos - 1
+      storeData.persistentData[roomId]["users"][fallingOutCityUserKey].rankNum =
+        Object.keys(storeData.persistentData[roomId]["users"]).length - pos;
+      storeData.persistentData[roomId]["users"][fallingOutCityUserKey].rank =
+        storeData.persistentData[roomId]["scoreTable"][
+          Object.keys(storeData.persistentData[roomId]["users"]).length - pos - 1
         ];
     }
   }
   //順位の逆順で返すと何かと楽そうなのでそうする。
   //またこの時にサクッとpoint計上しておく
-  return Object.keys(store[roomId]["users"]).sort(function(a, b) {
-    if (store[roomId]["users"][a].rankNum > store[roomId]["users"][b].rankNum)
+  return Object.keys(storeData.persistentData[roomId]["users"]).sort(function(a, b) {
+    if (storeData.persistentData[roomId]["users"][a].rankNum > storeData.persistentData[roomId]["users"][b].rankNum)
       return -1;
-    if (store[roomId]["users"][a].rankNum < store[roomId]["users"][b].rankNum)
+    if (storeData.persistentData[roomId]["users"][a].rankNum < storeData.persistentData[roomId]["users"][b].rankNum)
       return 1;
     return 0;
   });
@@ -613,54 +614,48 @@ function checkRank(sc, roomId, userId) {
   if (result.foul) {
     //反則上がりだった場合
     //rankはとりあえず大貧民扱いとする。(あとで再計算する)
-    store[roomId]["users"][userId].rank =
-      store[roomId]["scoreTable"][
-        Object.keys(store[roomId]["users"]).length - 1
+    storeData.persistentData[roomId]["users"][userId].rank =
+      storeData.persistentData[roomId]["scoreTable"][
+        Object.keys(storeData.persistentData[roomId]["users"]).length - 1
       ].rankId;
-    store[roomId]["users"][userId].rankNum = Object.keys(
-      store[roomId]["users"]
+    storeData.persistentData[roomId]["users"][userId].rankNum = Object.keys(
+      storeData.persistentData[roomId]["users"]
     ).length;
     //都落ちフラグは外しておく。(ないとは思うが、全員が反則上がりだった場合、大富豪になる可能性もある。そのときは別途firstPlaceを再計算する)
-    store[roomId]["users"][userId].firstPlace = false;
-    store[roomId]["users"][userId].rankReason = result.reason;
-    store[roomId]["users"][userId].finishTime = new Date().getTime();
+    storeData.persistentData[roomId]["users"][userId].firstPlace = false;
+    storeData.persistentData[roomId]["users"][userId].rankReason = result.reason;
+    storeData.persistentData[roomId]["users"][userId].finishTime = new Date().getTime();
   } else {
     let nextRank = 0;
-    Object.keys(store[roomId]["users"])
+    Object.keys(storeData.persistentData[roomId]["users"])
       .sort(function(a, b) {
         if (
-          store[roomId]["users"][a].rankNum > store[roomId]["users"][b].rankNum
+          storeData.persistentData[roomId]["users"][a].rankNum > storeData.persistentData[roomId]["users"][b].rankNum
         )
           return -1;
         if (
-          store[roomId]["users"][a].rankNum < store[roomId]["users"][b].rankNum
+          storeData.persistentData[roomId]["users"][a].rankNum < storeData.persistentData[roomId]["users"][b].rankNum
         )
           return 1;
         return 0;
       })
       .some(function(val) {
         if (
-          store[roomId]["users"][val].rankNum !=
-          Object.keys(store[roomId]["users"]).length
+          storeData.persistentData[roomId]["users"][val].rankNum !=
+          Object.keys(storeData.persistentData[roomId]["users"]).length
         ) {
-          nextRank = store[roomId]["users"][val].rankNum + 1;
+          nextRank = storeData.persistentData[roomId]["users"][val].rankNum + 1;
           return true;
         }
       });
 
-    store[roomId]["users"][userId].rank =
-      store[roomId]["scoreTable"][nextRank - 1].rankId;
-    store[roomId]["users"][userId].rankNum = nextRank;
-    // if(nextRank === 1){
-    //   //一位だった場合は都落ちのためのフラグを立てておく。
-    //   store[roomId]["users"][userId].firstPlace = true;
-    // }else if(store[roomId]["users"][userId].firstPlace){
-    //   //一位以外は外しておく
-    //   store[roomId]["users"][userId].firstPlace = false;
-    // }
-    store[roomId]["users"][userId].rankReason = result.reason;
-    store[roomId]["users"][userId].finishTime = new Date().getTime();
-    store[roomId].rankCount = store[roomId].rankCount + 1;
+    storeData.persistentData[roomId]["users"][userId].rank =
+      storeData.persistentData[roomId]["scoreTable"][nextRank - 1].rankId;
+    storeData.persistentData[roomId]["users"][userId].rankNum = nextRank;
+
+    storeData.persistentData[roomId]["users"][userId].rankReason = result.reason;
+    storeData.persistentData[roomId]["users"][userId].finishTime = new Date().getTime();
+    storeData.persistentData[roomId].rankCount = storeData.persistentData[roomId].rankCount + 1;
   }
 }
 
@@ -702,7 +697,7 @@ function checkFoul(sc, roomId) {
     result.reason = "jokerFinish";
     return result;
   }
-  if (!store[roomId].stair && flag8) {
+  if (!storeData.persistentData[roomId].stair && flag8) {
     //非階段状態で最後に出したカードに8を含む
     result.foul = true;
     result.reason = "card8Finish";
@@ -710,14 +705,14 @@ function checkFoul(sc, roomId) {
   }
 
   //革命時に3を含んでない?
-  if (store[roomId].revolution && flag3) {
+  if (storeData.persistentData[roomId].revolution && flag3) {
     result.foul = true;
     result.reason = "card3Finish";
     return result;
   }
 
   //非革命時に2を含んでない？
-  if (!store[roomId].revolution && flag2) {
+  if (!storeData.persistentData[roomId].revolution && flag2) {
     result.foul = true;
     result.reason = "card2Finish";
     return result;
@@ -828,9 +823,9 @@ function numComparison(nc, sc, roomId) {
     //ジョーカーはスペ3に勝てない
     return false;
   }
-  if (store[roomId].elevenback && store[roomId].revolution) {
+  if (storeData.persistentData[roomId].elevenback && storeData.persistentData[roomId].revolution) {
     return nc.number < sc.number;
-  } else if (store[roomId].elevenback || store[roomId].revolution) {
+  } else if (storeData.persistentData[roomId].elevenback || storeData.persistentData[roomId].revolution) {
     //逆残
     if (~sc.type.indexOf("joker")) {
       //ジョーカーは必ず勝てる
@@ -873,17 +868,17 @@ function createRankTable(count) {
 }
 
 function gameInit(count, sockets, roomId) {
-  store[roomId]["fieldCards"] = [];
+  storeData.persistentData[roomId]["fieldCards"] = [];
 
-  store[roomId].finishNum = 0;
-  store[roomId].scoreTable = createRankTable(count);
-  store[roomId].elevenback = false;
-  store[roomId].shibari = false;
-  store[roomId].revolution = false;
-  store[roomId].stair = false;
-  store[roomId]["order"] = [];
-  store[roomId].startedGame = true;
-  store[roomId].rankCount = 1;
+  storeData.persistentData[roomId].finishNum = 0;
+  storeData.persistentData[roomId].scoreTable = createRankTable(count);
+  storeData.persistentData[roomId].elevenback = false;
+  storeData.persistentData[roomId].shibari = false;
+  storeData.persistentData[roomId].revolution = false;
+  storeData.persistentData[roomId].stair = false;
+  storeData.persistentData[roomId]["order"] = [];
+  storeData.persistentData[roomId].startedGame = true;
+  storeData.persistentData[roomId].rankCount = 1;
 
   //まずは順番決め
   decideOrder(roomId);
@@ -893,14 +888,14 @@ function gameInit(count, sockets, roomId) {
 
   //準備完了通知
   //  notifyGameReady(roomId);
-  if (store[roomId].gameNum == 1) {
+  if (storeData.persistentData[roomId].gameNum == 1) {
     //1回目のゲームの場合は完了通知を送る。
     notifyGameReady(roomId);
   } else {
     //2回目以降はまず献上が先に実施される。(Orderが降順になっているので、それを利用する)
-    if (Object.keys(store[roomId]["users"]).length >= 3) {
+    if (Object.keys(storeData.persistentData[roomId]["users"]).length >= 3) {
       //3人以上の時
-      notifyGiveCard(roomId, Object.keys(store[roomId]["users"]).length);
+      notifyGiveCard(roomId, Object.keys(storeData.persistentData[roomId]["users"]).length);
     } else {
       //2人の時などは献上はなし
       notifyGameReady(roomId);
@@ -911,65 +906,65 @@ function gameInit(count, sockets, roomId) {
 function notifyGiveCard(roomId, memberCount) {
   if (memberCount === 3) {
     //3人のとき
-    const LowerUser1 = store[roomId]["order"][0];
-    const HigherUser1 = store[roomId]["order"][2];
+    const LowerUser1 = storeData.persistentData[roomId]["order"][0];
+    const HigherUser1 = storeData.persistentData[roomId]["order"][2];
     io.to(HigherUser1).emit("giveToLowerStatus1", {
-      targetCard: store[roomId]["users"][HigherUser1].card
+      targetCard: storeData.persistentData[roomId]["users"][HigherUser1].card
     });
     io.to(LowerUser1).emit("giveToHigherStatus1", {
-      targetCard: [store[roomId]["users"][LowerUser1].card.slice(-1)[0]]
+      targetCard: [storeData.persistentData[roomId]["users"][LowerUser1].card.slice(-1)[0]]
     });
-    store[roomId]["users"][LowerUser1].giveCard.push(
-      store[roomId]["users"][LowerUser1].slice(-1)[0]
+    storeData.persistentData[roomId]["users"][LowerUser1].giveCard.push(
+      storeData.persistentData[roomId]["users"][LowerUser1].slice(-1)[0]
     );
   } else {
     //4人以上
-    const LowerUser1 = store[roomId]["order"][1];
-    const HigherUser1 = store[roomId]["order"][memberCount - 2];
-    const LowerUser2 = store[roomId]["order"][0];
-    const HigherUser2 = store[roomId]["order"][memberCount - 1];
+    const LowerUser1 = storeData.persistentData[roomId]["order"][1];
+    const HigherUser1 = storeData.persistentData[roomId]["order"][memberCount - 2];
+    const LowerUser2 = storeData.persistentData[roomId]["order"][0];
+    const HigherUser2 = storeData.persistentData[roomId]["order"][memberCount - 1];
     io.to(HigherUser2).emit("giveToLowerStatus2", {
-      targetCard: store[roomId]["users"][HigherUser2].card
+      targetCard: storeData.persistentData[roomId]["users"][HigherUser2].card
     });
     io.to(LowerUser2).emit("giveToHigherStatus2", {
       targetCard: [
-        store[roomId]["users"][LowerUser2].card.slice(-1)[0],
-        store[roomId]["users"][LowerUser2].card.slice(-2)[0]
+        storeData.persistentData[roomId]["users"][LowerUser2].card.slice(-1)[0],
+        storeData.persistentData[roomId]["users"][LowerUser2].card.slice(-2)[0]
       ]
     });
     io.to(HigherUser1).emit("giveToLowerStatus1", {
-      targetCard: store[roomId]["users"][HigherUser1].card
+      targetCard: storeData.persistentData[roomId]["users"][HigherUser1].card
     });
     io.to(LowerUser1).emit("giveToHigherStatus1", {
-      targetCard: [store[roomId]["users"][LowerUser1].card.slice(-1)[0]]
+      targetCard: [storeData.persistentData[roomId]["users"][LowerUser1].card.slice(-1)[0]]
     });
-    store[roomId]["users"][LowerUser1].giveCard.push(
-      store[roomId]["users"][LowerUser1].card.slice(-1)[0]
+    storeData.persistentData[roomId]["users"][LowerUser1].giveCard.push(
+      storeData.persistentData[roomId]["users"][LowerUser1].card.slice(-1)[0]
     );
-    store[roomId]["users"][LowerUser2].giveCard.push(
-      store[roomId]["users"][LowerUser2].card.slice(-1)[0]
+    storeData.persistentData[roomId]["users"][LowerUser2].giveCard.push(
+      storeData.persistentData[roomId]["users"][LowerUser2].card.slice(-1)[0]
     );
-    store[roomId]["users"][LowerUser2].giveCard.push(
-      store[roomId]["users"][LowerUser2].card.slice(-2)[0]
+    storeData.persistentData[roomId]["users"][LowerUser2].giveCard.push(
+      storeData.persistentData[roomId]["users"][LowerUser2].card.slice(-2)[0]
     );
   }
 }
 
 function decideOrder(roomId) {
-  if (store[roomId].gameNum == 1) {
+  if (storeData.persistentData[roomId].gameNum == 1) {
     //1回目の場合は部屋に入った順
-    Object.keys(store[roomId]["users"]).forEach(key => {
-      store[roomId]["order"].push(key);
+    Object.keys(storeData.persistentData[roomId]["users"]).forEach(key => {
+      storeData.persistentData[roomId]["order"].push(key);
     });
-    logger.debug("第1回ゲームの順序: " + store[roomId]["order"]);
+    logger.debug("第1回ゲームの順序: " + storeData.persistentData[roomId]["order"]);
   } else {
     //2回目以降は大貧民が一番。時計回りという概念がないので、とりあえず順位の逆順にする。(オリジナル)
     //TODO? 実際は大貧民から時計回り。
     let userRank = [];
-    Object.keys(store[roomId]["users"]).forEach(key => {
-      userRank.push({ id: key, rankNum: store[roomId]["users"][key].rankNum });
-      store[roomId]["users"][key].rankNum = 0;
-      store[roomId]["users"][key].rank = "";
+    Object.keys(storeData.persistentData[roomId]["users"]).forEach(key => {
+      userRank.push({ id: key, rankNum: storeData.persistentData[roomId]["users"][key].rankNum });
+      storeData.persistentData[roomId]["users"][key].rankNum = 0;
+      storeData.persistentData[roomId]["users"][key].rank = "";
     });
     userRank
       .sort(function(a, b) {
@@ -979,7 +974,7 @@ function decideOrder(roomId) {
       })
       .forEach(key => {
         logger.debug("二回目以降key:" + key);
-        store[roomId]["order"].push(key.id);
+        storeData.persistentData[roomId]["order"].push(key.id);
       });
   }
 }
@@ -990,8 +985,8 @@ function handOutCards(count, roomId) {
   let remainder = TRUMP_TEMP.total % count;
   logger.debug("perNum:" + perNum + " remainder:" + remainder);
   let pos = 0;
-  Object.keys(store[roomId]["users"]).forEach(key => {
-    store[roomId]["users"][key].card = shuffleCards
+  Object.keys(storeData.persistentData[roomId]["users"]).forEach(key => {
+    storeData.persistentData[roomId]["users"][key].card = shuffleCards
       .slice(pos, remainder > 0 ? pos + perNum + 1 : pos + perNum)
       .sort(function(a, b) {
         if (a.number < b.number) return -1;
@@ -1002,17 +997,17 @@ function handOutCards(count, roomId) {
     remainder--;
     logger.debug("for文の中" + " perNum:" + perNum + " remainder:" + remainder);
     logger.debug(
-      key + "の持ちカード： " + JSON.stringify(store[roomId]["users"][key].card)
+      key + "の持ちカード： " + JSON.stringify(storeData.persistentData[roomId]["users"][key].card)
     );
   });
 }
 
 function notifyGameReady(roomId) {
-  store[roomId].giveCardCount = 0;
-  const orders = store[roomId]["order"];
-  const users = store[roomId]["users"];
+  storeData.persistentData[roomId].giveCardCount = 0;
+  const orders = storeData.persistentData[roomId]["order"];
+  const users = storeData.persistentData[roomId]["users"];
   io.to(orders[0]).emit("gameReady", {
-    gameNum: store[roomId].gameNum,
+    gameNum: storeData.persistentData[roomId].gameNum,
     card: users[orders[0]].card,
     yourTurn: true,
     playerName: users[orders[0]].dispName
@@ -1020,15 +1015,15 @@ function notifyGameReady(roomId) {
   logger.debug(
     "gameReadyのレスポンス(一番目)： " +
       JSON.stringify({
-        gameNum: store[roomId].gameNum,
+        gameNum: storeData.persistentData[roomId].gameNum,
         card: users[orders[0]].card,
         yourTurn: true,
         playerName: users[orders[0]].dispName
       })
   );
-  for (let i = 1; i < store[roomId]["order"].length; i++) {
+  for (let i = 1; i < storeData.persistentData[roomId]["order"].length; i++) {
     io.to(orders[i]).emit("gameReady", {
-      gameNum: store[roomId].gameNum,
+      gameNum: storeData.persistentData[roomId].gameNum,
       card: users[orders[i]].card,
       yourTurn: false,
       playerName: users[orders[0]].dispName
@@ -1047,32 +1042,32 @@ function notifyGameReady(roomId) {
 function removeCard(sc, userId, roomId) {
   //let arr = [];
   logger.debug(
-    "カード削除前: " + JSON.stringify(store[roomId]["users"][userId].card)
+    "カード削除前: " + JSON.stringify(storeData.persistentData[roomId]["users"][userId].card)
   );
   sc.forEach(v => {
-    store[roomId]["users"][userId].card = store[roomId]["users"][
+    storeData.persistentData[roomId]["users"][userId].card = storeData.persistentData[roomId]["users"][
       userId
     ].card.filter(ele => {
       return v.type !== ele.type || v.number !== ele.number;
     });
   });
   logger.debug(
-    "カード削除後: " + JSON.stringify(store[roomId]["users"][userId].card)
+    "カード削除後: " + JSON.stringify(storeData.persistentData[roomId]["users"][userId].card)
   );
 }
 
 //流した場合の動作
 function fieldClear(roomId) {
-  store[roomId]["fieldCards"] = [];
-  store[roomId].passCount = 0;
-  store[roomId].elevenback = false;
-  store[roomId].stair = false;
-  store[roomId].shibari = false;
+  storeData.persistentData[roomId]["fieldCards"] = [];
+  storeData.persistentData[roomId].passCount = 0;
+  storeData.persistentData[roomId].elevenback = false;
+  storeData.persistentData[roomId].stair = false;
+  storeData.persistentData[roomId].shibari = false;
 }
 
 function notifyChangeTurn(currentTurnIndex, roomId) {
-  const orderList = store[roomId]["order"];
-  const users = store[roomId]["users"];
+  const orderList = storeData.persistentData[roomId]["order"];
+  const users = storeData.persistentData[roomId]["users"];
   let nextTurn =
     currentTurnIndex != orderList.length - 1 ? currentTurnIndex + 1 : 0;
 
@@ -1091,7 +1086,7 @@ function notifyChangeTurn(currentTurnIndex, roomId) {
   });
   if (users[orderList[currentTurnIndex]].rankNum != 0) {
     //現在のユーザがすでに上がっている場合
-    store[roomId]["order"].splice(currentTurnIndex, 1);
+    storeData.persistentData[roomId]["order"].splice(currentTurnIndex, 1);
   }
 }
 
@@ -1203,7 +1198,7 @@ function cardCompareValidate(nc, sc, handType, roomId) {
     return result;
   }
   //スート縛りの確認
-  if (store[roomId].shibari && !isSameType(nc, sc)) {
+  if (storeData.persistentData[roomId].shibari && !isSameType(nc, sc)) {
     result.card = sc;
     result.error = 1;
     result.reason = "diffSuitCards";
@@ -1225,8 +1220,8 @@ function numComparison2(nc, sc, roomId) {
   let checkNC;
   let checkSC;
   if (
-    store[roomId].stair &&
-    (store[roomId].elevenback || store[roomId].revolution)
+    storeData.persistentData[roomId].stair &&
+    (storeData.persistentData[roomId].elevenback || storeData.persistentData[roomId].revolution)
   ) {
     //階段の場合、革命または11Back時の動作が変わる。(一番大きい数字を見ないといけない)
     nc.some(ele => {
@@ -1270,10 +1265,10 @@ function numComparison2(nc, sc, roomId) {
     //ジョーカーはスペ3に勝てない
     return false;
   }
-  if (store[roomId].elevenback && store[roomId].revolution) {
+  if (storeData.persistentData[roomId].elevenback && storeData.persistentData[roomId].revolution) {
     logger.debug("11backかつ革命中");
     return checkNC.number < checkSC.number;
-  } else if (store[roomId].elevenback || store[roomId].revolution) {
+  } else if (storeData.persistentData[roomId].elevenback || storeData.persistentData[roomId].revolution) {
     logger.debug("11backまたは革命中");
     logger.debug("比較させてねcheckNC" + JSON.stringify(checkNC));
     logger.debug("比較させてねcheckSC" + JSON.stringify(checkSC));
