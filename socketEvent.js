@@ -1,7 +1,7 @@
 //import { store, io } from './index';
 var item = require('./index.js');
-const log4js = require("log4js");
-const logger = log4js.getLogger();
+const commonUtil = require('./commonUtil');
+const LOGGER = commonUtil.logger;
 // const app = require("express")();
 // const http = require("http").Server(app);
 // const io = require("socket.io")(http);
@@ -11,17 +11,17 @@ exports.load_common_event = function(socket) {
     const roomIds = Object.keys(item.store);
     for (const roomId of roomIds) {
       if (~Object.keys(item.store[roomId]["users"]).indexOf(socket.id)) {
-        logger.warn(
+        LOGGER.warn(
           item.store[roomId]["users"][socket.id].dispName +
             "が" +
             item.store[roomId].roomDispName +
             "から退出"
         );
-        logger.debug("storeの状態" + JSON.stringify(item.store));
+        LOGGER.debug("storeの状態" + JSON.stringify(item.store));
         delete item.store[roomId]["users"][socket.id];
         socket.leave(roomId);
         if (item.store[roomId].startedGame) {
-          logger.debug("送る" + JSON.stringify(roomId) + "と" + item.store[roomId].roomId);
+          LOGGER.debug("送る" + JSON.stringify(roomId) + "と" + item.store[roomId].roomId);
           item.io.to(item.store[roomId].roomId).emit("releaseRoom", {
             reason: "goOutRoom"
           });
@@ -54,9 +54,9 @@ exports.load_room_event = function(socket) {
       rankCount: 1,
       giveCardCount: 0
     };
-    store[createRoomId] = roomObj;
-    logger.info("createdRoom:  " + roomObj.roomDispName);
-    io.emit("createdRoom", { [createRoomId]: roomObj });
+    item.store[createRoomId] = roomObj;
+    LOGGER.info("createdRoom:  " + roomObj.roomDispName);
+    commonUtil.io.emit("createdRoom", { [createRoomId]: roomObj });
   });
 };
 };
