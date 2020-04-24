@@ -1,24 +1,3 @@
-// const TRUMPDATA = {
-//   total: 54,
-//   card: [
-//     { type: "club", count: 13 },
-//     { type: "spade", count: 13 },
-//     { type: "heart", count: 13 },
-//     { type: "diamond", count: 13 }
-//   ],
-//   joker: 2
-// };
-
-// const DEBUG_TRUMPDATA = {
-//   total: 8,
-//   card: [
-//     { type: "club", count: 2 },
-//     { type: "spade", count: 2 },
-//     { type: "heart", count: 2 },
-//     { type: "diamond", count: 2 }
-//   ],
-//   joker: 0
-// };
 const commonUtil = require("./commonUtil.js");
 const storeData = require("./storeData.js");
 
@@ -31,10 +10,9 @@ var express = require("express");
 var app = require("express")();
 var http = require("http").Server(app);
 let io = require("socket.io")(http);
-const log4js = require("log4js");
-const logger = log4js.getLogger();
+
 var SocketEvent = require("./socketEvent");
-logger.level = "debug";
+//logger.level = "debug";
 // io.set('heartbeat interval', 5000);
 // io.set('heartbeat timeout', 15000);
 var port = process.env.PORT || 3000;
@@ -75,7 +53,7 @@ io.on("connection", socket => {
   //     }
   //   }
   // });
-  //SocketEvent.load_common_event(socket, io);
+  SocketEvent.load_common_event(socket, io);
   socket.on("requestRoomCreate", roomInfo => {
     const createRoomId = commonUtil.createUniqueId();
     const roomObj = {
@@ -235,7 +213,7 @@ io.on("connection", socket => {
         storeData.persistentData[msg.id].shibari = true;
         io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
           type: "shibari",
-          value: store[msg.id].shibari,
+          value: storeData.persistentData[msg.id].shibari,
           playerName: users[socket.id].dispName
         });
       }
@@ -311,7 +289,7 @@ io.on("connection", socket => {
         playerName: users[orderList[currentTurn]].dispName,
         rankReason: storeData.persistentData[msg.id]["users"][socket.id].rankReason
       });
-      logger.debug("都落ち判定前：" + JSON.stringify(store[msg.id]["users"]));
+      logger.debug("都落ち判定前：" + JSON.stringify(storeData.persistentData[msg.id]["users"]));
       if (
         storeData.persistentData[msg.id].gameNum != 1 &&
         Object.keys(storeData.persistentData[msg.id]["users"]).length >= 4 &&
