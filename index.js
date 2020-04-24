@@ -29,10 +29,9 @@ var app = require("express")();
 var http = require("http").Server(app);
 let io = require("socket.io")(http);
 exports.io = io;
-const log4js = require("log4js");
-const logger = log4js.getLogger();
+
 const socketEvent = require('./socketEvent');
-logger.level = "debug";
+const commonUtil = require('./commonUtil');
 // io.set('heartbeat interval', 5000);
 // io.set('heartbeat timeout', 15000);
 var port = process.env.PORT || 3000;
@@ -48,7 +47,7 @@ app.use("/js", express.static("public/js"));
 
 io.on("connection", socket => {
   //最初の接続時に現在のルーム一覧を送る
-  logger.debug(JSON.stringify(store));
+  commonUtil.logger.debug(JSON.stringify(store));
   io.to(socket.id).emit("showRoomList", store);
 
 //   socket.on("disconnect", () => {
