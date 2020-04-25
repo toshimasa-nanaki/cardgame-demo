@@ -493,7 +493,11 @@ $(function() {
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );
-  }); //カードを出したとき
+  }); 
+  $('#pop').popover({
+  trigger: 'focus'
+})
+  //カードを出したとき
   $("#send").click(function() {
     let sendCards = [];
     let cardarr;
