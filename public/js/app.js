@@ -2,6 +2,12 @@ $(function() {
   var socket = io();
   const debugMode =  location.search.substring(1) === "debug=true" ? true : false;
   const debugLog = (debugMode)? console.log.bind(console) : ()=>{};
+  const SUITES_DIC = {
+    spade: "♠",
+    club: "♣",
+    diamond: "♦",
+    heart: "♥"
+  }
   const RANKING_DIC = {
     daihugou: "大富豪",
     hugou: "富豪",
@@ -567,7 +573,9 @@ $(function() {
           msg.playerName + "さんがスートしばりを発動しました。<br />"
         );
         }
-        $("#shibari").text(msg.value ? "　縛り　" : "");
+        let suites = "";
+        msg.suites.forEach((ele) => suites = suites + SUITES_DIC[ele]);
+        $("#shibari").text(msg.value ? "　縛り　" + msg.suites : "");
         break;
       case "winjoker":
         $("#gameCommentaryArea").append(
