@@ -161,7 +161,7 @@
                 <h4>＜手札＞</h4>
                 <ul id="cardList2"></ul>
                 <div id="cardList"></div>
-                <div id="gameController">
+<!--                 <div id="gameController">
                   <button
                     id="send"
                     type="button"
@@ -176,7 +176,7 @@
                   >
                     パスする
                   </button>
-                </div>
+                </div> -->
               </div>
               <div id="giveCard">
                 <ul id="giveCardList"></ul>
@@ -190,7 +190,7 @@
                   </button>
                 </div>
               </div>
-              <div id="gameCommentaryArea"></div>
+<!--               <div id="gameCommentaryArea"></div> -->
             </div>
             
               
@@ -305,13 +305,15 @@
             </div>
           </div>
       </main>
-    <nav class="navbar fixed-bottom navbar-expand-sm navbar-dark bg-dark">
+    <nav class="navbar fixed-bottom navbar-expand-sm navbar-light bg-light">
+      <div id="gameCommentaryArea"></div>
+      <ul class="navbar-nav mr-auto"></ul>
 <!--   <a class="navbar-brand" href="#">Bottom navbar</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse2" aria-controls="navbarCollapse2" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarCollapse2">
-    <ul class="navbar-nav mr-auto">
+    
       <li class="nav-item active">
         <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
       </li>
@@ -331,9 +333,22 @@
       </li>
     </ul>
   </div> -->
-      <button>
-        test
-      </button>
+      <div id="gameController">
+                  <button
+                    id="send"
+                    type="button"
+                    class="btn btn-outline-primary"
+                  >
+                    カードを出す
+                  </button>
+                  <button
+                    id="pass"
+                    type="button"
+                    class="btn btn-outline-warning"
+                  >
+                    パスする
+                  </button>
+                </div>
 </nav>
     <div
       class="modal fade"
