@@ -4,6 +4,9 @@ const notifyUtil = require("./notifyUtil.js");
 //const index = require("./index.js");
 const loggerUtil = require("./loggerUtil.js");
 const LOGGER = loggerUtil.logger;
+const debug = process.env.DEBUG === "true" ? true : false;
+const TRUMP_TEMP = debug ? commonUtil.DEBUG_TRUMPDATA : commonUtil.TRUMPDATA;
+
 // const io = index.io;
 
 module.exports.gameInit = (count, sockets, roomId) => {
@@ -93,3 +96,26 @@ const handOutCards = (count, roomId) => {
     );
   });
 }
+
+const trumpInit = (trumpData) => {
+  var cards = [];
+  for (var i = 0; i < trumpData["card"].length; i++) {
+    var thistype = trumpData["card"][i];
+    for (var j = 0; j < thistype["count"]; j++) {
+      cards.push({
+        type: thistype["type"],
+        number: j + 3
+      });
+    }
+  }
+  for (var i = 0; i < trumpData["joker"]; i++) {
+    cards.push({
+      type: "joker" + (i + 1),
+      number: 99,
+      cloneType: ""
+    });
+  }
+  return cards;
+}
+
+const ORIGINALCARDDATA = trumpInit(TRUMP_TEMP);

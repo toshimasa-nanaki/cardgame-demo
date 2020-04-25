@@ -1,6 +1,7 @@
 "use strict";
 
 const commonUtil = require("./commonUtil.js");
+const gameUtil = require("./gameUtil.js");
 const storeData = require("./storeData.js");
 const loggerUtil = require("./loggerUtil.js");
 const LOGGER = loggerUtil.logger;
@@ -19,7 +20,7 @@ var port = process.env.PORT || 3000;
 const debug = process.env.DEBUG === "true" ? true : false;
 const TRUMP_TEMP = debug ? commonUtil.DEBUG_TRUMPDATA : commonUtil.TRUMPDATA;
 //let store = {};
-const ORIGINALCARDDATA = trump_init(TRUMP_TEMP);
+//const ORIGINALCARDDATA = trump_init(TRUMP_TEMP);
 
 app.get("/", function(req, res) {
   res.sendFile(__dirname + "/index.html");
@@ -116,7 +117,7 @@ io.on("connection", socket => {
     const count = storeData.persistentData[msg.id].capacity;
     if (Object.keys(storeData.persistentData[msg.id]["users"]).length == count) {
       //人数がそろっているのか確認
-      gameInit(count, socket.nsp.adapter.rooms[msg.id].sockets, msg.id);
+      gameUtil.gameInit(count, socket.nsp.adapter.rooms[msg.id].sockets, msg.id);
     } else {
       //TODO 解散
       console.log("人数が足りないので解散する");
@@ -725,26 +726,26 @@ function checkFoul(sc, roomId) {
 //   );
 // };
 
-function trump_init(trumpData) {
-  var cards = [];
-  for (var i = 0; i < trumpData["card"].length; i++) {
-    var thistype = trumpData["card"][i];
-    for (var j = 0; j < thistype["count"]; j++) {
-      cards.push({
-        type: thistype["type"],
-        number: j + 3
-      });
-    }
-  }
-  for (var i = 0; i < trumpData["joker"]; i++) {
-    cards.push({
-      type: "joker" + (i + 1),
-      number: 99,
-      cloneType: ""
-    });
-  }
-  return cards;
-}
+// function trump_init(trumpData) {
+//   var cards = [];
+//   for (var i = 0; i < trumpData["card"].length; i++) {
+//     var thistype = trumpData["card"][i];
+//     for (var j = 0; j < thistype["count"]; j++) {
+//       cards.push({
+//         type: thistype["type"],
+//         number: j + 3
+//       });
+//     }
+//   }
+//   for (var i = 0; i < trumpData["joker"]; i++) {
+//     cards.push({
+//       type: "joker" + (i + 1),
+//       number: 99,
+//       cloneType: ""
+//     });
+//   }
+//   return cards;
+// }
 
 // function sort_at_random(arrayData) {
 //   var arr = arrayData.concat();

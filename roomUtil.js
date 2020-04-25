@@ -39,7 +39,7 @@ module.exports.createRoom = roomInfo => {
   io.emit("createdRoom", { [createRoomId]: roomObj });
 };
 
-module.exports.roomJoin = (joinInfo, socketObj) => {
+module.exports.joinRoom = (joinInfo, socketObj) => {
   const roomCapacity = storeData.persistentData[joinInfo.roomId].capacity;
     if (Object.keys(storeData.persistentData[joinInfo.roomId]["users"]).length >= roomCapacity) {
       io.to(socketObj.id).emit("connectError", "roomFull");
