@@ -27,9 +27,9 @@ div#battle1,div#battle2,div#battle3,div#battle4 {
 .jumbotron {
   padding: 5rem 1rem;
 }
-nav#bottomController{
+/* nav#bottomController{
   display:none;
-}
+} */
 div#svgArea{
   display: none;
 }

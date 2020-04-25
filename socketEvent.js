@@ -32,8 +32,8 @@ module.exports.load_common_event = (socket)=> {
             reason: "goOutRoom"
           });
         }
-        //TODO 部屋の状態もおかしくなるので削除する
-        //delete store[roomId];
+        //部屋の状態もおかしくなるので削除する
+        delete storeData.persistentData[roomId];
       }
     }
 });
