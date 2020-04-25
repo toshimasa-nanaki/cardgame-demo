@@ -6,6 +6,7 @@ const storeData = require("./storeData.js");
 const loggerUtil = require("./loggerUtil.js");
 const LOGGER = loggerUtil.logger;
 const commonRequire = require("./commonRequire.js");
+const notifyUtil = require("./notifyUtil.js");
 // var express = require("express");
 // var app = require("express")();
 // var http = require("http").Server(app);
@@ -149,11 +150,11 @@ commonRequire.io.on("connection", socket => {
   socket.on("giveCardReady", msg => {});
   socket.on("giveToLowerStatus2", msg => {
     //大富豪から大貧民への送り
-    notifyGameReady(msg.id);
+    notifyUtil.notifyGameReady(msg.id);
   });
   socket.on("giveToLowerStatus1", msg => {
     //富豪から貧民への送り
-    notifyGameReady(msg.id);
+    notifyUtil.notifyGameReady(msg.id);
   });
 
   socket.on("validate", function(msg) {
@@ -456,7 +457,7 @@ commonRequire.io.on("connection", socket => {
 
       storeData.persistentData[msg.id].giveCardCount = storeData.persistentData[msg.id].giveCardCount + 1;
       if (storeData.persistentData[msg.id].giveCardCount == 1) {
-        notifyGameReady(msg.id);
+        notifyUtil.notifyGameReady(msg.id);
       } else {
         //TODO 何か送ってもいいかもしれないが、いったん保留で
       }
