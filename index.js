@@ -602,11 +602,16 @@ function checkFoul(sc, roomId) {
 }
 
 function isShibari(ncs, scs) {
+  let result = {
+    isShibari : false,
+    suits: []
+  }
   if (
     scs.some(item => ~item.type.indexOf("joker")) ||
     ncs.some(item => ~item.type.indexOf("joker"))
   ) {
-    return false;
+    //return false;
+    return result;
   }
   var flag = false;
   for (let i = 0; i < ncs.length; i++) {
