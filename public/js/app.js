@@ -269,6 +269,7 @@ $(function() {
     $("#elevenback").text("");
     $("#shibari").text("");
     $("#revolution").text("");
+    $("#bottomController").show();
     $("#send").prop("disabled", true);
     $("#pass").prop("disabled", true);
     $("#cardList").empty();
