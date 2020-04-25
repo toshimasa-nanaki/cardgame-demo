@@ -46,3 +46,28 @@ module.exports.load_room_event = (socket)=> {
     roomUtil.joinRoom(joinInfo, socket);
   });
 };
+
+module.exports.load_game_event = (socket)=> {
+  socket.on("pass", function(msg) {
+    const orderList = storeData.persistentData[msg.id]["order"];
+    const users = storeData.persistentData[msg.id]["users"];
+    storeData.persistentData[msg.id].passCount = storeData.persistentData[msg.id].passCount + 1;
+    //const count = store[msg.id].capacity;
+    LOGGER.debug(
+      "今のpassCount:" +
+        storeData.persistentData[msg.id].passCount +
+        " 今のorderList長さ" +
+        orderList.length
+    );
+    if (storeData.persistentData[msg.id].passCount >= orderList.length - 1) {
+      //パスで一周した場合流す
+      LOGGER.debug("流します");
+      fieldClear(msg.id);
+      commonRequire.io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", { type: "cutPass" });
+    }
+
+    let currentTurn = orderList.indexOf(socket.id);
+
+    notifyChangeTurn(currentTurn, msg.id);
+  });
+};
