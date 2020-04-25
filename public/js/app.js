@@ -503,6 +503,10 @@ $(function() {
         .split("_");
       sendCards.push({ type: cardarr[0], number: Number(cardarr[1]) });
     });
+    if(sendCards.length === 0){
+      //選択していない場合
+      return;
+    }
     //カードの確認をしてもらう
     socket.emit("validate", {
       cards: sendCards,
