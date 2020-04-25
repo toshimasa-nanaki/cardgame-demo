@@ -43,28 +43,7 @@ commonRequire.io.on("connection", socket => {
       console.log("人数が足りないので解散する");
     }
   });
-//   socket.on("pass", function(msg) {
-//     const orderList = storeData.persistentData[msg.id]["order"];
-//     const users = storeData.persistentData[msg.id]["users"];
-//     storeData.persistentData[msg.id].passCount = storeData.persistentData[msg.id].passCount + 1;
-//     //const count = store[msg.id].capacity;
-//     LOGGER.debug(
-//       "今のpassCount:" +
-//         storeData.persistentData[msg.id].passCount +
-//         " 今のorderList長さ" +
-//         orderList.length
-//     );
-//     if (storeData.persistentData[msg.id].passCount >= orderList.length - 1) {
-//       //パスで一周した場合流す
-//       LOGGER.debug("流します");
-//       fieldClear(msg.id);
-//       commonRequire.io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", { type: "cutPass" });
-//     }
 
-//     let currentTurn = orderList.indexOf(socket.id);
-
-//     notifyChangeTurn(currentTurn, msg.id);
-//   });
   socket.on("giveCardReady", msg => {});
   socket.on("giveToLowerStatus2", msg => {
     //大富豪から大貧民への送り
@@ -622,9 +601,6 @@ function checkFoul(sc, roomId) {
   return result;
 }
 
-//枚数確認
-function isMatchNumCards(ncs, scs) {}
-
 function isShibari(ncs, scs) {
   if (
     scs.some(item => ~item.type.indexOf("joker")) ||
@@ -659,31 +635,7 @@ function isSameNumber(cards) {
   return true;
 }
 
-function numComparison(nc, sc, roomId) {
-  if (~nc.type.indexOf("joker") && sc.type == "spade" && sc.number == "3") {
-    //スペ3はジョーカーに勝てる
-    return true;
-  }
-  if (~sc.type.indexOf("joker") && nc.type == "spade" && nc.number == "3") {
-    //ジョーカーはスペ3に勝てない
-    return false;
-  }
-  if (storeData.persistentData[roomId].elevenback && storeData.persistentData[roomId].revolution) {
-    return nc.number < sc.number;
-  } else if (storeData.persistentData[roomId].elevenback || storeData.persistentData[roomId].revolution) {
-    //逆残
-    if (~sc.type.indexOf("joker")) {
-      //ジョーカーは必ず勝てる
-      return true;
-    }
-    return nc.number > sc.number;
-  } else {
-    return nc.number < sc.number;
-  }
-}
-
 function removeCard(sc, userId, roomId) {
-  //let arr = [];
   LOGGER.debug(
     "カード削除前: " + JSON.stringify(storeData.persistentData[roomId]["users"][userId].card)
   );
@@ -698,41 +650,6 @@ function removeCard(sc, userId, roomId) {
     "カード削除後: " + JSON.stringify(storeData.persistentData[roomId]["users"][userId].card)
   );
 }
-
-//流した場合の動作
-// function fieldClear(roomId) {
-//   storeData.persistentData[roomId]["fieldCards"] = [];
-//   storeData.persistentData[roomId].passCount = 0;
-//   storeData.persistentData[roomId].elevenback = false;
-//   storeData.persistentData[roomId].stair = false;
-//   storeData.persistentData[roomId].shibari = false;
-// }
-
-// function notifyChangeTurn(currentTurnIndex, roomId) {
-//   const orderList = storeData.persistentData[roomId]["order"];
-//   const users = storeData.persistentData[roomId]["users"];
-//   let nextTurn =
-//     currentTurnIndex != orderList.length - 1 ? currentTurnIndex + 1 : 0;
-
-//   Object.keys(users).forEach(function(element) {
-//     if (element != orderList[nextTurn]) {
-//       commonRequire.io.to(element).emit("order", {
-//         flag: false,
-//         skip: false,
-//         playerName: users[orderList[nextTurn]].dispName
-//       });
-//     }
-//   });
-//   commonRequire.io.to(orderList[nextTurn]).emit("order", {
-//     flag: true,
-//     skip: users[orderList[nextTurn]].rank != "" ? true : false
-//   });
-//   if (users[orderList[currentTurnIndex]].rankNum != 0) {
-//     //現在のユーザがすでに上がっている場合
-//     storeData.persistentData[roomId]["order"].splice(currentTurnIndex, 1);
-//   }
-// }
-
 
 function cardCompareValidate(nc, sc, handType, roomId) {
   let result = {
@@ -759,7 +676,7 @@ function cardCompareValidate(nc, sc, handType, roomId) {
     return result;
   }
   //数字の大小確認
-  if (!numComparison2(nc, sc, roomId)) {
+  if (!numComparison(nc, sc, roomId)) {
     //複数枚の時はすべての数字が同じなので1枚目をみれば良い
     //階段の場合も一番弱いカード
     result.card = sc;
@@ -770,7 +687,7 @@ function cardCompareValidate(nc, sc, handType, roomId) {
   return result;
 }
 
-function numComparison2(nc, sc, roomId) {
+function numComparison(nc, sc, roomId) {
   let checkNC;
   let checkSC;
   if (
@@ -797,7 +714,7 @@ function numComparison2(nc, sc, roomId) {
     checkSC = sc[0];
   }
   LOGGER.debug(
-    "numComparison2の比較対象checkNC：" + checkNC + "　checkSC:" + checkSC
+    "numComparisonの比較対象checkNC：" + checkNC + "　checkSC:" + checkSC
   );
   if (~checkNC.type.indexOf("joker") && ~checkSC.type.indexOf("joker")) {
     //ジョーカーはジョーカーに勝てない
