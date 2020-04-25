@@ -43,6 +43,6 @@ module.exports.load_room_event = (socket)=> {
     roomUtil.createRoom(roomInfo);
   });
   socket.on("join", joinInfo => {
-    
+    roomUtil.joinRoom(joinInfo, socket);
   });
 };

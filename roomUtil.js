@@ -1,6 +1,7 @@
 "use strict";
 
 const commonUtil = require("./commonUtil.js");
+const gameUtil = require("./gameUtil.js");
 const storeData = require("./storeData.js");
 const index = require("./index.js");
 const loggerUtil = require("./loggerUtil.js");
@@ -63,7 +64,7 @@ module.exports.roomJoin = (joinInfo, socketObj) => {
     const currentPlayerNum = Object.keys(storeData.persistentData[joinInfo.roomId]["users"]).length;
     if (currentPlayerNum === roomCapacity) {
       LOGGER.info("There were members in the room.");
-      gameInit(currentPlayerNum, storeData.persistentData[joinInfo.roomId]["users"], joinInfo.roomId);
+      gameUtil.gameInit(currentPlayerNum, storeData.persistentData[joinInfo.roomId]["users"], joinInfo.roomId);
     }
   
 };
