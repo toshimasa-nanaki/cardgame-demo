@@ -33,7 +33,7 @@ module.exports.createRoom = roomInfo => {
   let roomObj = roomObjectTemp;
   roomObj["roomId"] = createRoomId;
   roomObj["roomDispName"] = roomInfo.dispName === "" ? createDefaultRoomName() : roomInfo.dispName;
-  roomObj["capacity"] = roomInfo.capacity === "" ? 4 : roomInfo.capacity;
+  roomObj["capacity"] = roomInfo.capacity === "" ? 4 : Number(roomInfo.capacity);
   storeData.persistentData[createRoomId] = roomObj;
   LOGGER.info("createdRoom:  " + roomObj.roomDispName);
   io.emit("createdRoom", { [createRoomId]: roomObj });
