@@ -306,8 +306,27 @@
           </div>
       </main>
     <nav class="navbar fixed-bottom navbar-expand-sm navbar-light bg-light">
-      <div id="gameCommentaryArea"></div>
-      <ul class="navbar-nav mr-auto"></ul>
+      <div class="row">
+  <div class="col-10"><div id="gameCommentaryArea"></div></div>
+  <div class="col-2"><div id="gameController">
+                  <button
+                    id="send"
+                    type="button"
+                    class="btn btn-outline-primary"
+                  >
+                    Play
+                  </button>
+                  <button
+                    id="pass"
+                    type="button"
+                    class="btn btn-outline-warning"
+                  >
+                    Pass
+                  </button>
+                </div></div>
+</div>
+      
+<!--       <ul class="navbar-nav mr-auto"></ul> -->
 <!--   <a class="navbar-brand" href="#">Bottom navbar</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse2" aria-controls="navbarCollapse2" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -333,22 +352,7 @@
       </li>
     </ul>
   </div> -->
-      <div id="gameController">
-                  <button
-                    id="send"
-                    type="button"
-                    class="btn btn-outline-primary"
-                  >
-                    Play
-                  </button>
-                  <button
-                    id="pass"
-                    type="button"
-                    class="btn btn-outline-warning"
-                  >
-                    パスする
-                  </button>
-                </div>
+      
 </nav>
     <div
       class="modal fade"

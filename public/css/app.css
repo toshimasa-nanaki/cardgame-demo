@@ -8,7 +8,7 @@
         display: none;
       } */
 body {
-/*   min-height: 75rem; */
+  min-height: 100% + 100px;
   padding-top: 4.5rem;
   font: 13px Helvetica, Arial;
 }
@@ -104,6 +104,9 @@ img.handCardImage{
   /* 画像にcheckedクラスが指定されたときは、
   チェックボックスの非表示を解除します。 */
   display: block;
+}
+.row{
+  width: 100%;
 }
 div#gameController2{
   display: none;
