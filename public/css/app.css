@@ -24,6 +24,10 @@ span#revolution{
 div#battle1,div#battle2,div#battle3,div#battle4 {
   display:none;
 }
+.jumbotron {
+  padding: 5rem 1rem;
+}
+nav#bottomController
 div#svgArea{
   display: none;
 }

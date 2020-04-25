@@ -12,156 +12,161 @@
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
       crossorigin="anonymous"
     />
-    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+    <link
+      href="https://use.fontawesome.com/releases/v5.6.1/css/all.css"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" type="text/css" href="css/app.css" />
     <title>賢帝の大富豪</title>
   </head>
   <body>
     <nav class="navbar navbar-expand navbar-dark fixed-top bg-dark">
-  <a class="navbar-brand" href="#">賢帝の大富豪</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" 
-          aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarCollapse">
-    <ul class="navbar-nav mr-auto"></ul>
-    <span>dropdown-</span>
-    <form class="form-inline">
-<!--       <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+      <a class="navbar-brand" href="#">賢帝の大富豪</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarCollapse"
+        aria-controls="navbarCollapse"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto"></ul>
+        <span>dropdown-</span>
+        <form class="form-inline">
+          <!--       <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button> -->
-      
-    </form>
-  </div>
-</nav>
+        </form>
+      </div>
+    </nav>
     <main role="main" class="container">
-        <div class="jumbotron">
-          <div class="col-sm-8 mx-auto">
-            <div id="roomSelectArea">
-              <div id="roomCreateArea">
-                <nav>
-                  <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                    <a
-                      class="nav-item nav-link active"
-                      id="nav-joinroom-tab"
-                      data-toggle="tab"
-                      href="#nav-joinroom"
-                      role="tab"
-                      aria-controls="nav-joinroom"
-                      aria-selected="true"
-                      >部屋に入る</a
-                    >
-                    <a
-                      class="nav-item nav-link"
-                      id="nav-createroom-tab"
-                      data-toggle="tab"
-                      href="#nav-createroom"
-                      role="tab"
-                      aria-controls="nav-createroom"
-                      aria-selected="false"
-                      >部屋を作る</a
-                    >
-                  </div>
-                </nav>
-                <div class="tab-content" id="nav-tabContent">
-                  <div
-                    class="tab-pane fade show active"
-                    id="nav-joinroom"
-                    role="tabpanel"
-                    aria-labelledby="nav-joinroom-tab"
+      <div class="jumbotron">
+        <div class="col-sm-8 mx-auto">
+          <div id="roomSelectArea">
+            <div id="roomCreateArea">
+              <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                  <a
+                    class="nav-item nav-link active"
+                    id="nav-joinroom-tab"
+                    data-toggle="tab"
+                    href="#nav-joinroom"
+                    role="tab"
+                    aria-controls="nav-joinroom"
+                    aria-selected="true"
+                    >部屋に入る</a
                   >
-                    <div class="form-group">
-                      <label for="playerName">プレイヤー名</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="playerName"
-                        placeholder="プレイヤー名を入力してください"
-                      />
-                    </div>
-                    <div class="form-group">
-                      <label for="selectRoomList">部屋選択</label>
-                      <div id="selectRoomList"></div>
-                    </div>
+                  <a
+                    class="nav-item nav-link"
+                    id="nav-createroom-tab"
+                    data-toggle="tab"
+                    href="#nav-createroom"
+                    role="tab"
+                    aria-controls="nav-createroom"
+                    aria-selected="false"
+                    >部屋を作る</a
+                  >
+                </div>
+              </nav>
+              <div class="tab-content" id="nav-tabContent">
+                <div
+                  class="tab-pane fade show active"
+                  id="nav-joinroom"
+                  role="tabpanel"
+                  aria-labelledby="nav-joinroom-tab"
+                >
+                  <div class="form-group">
+                    <label for="playerName">プレイヤー名</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="playerName"
+                      placeholder="プレイヤー名を入力してください"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="selectRoomList">部屋選択</label>
+                    <div id="selectRoomList"></div>
+                  </div>
 
-                    <button
-                      id="joinRoom"
-                      type="button"
-                      class="btn btn-outline-primary"
-                    >
-                      ルームに参加
-                    </button>
-                  </div>
-                  <div
-                    class="tab-pane fade"
-                    id="nav-createroom"
-                    role="tabpanel"
-                    aria-labelledby="nav-createroom-tab"
+                  <button
+                    id="joinRoom"
+                    type="button"
+                    class="btn btn-outline-primary"
                   >
-                    <div class="form-group">
-                      <label for="roomDispName">部屋名</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="roomDispName"
-                        placeholder="デフォルト:日時形式"
-                      />
-                    </div>
-                    <div class="form-group">
-                      <label for="roomcapacity">人数</label>
-                      <input
-                        type="number"
-                        class="form-control"
-                        id="roomcapacity"
-                        placeholder="デフォルト:4人"
-                      />
-                    </div>
-                    <button
-                      id="requestRoomCreate"
-                      type="button"
-                      class="btn btn-outline-primary"
-                    >
-                      ルームを作成
-                    </button>
+                    ルームに参加
+                  </button>
+                </div>
+                <div
+                  class="tab-pane fade"
+                  id="nav-createroom"
+                  role="tabpanel"
+                  aria-labelledby="nav-createroom-tab"
+                >
+                  <div class="form-group">
+                    <label for="roomDispName">部屋名</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="roomDispName"
+                      placeholder="デフォルト:日時形式"
+                    />
                   </div>
+                  <div class="form-group">
+                    <label for="roomcapacity">人数</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="roomcapacity"
+                      placeholder="デフォルト:4人"
+                    />
+                  </div>
+                  <button
+                    id="requestRoomCreate"
+                    type="button"
+                    class="btn btn-outline-primary"
+                  >
+                    ルームを作成
+                  </button>
                 </div>
               </div>
             </div>
-            <div id="gameArea">
-              <div id="gameFieldArea">
-                <div>
-                  <span id="order"></span>
-                </div>
-                <div>
-                  <h4>＜場＞</h4>
-                  <ul id="field"></ul>
-                </div>
-                <div>
-                  <span
-                    id="shibari"
-                    class="badge badge-pill badge-success"
-                  ></span>
-                  <span
-                    id="elevenback"
-                    class="badge badge-pill badge-danger"
-                  ></span>
-                  <span
-                    id="revolution"
-                    class="badge badge-pill badge-warning"
-                  ></span>
-                </div>
-                <div
-                  id="errorMsg"
-                  class="alert alert-danger"
-                  role="alert"
-                ></div>
-                <div>
-                  <span id="other"></span>
-                </div>
-                <ul id="gameStatus"></ul>
-                <h4>＜手札＞</h4>
-                <ul id="cardList2"></ul>
-                <div id="cardList"></div>
-<!--                 <div id="gameController">
+          </div>
+          <div id="gameArea">
+            <div id="gameFieldArea">
+              <div>
+                <span id="order"></span>
+              </div>
+              <div>
+                <h4>＜場＞</h4>
+                <ul id="field"></ul>
+              </div>
+              <div>
+                <span
+                  id="shibari"
+                  class="badge badge-pill badge-success"
+                ></span>
+                <span
+                  id="elevenback"
+                  class="badge badge-pill badge-danger"
+                ></span>
+                <span
+                  id="revolution"
+                  class="badge badge-pill badge-warning"
+                ></span>
+              </div>
+              <div id="errorMsg" class="alert alert-danger" role="alert"></div>
+              <div>
+                <span id="other"></span>
+              </div>
+              <ul id="gameStatus"></ul>
+              <h4>＜手札＞</h4>
+              <ul id="cardList2"></ul>
+              <div id="cardList"></div>
+              <!--                 <div id="gameController">
                   <button
                     id="send"
                     type="button"
@@ -177,157 +182,141 @@
                     パスする
                   </button>
                 </div> -->
-              </div>
-              <div id="giveCard">
-                <ul id="giveCardList"></ul>
-                <div id="gameController2">
-                  <button
-                    id="give"
-                    type="button"
-                    class="btn btn-outline-danger"
-                  >
-                    カードを渡す
-                  </button>
-                </div>
-              </div>
-<!--               <div id="gameCommentaryArea"></div> -->
             </div>
-            
-              
+            <div id="giveCard">
+              <ul id="giveCardList"></ul>
+              <div id="gameController2">
+                <button id="give" type="button" class="btn btn-outline-danger">
+                  カードを渡す
+                </button>
+              </div>
             </div>
-            <div id="res">
-              <span id="seiseki"></span>
-            </div>
-            <ul id="rank"></ul>
-           
-            <div class="accordion" id="battleRecord">
-              <div class="card" id="battle4">
-                <div class="card-header" id="battle4Header">
-                  <h5 class="mb-0">
-                    <button
-                      class="btn btn-link collapsed"
-                      type="button"
-                      data-toggle="collapse"
-                      data-target="#battle4Content"
-                      aria-expanded="false"
-                      aria-controls="battle4Content"
-                    >
-                      第4ゲーム成績
-                    </button>
-                  </h5>
-                </div>
-                <div
-                  id="battle4Content"
-                  class="collapse"
-                  aria-labelledby="battle4Header"
-                  data-parent="#battleRecord"
-                >
-                  <div class="card-body" id="battleResult4">
-                  </div>
-                </div>
-              </div>
-              <div class="card" id="battle3">
-                <div class="card-header" id="battle3Header">
-                  <h5 class="mb-0">
-                    <button
-                      class="btn btn-link collapsed"
-                      type="button"
-                      data-toggle="collapse"
-                      data-target="#battle3Content"
-                      aria-expanded="false"
-                      aria-controls="battle3Content"
-                    >
-                      第3ゲーム成績
-                    </button>
-                  </h5>
-                </div>
-                <div
-                  id="battle3Content"
-                  class="collapse"
-                  aria-labelledby="battle3Header"
-                  data-parent="#battleRecord"
-                >
-                  <div class="card-body" id="battleResult3">
-                  </div>
-                </div>
-              </div>
-              <div class="card" id="battle2">
-                <div class="card-header" id="battle2Header">
-                  <h5 class="mb-0">
-                    <button
-                      class="btn btn-link collapsed"
-                      type="button"
-                      data-toggle="collapse"
-                      data-target="#battle2Content"
-                      aria-expanded="false"
-                      aria-controls="battle2Content"
-                    >
-                      第2ゲーム成績
-                    </button>
-                  </h5>
-                </div>
-                <div
-                  id="battle2Content"
-                  class="collapse"
-                  aria-labelledby="battle2Header"
-                  data-parent="#battleRecord"
-                >
-                  <div class="card-body" id="battleResult2">
-                  </div>
-                </div>
-              </div>
-              <div class="card" id="battle1">
-                <div class="card-header" id="battle1Header">
-                  <h5 class="mb-0">
-                    <button
-                      class="btn btn-link"
-                      type="button"
-                      data-toggle="collapse"
-                      data-target="#battle1Content"
-                      aria-expanded="true"
-                      aria-controls="battle1Content"
-                    >
-                      第1ゲーム成績
-                    </button>
-                  </h5>
-                </div>
+            <!--               <div id="gameCommentaryArea"></div> -->
+          </div>
+        </div>
+        <div id="res">
+          <span id="seiseki"></span>
+        </div>
+        <ul id="rank"></ul>
 
-                <div
-                  id="battle1Content"
-                  class="collapse show"
-                  aria-labelledby="battle1Header"
-                  data-parent="#battleRecord"
+        <div class="accordion" id="battleRecord">
+          <div class="card" id="battle4">
+            <div class="card-header" id="battle4Header">
+              <h5 class="mb-0">
+                <button
+                  class="btn btn-link collapsed"
+                  type="button"
+                  data-toggle="collapse"
+                  data-target="#battle4Content"
+                  aria-expanded="false"
+                  aria-controls="battle4Content"
                 >
-                  <div class="card-body" id="battleResult1">
-                  </div>
-                </div>
-              </div>
+                  第4ゲーム成績
+                </button>
+              </h5>
+            </div>
+            <div
+              id="battle4Content"
+              class="collapse"
+              aria-labelledby="battle4Header"
+              data-parent="#battleRecord"
+            >
+              <div class="card-body" id="battleResult4"></div>
             </div>
           </div>
-      </main>
-    <nav class="navbar fixed-bottom navbar-expand-sm navbar-light bg-light">
+          <div class="card" id="battle3">
+            <div class="card-header" id="battle3Header">
+              <h5 class="mb-0">
+                <button
+                  class="btn btn-link collapsed"
+                  type="button"
+                  data-toggle="collapse"
+                  data-target="#battle3Content"
+                  aria-expanded="false"
+                  aria-controls="battle3Content"
+                >
+                  第3ゲーム成績
+                </button>
+              </h5>
+            </div>
+            <div
+              id="battle3Content"
+              class="collapse"
+              aria-labelledby="battle3Header"
+              data-parent="#battleRecord"
+            >
+              <div class="card-body" id="battleResult3"></div>
+            </div>
+          </div>
+          <div class="card" id="battle2">
+            <div class="card-header" id="battle2Header">
+              <h5 class="mb-0">
+                <button
+                  class="btn btn-link collapsed"
+                  type="button"
+                  data-toggle="collapse"
+                  data-target="#battle2Content"
+                  aria-expanded="false"
+                  aria-controls="battle2Content"
+                >
+                  第2ゲーム成績
+                </button>
+              </h5>
+            </div>
+            <div
+              id="battle2Content"
+              class="collapse"
+              aria-labelledby="battle2Header"
+              data-parent="#battleRecord"
+            >
+              <div class="card-body" id="battleResult2"></div>
+            </div>
+          </div>
+          <div class="card" id="battle1">
+            <div class="card-header" id="battle1Header">
+              <h5 class="mb-0">
+                <button
+                  class="btn btn-link"
+                  type="button"
+                  data-toggle="collapse"
+                  data-target="#battle1Content"
+                  aria-expanded="true"
+                  aria-controls="battle1Content"
+                >
+                  第1ゲーム成績
+                </button>
+              </h5>
+            </div>
+
+            <div
+              id="battle1Content"
+              class="collapse show"
+              aria-labelledby="battle1Header"
+              data-parent="#battleRecord"
+            >
+              <div class="card-body" id="battleResult1"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <nav id="bottomController" class="navbar fixed-bottom navbar-expand-sm navbar-light bg-light">
       <div class="row">
-  <div class="col-10"><div id="gameCommentaryArea"></div></div>
-  <div class="col-2"><div id="gameController">
-                  <button
-                    id="send"
-                    type="button"
-                    class="btn btn-outline-primary"
-                  >
-                    Play
-                  </button>
-                  <button
-                    id="pass"
-                    type="button"
-                    class="btn btn-outline-warning"
-                  >
-                    Pass
-                  </button>
-                </div></div>
-</div>
-      
-<!--       <ul class="navbar-nav mr-auto"></ul> -->
-<!--   <a class="navbar-brand" href="#">Bottom navbar</a>
+        <div class="col-10"><div id="gameCommentaryArea"></div></div>
+        <div class="col-2">
+          <div id="gameController">
+            <button id="send" type="button" class="btn btn-outline-primary">
+              Play
+            </button>
+            <button id="pass" type="button" class="btn btn-outline-warning">
+              Pass
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!--       <ul class="navbar-nav mr-auto"></ul> -->
+      <!--   <a class="navbar-brand" href="#">Bottom navbar</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse2" aria-controls="navbarCollapse2" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -352,8 +341,7 @@
       </li>
     </ul>
   </div> -->
-      
-</nav>
+    </nav>
     <div
       class="modal fade"
       id="errorModal"
