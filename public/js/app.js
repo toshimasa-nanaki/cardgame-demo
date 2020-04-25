@@ -495,7 +495,7 @@ $(function() {
     );
   }); 
   
-  $('#send').popover({trigger: 'focus'})
+  //$('#send').popover({trigger: 'focus'})
   //カードを出したとき
   $("#send").click(function() {
     let sendCards = [];
@@ -509,7 +509,7 @@ $(function() {
     if(sendCards.length === 0){
       //選択していない場合
       //$('#send').popover({trigger: 'focus', content: 'カードを選択してください。'})
-      //$('#send').popover({trigger: 'click'})
+      $('#send').popover('show')
       //$('.pop').popover({trigger: 'focus'});
       return;
     }
