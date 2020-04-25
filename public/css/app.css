@@ -10,7 +10,16 @@
 body {
   min-height: 75rem;
   padding-top: 4.5rem;
-  font: 16px Helvetica, Arial;
+  font: 13px Helvetica, Arial;
+}
+span#shibari{
+  font: 18px Helvetica, Arial;
+}
+span#elevenback{
+  font: 18px Helvetica, Arial;
+}
+span#revolution{
+  font: 18px Helvetica, Arial;
 }
 div#battle1,div#battle2,div#battle3,div#battle4 {
   display:none;
