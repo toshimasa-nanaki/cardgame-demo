@@ -494,9 +494,7 @@ $(function() {
       $("#gameCommentaryArea")[0].scrollHeight
     );
   }); 
-  $('#pop').popover({
-  trigger: 'focus'
-})
+  
   //カードを出したとき
   $("#send").click(function() {
     let sendCards = [];
@@ -509,6 +507,7 @@ $(function() {
     });
     if(sendCards.length === 0){
       //選択していない場合
+      $('#send').popover({trigger: 'focus', content: 'カードを選択してください。'})
       return;
     }
     //カードの確認をしてもらう
