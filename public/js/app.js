@@ -575,7 +575,7 @@ $(function() {
         }
         let suites = "";
         msg.suites.forEach((ele) => suites = suites + SUITES_DIC[ele]);
-        $("#shibari").text(msg.value ? "　縛り　" + msg.suites : "");
+        $("#shibari").text(msg.value ? "　縛り　" + suites : "");
         break;
       case "winjoker":
         $("#gameCommentaryArea").append(
