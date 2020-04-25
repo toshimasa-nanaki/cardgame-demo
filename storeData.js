@@ -29,3 +29,11 @@ module.exports.createRankTable = (count) => {
     return rankTable;
   }
 }
+
+module.exports.fieldClear = (roomId) => {
+  module.exports.persistentData[roomId]["fieldCards"] = [];
+  module.exports.persistentData[roomId].passCount = 0;
+  module.exports.persistentData[roomId].elevenback = false;
+  module.exports.persistentData[roomId].stair = false;
+  module.exports.persistentData[roomId].shibari = false;
+}

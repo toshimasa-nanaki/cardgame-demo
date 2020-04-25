@@ -91,3 +91,28 @@ module.exports.notifyGiveCard = (roomId,playerNum) => {
     );
   }
 }
+
+module.exports.notifyChangeTurn = (currentTurnIndex, roomId) => {
+  const orderList = storeData.persistentData[roomId]["order"];
+  const users = storeData.persistentData[roomId]["users"];
+  let nextTurn =
+    currentTurnIndex != orderList.length - 1 ? currentTurnIndex + 1 : 0;
+
+  Object.keys(users).forEach(function(element) {
+    if (element != orderList[nextTurn]) {
+      commonRequire.io.to(element).emit("order", {
+        flag: false,
+        skip: false,
+        playerName: users[orderList[nextTurn]].dispName
+      });
+    }
+  });
+  commonRequire.io.to(orderList[nextTurn]).emit("order", {
+    flag: true,
+    skip: users[orderList[nextTurn]].rank != "" ? true : false
+  });
+  if (users[orderList[currentTurnIndex]].rankNum != 0) {
+    //現在のユーザがすでに上がっている場合
+    storeData.persistentData[roomId]["order"].splice(currentTurnIndex, 1);
+  }
+}

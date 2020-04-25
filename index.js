@@ -30,6 +30,7 @@ commonRequire.io.on("connection", socket => {
 
   SocketEvent.load_common_event(socket);
   SocketEvent.load_room_event(socket);
+  SocketEvent.load_game_event(socket);
 
   //再戦
   socket.on("rematch", function(msg) {
@@ -121,7 +122,7 @@ commonRequire.io.on("connection", socket => {
         validateCards[0].number == "3"
       ) {
         //JOKER討伐(誰も倒せないから流す)
-        fieldClear(msg.id);
+        storeData.fieldClear(msg.id);
         commonRequire.io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
           type: "winjoker",
           value: msg,
@@ -148,7 +149,7 @@ commonRequire.io.on("connection", socket => {
       ~validateCards[1].type.indexOf("joker")
     ) {
       //JOKER2枚だしは歯が立たないので流す
-      fieldClear(msg.id);
+      storeData.fieldClear(msg.id);
       commonRequire.io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
         type: "doblejoker",
         value: msg,
@@ -168,7 +169,7 @@ commonRequire.io.on("connection", socket => {
     }
     if (validateCards[0].number == 8 && resultCheckHand.type !== "stair") {
       //8ぎり(階段のときは発生しない)
-      fieldClear(msg.id);
+      storeData.fieldClear(msg.id);
       commonRequire.io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
         type: "cut8",
         value: msg,
@@ -343,7 +344,7 @@ commonRequire.io.on("connection", socket => {
         }
       }
     }
-    notifyChangeTurn(currentTurn, msg.id);
+    notifyUtil.notifyChangeTurn(currentTurn, msg.id);
   });
   socket.on("selectedGiveCard", msg => {
     //選択したカードを交換して、ゲームをスタートする。
@@ -699,38 +700,38 @@ function removeCard(sc, userId, roomId) {
 }
 
 //流した場合の動作
-function fieldClear(roomId) {
-  storeData.persistentData[roomId]["fieldCards"] = [];
-  storeData.persistentData[roomId].passCount = 0;
-  storeData.persistentData[roomId].elevenback = false;
-  storeData.persistentData[roomId].stair = false;
-  storeData.persistentData[roomId].shibari = false;
-}
+// function fieldClear(roomId) {
+//   storeData.persistentData[roomId]["fieldCards"] = [];
+//   storeData.persistentData[roomId].passCount = 0;
+//   storeData.persistentData[roomId].elevenback = false;
+//   storeData.persistentData[roomId].stair = false;
+//   storeData.persistentData[roomId].shibari = false;
+// }
 
-function notifyChangeTurn(currentTurnIndex, roomId) {
-  const orderList = storeData.persistentData[roomId]["order"];
-  const users = storeData.persistentData[roomId]["users"];
-  let nextTurn =
-    currentTurnIndex != orderList.length - 1 ? currentTurnIndex + 1 : 0;
+// function notifyChangeTurn(currentTurnIndex, roomId) {
+//   const orderList = storeData.persistentData[roomId]["order"];
+//   const users = storeData.persistentData[roomId]["users"];
+//   let nextTurn =
+//     currentTurnIndex != orderList.length - 1 ? currentTurnIndex + 1 : 0;
 
-  Object.keys(users).forEach(function(element) {
-    if (element != orderList[nextTurn]) {
-      commonRequire.io.to(element).emit("order", {
-        flag: false,
-        skip: false,
-        playerName: users[orderList[nextTurn]].dispName
-      });
-    }
-  });
-  commonRequire.io.to(orderList[nextTurn]).emit("order", {
-    flag: true,
-    skip: users[orderList[nextTurn]].rank != "" ? true : false
-  });
-  if (users[orderList[currentTurnIndex]].rankNum != 0) {
-    //現在のユーザがすでに上がっている場合
-    storeData.persistentData[roomId]["order"].splice(currentTurnIndex, 1);
-  }
-}
+//   Object.keys(users).forEach(function(element) {
+//     if (element != orderList[nextTurn]) {
+//       commonRequire.io.to(element).emit("order", {
+//         flag: false,
+//         skip: false,
+//         playerName: users[orderList[nextTurn]].dispName
+//       });
+//     }
+//   });
+//   commonRequire.io.to(orderList[nextTurn]).emit("order", {
+//     flag: true,
+//     skip: users[orderList[nextTurn]].rank != "" ? true : false
+//   });
+//   if (users[orderList[currentTurnIndex]].rankNum != 0) {
+//     //現在のユーザがすでに上がっている場合
+//     storeData.persistentData[roomId]["order"].splice(currentTurnIndex, 1);
+//   }
+// }
 
 
 function cardCompareValidate(nc, sc, handType, roomId) {

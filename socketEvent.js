@@ -10,6 +10,7 @@ const commonUtil = require("./commonUtil.js");
 const roomUtil = require("./roomUtil.js");
 const loggerUtil = require("./loggerUtil.js");
 const LOGGER = loggerUtil.logger;
+const notifyUtil = require("./notifyUtil.js");
 const io = commonRequire.io;
 module.exports.load_common_event = (socket)=> {
   socket.on("disconnect", () => {
@@ -62,12 +63,12 @@ module.exports.load_game_event = (socket)=> {
     if (storeData.persistentData[msg.id].passCount >= orderList.length - 1) {
       //パスで一周した場合流す
       LOGGER.debug("流します");
-      fieldClear(msg.id);
+      storeData.fieldClear(msg.id);
       commonRequire.io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", { type: "cutPass" });
     }
 
     let currentTurn = orderList.indexOf(socket.id);
 
-    notifyChangeTurn(currentTurn, msg.id);
+    notifyUtil.notifyChangeTurn(currentTurn, msg.id);
   });
 };
