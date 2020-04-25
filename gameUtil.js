@@ -1,11 +1,16 @@
+"use strict";
+
+const index = require("./index.js");
 const commonUtil = require("./commonUtil.js");
 const storeData = require("./storeData.js");
 const notifyUtil = require("./notifyUtil.js");
+const io = index.io;
 //const index = require("./index.js");
 const loggerUtil = require("./loggerUtil.js");
 const LOGGER = loggerUtil.logger;
 const debug = process.env.DEBUG === "true" ? true : false;
 const TRUMP_TEMP = debug ? commonUtil.DEBUG_TRUMPDATA : commonUtil.TRUMPDATA;
+
 
 // const io = index.io;
 

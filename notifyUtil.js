@@ -1,11 +1,11 @@
 "use strict";
 
+const index = require("./index.js");
 const commonUtil = require("./commonUtil.js");
 const gameUtil = require("./gameUtil.js");
 const storeData = require("./storeData.js");
 const loggerUtil = require("./loggerUtil.js");
 const LOGGER = loggerUtil.logger;
-const index = require("./index.js");
 const io = index.io;
 
 module.exports.notifyGameReady = roomId => {
