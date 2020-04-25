@@ -7,6 +7,7 @@ const loggerUtil = require("./loggerUtil.js");
 const LOGGER = loggerUtil.logger;
 const commonRequire = require("./commonRequire.js");
 const notifyUtil = require("./notifyUtil.js");
+const validateUtil = require("./validateUtil.js");
 
 var SocketEvent = require("./socketEvent");
 //LOGGER.level = "debug";
@@ -87,7 +88,7 @@ commonRequire.io.on("connection", socket => {
 
     /* 受け取ったカードのみで判定可能な部分 */
     //役をチェック
-    let resultCheckHand = checkValidateHand(validateCards);
+    let resultCheckHand = validateUtil.checkValidateHand(validateCards);
     if (resultCheckHand.error !== 0) {
       commonRequire.io.to(socket.id).emit("validateError", {
         card: msg,
@@ -620,63 +621,6 @@ function checkFoul(sc, roomId) {
   return result;
 }
 
-// let uniqueId = function(digits) {
-//   var strong = typeof digits !== "undefined" ? digits : 1000;
-//   return (
-//     Date.now().toString(16) + Math.floor(strong * Math.random()).toString(16)
-//   );
-// };
-
-// let createdDefaultRoomName = function() {
-//   let now = new Date();
-//   return (
-//     now.getFullYear() +
-//     "_" +
-//     (now.getMonth() + 1) +
-//     "_" +
-//     now.getDate() +
-//     "_" +
-//     now.getHours() +
-//     ":" +
-//     now.getMinutes() +
-//     ":" +
-//     now.getSeconds()
-//   );
-// };
-
-// function trump_init(trumpData) {
-//   var cards = [];
-//   for (var i = 0; i < trumpData["card"].length; i++) {
-//     var thistype = trumpData["card"][i];
-//     for (var j = 0; j < thistype["count"]; j++) {
-//       cards.push({
-//         type: thistype["type"],
-//         number: j + 3
-//       });
-//     }
-//   }
-//   for (var i = 0; i < trumpData["joker"]; i++) {
-//     cards.push({
-//       type: "joker" + (i + 1),
-//       number: 99,
-//       cloneType: ""
-//     });
-//   }
-//   return cards;
-// }
-
-// function sort_at_random(arrayData) {
-//   var arr = arrayData.concat();
-//   var arrLength = arr.length;
-//   var randomArr = [];
-//   for (var i = 0; i < arrLength; i++) {
-//     var randomTarget = Math.floor(Math.random() * arr.length);
-//     randomArr[i] = arr[randomTarget];
-//     arr.splice(randomTarget, 1);
-//   }
-//   return randomArr;
-// }
-
 //枚数確認
 function isMatchNumCards(ncs, scs) {}
 
@@ -788,95 +732,6 @@ function notifyChangeTurn(currentTurnIndex, roomId) {
   }
 }
 
-// 大富豪の役を満たしているか
-function checkValidateHand(sc) {
-  //1枚だし
-  //複数枚だし
-  //階段(3枚以上、順番、同スート)
-  let result = {
-    error: 0,
-    type: ""
-  };
-  if (sc.length === 1) {
-    //1枚だしは特に問題なし
-    LOGGER.debug("大富豪の役：1枚だし");
-    result.type = "unit";
-  } else if (isAllSameNumber(sc)) {
-    //複数枚だしで数字がそろっていること
-    LOGGER.debug("大富豪の役：複数枚だし");
-    result.type = "multiple";
-  } else if (isStairsCard(sc)) {
-    //階段
-    LOGGER.debug("大富豪の役：階段");
-    result.type = "stair";
-  } else {
-    result.error = 1;
-  }
-  return result;
-}
-
-function isAllSameNumber(sc) {
-  let base = sc[0].number;
-  for (let i = 1; i < sc.length; i++) {
-    if (~sc[i].type.indexOf("joker")) {
-      continue;
-    }
-    if (base !== sc[i].number) {
-      return false;
-    }
-  }
-  return true;
-}
-
-function isStairsCard(sc) {
-  //Jokerの数を確認
-  let jokerCount = sc.filter(item => ~item.type.indexOf("joker")).length;
-  if (sc.length < 3) {
-    //3枚以上でなければ階段ではない
-    return false;
-  }
-  //Note 数字1枚、ジョーカー2枚は複数出しになるので意識しなくてよい。
-  let suit = false;
-  let stairNum = false;
-  for (let i = 0; i < sc.length; i++) {
-    //比較対象がない場合は抜ける。
-    if (i + 1 === sc.length) {
-      break;
-    }
-    //比較対象がJokerの場合は終わり
-    if (~sc[i + 1].type.indexOf("joker")) {
-      break;
-    }
-    //スートチェック
-    if (sc[i + 1].type === sc[i].type) {
-      suit = true;
-    } else {
-      return false; //1回でもマークが違ったら階段ではない
-    }
-    //階段チェック
-    //Note 差が0のときはスートチェックで引っかかるので相手しない
-    const diff = sc[i + 1].number - sc[i].number;
-    if (diff === 1) {
-      //差が1なら階段と判断
-      stairNum = true;
-    } else {
-      if (jokerCount > 0) {
-        //Jokerで救えるか確認する
-        if (diff - 1 <= jokerCount) {
-          stairNum = true;
-          jokerCount = jokerCount - (diff - 1);
-        } else {
-          //Jokerでも救うことができない
-          return false;
-        }
-      } else {
-        //Jokerがなく、差が1より大きいと階段ではない
-        return false;
-      }
-    }
-  }
-  return suit && stairNum;
-}
 
 function cardCompareValidate(nc, sc, handType, roomId) {
   let result = {
