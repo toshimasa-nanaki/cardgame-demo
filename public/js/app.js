@@ -647,7 +647,7 @@ $(function() {
   socket.on("gameFinish", function(msg) {
     debugLog("game finish");
     $("#field").empty();
-    $("#gameCommentaryArea").append("あなたは、" + RANKING_DIC[msg.rank] + "です。<br />");
+    $("#gameCommentaryArea").append("第"+msg.gameNum+"回のゲーム結果は以下の通りです。<br />");
     let mes = "";
     msg.ranking.forEach(function(ele){
       $("#gameCommentaryArea").append(ele.dispName + "さん : " + RANKING_DIC[ele.rank] + "<br />");
