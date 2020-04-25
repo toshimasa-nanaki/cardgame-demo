@@ -26,3 +26,15 @@ module.exports.createUniqueId = function(digits) {
     Date.now().toString(16) + Math.floor(strong * Math.random()).toString(16)
   );
 };
+
+module.exports.sortArrayRandomly = (arrayData) => {
+  var arr = arrayData.concat();
+  var arrLength = arr.length;
+  var randomArr = [];
+  for (var i = 0; i < arrLength; i++) {
+    var randomTarget = Math.floor(Math.random() * arr.length);
+    randomArr[i] = arr[randomTarget];
+    arr.splice(randomTarget, 1);
+  }
+  return randomArr;
+}

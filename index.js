@@ -746,17 +746,17 @@ function trump_init(trumpData) {
   return cards;
 }
 
-function sort_at_random(arrayData) {
-  var arr = arrayData.concat();
-  var arrLength = arr.length;
-  var randomArr = [];
-  for (var i = 0; i < arrLength; i++) {
-    var randomTarget = Math.floor(Math.random() * arr.length);
-    randomArr[i] = arr[randomTarget];
-    arr.splice(randomTarget, 1);
-  }
-  return randomArr;
-}
+// function sort_at_random(arrayData) {
+//   var arr = arrayData.concat();
+//   var arrLength = arr.length;
+//   var randomArr = [];
+//   for (var i = 0; i < arrLength; i++) {
+//     var randomTarget = Math.floor(Math.random() * arr.length);
+//     randomArr[i] = arr[randomTarget];
+//     arr.splice(randomTarget, 1);
+//   }
+//   return randomArr;
+// }
 
 //枚数確認
 function isMatchNumCards(ncs, scs) {}
@@ -931,57 +931,57 @@ function notifyGiveCard(roomId, memberCount) {
   }
 }
 
-function decideOrder(roomId) {
-  if (storeData.persistentData[roomId].gameNum == 1) {
-    //1回目の場合は部屋に入った順
-    Object.keys(storeData.persistentData[roomId]["users"]).forEach(key => {
-      storeData.persistentData[roomId]["order"].push(key);
-    });
-    LOGGER.debug("第1回ゲームの順序: " + storeData.persistentData[roomId]["order"]);
-  } else {
-    //2回目以降は大貧民が一番。時計回りという概念がないので、とりあえず順位の逆順にする。(オリジナル)
-    //TODO? 実際は大貧民から時計回り。
-    let userRank = [];
-    Object.keys(storeData.persistentData[roomId]["users"]).forEach(key => {
-      userRank.push({ id: key, rankNum: storeData.persistentData[roomId]["users"][key].rankNum });
-      storeData.persistentData[roomId]["users"][key].rankNum = 0;
-      storeData.persistentData[roomId]["users"][key].rank = "";
-    });
-    userRank
-      .sort(function(a, b) {
-        if (a.rankNum > b.rankNum) return -1;
-        if (a.rankNum < b.rankNum) return 1;
-        return 0;
-      })
-      .forEach(key => {
-        LOGGER.debug("二回目以降key:" + key);
-        storeData.persistentData[roomId]["order"].push(key.id);
-      });
-  }
-}
+// function decideOrder(roomId) {
+//   if (storeData.persistentData[roomId].gameNum == 1) {
+//     //1回目の場合は部屋に入った順
+//     Object.keys(storeData.persistentData[roomId]["users"]).forEach(key => {
+//       storeData.persistentData[roomId]["order"].push(key);
+//     });
+//     LOGGER.debug("第1回ゲームの順序: " + storeData.persistentData[roomId]["order"]);
+//   } else {
+//     //2回目以降は大貧民が一番。時計回りという概念がないので、とりあえず順位の逆順にする。(オリジナル)
+//     //TODO? 実際は大貧民から時計回り。
+//     let userRank = [];
+//     Object.keys(storeData.persistentData[roomId]["users"]).forEach(key => {
+//       userRank.push({ id: key, rankNum: storeData.persistentData[roomId]["users"][key].rankNum });
+//       storeData.persistentData[roomId]["users"][key].rankNum = 0;
+//       storeData.persistentData[roomId]["users"][key].rank = "";
+//     });
+//     userRank
+//       .sort(function(a, b) {
+//         if (a.rankNum > b.rankNum) return -1;
+//         if (a.rankNum < b.rankNum) return 1;
+//         return 0;
+//       })
+//       .forEach(key => {
+//         LOGGER.debug("二回目以降key:" + key);
+//         storeData.persistentData[roomId]["order"].push(key.id);
+//       });
+//   }
+// }
 
-function handOutCards(count, roomId) {
-  const shuffleCards = sort_at_random(ORIGINALCARDDATA);
-  const perNum = Math.floor(TRUMP_TEMP.total / count);
-  let remainder = TRUMP_TEMP.total % count;
-  LOGGER.debug("perNum:" + perNum + " remainder:" + remainder);
-  let pos = 0;
-  Object.keys(storeData.persistentData[roomId]["users"]).forEach(key => {
-    storeData.persistentData[roomId]["users"][key].card = shuffleCards
-      .slice(pos, remainder > 0 ? pos + perNum + 1 : pos + perNum)
-      .sort(function(a, b) {
-        if (a.number < b.number) return -1;
-        if (a.number > b.number) return 1;
-        return 0;
-      });
-    pos = remainder > 0 ? pos + perNum + 1 : pos + perNum;
-    remainder--;
-    LOGGER.debug("for文の中" + " perNum:" + perNum + " remainder:" + remainder);
-    LOGGER.debug(
-      key + "の持ちカード： " + JSON.stringify(storeData.persistentData[roomId]["users"][key].card)
-    );
-  });
-}
+// function handOutCards(count, roomId) {
+//   const shuffleCards = sort_at_random(ORIGINALCARDDATA);
+//   const perNum = Math.floor(TRUMP_TEMP.total / count);
+//   let remainder = TRUMP_TEMP.total % count;
+//   LOGGER.debug("perNum:" + perNum + " remainder:" + remainder);
+//   let pos = 0;
+//   Object.keys(storeData.persistentData[roomId]["users"]).forEach(key => {
+//     storeData.persistentData[roomId]["users"][key].card = shuffleCards
+//       .slice(pos, remainder > 0 ? pos + perNum + 1 : pos + perNum)
+//       .sort(function(a, b) {
+//         if (a.number < b.number) return -1;
+//         if (a.number > b.number) return 1;
+//         return 0;
+//       });
+//     pos = remainder > 0 ? pos + perNum + 1 : pos + perNum;
+//     remainder--;
+//     LOGGER.debug("for文の中" + " perNum:" + perNum + " remainder:" + remainder);
+//     LOGGER.debug(
+//       key + "の持ちカード： " + JSON.stringify(storeData.persistentData[roomId]["users"][key].card)
+//     );
+//   });
+// }
 
 function notifyGameReady(roomId) {
   storeData.persistentData[roomId].giveCardCount = 0;
