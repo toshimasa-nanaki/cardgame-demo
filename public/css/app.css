@@ -10,6 +10,7 @@
 body {
   min-height: 75rem;
   padding-top: 4.5rem;
+  font: 16px Helvetica, Arial;
 }
 div#battle1,div#battle2,div#battle3,div#battle4 {
   display:none;
