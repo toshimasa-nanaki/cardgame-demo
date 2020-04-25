@@ -299,7 +299,7 @@ $(function() {
     if (msg.yourTurn) {
       $("#send").prop("disabled", false);
       $("#pass").prop("disabled", false);
-      $("#cardList2 input").prop("disabled", false);
+      $("#cardList2 img").prop("disabled", false);
       //$("#order").text("あなたの番です");
       $("#gameCommentaryArea").append(
         "あなたのターンです。<br />"
@@ -312,7 +312,7 @@ $(function() {
     } else {
       $("#send").prop("disabled", true);
       $("#pass").prop("disabled", true);
-      $("#cardList2 input").prop("disabled", true);
+      $("#cardList2 img").prop("disabled", true);
       //$("#order").text(msg.playerName + "の番です");
       $("#gameCommentaryArea").append(
         msg.playerName + "さんのターンです。<br />"
