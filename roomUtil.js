@@ -25,7 +25,8 @@ let roomObjectTemp = {
   startedGame: false, //ゲームが開始されているか否かのフラグ
   rankCount: 1, //次に割り当てられる順位
   giveCardCount: 0, //カードを譲渡を実施した回数(最大2回想定)
-  users: {} //ユーザ情報
+  users: {}, //ユーザ情報
+  blindCards: [] //ブラインドカード
 };
 
 module.exports.createRoom = roomInfo => {
@@ -70,7 +71,8 @@ module.exports.joinRoom = (joinInfo, socketObj) => {
 };
 
 const createDefaultRoomName = () => {
-  let now = new Date();
+  //let now = new Date();
+  let now = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
   return (
     now.getFullYear() +
     "_" +

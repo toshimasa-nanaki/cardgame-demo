@@ -7,11 +7,6 @@ const loggerUtil = require("./loggerUtil.js");
 const LOGGER = loggerUtil.logger;
 const commonRequire = require("./commonRequire.js");
 const notifyUtil = require("./notifyUtil.js");
-// var express = require("express");
-// var app = require("express")();
-// var http = require("http").Server(app);
-// module.exports.io = require("socket.io")(http);
-// const io = module.exports.io;
 
 var SocketEvent = require("./socketEvent");
 //LOGGER.level = "debug";
@@ -20,9 +15,6 @@ var SocketEvent = require("./socketEvent");
 var port = process.env.PORT || 3000;
 //debug用フラグ
 const debug = process.env.DEBUG === "true" ? true : false;
-const TRUMP_TEMP = debug ? commonUtil.DEBUG_TRUMPDATA : commonUtil.TRUMPDATA;
-//let store = {};
-//const ORIGINALCARDDATA = trump_init(TRUMP_TEMP);
 
 commonRequire.app.get("/", function(req, res) {
   res.sendFile(__dirname + "/index.html");
