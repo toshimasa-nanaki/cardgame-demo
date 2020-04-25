@@ -3,6 +3,9 @@
 const loggerUtil = require("./loggerUtil.js");
 const LOGGER = loggerUtil.logger;
 
+/*
+カードの役を確認する
+*/
 module.exports.checkValidateHand = (sc) => {
   //1枚だし
   //複数枚だし
@@ -29,6 +32,10 @@ module.exports.checkValidateHand = (sc) => {
   return result;
 }
 
+/*
+すべての数字が同じかどうか判定。
+(JOKERも対応)
+*/
 const isAllSameNumber = (sc) => {
   let base = sc[0].number;
   for (let i = 1; i < sc.length; i++) {
@@ -42,6 +49,9 @@ const isAllSameNumber = (sc) => {
   return true;
 }
 
+/*
+階段かどうか判定
+*/
 const isStairsCard = (sc) => {
   //Jokerの数を確認
   let jokerCount = sc.filter(item => ~item.type.indexOf("joker")).length;
