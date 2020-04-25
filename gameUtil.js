@@ -123,4 +123,12 @@ const trumpInit = (trumpData) => {
   return cards;
 }
 
+function fieldClear(roomId) {
+  storeData.persistentData[roomId]["fieldCards"] = [];
+  storeData.persistentData[roomId].passCount = 0;
+  storeData.persistentData[roomId].elevenback = false;
+  storeData.persistentData[roomId].stair = false;
+  storeData.persistentData[roomId].shibari = false;
+}
+
 const ORIGINALCARDDATA = trumpInit(TRUMP_TEMP);
