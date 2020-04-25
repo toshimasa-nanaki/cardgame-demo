@@ -112,12 +112,14 @@ commonRequire.io.on("connection", socket => {
 
         return;
       }
-      if (!storeData.persistentData[msg.id].shibari && isShibari(fieldCards, validateCards)) {
+      const shibariResult = checkShibari(fieldCards, validateCards);
+      if (!storeData.persistentData[msg.id].shibari && shibariResult.isShibari) {
         storeData.persistentData[msg.id].shibari = true;
         commonRequire.io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
           type: "shibari",
           value: storeData.persistentData[msg.id].shibari,
-          playerName: users[socket.id].dispName
+          playerName: users[socket.id].dispName,
+          suites: shibariResult.suites
         });
       }
     }
@@ -601,10 +603,10 @@ function checkFoul(sc, roomId) {
   return result;
 }
 
-function isShibari(ncs, scs) {
+function checkShibari(ncs, scs) {
   let result = {
     isShibari : false,
-    suits: []
+    suites: []
   }
   if (
     scs.some(item => ~item.type.indexOf("joker")) ||
@@ -614,14 +616,22 @@ function isShibari(ncs, scs) {
     return result;
   }
   var flag = false;
+  let suiteArr = [];
   for (let i = 0; i < ncs.length; i++) {
-    flag = scs.some(item => item.type === ncs[i].type);
+    flag = scs.some(item => {
+      if(item.type === ncs[i].type){
+        suiteArr.push(item.type);
+        return true;
+      }
+    });
     if (!flag) {
       //一回でも一致しなければfalse
-      return false;
+      return result;
     }
   }
-  return flag;
+  result.isShibari = true;
+  result.suites = suiteArr;
+  return result;
 }
 
 function isSameNumber(cards) {
