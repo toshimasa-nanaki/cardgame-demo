@@ -251,9 +251,6 @@ $(function() {
     );
     $("#gameFieldArea").show();
     
-//     if(msg.gameNum == 1){
-      
-//     }
     $("#gameController").show();
     $("#giveCard").hide();
     // $("#giveCardCommentaryArea").hide();
