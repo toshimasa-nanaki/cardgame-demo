@@ -291,10 +291,6 @@ $(function() {
       let li = $('<li id="' + element.type + element.number + '"></li>').append(box);
       $("#cardList2").append(li);
     });
-    // if(msg.gameNum >= 2){
-    //   socket.emit("giveCardReady", {id: $("input[name=roomRadios]:checked").val()});
-    //   return;
-    // }
     debugLog("order accept");
     if (msg.yourTurn) {
       $("#send").prop("disabled", false);
@@ -507,6 +503,8 @@ $(function() {
     });
     if(sendCards.length === 0){
       //選択していない場合
+      $("#errorMsg").show();
+      $("#errorMsg").text("カードを選択してください。");
       return;
     }
     //カードの確認をしてもらう
