@@ -5,11 +5,12 @@ const gameUtil = require("./gameUtil.js");
 const storeData = require("./storeData.js");
 const loggerUtil = require("./loggerUtil.js");
 const LOGGER = loggerUtil.logger;
-var express = require("express");
-var app = require("express")();
-var http = require("http").Server(app);
-module.exports.io = require("socket.io")(http);
-const io = module.exports.io;
+const commonRequire = require("./commonRequire.js");
+// var express = require("express");
+// var app = require("express")();
+// var http = require("http").Server(app);
+// module.exports.io = require("socket.io")(http);
+// const io = module.exports.io;
 
 var SocketEvent = require("./socketEvent");
 //LOGGER.level = "debug";
@@ -22,16 +23,16 @@ const TRUMP_TEMP = debug ? commonUtil.DEBUG_TRUMPDATA : commonUtil.TRUMPDATA;
 //let store = {};
 //const ORIGINALCARDDATA = trump_init(TRUMP_TEMP);
 
-app.get("/", function(req, res) {
+commonRequire.app.get("/", function(req, res) {
   res.sendFile(__dirname + "/index.html");
 });
-app.use("/css", express.static("public/css"));
-app.use("/js", express.static("public/js"));
+commonRequire.app.use("/css", commonRequire.express.static("public/css"));
+commonRequire.app.use("/js", commonRequire.express.static("public/js"));
 
-io.on("connection", socket => {
+commonRequire.io.on("connection", socket => {
   //最初の接続時に現在のルーム一覧を送る
   LOGGER.debug(JSON.stringify(storeData.persistentData));
-  io.to(socket.id).emit("showRoomList", storeData.persistentData);
+  commonRequire.io.to(socket.id).emit("showRoomList", storeData.persistentData);
 
   // socket.on("disconnect", () => {
   //   //TODO ゲームがすでに始まっている場合は解散
@@ -138,7 +139,7 @@ io.on("connection", socket => {
       //パスで一周した場合流す
       LOGGER.debug("流します");
       fieldClear(msg.id);
-      io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", { type: "cutPass" });
+      commonRequire.io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", { type: "cutPass" });
     }
 
     let currentTurn = orderList.indexOf(socket.id);
@@ -171,7 +172,7 @@ io.on("connection", socket => {
     //役をチェック
     let resultCheckHand = checkValidateHand(validateCards);
     if (resultCheckHand.error !== 0) {
-      io.to(socket.id).emit("validateError", {
+      commonRequire.io.to(socket.id).emit("validateError", {
         card: msg,
         error: 1,
         reason: "handError"
@@ -188,7 +189,7 @@ io.on("connection", socket => {
       msg.id
     );
     if (resultCardCompare.error != 0) {
-      io.to(socket.id).emit("validateError", {
+      commonRequire.io.to(socket.id).emit("validateError", {
         card: msg,
         error: 1,
         reason: resultCardCompare.reason
@@ -203,7 +204,7 @@ io.on("connection", socket => {
       ) {
         //JOKER討伐(誰も倒せないから流す)
         fieldClear(msg.id);
-        io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
+        commonRequire.io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
           type: "winjoker",
           value: msg,
           playerName: users[socket.id].dispName
@@ -215,7 +216,7 @@ io.on("connection", socket => {
       }
       if (!storeData.persistentData[msg.id].shibari && isShibari(fieldCards, validateCards)) {
         storeData.persistentData[msg.id].shibari = true;
-        io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
+        commonRequire.io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
           type: "shibari",
           value: storeData.persistentData[msg.id].shibari,
           playerName: users[socket.id].dispName
@@ -230,7 +231,7 @@ io.on("connection", socket => {
     ) {
       //JOKER2枚だしは歯が立たないので流す
       fieldClear(msg.id);
-      io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
+      commonRequire.io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
         type: "doblejoker",
         value: msg,
         playerName: users[socket.id].dispName
@@ -241,7 +242,7 @@ io.on("connection", socket => {
     if (validateCards.length >= 4 && resultCheckHand.type !== "stair") {
       //革命(階段革命はない)
       storeData.persistentData[msg.id].revolution = !storeData.persistentData[msg.id].revolution;
-      io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
+      commonRequire.io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
         type: "revolution",
         value: storeData.persistentData[msg.id].revolution,
         playerName: users[socket.id].dispName
@@ -250,7 +251,7 @@ io.on("connection", socket => {
     if (validateCards[0].number == 8 && resultCheckHand.type !== "stair") {
       //8ぎり(階段のときは発生しない)
       fieldClear(msg.id);
-      io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
+      commonRequire.io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
         type: "cut8",
         value: msg,
         playerName: users[socket.id].dispName
@@ -261,7 +262,7 @@ io.on("connection", socket => {
     if (validateCards[0].number == 11 && resultCheckHand.type !== "stair") {
       //11back
       storeData.persistentData[msg.id].elevenback = !storeData.persistentData[msg.id].elevenback;
-      io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
+      commonRequire.io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
         type: "elevenback",
         value: storeData.persistentData[msg.id].elevenback,
         playerName: users[socket.id].dispName
@@ -273,7 +274,7 @@ io.on("connection", socket => {
       //階段役だった場合はフラグを立てる
       storeData.persistentData[msg.id].stair = true;
     }
-    io.to(storeData.persistentData[msg.id].roomId).emit("result", {
+    commonRequire.io.to(storeData.persistentData[msg.id].roomId).emit("result", {
       card: validateCards,
       error: 0,
       reason: "",
@@ -285,11 +286,11 @@ io.on("connection", socket => {
     if (users[socket.id].card.length <= 0) {
       //成績をチェックする。
       checkRank(validateCards, msg.id, socket.id);
-      io.to(orderList[currentTurn]).emit("finish", {
+      commonRequire.io.to(orderList[currentTurn]).emit("finish", {
         rankReason: storeData.persistentData[msg.id]["users"][socket.id].rankReason
       });
       //みんなに知らせる
-      io.to(storeData.persistentData[msg.id].roomId).emit("finishNotification", {
+      commonRequire.io.to(storeData.persistentData[msg.id].roomId).emit("finishNotification", {
         playerName: users[orderList[currentTurn]].dispName,
         rankReason: storeData.persistentData[msg.id]["users"][socket.id].rankReason
       });
@@ -319,11 +320,11 @@ io.on("connection", socket => {
             storeData.persistentData[msg.id]["users"][key].firstPlace = false;
             storeData.persistentData[msg.id]["users"][key].rankReason = "fallingOutCity";
             storeData.persistentData[msg.id]["users"][key].finishTime = new Date().getTime();
-            io.to(key).emit("finish", {
+            commonRequire.io.to(key).emit("finish", {
               rankReason: storeData.persistentData[msg.id]["users"][key].rankReason
             });
             //みんなに知らせる
-            io.to(storeData.persistentData[msg.id].roomId).emit("finishNotification", {
+            commonRequire.io.to(storeData.persistentData[msg.id].roomId).emit("finishNotification", {
               playerName: users[key].dispName,
               rankReason: storeData.persistentData[msg.id]["users"][key].rankReason
             });
@@ -364,10 +365,10 @@ io.on("connection", socket => {
         LOGGER.debug(
           "最下位ユーザー:" + JSON.stringify(storeData.persistentData[msg.id]["users"][lastId])
         );
-        io.to(lastId).emit("finish", {
+        commonRequire.io.to(lastId).emit("finish", {
           rankReason: storeData.persistentData[msg.id]["users"][lastId].rankReason
         });
-        io.to(storeData.persistentData[msg.id].roomId).emit("finishNotification", {
+        commonRequire.io.to(storeData.persistentData[msg.id].roomId).emit("finishNotification", {
           playerName: users[lastId].dispName,
           rankReason: storeData.persistentData[msg.id]["users"][lastId].rankReason
         });
@@ -403,7 +404,7 @@ io.on("connection", socket => {
               dispName: storeData.persistentData[msg.id]["users"][key].dispName
             });
           });
-          io.to(storeData.persistentData[msg.id].roomId).emit("gameSet", {
+          commonRequire.io.to(storeData.persistentData[msg.id].roomId).emit("gameSet", {
             gameNum: storeData.persistentData[msg.id].gameNum,
             ranking: displayRanking,
             overall: displayOverAllRanking
@@ -411,11 +412,11 @@ io.on("connection", socket => {
           return;
         } else {
           //次のゲームへ
-          io.to(storeData.persistentData[msg.id].roomId).emit("gameFinish", {
+          commonRequire.io.to(storeData.persistentData[msg.id].roomId).emit("gameFinish", {
             gameNum: storeData.persistentData[msg.id].gameNum,
             ranking: displayRanking
           });
-          io.to(lastId).emit("nextGameStart", {
+          commonRequire.io.to(lastId).emit("nextGameStart", {
             gameNum: storeData.persistentData[msg.id].gameNum + 1,
             ranking: displayRanking
           });
@@ -890,10 +891,10 @@ function notifyGiveCard(roomId, memberCount) {
     //3人のとき
     const LowerUser1 = storeData.persistentData[roomId]["order"][0];
     const HigherUser1 = storeData.persistentData[roomId]["order"][2];
-    io.to(HigherUser1).emit("giveToLowerStatus1", {
+    commonRequire.io.to(HigherUser1).emit("giveToLowerStatus1", {
       targetCard: storeData.persistentData[roomId]["users"][HigherUser1].card
     });
-    io.to(LowerUser1).emit("giveToHigherStatus1", {
+    commonRequire.io.to(LowerUser1).emit("giveToHigherStatus1", {
       targetCard: [storeData.persistentData[roomId]["users"][LowerUser1].card.slice(-1)[0]]
     });
     storeData.persistentData[roomId]["users"][LowerUser1].giveCard.push(
@@ -905,19 +906,19 @@ function notifyGiveCard(roomId, memberCount) {
     const HigherUser1 = storeData.persistentData[roomId]["order"][memberCount - 2];
     const LowerUser2 = storeData.persistentData[roomId]["order"][0];
     const HigherUser2 = storeData.persistentData[roomId]["order"][memberCount - 1];
-    io.to(HigherUser2).emit("giveToLowerStatus2", {
+    commonRequire.io.to(HigherUser2).emit("giveToLowerStatus2", {
       targetCard: storeData.persistentData[roomId]["users"][HigherUser2].card
     });
-    io.to(LowerUser2).emit("giveToHigherStatus2", {
+    commonRequire.io.to(LowerUser2).emit("giveToHigherStatus2", {
       targetCard: [
         storeData.persistentData[roomId]["users"][LowerUser2].card.slice(-1)[0],
         storeData.persistentData[roomId]["users"][LowerUser2].card.slice(-2)[0]
       ]
     });
-    io.to(HigherUser1).emit("giveToLowerStatus1", {
+    commonRequire.io.to(HigherUser1).emit("giveToLowerStatus1", {
       targetCard: storeData.persistentData[roomId]["users"][HigherUser1].card
     });
-    io.to(LowerUser1).emit("giveToHigherStatus1", {
+    commonRequire.io.to(LowerUser1).emit("giveToHigherStatus1", {
       targetCard: [storeData.persistentData[roomId]["users"][LowerUser1].card.slice(-1)[0]]
     });
     storeData.persistentData[roomId]["users"][LowerUser1].giveCard.push(
@@ -1055,14 +1056,14 @@ function notifyChangeTurn(currentTurnIndex, roomId) {
 
   Object.keys(users).forEach(function(element) {
     if (element != orderList[nextTurn]) {
-      io.to(element).emit("order", {
+      commonRequire.io.to(element).emit("order", {
         flag: false,
         skip: false,
         playerName: users[orderList[nextTurn]].dispName
       });
     }
   });
-  io.to(orderList[nextTurn]).emit("order", {
+  commonRequire.io.to(orderList[nextTurn]).emit("order", {
     flag: true,
     skip: users[orderList[nextTurn]].rank != "" ? true : false
   });
@@ -1292,6 +1293,6 @@ function isSameType(ncs, scs) {
   return flag;
 }
 
-http.listen(port, function() {
+commonRequire.http.listen(port, function() {
   console.log("listening on *:" + port);
 });

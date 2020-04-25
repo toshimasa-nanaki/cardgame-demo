@@ -5,12 +5,12 @@
 // const http = require("http").Server(app);
 // const io = require("socket.io")(http);
 const storeData = require("./storeData.js");
-const index = require("./index.js");
+const commonRequire = require("./commonRequire.js");
 const commonUtil = require("./commonUtil.js");
 const roomUtil = require("./roomUtil.js");
 const loggerUtil = require("./loggerUtil.js");
 const LOGGER = loggerUtil.logger;
-const io = index.io;
+const io = commonRequire.io;
 module.exports.load_common_event = (socket)=> {
   socket.on("disconnect", () => {
     const roomIds = Object.keys(storeData.persistentData);

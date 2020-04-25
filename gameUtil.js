@@ -1,10 +1,10 @@
 "use strict";
 
-const index = require("./index.js");
+const commonRequire = require("./commonRequire.js");
 const commonUtil = require("./commonUtil.js");
 const storeData = require("./storeData.js");
 const notifyUtil = require("./notifyUtil.js");
-const io = index.io;
+const io = commonRequire.io;
 //const index = require("./index.js");
 const loggerUtil = require("./loggerUtil.js");
 const LOGGER = loggerUtil.logger;

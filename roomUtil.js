@@ -3,10 +3,10 @@
 const commonUtil = require("./commonUtil.js");
 const gameUtil = require("./gameUtil.js");
 const storeData = require("./storeData.js");
-const index = require("./index.js");
+const commonRequire = require("./commonRequire.js");
 const loggerUtil = require("./loggerUtil.js");
 const LOGGER = loggerUtil.logger;
-const io = index.io;
+const io = commonRequire.io;
 
 let roomObjectTemp = {
   roomId: "", //部屋を一意に決めるID

@@ -1,12 +1,12 @@
 "use strict";
 
-const index = require("./index.js");
+const commonRequire = require("./commonRequire.js");
 const commonUtil = require("./commonUtil.js");
 const gameUtil = require("./gameUtil.js");
 const storeData = require("./storeData.js");
 const loggerUtil = require("./loggerUtil.js");
 const LOGGER = loggerUtil.logger;
-const io = index.io;
+const io = commonRequire.io;
 
 module.exports.notifyGameReady = roomId => {
   storeData.persistentData[roomId].giveCardCount = 0;
