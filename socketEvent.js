@@ -42,4 +42,7 @@ module.exports.load_room_event = (socket)=> {
   socket.on("requestRoomCreate", roomInfo => {
     roomUtil.createRoom(roomInfo);
   });
+  socket.on("join", joinInfo => {
+    
+  });
 };

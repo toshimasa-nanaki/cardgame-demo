@@ -38,7 +38,35 @@ module.exports.createRoom = roomInfo => {
   io.emit("createdRoom", { [createRoomId]: roomObj });
 };
 
-module.exports.roomJoin = () => {};
+module.exports.roomJoin = (joinInfo, socketObj) => {
+  const roomCapacity = storeData.persistentData[joinInfo.roomId].capacity;
+    if (Object.keys(storeData.persistentData[joinInfo.roomId]["users"]).length >= roomCapacity) {
+      io.to(socketObj.id).emit("connectError", "roomFull");
+      return;
+    }
+    storeData.persistentData[joinInfo.roomId]["users"][socketObj.id] = {
+      dispName: joinInfo.playerName,
+      card: [],
+      rank: "",
+      rankNum: 0,
+      rankReason: "",
+      finishTime: 0,
+      point: 0,
+      firstPlace: false,
+      giveCard: []
+    };
+    socketObj.join(joinInfo.roomId);
+    io.to(socketObj.id).emit("joinedRoom", storeData.persistentData[joinInfo.roomId]["users"]);
+    for (let [key, value] of Object.entries(storeData.persistentData[joinInfo.roomId]["users"])) {
+      if (key !== socketObj.id) io.to(key).emit("otherMemberJoinedRoom", joinInfo.playerName);
+    }
+    const currentPlayerNum = Object.keys(storeData.persistentData[joinInfo.roomId]["users"]).length;
+    if (currentPlayerNum === roomCapacity) {
+      LOGGER.info("There were members in the room.");
+      gameInit(currentPlayerNum, storeData.persistentData[joinInfo.roomId]["users"], joinInfo.roomId);
+    }
+  
+};
 
 const createDefaultRoomName = () => {
   let now = new Date();

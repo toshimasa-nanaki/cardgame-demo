@@ -83,34 +83,34 @@ io.on("connection", socket => {
   //   LOGGER.info("createdRoom:  " + roomObj.roomDispName);
   //   io.emit("createdRoom", { [createRoomId]: roomObj });
   // });
-  socket.on("join", joinInfo => {
-    const roomCapacity = storeData.persistentData[joinInfo.roomId].capacity;
-    if (Object.keys(storeData.persistentData[joinInfo.roomId]["users"]).length >= roomCapacity) {
-      io.to(socket.id).emit("connectError", "roomFull");
-      return;
-    }
-    storeData.persistentData[joinInfo.roomId]["users"][socket.id] = {
-      dispName: joinInfo.playerName,
-      card: [],
-      rank: "",
-      rankNum: 0,
-      rankReason: "",
-      finishTime: 0,
-      point: 0,
-      firstPlace: false,
-      giveCard: []
-    };
-    socket.join(joinInfo.roomId);
-    io.to(socket.id).emit("joinedRoom", storeData.persistentData[joinInfo.roomId]["users"]);
-    for (let [key, value] of Object.entries(storeData.persistentData[joinInfo.roomId]["users"])) {
-      if (key !== socket.id) io.to(key).emit("otherMemberJoinedRoom", joinInfo.playerName);
-    }
-    const currentPlayerNum = Object.keys(storeData.persistentData[joinInfo.roomId]["users"]).length;
-    if (currentPlayerNum === roomCapacity) {
-      LOGGER.info("There were members in the room.");
-      gameInit(currentPlayerNum, storeData.persistentData[joinInfo.roomId]["users"], joinInfo.roomId);
-    }
-  });
+  // socket.on("join", joinInfo => {
+  //   const roomCapacity = storeData.persistentData[joinInfo.roomId].capacity;
+  //   if (Object.keys(storeData.persistentData[joinInfo.roomId]["users"]).length >= roomCapacity) {
+  //     io.to(socket.id).emit("connectError", "roomFull");
+  //     return;
+  //   }
+  //   storeData.persistentData[joinInfo.roomId]["users"][socket.id] = {
+  //     dispName: joinInfo.playerName,
+  //     card: [],
+  //     rank: "",
+  //     rankNum: 0,
+  //     rankReason: "",
+  //     finishTime: 0,
+  //     point: 0,
+  //     firstPlace: false,
+  //     giveCard: []
+  //   };
+  //   socket.join(joinInfo.roomId);
+  //   io.to(socket.id).emit("joinedRoom", storeData.persistentData[joinInfo.roomId]["users"]);
+  //   for (let [key, value] of Object.entries(storeData.persistentData[joinInfo.roomId]["users"])) {
+  //     if (key !== socket.id) io.to(key).emit("otherMemberJoinedRoom", joinInfo.playerName);
+  //   }
+  //   const currentPlayerNum = Object.keys(storeData.persistentData[joinInfo.roomId]["users"]).length;
+  //   if (currentPlayerNum === roomCapacity) {
+  //     LOGGER.info("There were members in the room.");
+  //     gameInit(currentPlayerNum, storeData.persistentData[joinInfo.roomId]["users"], joinInfo.roomId);
+  //   }
+  // });
   //再戦
   socket.on("rematch", function(msg) {
     const count = storeData.persistentData[msg.id].capacity;
