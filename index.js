@@ -564,7 +564,7 @@ function checkFoul(sc, roomId) {
     if (ele.number == 8) {
       flag8 = true;
     }
-    if (~ele.type.indexOf("Joker")) {
+    if (~ele.type.indexOf("joker")) {
       flagJoker = true;
     }
     if (ele.number == 2) {
