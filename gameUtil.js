@@ -80,11 +80,15 @@ const decideOrder = roomId => {
 }
 
 const handOutCards = (count, roomId) => {
-  const shuffleCards = commonUtil.sortArrayRandomly(ORIGINALCARDDATA);
-  //ブラインドカードの確認をする。もし
+  let shuffleCards = commonUtil.sortArrayRandomly(ORIGINALCARDDATA);
   const perNum = Math.floor(TRUMP_TEMP.total / count);
   const remainder = TRUMP_TEMP.total % count;
   LOGGER.debug("perNum:" + perNum + " remainder:" + remainder);
+  //ブラインドカードの確認をする。もしジョーカーが含まれている場合は切りなおす。
+  while(shuffleCards.slice(TRUMP_TEMP.total - 2, TRUMP_TEMP.total).some(ele => ~ele.type.indexOf("joker"))){
+    LOGGER.debug("ブラインドカードにジョーカーが含まれるためシャッフルしなおす");
+    shuffleCards = commonUtil.sortArrayRandomly(ORIGINALCARDDATA);
+  }
   let pos = 0;
   Object.keys(storeData.persistentData[roomId]["users"]).forEach(key => {
     storeData.persistentData[roomId]["users"][key].card = shuffleCards
