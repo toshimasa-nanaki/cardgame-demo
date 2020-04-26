@@ -70,8 +70,8 @@ module.exports.checkOut = (sc, roomId, userId, currentTurn) => {
       if (
         storeData.persistentData[roomId].gameNum != 1 &&
         Object.keys(storeData.persistentData[roomId]["users"]).length >= 4 &&
-        !storeData.persistentData[roomId]["users"][socket.id].firstPlace &&
-        storeData.persistentData[roomId]["users"][socket.id].rankNum == 1
+        !storeData.persistentData[roomId]["users"][userId].firstPlace &&
+        storeData.persistentData[roomId]["users"][userId].rankNum == 1
       ) {
         //都落ちが発生。
         //前回一位じゃなかったものが一位になっている場合は、都落ちが発生する。
@@ -400,6 +400,87 @@ const checkFoul = (sc, roomId) => {
     return result;
   }
   return result;
+}
+
+//ゲームセットの成績統計
+const aggregateBattleSet = (roomId) => {
+  //ポイント降順で返す。(ランキング順)
+  return Object.keys(storeData.persistentData[roomId]["users"]).sort(function(a, b) {
+    if (storeData.persistentData[roomId]["users"][a].point > storeData.persistentData[roomId]["users"][b].point)
+      return -1;
+    if (storeData.persistentData[roomId]["users"][a].point < storeData.persistentData[roomId]["users"][b].point)
+      return 1;
+    return 0;
+  });
+}
+
+const aggregateBattlePhase = (roomId) => {
+  //ユーザデータを全検索し、最下位のメンバをfinishTimeの昇順に並べる。
+  let loseUsers = Object.keys(storeData.persistentData[roomId]["users"])
+    .filter(function(key) {
+      return storeData.persistentData[roomId]["users"][key].rankNum === 4;
+    })
+    .sort(function(a, b) {
+      if (
+        storeData.persistentData[roomId]["users"][a].finishTime <
+        storeData.persistentData[roomId]["users"][b].finishTime
+      )
+        return -1;
+      if (
+        storeData.persistentData[roomId]["users"][a].finishTime >
+        storeData.persistentData[roomId]["users"][b].finishTime
+      )
+        return 1;
+      return 0;
+    });
+  if (loseUsers.length != 1) {
+    //0はありえないので考慮しない。
+    LOGGER.debug("4位の人数: " + loseUsers.length);
+    let pos = 0;
+    let fallingOutCityUserKey = "";
+    loseUsers.forEach(key => {
+      if (storeData.persistentData[roomId]["users"][key].rankReason != "fallingOutCity") {
+        //都落ちでない場合は、反則負けで早く上がったものから悪い順位になる。
+        LOGGER.debug(
+          "入れる前: " + JSON.stringify(storeData.persistentData[roomId]["users"][key])
+        );
+        storeData.persistentData[roomId]["users"][key].rankNum =
+          Object.keys(storeData.persistentData[roomId]["users"]).length - pos;
+        if (storeData.persistentData[roomId]["users"][key].rankNum === 1) {
+          //(ないとは思うが)一位だった場合は都落ちフラグ
+          storeData.persistentData[roomId]["users"][key].firstPlace = true;
+          //Note 反則負け判断時にいったんフラグをfalseにしているので、ここで見直すことはしない
+        }
+        storeData.persistentData[roomId]["users"][key].rank =
+          storeData.persistentData[roomId]["scoreTable"][
+            Object.keys(storeData.persistentData[roomId]["users"]).length - pos - 1
+          ].rankId;
+        LOGGER.debug(
+          "入れた後: " + JSON.stringify(storeData.persistentData[roomId]["users"][key])
+        );
+        pos++;
+      } else {
+        fallingOutCityUserKey = key;
+      }
+    });
+    if (fallingOutCityUserKey != "") {
+      storeData.persistentData[roomId]["users"][fallingOutCityUserKey].rankNum =
+        Object.keys(storeData.persistentData[roomId]["users"]).length - pos;
+      storeData.persistentData[roomId]["users"][fallingOutCityUserKey].rank =
+        storeData.persistentData[roomId]["scoreTable"][
+          Object.keys(storeData.persistentData[roomId]["users"]).length - pos - 1
+        ];
+    }
+  }
+  //順位の逆順で返すと何かと楽そうなのでそうする。
+  //またこの時にサクッとpoint計上しておく
+  return Object.keys(storeData.persistentData[roomId]["users"]).sort(function(a, b) {
+    if (storeData.persistentData[roomId]["users"][a].rankNum > storeData.persistentData[roomId]["users"][b].rankNum)
+      return -1;
+    if (storeData.persistentData[roomId]["users"][a].rankNum < storeData.persistentData[roomId]["users"][b].rankNum)
+      return 1;
+    return 0;
+  });
 }
 
 const ORIGINALCARDDATA = trumpInit(TRUMP_TEMP);
