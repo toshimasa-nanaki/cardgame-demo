@@ -35,7 +35,27 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav mr-auto"></ul>
-        <span>dropdown-</span>
+        <!--         <span>dropdown-</span> -->
+        <div id="playerInfoDropdown" class="btn-group">
+          <button
+            id=""
+            class="btn btn-secondary btn-sm dropdown-toggle"
+            type="button"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <span>名前</span>　
+            <span>3</span>P
+          </button>
+          <div class="dropdown-menu">
+            <span>ブラインドカード</span>
+            <ul>
+              <li>♥3</li>
+              <li>♥4</li>
+            </ul>
+          </div>
+        </div>
         <form class="form-inline">
           <!--       <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button> -->
@@ -185,7 +205,7 @@
             </div>
             <div id="giveCard">
               <ul id="giveCardList"></ul>
-<!--               <div id="gameController2">
+              <!--               <div id="gameController2">
                 <button id="give" type="button" class="btn btn-outline-danger">
                   カードを渡す
                 </button>
@@ -300,7 +320,10 @@
         </div>
       </div>
     </main>
-    <nav id="bottomController" class="navbar fixed-bottom navbar-expand-sm navbar-light bg-light">
+    <nav
+      id="bottomController"
+      class="navbar fixed-bottom navbar-expand-sm navbar-light bg-light"
+    >
       <div class="row">
         <div class="col-10"><div id="gameCommentaryArea"></div></div>
         <div class="col-2">
@@ -313,10 +336,10 @@
             </button>
           </div>
           <div id="gameController2">
-                <button id="give" type="button" class="btn btn-outline-danger">
-                  Give
-                </button>
-              </div>
+            <button id="give" type="button" class="btn btn-outline-danger">
+              Give
+            </button>
+          </div>
         </div>
       </div>
     </nav>
