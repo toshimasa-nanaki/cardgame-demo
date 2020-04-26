@@ -58,103 +58,103 @@ module.exports.checkOut = (sc, roomId, userId, currentTurn) => {
   //if (users[socket.id].card.length <= 0) {
       //成績をチェックする。
       checkRank(sc, roomId, userId);
-      commonRequire.io.to(storeData.persistentData[roomId]["order"][currentTurn]).emit("finish", {
+      commonRequire.io.to(userId).emit("finish", {
         rankReason: storeData.persistentData[roomId]["users"][userId].rankReason
       });
       //みんなに知らせる
-      commonRequire.io.to(storeData.persistentData[roomId].roomId).emit("finishNotification", {
-        playerName: users[orderList[currentTurn]].dispName,
-        rankReason: storeData.persistentData[msg.id]["users"][socket.id].rankReason
+      commonRequire.io.to(roomId).emit("finishNotification", {
+        playerName: storeData.persistentData[roomId]["users"][userId].dispName,
+        rankReason: storeData.persistentData[roomId]["users"][userId].rankReason
       });
-      LOGGER.debug("都落ち判定前：" + JSON.stringify(storeData.persistentData[msg.id]["users"]));
+      LOGGER.debug("都落ち判定前：" + JSON.stringify(storeData.persistentData[roomId]["users"]));
       if (
-        storeData.persistentData[msg.id].gameNum != 1 &&
-        Object.keys(storeData.persistentData[msg.id]["users"]).length >= 4 &&
-        !storeData.persistentData[msg.id]["users"][socket.id].firstPlace &&
-        storeData.persistentData[msg.id]["users"][socket.id].rankNum == 1
+        storeData.persistentData[roomId].gameNum != 1 &&
+        Object.keys(storeData.persistentData[roomId]["users"]).length >= 4 &&
+        !storeData.persistentData[roomId]["users"][socket.id].firstPlace &&
+        storeData.persistentData[roomId]["users"][socket.id].rankNum == 1
       ) {
         //都落ちが発生。
         //前回一位じゃなかったものが一位になっている場合は、都落ちが発生する。
         LOGGER.debug("都落ち発生！！！");
         LOGGER.debug(
-          "今の都落ち候補:" + JSON.stringify(storeData.persistentData[msg.id]["users"])
+          "今の都落ち候補:" + JSON.stringify(storeData.persistentData[roomId]["users"])
         );
-        Object.keys(storeData.persistentData[msg.id]["users"]).forEach(key => {
-          if (storeData.persistentData[msg.id]["users"][key].firstPlace) {
+        Object.keys(storeData.persistentData[roomId]["users"]).forEach(key => {
+          if (storeData.persistentData[roomId]["users"][key].firstPlace) {
             //都落ちなので、ゲーム終了。とりあえず大貧民にしておく
-            storeData.persistentData[msg.id]["users"][key].rankNum = Object.keys(
-              storeData.persistentData[msg.id]["users"]
+            storeData.persistentData[roomId]["users"][key].rankNum = Object.keys(
+              storeData.persistentData[roomId]["users"]
             ).length;
-            storeData.persistentData[msg.id]["users"][key].rank =
-              storeData.persistentData[msg.id]["scoreTable"][
-                Object.keys(storeData.persistentData[msg.id]["users"]).length - 1
+            storeData.persistentData[roomId]["users"][key].rank =
+              storeData.persistentData[roomId]["scoreTable"][
+                Object.keys(storeData.persistentData[roomId]["users"]).length - 1
               ].rankId;
-            storeData.persistentData[msg.id]["users"][key].firstPlace = false;
-            storeData.persistentData[msg.id]["users"][key].rankReason = "fallingOutCity";
-            storeData.persistentData[msg.id]["users"][key].finishTime = new Date().getTime();
+            storeData.persistentData[roomId]["users"][key].firstPlace = false;
+            storeData.persistentData[roomId]["users"][key].rankReason = "fallingOutCity";
+            storeData.persistentData[roomId]["users"][key].finishTime = new Date().getTime();
             commonRequire.io.to(key).emit("finish", {
-              rankReason: storeData.persistentData[msg.id]["users"][key].rankReason
+              rankReason: storeData.persistentData[roomId]["users"][key].rankReason
             });
             //みんなに知らせる
-            commonRequire.io.to(storeData.persistentData[msg.id].roomId).emit("finishNotification", {
-              playerName: users[key].dispName,
-              rankReason: storeData.persistentData[msg.id]["users"][key].rankReason
+            commonRequire.io.to(storeData.persistentData[roomId].roomId).emit("finishNotification", {
+              playerName: storeData.persistentData[roomId]["users"][key].dispName,
+              rankReason: storeData.persistentData[roomId]["users"][key].rankReason
             });
-            storeData.persistentData[msg.id].finishNum = storeData.persistentData[msg.id].finishNum + 1;
-            storeData.persistentData[msg.id]["order"].splice(
-              storeData.persistentData[msg.id]["order"].indexOf(key),
+            storeData.persistentData[roomId].finishNum = storeData.persistentData[roomId].finishNum + 1;
+            storeData.persistentData[roomId]["order"].splice(
+              storeData.persistentData[roomId]["order"].indexOf(key),
               1
             );
           }
         });
       }
-      if (storeData.persistentData[msg.id]["users"][socket.id].rankNum == 1) {
-        storeData.persistentData[msg.id]["users"][socket.id].firstPlace = true;
+      if (storeData.persistentData[roomId]["users"][userId].rankNum == 1) {
+        storeData.persistentData[roomId]["users"][userId].firstPlace = true;
       }
-      storeData.persistentData[msg.id].finishNum = storeData.persistentData[msg.id].finishNum + 1;
-      storeData.persistentData[msg.id].passCount = -1;
+      storeData.persistentData[roomId].finishNum = storeData.persistentData[roomId].finishNum + 1;
+      storeData.persistentData[roomId].passCount = -1;
 
       LOGGER.debug(
         "現在のユーザーの状態:" +
-          JSON.stringify(storeData.persistentData[msg.id]["users"][orderList[currentTurn]])
+          JSON.stringify(storeData.persistentData[roomId]["users"][userId])
       );
-      if (storeData.persistentData[msg.id].finishNum == Object.keys(users).length - 1) {
+      if (storeData.persistentData[roomId].finishNum == Object.keys(storeData.persistentData[roomId]["users"]).length - 1) {
         //ビリ以外は全員終了
-        let lastId = Object.keys(users).filter(item => {
+        let lastId = Object.keys(storeData.persistentData[roomId]["users"]).filter(item => {
           LOGGER.debug(
-            "itemの値:" + JSON.stringify(storeData.persistentData[msg.id]["users"][item])
+            "itemの値:" + JSON.stringify(storeData.persistentData[roomId]["users"][item])
           );
-          return storeData.persistentData[msg.id]["users"][item].rank.length == 0;
+          return storeData.persistentData[roomId]["users"][item].rank.length == 0;
         });
         LOGGER.debug(
           "最下位ユーザーに入るscoreTable:" +
-            JSON.stringify(storeData.persistentData[msg.id]["scoreTable"])
+            JSON.stringify(storeData.persistentData[roomId]["scoreTable"])
         );
-        storeData.persistentData[msg.id]["users"][lastId].rank =
-          storeData.persistentData[msg.id]["scoreTable"][storeData.persistentData[msg.id].rankCount - 1].rankId;
-        storeData.persistentData[msg.id]["users"][lastId].rankNum = storeData.persistentData[msg.id].rankCount;
-        storeData.persistentData[msg.id]["users"][lastId].finishTime = new Date().getTime();
+        storeData.persistentData[roomId]["users"][lastId].rank =
+          storeData.persistentData[roomId]["scoreTable"][storeData.persistentData[roomId].rankCount - 1].rankId;
+        storeData.persistentData[roomId]["users"][lastId].rankNum = storeData.persistentData[roomId].rankCount;
+        storeData.persistentData[roomId]["users"][lastId].finishTime = new Date().getTime();
         LOGGER.debug(
-          "最下位ユーザー:" + JSON.stringify(storeData.persistentData[msg.id]["users"][lastId])
+          "最下位ユーザー:" + JSON.stringify(storeData.persistentData[roomId]["users"][lastId])
         );
         commonRequire.io.to(lastId).emit("finish", {
-          rankReason: storeData.persistentData[msg.id]["users"][lastId].rankReason
+          rankReason: storeData.persistentData[roomId]["users"][lastId].rankReason
         });
-        commonRequire.io.to(storeData.persistentData[msg.id].roomId).emit("finishNotification", {
-          playerName: users[lastId].dispName,
-          rankReason: storeData.persistentData[msg.id]["users"][lastId].rankReason
+        commonRequire.io.to(storeData.persistentData[roomId].roomId).emit("finishNotification", {
+          playerName: storeData.persistentData[roomId]["users"][lastId].dispName,
+          rankReason: storeData.persistentData[roomId]["users"][lastId].rankReason
         });
-        const reverseRank = aggregateBattlePhase(msg.id);
-        storeData.persistentData[msg.id]["order"] = reverseRank;
-        Object.keys(storeData.persistentData[msg.id]["users"]).forEach(function(key) {
-          storeData.persistentData[msg.id]["scoreTable"].some(function(ele) {
-            if (storeData.persistentData[msg.id]["users"][key].rank === ele.rankId) {
-              storeData.persistentData[msg.id]["users"][key].point =
-                storeData.persistentData[msg.id]["users"][key].point + ele.point;
+        const reverseRank = aggregateBattlePhase(roomId);
+        storeData.persistentData[roomId]["order"] = reverseRank;
+        Object.keys(storeData.persistentData[roomId]["users"]).forEach(function(key) {
+          storeData.persistentData[roomId]["scoreTable"].some(function(ele) {
+            if (storeData.persistentData[roomId]["users"][key].rank === ele.rankId) {
+              storeData.persistentData[roomId]["users"][key].point =
+                storeData.persistentData[roomId]["users"][key].point + ele.point;
               LOGGER.debug(
-                storeData.persistentData[msg.id]["users"][key].dispName +
+                storeData.persistentData[roomId]["users"][key].dispName +
                   "の現在のポイント: " +
-                  storeData.persistentData[msg.id]["users"][key].point
+                  storeData.persistentData[roomId]["users"][key].point
               );
               return true;
             }
@@ -163,36 +163,36 @@ module.exports.checkOut = (sc, roomId, userId, currentTurn) => {
         let displayRanking = [];
         reverseRank.forEach(function(key) {
           displayRanking.unshift({
-            rank: storeData.persistentData[msg.id]["users"][key].rank,
-            dispName: storeData.persistentData[msg.id]["users"][key].dispName
+            rank: storeData.persistentData[roomId]["users"][key].rank,
+            dispName: storeData.persistentData[roomId]["users"][key].dispName
           });
         });
-        if (storeData.persistentData[msg.id].gameNum == 4) {
+        if (storeData.persistentData[roomId].gameNum == 4) {
           //1セット終了
-          let overallGrade = aggregateBattleSet(msg.id);
+          let overallGrade = aggregateBattleSet(roomId);
           let displayOverAllRanking = [];
           overallGrade.forEach(function(key) {
             displayOverAllRanking.push({
-              dispName: storeData.persistentData[msg.id]["users"][key].dispName
+              dispName: storeData.persistentData[roomId]["users"][key].dispName
             });
           });
-          commonRequire.io.to(storeData.persistentData[msg.id].roomId).emit("gameSet", {
-            gameNum: storeData.persistentData[msg.id].gameNum,
+          commonRequire.io.to(storeData.persistentData[roomId].roomId).emit("gameSet", {
+            gameNum: storeData.persistentData[roomId].gameNum,
             ranking: displayRanking,
             overall: displayOverAllRanking
           });
           return;
         } else {
           //次のゲームへ
-          commonRequire.io.to(storeData.persistentData[msg.id].roomId).emit("gameFinish", {
-            gameNum: storeData.persistentData[msg.id].gameNum,
+          commonRequire.io.to(storeData.persistentData[roomId].roomId).emit("gameFinish", {
+            gameNum: storeData.persistentData[roomId].gameNum,
             ranking: displayRanking
           });
           commonRequire.io.to(lastId).emit("nextGameStart", {
-            gameNum: storeData.persistentData[msg.id].gameNum + 1,
+            gameNum: storeData.persistentData[roomId].gameNum + 1,
             ranking: displayRanking
           });
-          storeData.persistentData[msg.id].gameNum = storeData.persistentData[msg.id].gameNum + 1;
+          storeData.persistentData[roomId].gameNum = storeData.persistentData[roomId].gameNum + 1;
           return;
         }
       }

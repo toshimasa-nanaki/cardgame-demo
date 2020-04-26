@@ -492,116 +492,116 @@ function aggregateBattlePhase(roomId) {
   });
 }
 
-function checkRank(sc, roomId, userId) {
-  let result = checkFoul(sc, roomId);
-  if (result.foul) {
-    //反則上がりだった場合
-    //rankはとりあえず大貧民扱いとする。(あとで再計算する)
-    storeData.persistentData[roomId]["users"][userId].rank =
-      storeData.persistentData[roomId]["scoreTable"][
-        Object.keys(storeData.persistentData[roomId]["users"]).length - 1
-      ].rankId;
-    storeData.persistentData[roomId]["users"][userId].rankNum = Object.keys(
-      storeData.persistentData[roomId]["users"]
-    ).length;
-    //都落ちフラグは外しておく。(ないとは思うが、全員が反則上がりだった場合、大富豪になる可能性もある。そのときは別途firstPlaceを再計算する)
-    storeData.persistentData[roomId]["users"][userId].firstPlace = false;
-    storeData.persistentData[roomId]["users"][userId].rankReason = result.reason;
-    storeData.persistentData[roomId]["users"][userId].finishTime = new Date().getTime();
-  } else {
-    let nextRank = 0;
-    Object.keys(storeData.persistentData[roomId]["users"])
-      .sort(function(a, b) {
-        if (
-          storeData.persistentData[roomId]["users"][a].rankNum > storeData.persistentData[roomId]["users"][b].rankNum
-        )
-          return -1;
-        if (
-          storeData.persistentData[roomId]["users"][a].rankNum < storeData.persistentData[roomId]["users"][b].rankNum
-        )
-          return 1;
-        return 0;
-      })
-      .some(function(val) {
-        if (
-          storeData.persistentData[roomId]["users"][val].rankNum !=
-          Object.keys(storeData.persistentData[roomId]["users"]).length
-        ) {
-          nextRank = storeData.persistentData[roomId]["users"][val].rankNum + 1;
-          return true;
-        }
-      });
+// function checkRank(sc, roomId, userId) {
+//   let result = checkFoul(sc, roomId);
+//   if (result.foul) {
+//     //反則上がりだった場合
+//     //rankはとりあえず大貧民扱いとする。(あとで再計算する)
+//     storeData.persistentData[roomId]["users"][userId].rank =
+//       storeData.persistentData[roomId]["scoreTable"][
+//         Object.keys(storeData.persistentData[roomId]["users"]).length - 1
+//       ].rankId;
+//     storeData.persistentData[roomId]["users"][userId].rankNum = Object.keys(
+//       storeData.persistentData[roomId]["users"]
+//     ).length;
+//     //都落ちフラグは外しておく。(ないとは思うが、全員が反則上がりだった場合、大富豪になる可能性もある。そのときは別途firstPlaceを再計算する)
+//     storeData.persistentData[roomId]["users"][userId].firstPlace = false;
+//     storeData.persistentData[roomId]["users"][userId].rankReason = result.reason;
+//     storeData.persistentData[roomId]["users"][userId].finishTime = new Date().getTime();
+//   } else {
+//     let nextRank = 0;
+//     Object.keys(storeData.persistentData[roomId]["users"])
+//       .sort(function(a, b) {
+//         if (
+//           storeData.persistentData[roomId]["users"][a].rankNum > storeData.persistentData[roomId]["users"][b].rankNum
+//         )
+//           return -1;
+//         if (
+//           storeData.persistentData[roomId]["users"][a].rankNum < storeData.persistentData[roomId]["users"][b].rankNum
+//         )
+//           return 1;
+//         return 0;
+//       })
+//       .some(function(val) {
+//         if (
+//           storeData.persistentData[roomId]["users"][val].rankNum !=
+//           Object.keys(storeData.persistentData[roomId]["users"]).length
+//         ) {
+//           nextRank = storeData.persistentData[roomId]["users"][val].rankNum + 1;
+//           return true;
+//         }
+//       });
 
-    storeData.persistentData[roomId]["users"][userId].rank =
-      storeData.persistentData[roomId]["scoreTable"][nextRank - 1].rankId;
-    storeData.persistentData[roomId]["users"][userId].rankNum = nextRank;
+//     storeData.persistentData[roomId]["users"][userId].rank =
+//       storeData.persistentData[roomId]["scoreTable"][nextRank - 1].rankId;
+//     storeData.persistentData[roomId]["users"][userId].rankNum = nextRank;
 
-    storeData.persistentData[roomId]["users"][userId].rankReason = result.reason;
-    storeData.persistentData[roomId]["users"][userId].finishTime = new Date().getTime();
-    storeData.persistentData[roomId].rankCount = storeData.persistentData[roomId].rankCount + 1;
-  }
-}
+//     storeData.persistentData[roomId]["users"][userId].rankReason = result.reason;
+//     storeData.persistentData[roomId]["users"][userId].finishTime = new Date().getTime();
+//     storeData.persistentData[roomId].rankCount = storeData.persistentData[roomId].rankCount + 1;
+//   }
+// }
 
-//反則上がりのチェック
-function checkFoul(sc, roomId) {
-  let result = {
-    foul: false,
-    reason: ""
-  };
-  if (sc.length == 1 && sc[0].number == 3 && sc[0].type == "spade") {
-    //・スペ3一枚で上がってない？
-    result.foul = true;
-    result.reason = "spade3Finish";
-    return result;
-  }
-  //最後に出したカードに8またはジョーカーが含まれていない？(階段の場合は8は許される)
-  //あとで使う2と3も確認しておく
-  let flag8 = false;
-  let flagJoker = false;
-  let flag2 = false;
-  let flag3 = false;
-  sc.forEach(ele => {
-    if (ele.number == 8) {
-      flag8 = true;
-    }
-    if (~ele.type.indexOf("joker")) {
-      flagJoker = true;
-    }
-    if (ele.number == 2) {
-      flag2 = true;
-    }
-    if (ele.number == 3) {
-      flag3 = true;
-    }
-  });
-  if (flagJoker) {
-    //最後に出したカードにJOKERを含む
-    result.foul = true;
-    result.reason = "jokerFinish";
-    return result;
-  }
-  if (!storeData.persistentData[roomId].stair && flag8) {
-    //非階段状態で最後に出したカードに8を含む
-    result.foul = true;
-    result.reason = "card8Finish";
-    return result;
-  }
+// //反則上がりのチェック
+// function checkFoul(sc, roomId) {
+//   let result = {
+//     foul: false,
+//     reason: ""
+//   };
+//   if (sc.length == 1 && sc[0].number == 3 && sc[0].type == "spade") {
+//     //・スペ3一枚で上がってない？
+//     result.foul = true;
+//     result.reason = "spade3Finish";
+//     return result;
+//   }
+//   //最後に出したカードに8またはジョーカーが含まれていない？(階段の場合は8は許される)
+//   //あとで使う2と3も確認しておく
+//   let flag8 = false;
+//   let flagJoker = false;
+//   let flag2 = false;
+//   let flag3 = false;
+//   sc.forEach(ele => {
+//     if (ele.number == 8) {
+//       flag8 = true;
+//     }
+//     if (~ele.type.indexOf("joker")) {
+//       flagJoker = true;
+//     }
+//     if (ele.number == 2) {
+//       flag2 = true;
+//     }
+//     if (ele.number == 3) {
+//       flag3 = true;
+//     }
+//   });
+//   if (flagJoker) {
+//     //最後に出したカードにJOKERを含む
+//     result.foul = true;
+//     result.reason = "jokerFinish";
+//     return result;
+//   }
+//   if (!storeData.persistentData[roomId].stair && flag8) {
+//     //非階段状態で最後に出したカードに8を含む
+//     result.foul = true;
+//     result.reason = "card8Finish";
+//     return result;
+//   }
 
-  //革命時に3を含んでない?
-  if (storeData.persistentData[roomId].revolution && flag3) {
-    result.foul = true;
-    result.reason = "card3Finish";
-    return result;
-  }
+//   //革命時に3を含んでない?
+//   if (storeData.persistentData[roomId].revolution && flag3) {
+//     result.foul = true;
+//     result.reason = "card3Finish";
+//     return result;
+//   }
 
-  //非革命時に2を含んでない？
-  if (!storeData.persistentData[roomId].revolution && flag2) {
-    result.foul = true;
-    result.reason = "card2Finish";
-    return result;
-  }
-  return result;
-}
+//   //非革命時に2を含んでない？
+//   if (!storeData.persistentData[roomId].revolution && flag2) {
+//     result.foul = true;
+//     result.reason = "card2Finish";
+//     return result;
+//   }
+//   return result;
+// }
 
 function checkShibari(ncs, scs) {
   let result = {
