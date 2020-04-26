@@ -81,6 +81,7 @@ const decideOrder = roomId => {
 
 const handOutCards = (count, roomId) => {
   const shuffleCards = commonUtil.sortArrayRandomly(ORIGINALCARDDATA);
+  //ブラインドカードの確認をする。もし
   const perNum = Math.floor(TRUMP_TEMP.total / count);
   const remainder = TRUMP_TEMP.total % count;
   LOGGER.debug("perNum:" + perNum + " remainder:" + remainder);
@@ -112,7 +113,7 @@ const handOutCards = (count, roomId) => {
       });
   }
   LOGGER.debug(
-      key + "の持ちカード： " + JSON.stringify(storeData.persistentData[roomId]["users"][key].card)
+      "ブラインドカード： " + JSON.stringify(storeData.persistentData[roomId].blindCards)
     );
 }
 
