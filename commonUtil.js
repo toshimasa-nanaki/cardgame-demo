@@ -49,3 +49,10 @@ module.exports.formatDate = (date, format) => {
   format = format.replace(/SSS/g, ('00' + date.getMilliseconds()).slice(-3));
   return format;
 };
+
+module.exports.htmlentities = (str) => {
+    return String(str).replace(/&/g, "&amp;")
+              .replace(/"/g, "&quot;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;");
+}

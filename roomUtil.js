@@ -52,7 +52,7 @@ module.exports.createRoom = roomInfo => {
   blindCards: [] //ブラインドカード
 };
   roomObj["roomId"] = createRoomId;
-  roomObj["roomDispName"] = roomInfo.dispName === "" ? createDefaultRoomName() : roomInfo.dispName;
+  roomObj["roomDispName"] = roomInfo.dispName === "" ? createDefaultRoomName() : commonUtil.htmlentities(roomInfo.dispName);
   roomObj["capacity"] = roomInfo.capacity === "" ? 4 : Number(roomInfo.capacity);
   storeData.persistentData[createRoomId] = roomObj;
   LOGGER.info("createdRoom:  " + roomObj.roomDispName);
@@ -66,7 +66,7 @@ module.exports.joinRoom = (joinInfo, socketObj) => {
       return;
     }
     storeData.persistentData[joinInfo.roomId]["users"][socketObj.id] = {
-      dispName: joinInfo.playerName,
+      dispName: commonUtil.htmlentities(joinInfo.playerName),
       card: [],
       rank: "",
       rankNum: 0,
@@ -79,7 +79,7 @@ module.exports.joinRoom = (joinInfo, socketObj) => {
     socketObj.join(joinInfo.roomId);
     io.to(socketObj.id).emit("joinedRoom", storeData.persistentData[joinInfo.roomId]["users"]);
     for (let [key, value] of Object.entries(storeData.persistentData[joinInfo.roomId]["users"])) {
-      if (key !== socketObj.id) io.to(key).emit("otherMemberJoinedRoom", joinInfo.playerName);
+      if (key !== socketObj.id) io.to(key).emit("otherMemberJoinedRoom", commonUtil.htmlentities(joinInfo.playerName));
     }
     const currentPlayerNum = Object.keys(storeData.persistentData[joinInfo.roomId]["users"]).length;
     if (currentPlayerNum === roomCapacity) {
