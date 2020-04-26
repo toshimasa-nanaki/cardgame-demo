@@ -1,13 +1,14 @@
 $(function() {
   var socket = io();
-  const debugMode =  location.search.substring(1) === "debug=true" ? true : false;
-  const debugLog = (debugMode)? console.log.bind(console) : ()=>{};
+  const debugMode =
+    location.search.substring(1) === "debug=true" ? true : false;
+  const debugLog = debugMode ? console.log.bind(console) : () => {};
   const SUITES_DIC = {
     spade: "♠",
     club: "♣",
     diamond: "♦",
     heart: "♥"
-  }
+  };
   const RANKING_DIC = {
     daihugou: "大富豪",
     hugou: "富豪",
@@ -143,22 +144,27 @@ $(function() {
     joker199: "JOKER",
     joker299: "JOKER"
   };
-  function mypreload() {    
-    Object.keys(DISPLAY_IMAGE_ID).forEach(key =>{
+  function mypreload() {
+    Object.keys(DISPLAY_IMAGE_ID).forEach(key => {
       //const imgUri = "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" + DISPLAY_IMAGE_ID[element.type + element.number] + ".png";
-      $("<img>").attr("src", "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" + DISPLAY_IMAGE_ID[key] + ".png");
+      $("<img>").attr(
+        "src",
+        "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
+          DISPLAY_IMAGE_ID[key] +
+          ".png"
+      );
     });
   }
   //関数の呼び出し。
   mypreload();
   // 画像がクリックされた時の処理です。
-  $('img.handCardImage').click(function() {
-    if (!$(this).is('.checked')) {
+  $("img.handCardImage").click(function() {
+    if (!$(this).is(".checked")) {
       // チェックが入っていない画像をクリックした場合、チェックを入れます。
-      $(this).addClass('checked');
+      $(this).addClass("checked");
     } else {
       // チェックが入っている画像をクリックした場合、チェックを外します。
-      $(this).removeClass('checked')
+      $(this).removeClass("checked");
     }
   });
 
@@ -209,7 +215,7 @@ $(function() {
       );
       $("#selectRoomList").prepend(div);
     });
-    $('#selectRoomList > :first > input').prop('checked', true);
+    $("#selectRoomList > :first > input").prop("checked", true);
   }
   $("#joinRoom").click(function() {
     let roomId = $("input[name=roomRadios]:checked").val();
@@ -259,7 +265,7 @@ $(function() {
       $("#gameCommentaryArea")[0].scrollHeight
     );
     $("#gameFieldArea").show();
-    
+
     $("#gameController").show();
     $("#giveCard").hide();
     $("#playerInfoDropdown").show();
@@ -279,29 +285,48 @@ $(function() {
     $("#cardList").empty();
     $("#cardList2").empty();
     $("#giveCardList").empty();
-    $("#playerName").text(msg.playerName2);
+    $("#playerNameDisp").text(msg.playerName2);
     $("#playerPoint").text(msg.playerPoint);
+    $("blindCards").e
+    msg.blindCards.forEach(ele => {
+      $("#blindCards").append($('<li>' + DISPLAY_DIC[ele.type + ele.number] +'</li>'));
+    });
     msg.card.forEach(element => {
       const cardType = element.number + element.type;
-      const imgUri = "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" + DISPLAY_IMAGE_ID[element.type + element.number] + ".png";
+      const imgUri =
+        "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
+        DISPLAY_IMAGE_ID[element.type + element.number] +
+        ".png";
       //画像データを取得する
-      let img = $('<img class="handCardImage" src="' + imgUri + '"></img>').attr({
+      let img = $('<img class="handCardImage" src="' + imgUri + '"></img>')
+        .attr({
           value: element.type + "_" + element.number
-        }).on('click', function() {
-        if (!$(this).is('.checked')) {
-      // チェックが入っていない画像をクリックした場合、チェックを入れます。
-      $(this).addClass('checked');
-    } else {
-      // チェックが入っている画像をクリックした場合、チェックを外します。
-      $(this).removeClass('checked')
-    }
-      });
-      var check = $('<input class="disabled_checkbox" type="checkbox" checked="" />').attr({
+        })
+        .on("click", function() {
+          if (!$(this).is(".checked")) {
+            // チェックが入っていない画像をクリックした場合、チェックを入れます。
+            $(this).addClass("checked");
+          } else {
+            // チェックが入っている画像をクリックした場合、チェックを外します。
+            $(this).removeClass("checked");
+          }
+        });
+      var check = $(
+        '<input class="disabled_checkbox" type="checkbox" checked="" />'
+      )
+        .attr({
           name: "cards",
           value: element.type + "_" + element.number
-        }).on('click', function() {return false});
-      let box = $('<div class="image_box"/>').append(img).append(check);
-      let li = $('<li id="' + element.type + element.number + '"></li>').append(box);
+        })
+        .on("click", function() {
+          return false;
+        });
+      let box = $('<div class="image_box"/>')
+        .append(img)
+        .append(check);
+      let li = $('<li id="' + element.type + element.number + '"></li>').append(
+        box
+      );
       $("#cardList2").append(li);
     });
     debugLog("order accept");
@@ -310,9 +335,7 @@ $(function() {
       $("#pass").prop("disabled", false);
       $("#cardList2 img").prop("disabled", false);
       //$("#order").text("あなたの番です");
-      $("#gameCommentaryArea").append(
-        "あなたのターンです。<br />"
-      );
+      $("#gameCommentaryArea").append("あなたのターンです。<br />");
       if (msg.skip) {
         socket.emit("pass", {
           id: $("input[name=roomRadios]:checked").val()
@@ -331,16 +354,14 @@ $(function() {
       $("#gameCommentaryArea")[0].scrollHeight
     );
   });
-  socket.on("notNeedGiveCard", msg =>{
+  socket.on("notNeedGiveCard", msg => {
     debugLog("order accept");
     if (msg.yourTurn) {
       $("#send").prop("disabled", false);
       $("#pass").prop("disabled", false);
       $("#cardList input").prop("disabled", false);
       //$("#order").text("あなたの番です");
-      $("#gameCommentaryArea").append(
-        "あなたのターンです。<br />"
-      );
+      $("#gameCommentaryArea").append("あなたのターンです。<br />");
       if (msg.skip) {
         socket.emit("pass", {
           id: $("input[name=roomRadios]:checked").val()
@@ -359,96 +380,140 @@ $(function() {
       $("#gameCommentaryArea")[0].scrollHeight
     );
   });
-  socket.on("giveToHigherStatus2", msg =>{
+  socket.on("giveToHigherStatus2", msg => {
     $("#giveCard").show();
     msg.targetCard.forEach(element => {
-      const imgUri = "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" + DISPLAY_IMAGE_ID[element.type + element.number] + ".png";
-      let li = $('<li></li>').append($('<img class="giveCardViewImage" src="' + imgUri + '"></img>'));
+      const imgUri =
+        "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
+        DISPLAY_IMAGE_ID[element.type + element.number] +
+        ".png";
+      let li = $("<li></li>").append(
+        $('<img class="giveCardViewImage" src="' + imgUri + '"></img>')
+      );
       $("#giveCardList").append(li);
     });
     $("#gameCommentaryArea").append(
-        "大富豪に上記の"　+  DISPLAY_DIC[msg.targetCard[0].type + msg.targetCard[0].number] + "と" + DISPLAY_DIC[msg.targetCard[1].type + msg.targetCard[1].number] +"を渡します。<br />"
+      "大富豪に上記の" +
+        DISPLAY_DIC[msg.targetCard[0].type + msg.targetCard[0].number] +
+        "と" +
+        DISPLAY_DIC[msg.targetCard[1].type + msg.targetCard[1].number] +
+        "を渡します。<br />"
     );
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );
   });
-  socket.on("giveToLowerStatus2", msg =>{
+  socket.on("giveToLowerStatus2", msg => {
     $("#giveCard").show();
     $("#gameController2").show();
     msg.targetCard.forEach(element => {
       const cardType = element.number + element.type;
-      const imgUri = "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" + DISPLAY_IMAGE_ID[element.type + element.number] + ".png";
+      const imgUri =
+        "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
+        DISPLAY_IMAGE_ID[element.type + element.number] +
+        ".png";
       //画像データを取得する
-      let img = $('<img class="giveCardImage" src="' + imgUri + '"></img>').attr({
+      let img = $('<img class="giveCardImage" src="' + imgUri + '"></img>')
+        .attr({
           value: element.type + "_" + element.number
-        }).on('click', function() {
-        if (!$(this).is('.checked')) {
-      // チェックが入っていない画像をクリックした場合、チェックを入れます。
-      $(this).addClass('checked');
-    } else {
-      // チェックが入っている画像をクリックした場合、チェックを外します。
-      $(this).removeClass('checked')
-    }
-      });
-      var check = $('<input class="disabled_checkbox" type="checkbox" checked="" />').attr({
+        })
+        .on("click", function() {
+          if (!$(this).is(".checked")) {
+            // チェックが入っていない画像をクリックした場合、チェックを入れます。
+            $(this).addClass("checked");
+          } else {
+            // チェックが入っている画像をクリックした場合、チェックを外します。
+            $(this).removeClass("checked");
+          }
+        });
+      var check = $(
+        '<input class="disabled_checkbox" type="checkbox" checked="" />'
+      )
+        .attr({
           name: "cards",
           value: element.type + "_" + element.number
-        }).on('click', function() {return false});
-      let box = $('<div class="image_box"/>').append(img).append(check);
-      let li = $('<li id="' + element.type + element.number + '"></li>').append(box);
+        })
+        .on("click", function() {
+          return false;
+        });
+      let box = $('<div class="image_box"/>')
+        .append(img)
+        .append(check);
+      let li = $('<li id="' + element.type + element.number + '"></li>').append(
+        box
+      );
       $("#giveCardList").append(li);
     });
     $("#gameCommentaryArea").append(
-        "大貧民に渡すカードを選んでください。<br />"
+      "大貧民に渡すカードを選んでください。<br />"
     );
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );
   });
-  socket.on("giveToHigherStatus1", msg =>{
+  socket.on("giveToHigherStatus1", msg => {
     $("#giveCard").show();
     msg.targetCard.forEach(element => {
-      const imgUri = "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" + DISPLAY_IMAGE_ID[element.type + element.number] + ".png";
-      let li = $('<li></li>').append($('<img class="giveCardViewImage" src="' + imgUri + '"></img>'));
+      const imgUri =
+        "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
+        DISPLAY_IMAGE_ID[element.type + element.number] +
+        ".png";
+      let li = $("<li></li>").append(
+        $('<img class="giveCardViewImage" src="' + imgUri + '"></img>')
+      );
       $("#giveCardList").append(li);
     });
     $("#gameCommentaryArea").append(
-        "富豪に上記の"　+  DISPLAY_DIC[msg.targetCard[0].type + msg.targetCard[0].number] + "を渡します。<br />"
+      "富豪に上記の" +
+        DISPLAY_DIC[msg.targetCard[0].type + msg.targetCard[0].number] +
+        "を渡します。<br />"
     );
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );
   });
-  socket.on("giveToLowerStatus1", msg =>{
+  socket.on("giveToLowerStatus1", msg => {
     $("#giveCard").show();
     $("#gameController2").show();
     msg.targetCard.forEach(element => {
       const cardType = element.number + element.type;
-      const imgUri = "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" + DISPLAY_IMAGE_ID[element.type + element.number] + ".png";
+      const imgUri =
+        "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
+        DISPLAY_IMAGE_ID[element.type + element.number] +
+        ".png";
       //画像データを取得する
-      let img = $('<img class="giveCardImage" src="' + imgUri + '"></img>').attr({
+      let img = $('<img class="giveCardImage" src="' + imgUri + '"></img>')
+        .attr({
           value: element.type + "_" + element.number
-        }).on('click', function() {
-        if (!$(this).is('.checked')) {
-      // チェックが入っていない画像をクリックした場合、チェックを入れます。
-      $(this).addClass('checked');
-    } else {
-      // チェックが入っている画像をクリックした場合、チェックを外します。
-      $(this).removeClass('checked')
-    }
-      });
-      var check = $('<input class="disabled_checkbox" type="checkbox" checked="" />').attr({
+        })
+        .on("click", function() {
+          if (!$(this).is(".checked")) {
+            // チェックが入っていない画像をクリックした場合、チェックを入れます。
+            $(this).addClass("checked");
+          } else {
+            // チェックが入っている画像をクリックした場合、チェックを外します。
+            $(this).removeClass("checked");
+          }
+        });
+      var check = $(
+        '<input class="disabled_checkbox" type="checkbox" checked="" />'
+      )
+        .attr({
           name: "cards",
           value: element.type + "_" + element.number
-        }).on('click', function() {return false});
-      let box = $('<div class="image_box"/>').append(img).append(check);
-      let li = $('<li id="' + element.type + element.number + '"></li>').append(box);
+        })
+        .on("click", function() {
+          return false;
+        });
+      let box = $('<div class="image_box"/>')
+        .append(img)
+        .append(check);
+      let li = $('<li id="' + element.type + element.number + '"></li>').append(
+        box
+      );
       $("#giveCardList").append(li);
     });
-    $("#gameCommentaryArea").append(
-        "貧民に渡すカードを選んでください。<br />"
-    );
+    $("#gameCommentaryArea").append("貧民に渡すカードを選んでください。<br />");
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );
@@ -456,7 +521,7 @@ $(function() {
   $("#give").click(function() {
     let giveCards = [];
     let cardarr;
-    $('img.giveCardImage.checked').each(function() {
+    $("img.giveCardImage.checked").each(function() {
       cardarr = $(this)
         .attr("value")
         .split("_");
@@ -468,14 +533,14 @@ $(function() {
       id: $("input[name=roomRadios]:checked").val()
     });
     $("#gameCommentaryArea").append(
-        "カードの譲渡処理が終了するまでお待ちください。<br />"
+      "カードの譲渡処理が終了するまでお待ちください。<br />"
     );
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );
     $("#gameController2").hide();
   });
-  
+
   socket.on("order", function(msg) {
     debugLog("order accept");
     if (msg.flag) {
@@ -483,9 +548,7 @@ $(function() {
       $("#pass").prop("disabled", false);
       $("#cardList input").prop("disabled", false);
       //$("#order").text("あなたの番です");
-      $("#gameCommentaryArea").append(
-        "あなたのターンです。<br />"
-      );
+      $("#gameCommentaryArea").append("あなたのターンです。<br />");
       if (msg.skip) {
         socket.emit("pass", {
           id: $("input[name=roomRadios]:checked").val()
@@ -502,19 +565,19 @@ $(function() {
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );
-  }); 
-  
+  });
+
   //カードを出したとき
   $("#send").click(function() {
     let sendCards = [];
     let cardarr;
-    $('img.handCardImage.checked').each(function() {
+    $("img.handCardImage.checked").each(function() {
       cardarr = $(this)
         .attr("value")
         .split("_");
       sendCards.push({ type: cardarr[0], number: Number(cardarr[1]) });
     });
-    if(sendCards.length === 0){
+    if (sendCards.length === 0) {
       //選択していない場合
       $("#errorMsg").show();
       $("#errorMsg").text("カードを選択してください。");
@@ -544,14 +607,19 @@ $(function() {
       //手札削除
       $("#" + msg.card[i].type + msg.card[i].number).remove();
       //場にカードを置く
-      const imgUri = "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" + DISPLAY_IMAGE_ID[msg.result[i].type + msg.result[i].number] + ".png";
-      let li = $('<li></li>').append($('<img class="fieldCardImage" src="' + imgUri + '"></img>'));
+      const imgUri =
+        "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
+        DISPLAY_IMAGE_ID[msg.result[i].type + msg.result[i].number] +
+        ".png";
+      let li = $("<li></li>").append(
+        $('<img class="fieldCardImage" src="' + imgUri + '"></img>')
+      );
       $("#field").append(li);
     }
     //$("#field").text(message);
     $("#gameCommentaryArea").append(
-          msg.playerName + "さんが"+ message +"を出しました。<br />"
-    );      
+      msg.playerName + "さんが" + message + "を出しました。<br />"
+    );
     $("#other").text("");
     $("#errorMsg").hide();
     $("#errorMsg").text("");
@@ -559,29 +627,29 @@ $(function() {
   socket.on("changeStatus", function(msg) {
     switch (msg.type) {
       case "elevenback":
-        if(msg.value){
+        if (msg.value) {
           $("#gameCommentaryArea").append(
-          msg.playerName + "さんが11バックを発動しました。<br />"
-        );
-        } 
+            msg.playerName + "さんが11バックを発動しました。<br />"
+          );
+        }
         $("#elevenback").text(msg.value ? "　11Back　" : "");
         break;
       case "revolution":
-        if(msg.value){
+        if (msg.value) {
           $("#gameCommentaryArea").append(
-          msg.playerName + "さんが革命を発動しました。<br />"
-        );
+            msg.playerName + "さんが革命を発動しました。<br />"
+          );
         }
         $("#revolution").text(msg.value ? "　革命中　" : "");
         break;
       case "shibari":
-        if(msg.value){
+        if (msg.value) {
           $("#gameCommentaryArea").append(
-          msg.playerName + "さんがスートしばりを発動しました。<br />"
-        );
+            msg.playerName + "さんがスートしばりを発動しました。<br />"
+          );
         }
         let suites = "";
-        msg.suites.forEach((ele) => suites = suites + SUITES_DIC[ele]);
+        msg.suites.forEach(ele => (suites = suites + SUITES_DIC[ele]));
         $("#shibari").text(msg.value ? "　縛り　" + suites : "");
         break;
       case "winjoker":
@@ -598,7 +666,8 @@ $(function() {
         break;
       case "doblejoker":
         $("#gameCommentaryArea").append(
-          msg.playerName + "さんがダブルJOKERを発動しました。場を流します。<br />"
+          msg.playerName +
+            "さんがダブルJOKERを発動しました。場を流します。<br />"
         );
         $("#field").empty();
         for (let i = 0; i < msg.value.cards.length; i++) {
@@ -622,7 +691,7 @@ $(function() {
         $("#gameCommentaryArea").append(
           "パスが一周したので場を流します。<br />"
         );
-       $("#field").empty();
+        $("#field").empty();
         $("#elevenback").text("");
         $("#shibari").text("");
         break;
@@ -635,34 +704,46 @@ $(function() {
     debugLog("finish accept");
     $("#cardList2").empty();
     $("#gameController").hide();
-    if(msg.rankReason !== ""){
+    if (msg.rankReason !== "") {
       //何か問題があったと判断
-      $("#gameCommentaryArea").append(LOSE_REASON_DIC[msg.rankReason] + "<br/>");
+      $("#gameCommentaryArea").append(
+        LOSE_REASON_DIC[msg.rankReason] + "<br/>"
+      );
     }
-    $("#gameCommentaryArea").append("ゲームが終了したため、観戦モードに移行します。<br />");
+    $("#gameCommentaryArea").append(
+      "ゲームが終了したため、観戦モードに移行します。<br />"
+    );
   });
   socket.on("finishNotification", function(msg) {
     debugLog("finish accept notification");
-    if(msg.rankReason !== ""){
+    if (msg.rankReason !== "") {
       //何か問題があったと判断
-      $("#gameCommentaryArea").append(msg.playerName + "さんが、" + LOSE_REASON_DIC[msg.rankReason] + "<br />");
-    }else{
-      $("#gameCommentaryArea").append(msg.playerName + "さんがあがりました。<br />");
+      $("#gameCommentaryArea").append(
+        msg.playerName + "さんが、" + LOSE_REASON_DIC[msg.rankReason] + "<br />"
+      );
+    } else {
+      $("#gameCommentaryArea").append(
+        msg.playerName + "さんがあがりました。<br />"
+      );
     }
   });
   socket.on("gameFinish", function(msg) {
     debugLog("game finish");
     $("#field").empty();
-    $("#gameCommentaryArea").append("第"+msg.gameNum+"回のゲーム結果は以下の通りです。<br />");
+    $("#gameCommentaryArea").append(
+      "第" + msg.gameNum + "回のゲーム結果は以下の通りです。<br />"
+    );
     let mes = "";
-    msg.ranking.forEach(function(ele){
-      $("#gameCommentaryArea").append(ele.dispName + "さん : " + RANKING_DIC[ele.rank] + "<br />");
+    msg.ranking.forEach(function(ele) {
+      $("#gameCommentaryArea").append(
+        ele.dispName + "さん : " + RANKING_DIC[ele.rank] + "<br />"
+      );
       mes = mes + RANKING_DIC[ele.rank] + " : " + ele.dispName + "さん<br />";
     });
-      $("#battleResult"+ msg.gameNum).append(mes);
-    $("#battle"+ msg.gameNum).show();
+    $("#battleResult" + msg.gameNum).append(mes);
+    $("#battle" + msg.gameNum).show();
     //$("#gameCommentaryArea").append("10秒後に次のゲームを始めます。<br />");
-    
+
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );
@@ -670,17 +751,15 @@ $(function() {
   socket.on("nextGameStart", function(msg) {
     debugLog("next game start");
     //$("#rematch").show();
-    msg.ranking.forEach(function(key){
-      
-    });
+    msg.ranking.forEach(function(key) {});
     //$("#gameCommentaryArea").append("10秒後に次のゲームを始めます。<br />");
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );
     socket.emit("rematch", {
-        id: $("input[name=roomRadios]:checked").val(),
-        roomid: $("input[name=roomRadios]:checked").val()
-      });
+      id: $("input[name=roomRadios]:checked").val(),
+      roomid: $("input[name=roomRadios]:checked").val()
+    });
     // sleep(10, function () {
     //   socket.emit("rematch", {
     //     id: $("input[name=roomRadios]:checked").val(),
@@ -692,37 +771,43 @@ $(function() {
     debugLog("game set");
     //TODO 渡し方次第な気がする。
     //$("#gameCommentaryArea").append("あなたは、" + RANKING_DIC[msg.rank] + "です。<br />");
-    $("#gameCommentaryArea").append("第" + msg.gameNum + "回の結果は以下の通りです。<br />");
+    $("#gameCommentaryArea").append(
+      "第" + msg.gameNum + "回の結果は以下の通りです。<br />"
+    );
     let mes = "";
-    msg.ranking.forEach(function(ele){
-      $("#gameCommentaryArea").append(ele.dispName + "さん : " + RANKING_DIC[ele.rank] + "<br />");
+    msg.ranking.forEach(function(ele) {
+      $("#gameCommentaryArea").append(
+        ele.dispName + "さん : " + RANKING_DIC[ele.rank] + "<br />"
+      );
       mes = mes + RANKING_DIC[ele.rank] + " : " + ele.dispName + "さん<br />";
     });
-      $("#battleResult"+ msg.gameNum).append(mes);
-    $("#battle"+ msg.gameNum).show();
-    
+    $("#battleResult" + msg.gameNum).append(mes);
+    $("#battle" + msg.gameNum).show();
+
     //$("#gameCommentaryArea").append("10秒後に次のゲームを始めます。<br />");
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );
-    
+
     $("#gameCommentaryArea").append("総合成績は以下の通りです。<br />");
     let rank = 1;
-    msg.overall.forEach(function(ele){
-      $("#gameCommentaryArea").append(rank + "位:" + ele.dispName + "さん<br />");
+    msg.overall.forEach(function(ele) {
+      $("#gameCommentaryArea").append(
+        rank + "位:" + ele.dispName + "さん<br />"
+      );
       rank++;
     });
   });
-  socket.on("releaseRoom", (info)=>{
+  socket.on("releaseRoom", info => {
     debugLog("部屋がリリースされました");
     $("#releaseRoomModalBody").text("");
     $("#releaseRoomModalBody").text(ERROR_DIC[info.reason]);
-    $("#releaseRoomModal").modal({backdrop: "static", keyboard: false});
+    $("#releaseRoomModal").modal({ backdrop: "static", keyboard: false });
   });
-  $("#releaseRoomModalButton").click(()=>{
+  $("#releaseRoomModalButton").click(() => {
     location.reload();
   });
-  
+
   $("#rematch").click(function() {
     $("#rank").text("");
     $("#rematch").hide();
@@ -737,7 +822,7 @@ $(function() {
       roomid: $("input[name=roomRadios]:checked").val()
     });
   });
-  
+
   // setIntervalを使う方法
   function sleep(waitSec, callbackFunc) {
     // 経過時間（秒）
@@ -757,5 +842,4 @@ $(function() {
       }
     }, 1000);
   }
-  
 });
