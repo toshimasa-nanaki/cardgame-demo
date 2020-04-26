@@ -50,7 +50,7 @@ module.exports.gameInit = (count, sockets, roomId) => {
   }
 }
 
-module.exports.checkOut = (sc, roomId, userId, currentTurn) => {
+module.exports.checkOut = (sc, roomId, userId) => {
   if (storeData.persistentData[roomId]["users"][userId].card.length > 0) {
     //上がっていないのでreturn
     return;
