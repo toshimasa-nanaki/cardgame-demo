@@ -110,8 +110,8 @@ commonRequire.io.on("connection", socket => {
         //ストアからカードを抜きだす
         removeCard(validateCards, socket.id, msg.id);
         if (users[socket.id].card.length <= 0) {
-          gameUtil.checkOut(validateCards, msg.id, socket.id);
-          notifyUtil.notifyChangeTurn(currentTurn, msg.id);
+          gameUtil.checkOut(validateCards, msg.id, socket.id, currentTurn);
+          //notifyUtil.notifyChangeTurn(currentTurn, msg.id);
         }
         return;
       }
@@ -141,8 +141,8 @@ commonRequire.io.on("connection", socket => {
       });
       removeCard(validateCards, socket.id, msg.id);
       if (users[socket.id].card.length <= 0) {
-          gameUtil.checkOut(validateCards, msg.id, socket.id);
-          notifyUtil.notifyChangeTurn(currentTurn, msg.id);
+          gameUtil.checkOut(validateCards, msg.id, socket.id, currentTurn);
+          //notifyUtil.notifyChangeTurn(currentTurn, msg.id);
         }
       return;
     }
@@ -165,8 +165,8 @@ commonRequire.io.on("connection", socket => {
       });
       removeCard(validateCards, socket.id, msg.id);
       if (users[socket.id].card.length <= 0) {
-          gameUtil.checkOut(validateCards, msg.id, socket.id);
-          notifyUtil.notifyChangeTurn(currentTurn, msg.id);
+          gameUtil.checkOut(validateCards, msg.id, socket.id, currentTurn);
+          //notifyUtil.notifyChangeTurn(currentTurn, msg.id);
         }
       return;
     }
@@ -196,7 +196,10 @@ commonRequire.io.on("connection", socket => {
     removeCard(validateCards, socket.id, msg.id);
     if (users[socket.id].card.length <= 0) {
       //上がった場合
-      gameUtil.checkOut(validateCards, msg.id, socket.id);
+      gameUtil.checkOut(validateCards, msg.id, socket.id, currentTurn);
+    }else{
+      //上がっていない場合は次の順番に回す処理のみ
+      notifyUtil.notifyChangeTurn(currentTurn, msg.id);
     }
 //     if (users[socket.id].card.length <= 0) {
 //       //成績をチェックする。
@@ -340,7 +343,7 @@ commonRequire.io.on("connection", socket => {
 //         }
 //       }
 //     }
-    notifyUtil.notifyChangeTurn(currentTurn, msg.id);
+    //notifyUtil.notifyChangeTurn(currentTurn, msg.id);
   });
   socket.on("selectedGiveCard", msg => {
     //選択したカードを交換して、ゲームをスタートする。

@@ -50,7 +50,7 @@ module.exports.gameInit = (count, sockets, roomId) => {
   }
 }
 
-module.exports.checkOut = (sc, roomId, userId) => {
+module.exports.checkOut = (sc, roomId, userId, currentTurn) => {
   
   //if (users[socket.id].card.length <= 0) {
       //成績をチェックする。
@@ -193,6 +193,7 @@ module.exports.checkOut = (sc, roomId, userId) => {
           return;
         }
       }
+  notifyUtil.notifyChangeTurn(currentTurn, roomId);
     //}
 }
 
