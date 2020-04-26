@@ -109,7 +109,10 @@ commonRequire.io.on("connection", socket => {
         });
         //ストアからカードを抜きだす
         removeCard(validateCards, socket.id, msg.id);
-
+        if (users[socket.id].card.length <= 0) {
+          gameUtil.checkOut(validateCards, msg.id, socket.id);
+          notifyUtil.notifyChangeTurn(currentTurn, msg.id);
+        }
         return;
       }
       const shibariResult = checkShibari(fieldCards, validateCards);
@@ -137,6 +140,10 @@ commonRequire.io.on("connection", socket => {
         playerName: users[socket.id].dispName
       });
       removeCard(validateCards, socket.id, msg.id);
+      if (users[socket.id].card.length <= 0) {
+          gameUtil.checkOut(validateCards, msg.id, socket.id);
+          notifyUtil.notifyChangeTurn(currentTurn, msg.id);
+        }
       return;
     }
     if (validateCards.length >= 4 && resultCheckHand.type !== "stair") {
@@ -157,6 +164,10 @@ commonRequire.io.on("connection", socket => {
         playerName: users[socket.id].dispName
       });
       removeCard(validateCards, socket.id, msg.id);
+      if (users[socket.id].card.length <= 0) {
+          gameUtil.checkOut(validateCards, msg.id, socket.id);
+          notifyUtil.notifyChangeTurn(currentTurn, msg.id);
+        }
       return;
     }
     if (validateCards[0].number == 11 && resultCheckHand.type !== "stair") {
@@ -183,6 +194,10 @@ commonRequire.io.on("connection", socket => {
     });
 
     removeCard(validateCards, socket.id, msg.id);
+    if (users[socket.id].card.length <= 0) {
+      //上がった場合
+      gameUtil.checkOut(validateCards, msg.id, socket.id);
+    }
 //     if (users[socket.id].card.length <= 0) {
 //       //成績をチェックする。
 //       checkRank(validateCards, msg.id, socket.id);
