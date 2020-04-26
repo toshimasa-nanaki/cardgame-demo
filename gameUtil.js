@@ -82,24 +82,38 @@ const decideOrder = roomId => {
 const handOutCards = (count, roomId) => {
   const shuffleCards = commonUtil.sortArrayRandomly(ORIGINALCARDDATA);
   const perNum = Math.floor(TRUMP_TEMP.total / count);
-  let remainder = TRUMP_TEMP.total % count;
+  const remainder = TRUMP_TEMP.total % count;
   LOGGER.debug("perNum:" + perNum + " remainder:" + remainder);
   let pos = 0;
   Object.keys(storeData.persistentData[roomId]["users"]).forEach(key => {
     storeData.persistentData[roomId]["users"][key].card = shuffleCards
-      .slice(pos, remainder > 0 ? pos + perNum + 1 : pos + perNum)
+      //.slice(pos, remainder > 0 ? pos + perNum + 1 : pos + perNum)
+    .slice(pos, pos + perNum)
       .sort(function(a, b) {
         if (a.number < b.number) return -1;
         if (a.number > b.number) return 1;
         return 0;
       });
-    pos = remainder > 0 ? pos + perNum + 1 : pos + perNum;
-    remainder--;
-    LOGGER.debug("for文の中" + " perNum:" + perNum + " remainder:" + remainder);
-    LOGGER.debug(
+    
+    pos = pos + perNum;
+    // pos = remainder > 0 ? pos + perNum + 1 : pos + perNum;
+    // remainder--;
+    // LOGGER.debug("for文の中" + " perNum:" + perNum + " remainder:" + remainder);
+    // LOGGER.debug(
+    //   key + "の持ちカード： " + JSON.stringify(storeData.persistentData[roomId]["users"][key].card)
+    // );
+  });
+  //余ったカードがある場合、それはブラインドカードとする。
+  if(remainder !== 0){
+    storeData.persistentData[roomId].blindCards = shuffleCards.slice(pos, pos + remainder).sort(function(a, b) {
+        if (a.number < b.number) return -1;
+        if (a.number > b.number) return 1;
+        return 0;
+      });
+  }
+  LOGGER.debug(
       key + "の持ちカード： " + JSON.stringify(storeData.persistentData[roomId]["users"][key].card)
     );
-  });
 }
 
 const trumpInit = (trumpData) => {
