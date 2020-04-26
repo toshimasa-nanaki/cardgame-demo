@@ -10,14 +10,14 @@ module.exports.TRUMPDATA = {
 };
 
 module.exports.DEBUG_TRUMPDATA = {
-  total: 8,
+  total: 7,
   card: [
-    { type: "club", count: 2 },
-    { type: "spade", count: 2 },
+    { type: "club", count: 1 },
+    { type: "spade", count: 1 },
     { type: "heart", count: 2 },
-    { type: "diamond", count: 2 }
+    { type: "diamond", count: 1 }
   ],
-  joker: 0
+  joker: 2
 };
 
 module.exports.createUniqueId = function(digits) {
