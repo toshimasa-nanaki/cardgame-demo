@@ -16,7 +16,8 @@ module.exports.notifyGameReady = roomId => {
     gameNum: storeData.persistentData[roomId].gameNum,
     card: users[orders[0]].card,
     yourTurn: true,
-    playerName: users[orders[0]].dispName
+    playerName: users[orders[0]].dispName,
+    playerPoint: users[orders[0]].point
   });
   LOGGER.debug(
     "gameReadyのレスポンス(一番目)： " +

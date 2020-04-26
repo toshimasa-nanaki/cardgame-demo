@@ -262,6 +262,7 @@ $(function() {
     
     $("#gameController").show();
     $("#giveCard").hide();
+    $("#playerInfoDropdown").show();
     // $("#giveCardCommentaryArea").hide();
     $("#rank").text("");
     $("#rematch").hide();
