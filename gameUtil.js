@@ -85,8 +85,8 @@ const handOutCards = (count, roomId) => {
   const remainder = TRUMP_TEMP.total % count;
   LOGGER.debug("perNum:" + perNum + " remainder:" + remainder);
   //ブラインドカードの確認をする。もしジョーカーが含まれている場合は切りなおす。
-  while(shuffleCards.slice(TRUMP_TEMP.total - 2, TRUMP_TEMP.total).some(ele => ~ele.type.indexOf("joker"))){
-    LOGGER.debug("ブラインドカードにジョーカーが含まれるためシャッフルしなおす" + shuffleCards.slice(TRUMP_TEMP.total - 2, TRUMP_TEMP.total));
+  while(shuffleCards.slice(TRUMP_TEMP.total - remainder, TRUMP_TEMP.total).some(ele => ~ele.type.indexOf("joker"))){
+    LOGGER.debug("ブラインドカードにジョーカーが含まれるためシャッフルしなおす" + JSON.stringify(shuffleCards.slice(TRUMP_TEMP.total - 2, TRUMP_TEMP.total)));
     shuffleCards = commonUtil.sortArrayRandomly(ORIGINALCARDDATA);
   }
   let pos = 0;
