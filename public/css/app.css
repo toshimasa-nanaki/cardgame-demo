@@ -24,6 +24,9 @@ span#revolution{
 div#battle1,div#battle2,div#battle3,div#battle4 {
   display:none;
 }
+div#playerInfoDropdown{
+  display:none;
+}
 .jumbotron {
   padding: 5rem 1rem;
 }

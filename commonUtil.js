@@ -10,12 +10,12 @@ module.exports.TRUMPDATA = {
 };
 
 module.exports.DEBUG_TRUMPDATA = {
-  total: 7,
+  total: 14,
   card: [
-    { type: "club", count: 1 },
-    { type: "spade", count: 1 },
-    { type: "heart", count: 2 },
-    { type: "diamond", count: 1 }
+    { type: "club", count: 3 },
+    { type: "spade", count: 3 },
+    { type: "heart", count: 3 },
+    { type: "diamond", count: 3 }
   ],
   joker: 2
 };
