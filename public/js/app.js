@@ -279,6 +279,8 @@ $(function() {
     $("#cardList").empty();
     $("#cardList2").empty();
     $("#giveCardList").empty();
+    $("#playerName").text(msg.playerName2);
+    $("#playerPoint").text(msg.playerPoint);
     msg.card.forEach(element => {
       const cardType = element.number + element.type;
       const imgUri = "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" + DISPLAY_IMAGE_ID[element.type + element.number] + ".png";
