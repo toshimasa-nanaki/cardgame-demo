@@ -421,9 +421,23 @@ $(function() {
           if (!$(this).is(".checked")) {
             // チェックが入っていない画像をクリックした場合、チェックを入れます。
             $(this).addClass("checked");
+            if ($("img.giveCardImage.checked").length == 2) {
+              // ボタン有効
+              $("#give").prop("disabled", false);
+            }else{
+              // ボタン無効
+              $("#give").prop("disabled", true);
+            }
           } else {
             // チェックが入っている画像をクリックした場合、チェックを外します。
             $(this).removeClass("checked");
+            if ($("img.giveCardImage.checked").length == 2) {
+              // ボタン有効
+              $("#give").prop("disabled", false);
+            }else{
+              // ボタン無効
+              $("#give").prop("disabled", true);
+            }
           }
         });
       var check = $(
@@ -490,11 +504,25 @@ $(function() {
           if (!$(this).is(".checked")) {
             // チェックが入っていない画像をクリックした場合、チェックを入れます。
             $(this).addClass("checked");
+            if ($("img.giveCardImage.checked").length == 1) {
+              // ボタン有効
+              $("#give").prop("disabled", false);
+            }else{
+              // ボタン無効
+              $("#give").prop("disabled", true);
+            }
           } else {
             // チェックが入っている画像をクリックした場合、チェックを外します。
             $(this).removeClass("checked");
+            if ($("img.giveCardImage.checked").length == 1) {
+              // ボタン有効
+              $("#give").prop("disabled", false);
+            }else{
+              // ボタン無効
+              $("#give").prop("disabled", true);
+            }
           }
-        });
+    });
       var check = $(
         '<input class="disabled_checkbox" type="checkbox" checked="" />'
       )
@@ -504,16 +532,7 @@ $(function() {
         })
         .on("click", function() {
           return false;
-        }).on('change', function () {
-        // チェックされているチェックボックスの数
-        if ($("img.giveCardImage.checked").length == 1) {
-          // ボタン有効
-          $("#give").prop("disabled", false);
-        } else {
-          // ボタン無効
-          $("#give").prop("disabled", true);
-        }
-    });
+        });
       let box = $('<div class="image_box"/>')
         .append(img)
         .append(check);
