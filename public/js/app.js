@@ -790,6 +790,7 @@ $(function() {
     );
 
     $("#gameCommentaryArea").append("総合成績は以下の通りです。<br />");
+    $("#playerPoint").text(msg.finalPoint);
     let rank = 1;
     msg.overall.forEach(function(ele) {
       $("#gameCommentaryArea").append(
