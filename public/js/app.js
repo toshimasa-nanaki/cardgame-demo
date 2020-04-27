@@ -264,6 +264,7 @@ $(function() {
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );
+    $("#give").prop("disabled", true);
     $("#gameFieldArea").show();
 
     $("#gameController").show();
