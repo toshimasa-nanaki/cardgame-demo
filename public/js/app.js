@@ -504,7 +504,16 @@ $(function() {
         })
         .on("click", function() {
           return false;
-        });
+        }).on('change', function () {
+        // チェックされているチェックボックスの数
+        if ($("img.giveCardImage.checked").length == 1) {
+          // ボタン有効
+          $("#give").prop("disabled", false);
+        } else {
+          // ボタン無効
+          $("#give").prop("disabled", true);
+        }
+    });
       let box = $('<div class="image_box"/>')
         .append(img)
         .append(check);
