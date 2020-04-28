@@ -186,6 +186,8 @@ $(function() {
     debugLog("ShowRoom");
     createSelectRoomRadioButton(roomList);
   });
+  
+  $("#playerName").val(document.cookie.split(';')[0])
 
   // 部屋一覧のラジオボタン生成
   function createSelectRoomRadioButton(roomList) {
@@ -223,6 +225,7 @@ $(function() {
       roomId: $("input[name=roomRadios]:checked").val(),
       playerName: $("#playerName").val()
     });
+    document.cookie = 'name="' + $("#playerName").val() + '; max-age=259200';
   });
   socket.on("joinedRoom", function(joinMembers) {
     //部屋ジョイン後
