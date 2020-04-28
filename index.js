@@ -228,11 +228,7 @@ commonRequire.io.on("connection", socket => {
       storeData.persistentData[msg.id]["users"][storeData.persistentData[msg.id]["order"][yourOrder]].card.push(
         msg.cards[0]
       );
-      let validateCards = msg.cards.sort(function(a, b) {
-      if (a.number < b.number) return -1;
-      if (a.number > b.number) return 1;
-      return 0;
-    });
+      storeData.sortCard(msg.id, storeData.persistentData[msg.id]["order"][yourOrder], true);
 
       storeData.persistentData[msg.id].giveCardCount = storeData.persistentData[msg.id].giveCardCount + 1;
       if (storeData.persistentData[msg.id].giveCardCount == 1) {
@@ -280,6 +276,9 @@ commonRequire.io.on("connection", socket => {
           msg.cards[0]
         );
       }
+      LOGGER.debug("ソート前:" + JSON.stringify(storeData.persistentData[msg.id]["users"][storeData.persistentData[msg.id]["order"][yourOrder]].card));
+      storeData.sortCard(msg.id, storeData.persistentData[msg.id]["order"][yourOrder], true);
+      LOGGER.debug("ソート後:" + JSON.stringify(storeData.persistentData[msg.id]["users"][storeData.persistentData[msg.id]["order"][yourOrder]].card));
       storeData.persistentData[msg.id].giveCardCount = storeData.persistentData[msg.id].giveCardCount + 1;
 
       if (storeData.persistentData[msg.id].giveCardCount == 2) {
