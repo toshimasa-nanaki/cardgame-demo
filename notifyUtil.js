@@ -78,7 +78,7 @@ module.exports.notifyGiveCard = (roomId,playerNum) => {
       targetCard: [
         storeData.persistentData[roomId]["users"][LowerUser2].card.slice(-1)[0],
         storeData.persistentData[roomId]["users"][LowerUser2].card.slice(-2)[0]
-      ]
+      ].
     });
     commonRequire.io.to(HigherUser1).emit("giveToLowerStatus1", {
       targetCard: storeData.persistentData[roomId]["users"][HigherUser1].card
