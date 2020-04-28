@@ -37,3 +37,5 @@ module.exports.fieldClear = (roomId) => {
   module.exports.persistentData[roomId].stair = false;
   module.exports.persistentData[roomId].shibari = false;
 }
+
+module.exports.sort
