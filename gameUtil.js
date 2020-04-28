@@ -191,10 +191,18 @@ module.exports.checkOut = (sc, roomId, userId, currentTurn) => {
           return;
         } else {
           //次のゲームへ
-          commonRequire.io.to(storeData.persistentData[roomId].roomId).emit("gameFinish", {
-            gameNum: storeData.persistentData[roomId].gameNum,
-            ranking: displayRanking
-          });
+          for (let [key, value] of Object.entries(storeData.persistentData[roomId]["users"])) {
+            commonRequire.io.to(key).emit("gameFinish", {
+              gameNum: storeData.persistentData[roomId].gameNum,
+              ranking: displayRanking,
+              point: value.point
+            });
+            // if (key !== socketObj.id) io.to(key).emit("otherMemberJoinedRoom", commonUtil.htmlentities(joinInfo.playerName));
+          }
+          // commonRequire.io.to(storeData.persistentData[roomId].roomId).emit("gameFinish", {
+          //   gameNum: storeData.persistentData[roomId].gameNum,
+          //   ranking: displayRanking
+          // });
           commonRequire.io.to(lastId).emit("nextGameStart", {
             gameNum: storeData.persistentData[roomId].gameNum + 1,
             ranking: displayRanking

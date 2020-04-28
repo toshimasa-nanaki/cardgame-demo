@@ -769,6 +769,7 @@ $(function() {
       );
       mes = mes + RANKING_DIC[ele.rank] + " : " + ele.dispName + "さん<br />";
     });
+    $("#playerPoint").text(msg.point);
     $("#battleResult" + msg.gameNum).append(mes);
     $("#battle" + msg.gameNum).show();
     $("#battle" + msg.gameNum + "Content").collapse('show');
