@@ -771,6 +771,7 @@ $(function() {
     });
     $("#battleResult" + msg.gameNum).append(mes);
     $("#battle" + msg.gameNum).show();
+    $("#battle" + msg.gameNum + "Content").collapse('show');
     //$("#gameCommentaryArea").append("10秒後に次のゲームを始めます。<br />");
 
     $("#gameCommentaryArea").scrollTop(
