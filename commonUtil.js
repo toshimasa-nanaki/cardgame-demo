@@ -56,3 +56,19 @@ module.exports.htmlentities = (str) => {
               .replace(/</g, "&lt;")
               .replace(/>/g, "&gt;");
 }
+
+module.exports.sortArray = (targetArr, isASC = true) => {
+  return targetArr.sort((a,b)=>{
+    if(isASC){
+      //番号の昇順
+      if (a.number < b.number) return -1;
+      if (a.number > b.number) return 1;
+      return 0;
+    }else{
+      //番号の降順
+      if (a.number > b.number) return -1;
+      if (a.number < b.number) return 1;
+      return 0;
+    }
+  });
+}

@@ -72,13 +72,13 @@ module.exports.notifyGiveCard = (roomId,playerNum) => {
     const LowerUser2 = storeData.persistentData[roomId]["order"][0];
     const HigherUser2 = storeData.persistentData[roomId]["order"][playerNum - 1];
     commonRequire.io.to(HigherUser2).emit("giveToLowerStatus2", {
-      targetCard: storeData.persistentData[roomId]["users"][HigherUser2].card
+      targetCard: commonUtil.sortArray(storeData.persistentData[roomId]["users"][HigherUser2].card, true)
     });
     commonRequire.io.to(LowerUser2).emit("giveToHigherStatus2", {
-      targetCard: [
+      targetCard: commonUtil.sortArray([
         storeData.persistentData[roomId]["users"][LowerUser2].card.slice(-1)[0],
         storeData.persistentData[roomId]["users"][LowerUser2].card.slice(-2)[0]
-      ].
+      ], true)
     });
     commonRequire.io.to(HigherUser1).emit("giveToLowerStatus1", {
       targetCard: storeData.persistentData[roomId]["users"][HigherUser1].card

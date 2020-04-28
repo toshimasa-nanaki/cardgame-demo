@@ -1,3 +1,5 @@
+const commonUtil = require("./commonUtil.js");
+
 module.exports.persistentData = {};
 
 module.exports.createRankTable = (count) => {
@@ -39,17 +41,5 @@ module.exports.fieldClear = (roomId) => {
 }
 
 module.exports.sortCard = (roomId, userId, isASC = true) => {
-  module.exports.persistentData[roomId]['users'][userId].card = module.exports.persistentData[roomId]['users'][userId].card.sort((a,b)=>{
-    if(isASC){
-      //番号の昇順
-      if (a.number < b.number) return -1;
-      if (a.number > b.number) return 1;
-      return 0;
-    }else{
-      //番号の降順
-      if (a.number > b.number) return -1;
-      if (a.number < b.number) return 1;
-      return 0;
-    }
-  });
+  module.exports.persistentData[roomId]['users'][userId].card = commonUtil.sortArray(module.exports.persistentData[roomId]['users'][userId].card, isASC);
 }
