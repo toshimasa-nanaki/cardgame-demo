@@ -38,4 +38,6 @@ module.exports.fieldClear = (roomId) => {
   module.exports.persistentData[roomId].shibari = false;
 }
 
-module.exports.sort
+module.exports.sortCard = (isASC = true) => {
+  
+}
