@@ -63,7 +63,7 @@ module.exports.notifyGiveCard = (roomId,playerNum) => {
       targetCard: [storeData.persistentData[roomId]["users"][LowerUser1].card.slice(-1)[0]]
     });
     storeData.persistentData[roomId]["users"][LowerUser1].giveCard.push(
-      storeData.persistentData[roomId]["users"][LowerUser1].slice(-1)[0]
+      storeData.persistentData[roomId]["users"][LowerUser1].card.slice(-1)[0]
     );
   } else {
     //4人以上
