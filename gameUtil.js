@@ -382,7 +382,7 @@ const checkFoul = (sc, roomId) => {
     if (~ele.type.indexOf("joker")) {
       flagJoker = true;
     }
-    if (ele.number == 2) {
+    if (ele.number == 15) {
       flag2 = true;
     }
     if (ele.number == 3) {
