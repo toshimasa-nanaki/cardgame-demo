@@ -51,16 +51,16 @@ ul#field li {
   display: inline-block;
 }
 ul#field li .fieldCardImage {
-  width: 90px;
-  height: 100px;
+  width: 80px;
+  height: 90px;
 }
 ul#giveCardList li {
   /* liが横並びになるようにします。 */
   display: inline-block;
 }
 ul#giveCardList li .giveCardViewImage {
-  width: 90px;
-  height: 100px;
+  width: 80px;
+  height: 90px;
 }
 ul#giveCardList li .image_box {
   width: 60px;
