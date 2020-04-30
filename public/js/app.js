@@ -293,7 +293,9 @@ $(function() {
     $("#playerNameDisp").text(msg.playerName2);
     $("#playerPoint").text(msg.playerPoint);
     $("#blindCards").empty();
-    $("#orderList")
+    msg.userList.forEach(user => {
+      $("#orderList").append("<li>" + user + "</li>");
+    });
     msg.blindCards.forEach(ele => {
       $("#blindCards").append($('<li>' + DISPLAY_DIC[ele.type + ele.number] +'</li>'));
     });

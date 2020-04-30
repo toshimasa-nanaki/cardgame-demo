@@ -13,9 +13,12 @@ module.exports.notifyGameReady = roomId => {
   const orders = storeData.persistentData[roomId]["order"];
   const users = storeData.persistentData[roomId]["users"];
   const userDispList = [];
-  for (let [key, value] of Object.entries(users)) {
-    userDispList.push(value.dispName);
-  }
+  orders.forEach(key => {
+    userDispList.push(users[key].dispName);
+  });
+  // for (let [key, value] of Object.entries(orders)) {
+  //   userDispList.push(value.dispName);
+  // }
   io.to(orders[0]).emit("gameReady", {
     gameNum: storeData.persistentData[roomId].gameNum,
     card: users[orders[0]].card,
@@ -117,13 +120,15 @@ module.exports.notifyChangeTurn = (currentTurnIndex, roomId) => {
       commonRequire.io.to(element).emit("order", {
         flag: false,
         skip: false,
-        playerName: users[orderList[nextTurn]].dispName
+        playerName: users[orderList[nextTurn]].dispName,
+        orderNum: nextTurn
       });
     }
   });
   commonRequire.io.to(orderList[nextTurn]).emit("order", {
     flag: true,
-    skip: users[orderList[nextTurn]].rank != "" ? true : false
+    skip: users[orderList[nextTurn]].rank != "" ? true : false,
+    orderNum: nextTurn
   });
   if (users[orderList[currentTurnIndex]].rankNum != 0) {
     //現在のユーザがすでに上がっている場合
