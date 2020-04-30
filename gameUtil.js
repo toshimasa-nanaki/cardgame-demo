@@ -399,7 +399,7 @@ const checkFoul = (sc, roomId) => {
     result.reason = "jokerFinish";
     return result;
   }
-  if (flagJoker) {
+  if (flag11) {
     //最後に出したカードに11を含む
     result.foul = true;
     result.reason = "card11Finish";
