@@ -30,6 +30,7 @@ $(function() {
     card8Finish: "非階段状態での8あがりのため、反則負けとなりました。",
     card3Finish: "革命状態での3あがりのため、反則負けとなりました。",
     card2Finish: "非革命状態での2あがりのため、反則負けとなりました。",
+    card11Finish: "11Backあがりのため、反則負けとなりました。",
     fallingOutCity: "都落ちのため、負けとなりました。"
   };
   const DISPLAY_IMAGE_ID = {

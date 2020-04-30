@@ -399,6 +399,12 @@ const checkFoul = (sc, roomId) => {
     result.reason = "jokerFinish";
     return result;
   }
+  if (flagJoker) {
+    //最後に出したカードに11を含む
+    result.foul = true;
+    result.reason = "card11Finish";
+    return result;
+  }
   if (!storeData.persistentData[roomId].stair && flag8) {
     //非階段状態で最後に出したカードに8を含む
     result.foul = true;
@@ -409,14 +415,14 @@ const checkFoul = (sc, roomId) => {
   //排他的論理和で革命と11backによる2,3の判断をする。(記述を短くするためにビット演算する)
   let xor = storeData.persistentData[roomId].revolution ^ storeData.persistentData[roomId].elevenback;
   //革命時に3を含んでない?
-  if ((storeData.persistentData[roomId].revolution || storeData.persistentData[roomId].elevenback) && flag3) {
+  if (xor == 1 && flag3) {
     result.foul = true;
     result.reason = "card3Finish";
     return result;
   }
 
   //非革命時に2を含んでない？
-  if ((!storeData.persistentData[roomId].revolution && !storeData.persistentData[roomId].elevenback) && flag2) {
+  if (xor == 0 && flag2) {
     result.foul = true;
     result.reason = "card2Finish";
     return result;
