@@ -63,7 +63,13 @@ module.exports.createRoom = roomInfo => {
 module.exports.joinRoom = (joinInfo, socketObj) => {
   const roomCapacity = storeData.persistentData[joinInfo.roomId].capacity;
     if (Object.keys(storeData.persistentData[joinInfo.roomId]["users"]).length >= roomCapacity) {
-      io.to(socketObj.id).emit("connectError", "roomFull");
+      if(storeData.persistentData[joinInfo.roomId].leaveUserIds.length > 0){
+        //抜けたユーザーがいる場合、入れる可能性がある。
+        
+        io.to(socketObj.id).emit("connectRetry", {})
+      }else{
+        io.to(socketObj.id).emit("connectError", "roomFull");
+      }
       return;
     }
     storeData.persistentData[joinInfo.roomId]["users"][socketObj.id] = {
