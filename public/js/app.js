@@ -229,6 +229,40 @@ $(function() {
     });
     document.cookie = 'name=' + $("#playerName").val() + '; max-age=259200';
   });
+  socket.on("connectRetry", function(leaveMemberInfo){
+    debugLog("Retryモード");
+    //選択画面を開く。
+    createSelectConnectMemberButton(leaveMemberInfo);
+  });
+  function createSelectConnectMemberButton(leaveMemberInfo) {
+    leaveMemberInfo.forEach(function(ele) {
+      debugLog(ele.dispName);
+      const div = $('<div class="form-check"></div>');
+      div.append(
+        $('<input type="radio" />').attr({
+          class: "form-check-input",
+          name: "roomRadios",
+          value: roomList[key].roomId,
+          id: "room_" + roomList[key].roomId
+        })
+      );
+      div.append(
+        $(
+          '<label class="form-check-label" for="' +
+            "room_" +
+            roomList[key].roomId +
+            '">' +
+            roomList[key].roomDispName +
+            "(定員：" +
+            roomList[key].capacity +
+            "人)" +
+            "</label>"
+        )
+      );
+      $("#selectRoomList").prepend(div);
+    });
+    $("#selectRoomList > :first > input").prop("checked", true);
+  }
   socket.on("joinedRoom", function(joinMembers) {
     //部屋ジョイン後
     debugLog("JoinedRoom");
