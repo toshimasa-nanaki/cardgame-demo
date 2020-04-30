@@ -370,17 +370,21 @@ const checkFoul = (sc, roomId) => {
     return result;
   }
   //最後に出したカードに8またはジョーカーが含まれていない？(階段の場合は8は許される)
-  //あとで使う2と3も確認しておく
+  //あとで使う2と3と11backも確認しておく
   let flag8 = false;
   let flagJoker = false;
   let flag2 = false;
   let flag3 = false;
+  let flag11 = false;
   sc.forEach(ele => {
     if (ele.number == 8) {
       flag8 = true;
     }
     if (~ele.type.indexOf("joker")) {
       flagJoker = true;
+    }
+    if (ele.number == 11) {
+      flag11 = true;
     }
     if (ele.number == 15) {
       flag2 = true;
@@ -403,14 +407,14 @@ const checkFoul = (sc, roomId) => {
   }
 
   //革命時に3を含んでない?
-  if (storeData.persistentData[roomId].revolution && flag3) {
+  if ((storeData.persistentData[roomId].revolution || storeData.persistentData[roomId].elevenback) && flag3) {
     result.foul = true;
     result.reason = "card3Finish";
     return result;
   }
 
   //非革命時に2を含んでない？
-  if (!storeData.persistentData[roomId].revolution && flag2) {
+  if ((!storeData.persistentData[roomId].revolution && !storeData.persistentData[roomId].elevenback) && flag2) {
     result.foul = true;
     result.reason = "card2Finish";
     return result;
