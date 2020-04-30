@@ -406,6 +406,8 @@ const checkFoul = (sc, roomId) => {
     return result;
   }
 
+  //排他的論理和で革命と11backによる2,3の判断をする。(記述を短くするためにビット演算する)
+  let xor = storeData.persistentData[roomId].revolution ^ storeData.persistentData[roomId].elevenback;
   //革命時に3を含んでない?
   if ((storeData.persistentData[roomId].revolution || storeData.persistentData[roomId].elevenback) && flag3) {
     result.foul = true;
