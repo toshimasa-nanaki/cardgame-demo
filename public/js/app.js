@@ -293,9 +293,14 @@ $(function() {
     $("#playerNameDisp").text(msg.playerName2);
     $("#playerPoint").text(msg.playerPoint);
     $("#blindCards").empty();
-    msg.userList.forEach(user => {
-      $("#orderList").append("<li>" + user + "</li>");
-    });
+    for(let i = 0; i < msg.userList.length; i++){
+      let ele = i === 0 ? $("<li>").text(msg.userList[i]).attr({style: "color: red"}) : $("<li>").text(msg.userList[i]);
+      $("#orderList").append(ele);
+    }
+    // msg.userList.forEach(user => {
+    //   let ele = $("li").val(user);
+    //   $("#orderList").append("<li>" + user + "</li>");
+    // });
     msg.blindCards.forEach(ele => {
       $("#blindCards").append($('<li>' + DISPLAY_DIC[ele.type + ele.number] +'</li>'));
     });

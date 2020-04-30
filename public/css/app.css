@@ -36,6 +36,9 @@ nav#bottomController{
 div#svgArea{
   display: none;
 }
+ul#orderList li {
+  display: inline-block;
+}
 ul#cardList2 li {
   /* liが横並びになるようにします。 */
   display: inline-block;
