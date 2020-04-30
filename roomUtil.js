@@ -117,6 +117,9 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
   
   let orderIndex = storeData.persistentData[reJoinInfo.roomId].order.indexOf(reJoinInfo.userId);
   storeData.persistentData[reJoinInfo.roomId].order = storeData.persistentData[reJoinInfo.roomId].order.splice(orderIndex, 1, socketObj.id);
+  
+  //あとはクライアントがわに送るだけ
+  //io.to(socketObj.id).emit("connectError", "roomFull");
 };
 
 const createDefaultRoomName = () => {
