@@ -12,6 +12,10 @@ module.exports.notifyGameReady = roomId => {
   storeData.persistentData[roomId].giveCardCount = 0;
   const orders = storeData.persistentData[roomId]["order"];
   const users = storeData.persistentData[roomId]["users"];
+  const userDispList = [];
+  for (let [key, value] of Object.entries(users)) {
+    userDispList.push(value.dispName);
+  }
   io.to(orders[0]).emit("gameReady", {
     gameNum: storeData.persistentData[roomId].gameNum,
     card: users[orders[0]].card,
@@ -19,7 +23,9 @@ module.exports.notifyGameReady = roomId => {
     playerName: users[orders[0]].dispName,
     playerName2: users[orders[0]].dispName,
     playerPoint: users[orders[0]].point,
-    blindCards: storeData.persistentData[roomId].blindCards
+    blindCards: storeData.persistentData[roomId].blindCards,
+    orderNum: 0,
+    userList: userDispList
   });
   LOGGER.debug(
     "gameReadyのレスポンス(一番目)： " +
@@ -38,7 +44,9 @@ module.exports.notifyGameReady = roomId => {
       playerName: users[orders[0]].dispName,
       playerName2: users[orders[i]].dispName,
       playerPoint: users[orders[i]].point,
-      blindCards: storeData.persistentData[roomId].blindCards
+      blindCards: storeData.persistentData[roomId].blindCards,
+      orderNum: 0,
+      userList: userDispList
     });
     LOGGER.debug(
       "gameReadyのレスポンス(二番目以降)： " +
