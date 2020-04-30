@@ -23,7 +23,7 @@ $(function() {
     diffSuitCards: "スートしばりに合ったカードを出してください。",
     loseCards: "場のカードより強いものを出してください。",
     handError: "役ができていません。",
-    goOutRoom: "プレイヤーの数が減ったため部屋を解散します。",
+    goOutRoom: "プレイヤーの数が減ったためゲームを中断します。<br>ゲームをやめる場合はページを再読み込みしてください。",
     roomFull: "この部屋は既に定員に達しています。"
   };
   const LOSE_REASON_DIC = {
