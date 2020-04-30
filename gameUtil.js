@@ -266,12 +266,6 @@ const handOutCards = (count, roomId) => {
       });
     
     pos = pos + perNum;
-    // pos = remainder > 0 ? pos + perNum + 1 : pos + perNum;
-    // remainder--;
-    // LOGGER.debug("for文の中" + " perNum:" + perNum + " remainder:" + remainder);
-    // LOGGER.debug(
-    //   key + "の持ちカード： " + JSON.stringify(storeData.persistentData[roomId]["users"][key].card)
-    // );
   });
   //余ったカードがある場合、それはブラインドカードとする。
   if(remainder !== 0){
