@@ -606,10 +606,16 @@ $(function() {
         msg.playerName + "さんのターンです。<br />"
       );
     }
-    $("#orderList").children().forEach(key => {
-      $(key).removeAttr("style");
-      $(key).attr({style: "color:red"});
-    });
+    for(let i=0 ; i < $("#orderList").children().length; i++){
+      $($("#orderList").children()[i]).removeAttr("style");
+      if(msg.orderNum === i){
+        $($("#orderList").children()[i]).attr({style: "color:red"});
+      }  
+    }
+    // $("#orderList").children().forEach(key => {
+    //   $(key).removeAttr("style");
+    //   $(key).attr({style: "color:red"});
+    // });
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );
