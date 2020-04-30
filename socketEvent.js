@@ -50,6 +50,9 @@ module.exports.load_room_event = (socket)=> {
   socket.on("join", joinInfo => {
     roomUtil.joinRoom(joinInfo, socket);
   });
+  socket.on("reJoin", reJoinInfo => {
+    roomUtil.reJoinRoom(reJoinInfo, socket);
+  });
 };
 
 module.exports.load_game_event = (socket)=> {

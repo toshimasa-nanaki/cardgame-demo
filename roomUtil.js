@@ -95,6 +95,12 @@ module.exports.joinRoom = (joinInfo, socketObj) => {
   
 };
 
+module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
+  //TODOとりあえずあること前提で書く。でも無い場合もあるかもしれないのでその時はエラーなど対応が必要。
+  
+  
+};
+
 const createDefaultRoomName = () => {
   const now = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
   return commonUtil.formatDate(now, 'yyyy_MM_dd_HH:mm:ss.SSS');

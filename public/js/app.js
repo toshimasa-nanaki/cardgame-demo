@@ -241,28 +241,36 @@ $(function() {
       div.append(
         $('<input type="radio" />').attr({
           class: "form-check-input",
-          name: "roomRadios",
-          value: roomList[key].roomId,
-          id: "room_" + roomList[key].roomId
+          name: "memberRadios",
+          value: ele.id,
+          id: "member_" + ele.id
         })
       );
       div.append(
         $(
           '<label class="form-check-label" for="' +
-            "room_" +
-            roomList[key].roomId +
+            "member_" +
+            ele.id +
             '">' +
-            roomList[key].roomDispName +
-            "(定員：" +
-            roomList[key].capacity +
-            "人)" +
+            ele.dispName +
             "</label>"
         )
       );
-      $("#selectRoomList").prepend(div);
+      $("#selectMemberList").prepend(div);
     });
-    $("#selectRoomList > :first > input").prop("checked", true);
+    $("#selectMemberList > :first > input").prop("checked", true);
   }
+  
+  $("#retryConnectRoomButton").click(function() {
+    //let reconnectUserId = $("input[name=memberRadios]:checked").val();
+    socket.emit("reJoin", {
+      roomId: $("input[name=roomRadios]:checked").val(),
+      reconnectUserId: $("input[name=memberRadios]:checked").val(),
+      playerName: $("#playerName").val()
+    });
+    document.cookie = 'name=' + $("#playerName").val() + '; max-age=259200';
+  });
+  
   socket.on("joinedRoom", function(joinMembers) {
     //部屋ジョイン後
     debugLog("JoinedRoom");
