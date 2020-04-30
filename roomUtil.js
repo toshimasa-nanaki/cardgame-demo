@@ -97,8 +97,26 @@ module.exports.joinRoom = (joinInfo, socketObj) => {
 
 module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
   //TODOとりあえずあること前提で書く。でも無い場合もあるかもしれないのでその時はエラーなど対応が必要。
+  //置き換えの必要があるもの
+  //・user情報
+  //・order情報
+  //まず新しくユーザー情報を作る
+  let reconnectUser = {
+      dispName: reJoinInfo.playerName !== "" ? commonUtil.htmlentities(reJoinInfo.playerName) : storeData.persistentData[reJoinInfo.roomId]["user"][reJoinInfo.userId].dispName,
+      card: storeData.persistentData[reJoinInfo.roomId]["user"][reJoinInfo.userId].card,
+      rank: storeData.persistentData[reJoinInfo.roomId]["user"][reJoinInfo.userId].rank,
+      rankNum: storeData.persistentData[reJoinInfo.roomId]["user"][reJoinInfo.userId].rankNum,
+      rankReason: storeData.persistentData[reJoinInfo.roomId]["user"][reJoinInfo.userId].rankReason,
+      finishTime: storeData.persistentData[reJoinInfo.roomId]["user"][reJoinInfo.userId].finishTime,
+      point: storeData.persistentData[reJoinInfo.roomId]["user"][reJoinInfo.userId].point,
+      firstPlace: storeData.persistentData[reJoinInfo.roomId]["user"][reJoinInfo.userId].firstPlace,
+      giveCard: storeData.persistentData[reJoinInfo.roomId]["user"][reJoinInfo.userId].giveCard
+  };
+  storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id] = reconnectUser;
+  delete storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.userId];
   
-  
+  let orderIndex = storeData.persistentData[reJoinInfo.roomId].order.indexOf(reJoinInfo.userId);
+  storeData.persistentData[reJoinInfo.roomId].order = storeData.persistentData[reJoinInfo.roomId].order.splice(orderIndex, 1, socketObj.id);
 };
 
 const createDefaultRoomName = () => {
