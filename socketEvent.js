@@ -24,16 +24,20 @@ module.exports.load_common_event = (socket)=> {
             "から退出"
         );
         console.log("storeの状態" + JSON.stringify(storeData.persistentData));
-        delete storeData.persistentData[roomId]["users"][socket.id];
+        //delete storeData.persistentData[roomId]["users"][socket.id];
         socket.leave(roomId);
         if (storeData.persistentData[roomId].startedGame) {
+          storeData.persistentData[roomId].leaveUserIds.push(socket.id);
           console.log("送る" + JSON.stringify(roomId) + "と" + storeData.persistentData[roomId].roomId);
           io.to(storeData.persistentData[roomId].roomId).emit("releaseRoom", {
             reason: "goOutRoom"
           });
+        }else{
+          //ゲーム始まっていないなら抜けるだけ
+          //TOODなんか送ったほうがいいのか？
         }
         //部屋の状態もおかしくなるので削除する
-        delete storeData.persistentData[roomId];
+        //delete storeData.persistentData[roomId];
       }
     }
 });

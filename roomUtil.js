@@ -26,7 +26,8 @@ let roomObjectTemp = {
   rankCount: 1, //次に割り当てられる順位
   giveCardCount: 0, //カードを譲渡を実施した回数(最大2回想定)
   users: {}, //ユーザ情報
-  blindCards: [] //ブラインドカード
+  blindCards: [], //ブラインドカード
+  leaveUserIds: []  //抜けた人のid
 };
 
 module.exports.createRoom = roomInfo => {
