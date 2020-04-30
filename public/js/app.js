@@ -296,6 +296,9 @@ $(function() {
     for(let i = 0; i < msg.userList.length; i++){
       let ele = i === 0 ? $("<li>").text(msg.userList[i]).attr({style: "color: red"}) : $("<li>").text(msg.userList[i]);
       $("#orderList").append(ele);
+      if(i !== msg.userList.length -1){
+        $("#orderList").append("→");
+      }
     }
     // msg.userList.forEach(user => {
     //   let ele = $("li").val(user);
@@ -603,6 +606,10 @@ $(function() {
         msg.playerName + "さんのターンです。<br />"
       );
     }
+    $("#orderList").children().forEach(key => {
+      $(key).removeAttr("style");
+      $(key).attr({style: "color:red"});
+    });
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );
