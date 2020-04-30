@@ -121,14 +121,16 @@ module.exports.notifyChangeTurn = (currentTurnIndex, roomId) => {
         flag: false,
         skip: false,
         playerName: users[orderList[nextTurn]].dispName,
-        orderNum: nextTurn
+        orderNum: nextTurn,
+        endCurrentTurn: users[orderList[currentTurnIndex]].rankNum != 0 ? currentTurnIndex : -1
       });
     }
   });
   commonRequire.io.to(orderList[nextTurn]).emit("order", {
     flag: true,
     skip: users[orderList[nextTurn]].rank != "" ? true : false,
-    orderNum: nextTurn
+    orderNum: nextTurn,
+    endCurrentTurn: users[orderList[currentTurnIndex]].rankNum != 0 ? currentTurnIndex : -1
   });
   if (users[orderList[currentTurnIndex]].rankNum != 0) {
     //現在のユーザがすでに上がっている場合

@@ -609,6 +609,10 @@ $(function() {
         msg.playerName + "さんのターンです。<br />"
       );
     }
+    if(msg.endCurrentTurn !== -1){
+      //前のユーザーが完了したのなら、リストから消す
+      
+    }
     for(let i=0 ; i < $("#orderList").children().length; i++){
       $($("#orderList").children()[i]).removeAttr("style");
       if(msg.orderNum === i){
