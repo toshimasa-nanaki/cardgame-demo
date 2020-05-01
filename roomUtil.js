@@ -133,8 +133,15 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
   LOGGER.debug("置換後のorder:" + JSON.stringify(storeData.persistentData[reJoinInfo.roomId].order));
   
   //この時点でleaveメンバーから抜く
-  let deleteL
-  storeData.persistentData[reJoinInfo.roomId].leaveUserIds.splice(orderIndex, 1, socketObj.id);
+  LOGGER.debug("抜く前のleaveUserIds:" + JSON.stringify(storeData.persistentData[reJoinInfo.roomId].leaveUserIds));
+  let deleteLeaveUserPos = storeData.persistentData[reJoinInfo.roomId].leaveUserIds.indexOf(reJoinInfo.reconnectUserId);
+  if(deleteLeaveUserPos !== -1){
+    storeData.persistentData[reJoinInfo.roomId].leaveUserIds.splice(deleteLeaveUserPos, 1);
+  }else{
+    //おかしな現象なのでエラーをはいておく
+    LOGGER.error("なんでLeaveにいないメンバーで入ろうとしてるねん");
+  }
+  LOGGER.debug("抜いたあとのleaveUserIds:" + JSON.stringify(storeData.persistentData[reJoinInfo.roomId].leaveUserIds));
   
   const userDispList = [];
   storeData.persistentData[reJoinInfo.roomId]["order"].forEach(key => {
