@@ -164,6 +164,10 @@ module.exports.checkOut = (sc, roomId, userId, currentTurn) => {
             dispName: storeData.persistentData[roomId]["users"][key].dispName
           });
         });
+        storeData.persistentData[roomId].rankingHistory.push({
+          gameNum : storeData.persistentData[roomId].gameNum,
+          ranking : displayRanking
+        });
         if (storeData.persistentData[roomId].gameNum == 4) {
           //1セット終了
           let overallGrade = aggregateBattleSet(roomId);

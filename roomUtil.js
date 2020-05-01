@@ -54,7 +54,8 @@ module.exports.createRoom = roomInfo => {
   giveCardCount: 0, //カードを譲渡を実施した回数(最大2回想定)
   users: {}, //ユーザ情報
   blindCards: [], //ブラインドカード
-  leaveUserIds: []  //抜けた人のid
+  leaveUserIds: [],  //抜けた人のid
+  rankingHistory: []  //ランキングの配列
 };
   roomObj["roomId"] = createRoomId;
   roomObj["roomDispName"] = roomInfo.dispName === "" ? createDefaultRoomName() : commonUtil.htmlentities(roomInfo.dispName);
@@ -177,6 +178,7 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
       shibariSuites: storeData.persistentData[reJoinInfo.roomId].shibariSuites,
       revolution: storeData.persistentData[reJoinInfo.roomId].revolution, //革命フラグ
       fieldCards: storeData.persistentData[reJoinInfo.roomId].fieldCards, //場のカード配列
+      rankingHistory: storeData.persistentData[reJoinInfo.roomId].rankingHistory //ランキングヒストリー
     }
   });
   for (let [key, value] of Object.entries(storeData.persistentData[reJoinInfo.roomId]["users"])) {
