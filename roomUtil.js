@@ -158,6 +158,7 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
     userDispList.push(storeData.persistentData[reJoinInfo.roomId]["users"][key].dispName);
   });
   //あとはクライアントがわに送るだけ
+  //できる限り多くの情報を送らないと復活できないからね。。
   io.to(socketObj.id).emit("reJoinOK", {
     gameNum: storeData.persistentData[reJoinInfo.roomId].gameNum,
     card: storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].card,
@@ -167,7 +168,14 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
     playerPoint: storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].point,
     blindCards: storeData.persistentData[reJoinInfo.roomId].blindCards,
     orderNum: storeData.persistentData[reJoinInfo.roomId].currentTurnPos,
-    userList: userDispList
+    userList: userDispList,
+    roomInfo: {
+      roomDispName: storeData.persistentData[reJoinInfo.roomId].roomDispName, //部屋の表示名
+      elevenback: storeData.persistentData[reJoinInfo.roomId].elevenback, //11backフラグ
+      shibari: storeData.persistentData[reJoinInfo.roomId].shibari, //縛りフラグ
+      revolution: storeData.persistentData[reJoinInfo.roomId].revolution, //革命フラグ
+      fieldCards: storeData.persistentData[reJoinInfo.roomId].revolution, //場のカード配列
+    }
   });
   for (let [key, value] of Object.entries(storeData.persistentData[reJoinInfo.roomId]["users"])) {
       if (key !== socketObj.id) io.to(key).emit("otherMemberReJoinedOK", {
