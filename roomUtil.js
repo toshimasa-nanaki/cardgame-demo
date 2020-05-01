@@ -108,7 +108,7 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
   LOGGER.debug("reJoinInfo:" + JSON.stringify(reJoinInfo));
   LOGGER.debug("reJoinInfoでユーザー情報とれる？:" + JSON.stringify(storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.reconnectUserId]));
   let reconnectUser = {
-      dispName: reJoinInfo.playerName !== "" ? commonUtil.htmlentities(reJoinInfo.playerName) : storeData.persistentData[reJoinInfo.roomId]["user"][reJoinInfo.reconnectUserId].dispName,
+      dispName: reJoinInfo.playerName !== "" ? commonUtil.htmlentities(reJoinInfo.playerName) : storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.reconnectUserId].dispName,
       card: storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.reconnectUserId].card,
       rank: storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.reconnectUserId].rank,
       rankNum: storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.reconnectUserId].rankNum,

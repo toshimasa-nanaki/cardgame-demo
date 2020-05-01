@@ -303,7 +303,7 @@ $(function() {
     //$("#shibari").text("");
     let suites = "";
     msg.roomInfo.shibariSuites.forEach(ele => (suites = suites + SUITES_DIC[ele]));
-    $("#shibari").text(msg.value ? "　縛り　" + suites : "");
+    $("#shibari").text(msg.roomInfo.shibari ? "　縛り　" + suites : "");
     //$("#revolution").text("");
     $("#revolution").text(msg.roomInfo.revolution ? "　革命中　" : "");
     $("#bottomController").show();
