@@ -23,7 +23,7 @@ $(function() {
     diffSuitCards: "スートしばりに合ったカードを出してください。",
     loseCards: "場のカードより強いものを出してください。",
     handError: "役ができていません。",
-    goOutRoom: "プレイヤーの数が減ったためゲームを中断します。<br>ゲームをやめる場合はページを再読み込みしてください。",
+    goOutRoom: "プレイヤーの数が減ったためゲームを中断します。\nゲームをやめる場合はページを再読み込みしてください。",
     roomFull: "この部屋は既に定員に達しています。"
   };
   const LOSE_REASON_DIC = {
@@ -233,6 +233,10 @@ $(function() {
     debugLog("Retryモード");
     //選択画面を開く。
     createSelectConnectMemberButton(leaveMemberInfo.leaveUserInfo);
+    //debugLog("部屋がリリースされました");
+    //$("#releaseRoomModalBody").text("");
+    //$("#releaseRoomModalBody").text(ERROR_DIC[info.reason]);
+    $("#retryConnectModal").modal({ backdrop: "static", keyboard: false });
   });
   function createSelectConnectMemberButton(leaveMemberInfo) {
     leaveMemberInfo.forEach(function(ele) {

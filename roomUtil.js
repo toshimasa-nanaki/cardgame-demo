@@ -104,21 +104,23 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
   //・user情報
   //・order情報
   //まず新しくユーザー情報を作る
+  LOGGER.debug("reJoinInfo:" + JSON.stringify(reJoinInfo));
+  LOGGER.debug("reJoinInfoでユーザー情報とれる？:" + JSON.stringify(storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.reconnectUserId]));
   let reconnectUser = {
-      dispName: reJoinInfo.playerName !== "" ? commonUtil.htmlentities(reJoinInfo.playerName) : storeData.persistentData[reJoinInfo.roomId]["user"][reJoinInfo.userId].dispName,
-      card: storeData.persistentData[reJoinInfo.roomId]["user"][reJoinInfo.userId].card,
-      rank: storeData.persistentData[reJoinInfo.roomId]["user"][reJoinInfo.userId].rank,
-      rankNum: storeData.persistentData[reJoinInfo.roomId]["user"][reJoinInfo.userId].rankNum,
-      rankReason: storeData.persistentData[reJoinInfo.roomId]["user"][reJoinInfo.userId].rankReason,
-      finishTime: storeData.persistentData[reJoinInfo.roomId]["user"][reJoinInfo.userId].finishTime,
-      point: storeData.persistentData[reJoinInfo.roomId]["user"][reJoinInfo.userId].point,
-      firstPlace: storeData.persistentData[reJoinInfo.roomId]["user"][reJoinInfo.userId].firstPlace,
-      giveCard: storeData.persistentData[reJoinInfo.roomId]["user"][reJoinInfo.userId].giveCard
+      dispName: reJoinInfo.playerName !== "" ? commonUtil.htmlentities(reJoinInfo.playerName) : storeData.persistentData[reJoinInfo.roomId]["user"][reJoinInfo.reconnectUserId].dispName,
+      card: storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.reconnectUserId].card,
+      rank: storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.reconnectUserId].rank,
+      rankNum: storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.reconnectUserId].rankNum,
+      rankReason: storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.reconnectUserId].rankReason,
+      finishTime: storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.reconnectUserId].finishTime,
+      point: storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.reconnectUserId].point,
+      firstPlace: storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.reconnectUserId].firstPlace,
+      giveCard: storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.reconnectUserId].giveCard
   };
   storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id] = reconnectUser;
-  delete storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.userId];
+  delete storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.reconnectUserId];
   
-  let orderIndex = storeData.persistentData[reJoinInfo.roomId].order.indexOf(reJoinInfo.userId);
+  let orderIndex = storeData.persistentData[reJoinInfo.roomId].order.indexOf(reJoinInfo.reconnectUserId);
   storeData.persistentData[reJoinInfo.roomId].order = storeData.persistentData[reJoinInfo.roomId].order.splice(orderIndex, 1, socketObj.id);
   
   const userDispList = [];
@@ -128,11 +130,11 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
   //あとはクライアントがわに送るだけ
   io.to(socketObj.id).emit("reJoinOK", {
     gameNum: storeData.persistentData[reJoinInfo.roomId].gameNum,
-    card: storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.userId].card,
+    card: storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.reconnectUserId].card,
     yourTurn: true,
     playerName: storeData.persistentData[reJoinInfo.roomId]["users"][storeData.persistentData[reJoinInfo.roomId].order[storeData.persistentData[reJoinInfo.roomId].currentTurnPos]].dispName,
-    playerName2: storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.userId].dispName,
-    playerPoint: storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.userId].point,
+    playerName2: storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.reconnectUserId].dispName,
+    playerPoint: storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.reconnectUserId].point,
     blindCards: storeData.persistentData[reJoinInfo.roomId].blindCards,
     orderNum: storeData.persistentData[reJoinInfo.roomId].currentTurnPos,
     userList: userDispList
