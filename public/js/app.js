@@ -326,11 +326,16 @@ $(function() {
     msg.blindCards.forEach(ele => {
       $("#blindCards").append($('<li>' + DISPLAY_DIC[ele.type + ele.number] +'</li>'));
     });
+    msg.roomInfo.rankingHistory.forEach(ele => {
+      let mes = "";
+      ele.ranking.forEach(function(ele2) {
+        mes = mes + RANKING_DIC[ele2.rank] + " : " + ele2.dispName + "さん<br />";
+      });
+      $("#battleResult" + ele.gameNum).append(mes);
+      $("#battle" + ele.gameNum).show();
+      $("#battle" + ele.gameNum + "Content").collapse('show');
+    });
     for (let i = 0; i < msg.roomInfo.fieldCards.length; i++) {
-      // message =
-      //   message + "　" + DISPLAY_DIC[msg.result[i].type + msg.result[i].number];
-      //手札削除
-      //$("#" + msg.card[i].type + msg.card[i].number).remove();
       //場にカードを置く
       const imgUri =
         "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
