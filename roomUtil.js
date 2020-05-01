@@ -162,57 +162,63 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
     //カード譲渡のフェーズに戻る必要がある。
     let playerNum = Object.keys(storeData.persistentData[reJoinInfo.roomId]["users"]).length;
     if (playerNum === 3) {
-      //3人のときrankNum
+      //3人のとき
       if(storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].rankNum === 1){
         //1位である
+        giveInfo = {targetCard : storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].card, alreadyGive: storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].giveCard.length !== 0}
       }else if(storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].rankNum === 3){
         //最下位である
-        giveInfo = {targetCard : [storeData.persistentData[reJoinInfo.roomId]["users"][LowerUser1].card.slice(-1)[0]]}
+        giveInfo = {targetCard : [storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].card.slice(-1)[0]]}
       }else{
         //ありえないのでエラーでもはいておく
         LOGGER.error("この時点で順位が出てないのはおかしい");
       }
-    const LowerUser1 = storeData.persistentData[reJoinInfo.roomId]["order"][0];
-    const HigherUser1 = storeData.persistentData[reJoinInfo.roomId]["order"][2];
-    commonRequire.io.to(HigherUser1).emit("giveToLowerStatus1", {
-      targetCard: storeData.persistentData[reJoinInfo.roomId]["users"][HigherUser1].card
-    });
-    commonRequire.io.to(LowerUser1).emit("giveToHigherStatus1", {
-      targetCard: [storeData.persistentData[reJoinInfo.roomId]["users"][LowerUser1].card.slice(-1)[0]]
-    });
-    storeData.persistentData[roomId]["users"][LowerUser1].giveCard.push(
-      storeData.persistentData[roomId]["users"][LowerUser1].card.slice(-1)[0]
-    );
   } else {
     //4人以上
-    const LowerUser1 = storeData.persistentData[roomId]["order"][1];
-    const HigherUser1 = storeData.persistentData[roomId]["order"][playerNum - 2];
-    const LowerUser2 = storeData.persistentData[roomId]["order"][0];
-    const HigherUser2 = storeData.persistentData[roomId]["order"][playerNum - 1];
-    commonRequire.io.to(HigherUser2).emit("giveToLowerStatus2", {
-      targetCard: commonUtil.sortArray(storeData.persistentData[roomId]["users"][HigherUser2].card, true)
-    });
-    commonRequire.io.to(LowerUser2).emit("giveToHigherStatus2", {
-      targetCard: commonUtil.sortArray([
-        storeData.persistentData[roomId]["users"][LowerUser2].card.slice(-1)[0],
-        storeData.persistentData[roomId]["users"][LowerUser2].card.slice(-2)[0]
-      ], true)
-    });
-    commonRequire.io.to(HigherUser1).emit("giveToLowerStatus1", {
-      targetCard: storeData.persistentData[roomId]["users"][HigherUser1].card
-    });
-    commonRequire.io.to(LowerUser1).emit("giveToHigherStatus1", {
-      targetCard: [storeData.persistentData[roomId]["users"][LowerUser1].card.slice(-1)[0]]
-    });
-    storeData.persistentData[roomId]["users"][LowerUser1].giveCard.push(
-      storeData.persistentData[roomId]["users"][LowerUser1].card.slice(-1)[0]
-    );
-    storeData.persistentData[roomId]["users"][LowerUser2].giveCard.push(
-      storeData.persistentData[roomId]["users"][LowerUser2].card.slice(-1)[0]
-    );
-    storeData.persistentData[roomId]["users"][LowerUser2].giveCard.push(
-      storeData.persistentData[roomId]["users"][LowerUser2].card.slice(-2)[0]
-    );
+    if(storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].rankNum === 1){
+        //1位である
+        giveInfo = {targetCard: commonUtil.sortArray(storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].card, true), alreadyGive: storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].giveCard.length !== 0}
+      }else if(storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].rankNum === 2){
+        //2位である
+        giveInfo = {targetCard: storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].card, alreadyGive: storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].giveCard.length !== 0}
+      }else if(storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].rankNum === playerNum - 1){
+        //ビリから2番目
+        giveInfo = {targetCard : [storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].card.slice(-1)[0]]}
+      }else if(storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].rankNum === playerNum){
+        //最下位
+        giveInfo = {targetCard : commonUtil.sortArray([storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].card.slice(-1)[0],storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].card.slice(-2)[0]], true)}
+      }else{
+        //ありえないのでエラーでもはいておく
+        LOGGER.error("この時点で順位が出てないのはおかしい");
+      }
+    // const LowerUser1 = storeData.persistentData[roomId]["order"][1];
+    // const HigherUser1 = storeData.persistentData[roomId]["order"][playerNum - 2];
+    // const LowerUser2 = storeData.persistentData[roomId]["order"][0];
+    // const HigherUser2 = storeData.persistentData[roomId]["order"][playerNum - 1];
+    // commonRequire.io.to(HigherUser2).emit("giveToLowerStatus2", {
+    //   targetCard: commonUtil.sortArray(storeData.persistentData[roomId]["users"][HigherUser2].card, true)
+    // });
+    // commonRequire.io.to(LowerUser2).emit("giveToHigherStatus2", {
+    //   targetCard: commonUtil.sortArray([
+    //     storeData.persistentData[roomId]["users"][LowerUser2].card.slice(-1)[0],
+    //     storeData.persistentData[roomId]["users"][LowerUser2].card.slice(-2)[0]
+    //   ], true)
+    // });
+    // commonRequire.io.to(HigherUser1).emit("giveToLowerStatus1", {
+    //   targetCard: storeData.persistentData[roomId]["users"][HigherUser1].card
+    // });
+    // commonRequire.io.to(LowerUser1).emit("giveToHigherStatus1", {
+    //   targetCard: [storeData.persistentData[roomId]["users"][LowerUser1].card.slice(-1)[0]]
+    // });
+    // storeData.persistentData[roomId]["users"][LowerUser1].giveCard.push(
+    //   storeData.persistentData[roomId]["users"][LowerUser1].card.slice(-1)[0]
+    // );
+    // storeData.persistentData[roomId]["users"][LowerUser2].giveCard.push(
+    //   storeData.persistentData[roomId]["users"][LowerUser2].card.slice(-1)[0]
+    // );
+    // storeData.persistentData[roomId]["users"][LowerUser2].giveCard.push(
+    //   storeData.persistentData[roomId]["users"][LowerUser2].card.slice(-2)[0]
+    // );
   }
   }
   const userDispList = [];
@@ -248,7 +254,8 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
       rankingHistory: storeData.persistentData[reJoinInfo.roomId].rankingHistory, //ランキングヒストリー
       orders: remainingCards,
       giveCardPhase: storeData.persistentData[reJoinInfo.roomId].giveCardPhase
-    }
+    },
+    giveInfo: giveInfo
   });
   for (let [key, value] of Object.entries(storeData.persistentData[reJoinInfo.roomId]["users"])) {
       if (key !== socketObj.id) io.to(key).emit("otherMemberReJoinedOK", {
