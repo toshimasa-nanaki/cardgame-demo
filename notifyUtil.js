@@ -116,6 +116,12 @@ module.exports.notifyChangeTurn = (currentTurnIndex, roomId) => {
     currentTurnIndex != orderList.length - 1 ? currentTurnIndex + 1 : 0;
   let nextTurnUserId = orderList[nextTurn];
   let currentTurnUserId = orderList[currentTurnIndex];
+  const remainingCards = [];
+  orderList.forEach(key => {
+    remainingCards.push({
+      cardNum: card
+    });
+  });
   if (users[orderList[currentTurnIndex]].rankNum != 0) {
     //現在のユーザがすでに上がっている場合
     storeData.persistentData[roomId]["order"].splice(currentTurnIndex, 1);
