@@ -277,6 +277,23 @@ $(function() {
   });
   
   socket.on("reJoinOK", function(msg) {
+    if(msg.roomInfo.giveCardPhase){
+      switch(msg.giveInfo.type){
+        case "lower1":
+          giveToHigherStatus1(msg)
+          break;
+        case "lower2":
+          giveToHigherStatus2(msg)
+          break;
+        case "higher1":
+          giveToLowerStatus1(msg, msg.giveInfo.alreadyGive)
+          break;
+        case "higher2":
+          giveToLowerStatus2(msg, msg.giveInfo.alreadyGive)
+          break;
+      }
+      return;
+    }
     $("#gameCommentaryArea").append(
       "第" + msg.gameNum + "回ゲームを再開します" + "<br />"
     );
@@ -413,10 +430,8 @@ $(function() {
     }
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
-    );
-    
+    );  
   });
-  
   
   socket.on("joinedRoom", function(joinMembers) {
     //部屋ジョイン後
