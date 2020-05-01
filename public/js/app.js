@@ -280,16 +280,16 @@ $(function() {
     if(msg.roomInfo.giveCardPhase){
       switch(msg.giveInfo.type){
         case "lower1":
-          giveToHigherStatus1(msg)
+          giveToHigherStatus1(msg.giveInfo)
           break;
         case "lower2":
-          giveToHigherStatus2(msg)
+          giveToHigherStatus2(msg.giveInfo)
           break;
         case "higher1":
-          giveToLowerStatus1(msg, msg.giveInfo.alreadyGive)
+          giveToLowerStatus1(msg.giveInfo, msg.giveInfo.alreadyGive)
           break;
         case "higher2":
-          giveToLowerStatus2(msg, msg.giveInfo.alreadyGive)
+          giveToLowerStatus2(msg.giveInfo, msg.giveInfo.alreadyGive)
           break;
       }
       return;
