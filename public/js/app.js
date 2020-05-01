@@ -149,7 +149,6 @@ $(function() {
   };
   function mypreload() {
     Object.keys(DISPLAY_IMAGE_ID).forEach(key => {
-      //const imgUri = "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" + DISPLAY_IMAGE_ID[element.type + element.number] + ".png";
       $("<img>").attr(
         "src",
         "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
@@ -233,9 +232,6 @@ $(function() {
     debugLog("Retryモード");
     //選択画面を開く。
     createSelectConnectMemberButton(leaveMemberInfo.leaveUserInfo);
-    //debugLog("部屋がリリースされました");
-    //$("#releaseRoomModalBody").text("");
-    //$("#releaseRoomModalBody").text(ERROR_DIC[info.reason]);
     $("#retryConnectModal").modal({ backdrop: "static", keyboard: false });
   });
   function createSelectConnectMemberButton(leaveMemberInfo) {

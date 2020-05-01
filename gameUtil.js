@@ -40,7 +40,6 @@ module.exports.gameInit = (count, sockets, roomId) => {
   handOutCards(count, roomId);
 
   //準備完了通知
-  //  notifyGameReady(roomId);
   if (storeData.persistentData[roomId].gameNum == 1) {
     //1回目のゲームの場合は完了通知を送る。
     notifyUtil.notifyGameReady(roomId);
