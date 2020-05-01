@@ -597,7 +597,7 @@ $(function() {
       $("#gameCommentaryArea")[0].scrollHeight
     );
   });
-  socket.on("giveToHigherStatus2", msg => {
+  function giveToHigherStatus2(msg){
     $("#giveCard").show();
     msg.targetCard.forEach(element => {
       const imgUri =
@@ -619,8 +619,11 @@ $(function() {
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );
+  }
+  socket.on("giveToHigherStatus2", msg => {
+    giveToHigherStatus2(msg)
   });
-  socket.on("giveToLowerStatus2", msg => {
+  function giveToLowerStatus2(msg, alreadyFlag){
     $("#giveCard").show();
     $("#gameController2").show();
     msg.targetCard.forEach(element => {
@@ -681,8 +684,11 @@ $(function() {
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );
+  }
+  socket.on("giveToLowerStatus2", msg => {
+    giveToLowerStatus2(msg, false);
   });
-  socket.on("giveToHigherStatus1", msg => {
+  function giveToHigherStatus1(msg){
     $("#giveCard").show();
     msg.targetCard.forEach(element => {
       const imgUri =
@@ -702,8 +708,11 @@ $(function() {
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );
+  }
+  socket.on("giveToHigherStatus1", msg => {
+    giveToHigherStatus1(msg);
   });
-  socket.on("giveToLowerStatus1", msg => {
+  function giveToLowerStatus1(msg, alreadyFlag){
     $("#giveCard").show();
     $("#gameController2").show();
     msg.targetCard.forEach(element => {
@@ -762,6 +771,9 @@ $(function() {
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );
+  }
+  socket.on("giveToLowerStatus1", msg => {
+    giveToLowerStatus1(msg, false);
   });
   $("#give").click(function() {
     let giveCards = [];

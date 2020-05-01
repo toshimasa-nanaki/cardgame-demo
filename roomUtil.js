@@ -165,10 +165,10 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
       //3人のとき
       if(storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].rankNum === 1){
         //1位である
-        giveInfo = {targetCard : storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].card, alreadyGive: storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].giveCard.length !== 0}
+        giveInfo = {type: "higher1",targetCard : storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].card, alreadyGive: storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].giveCard.length !== 0}
       }else if(storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].rankNum === 3){
         //最下位である
-        giveInfo = {targetCard : [storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].card.slice(-1)[0]]}
+        giveInfo = {type: "lower1",targetCard : [storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].card.slice(-1)[0]]}
       }else{
         //ありえないのでエラーでもはいておく
         LOGGER.error("この時点で順位が出てないのはおかしい");
@@ -177,16 +177,16 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
     //4人以上
     if(storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].rankNum === 1){
         //1位である
-        giveInfo = {targetCard: commonUtil.sortArray(storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].card, true), alreadyGive: storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].giveCard.length !== 0}
+        giveInfo = {type: "higher2",targetCard: commonUtil.sortArray(storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].card, true), alreadyGive: storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].giveCard.length !== 0}
       }else if(storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].rankNum === 2){
         //2位である
-        giveInfo = {targetCard: storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].card, alreadyGive: storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].giveCard.length !== 0}
+        giveInfo = {type: "higher1",targetCard: storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].card, alreadyGive: storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].giveCard.length !== 0}
       }else if(storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].rankNum === playerNum - 1){
         //ビリから2番目
-        giveInfo = {targetCard : [storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].card.slice(-1)[0]]}
+        giveInfo = {type: "lower1", targetCard : [storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].card.slice(-1)[0]]}
       }else if(storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].rankNum === playerNum){
         //最下位
-        giveInfo = {targetCard : commonUtil.sortArray([storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].card.slice(-1)[0],storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].card.slice(-2)[0]], true)}
+        giveInfo = {type: "lower2", targetCard : commonUtil.sortArray([storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].card.slice(-1)[0],storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].card.slice(-2)[0]], true)}
       }else{
         //ありえないのでエラーでもはいておく
         LOGGER.error("この時点で順位が出てないのはおかしい");
