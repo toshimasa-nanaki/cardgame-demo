@@ -316,14 +316,6 @@ $(function() {
     $("#playerPoint").text(msg.playerPoint);
     $("#blindCards").empty();
     $("#orderList").empty();
-    //$("#orderList").empty();
-    // for(let i = 0; i < msg.userList.length; i++){
-    //   let ele = i === 0 ? $("<li>").text(msg.userList[i]).attr({style: "color: red"}) : $("<li>").text(msg.userList[i]);
-    //   $("#orderList").append(ele);
-    //   if(i !== msg.userList.length -1){
-    //     $("#orderList").append("→");
-    //   }
-    // }
     let pos = 0
     msg.roomInfo.orders.forEach(ele => {
       let li = $("<li>").text(ele.playerName + "(" + ele.cardNum + "枚)");
@@ -336,13 +328,6 @@ $(function() {
       }
       pos++;
     });
-    // for(let i = 0; i < msg.userList.length; i++){
-    //   let ele = i === 0 ? $("<li>").text(msg.userList[i]).attr({style: "color: red"}) : $("<li>").text(msg.userList[i]);
-    //   $("#orderList").append(ele);
-    //   if(i !== msg.userList.length -1){
-    //     $("#orderList").append("→");
-    //   }
-    // }
     msg.blindCards.forEach(ele => {
       $("#blindCards").append($('<li>' + DISPLAY_DIC[ele.type + ele.number] +'</li>'));
     });
