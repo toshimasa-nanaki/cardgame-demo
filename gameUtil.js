@@ -26,8 +26,12 @@ module.exports.gameInit = (count, sockets, roomId) => {
   storeData.persistentData[roomId]["order"] = [];
   storeData.persistentData[roomId].startedGame = true;
   storeData.persistentData[roomId].rankCount = 1;
-  //もらったカード、
-  storeData.persistentData[roomId]["users"][]
+  //もらったカード、あげたカードをクリアする
+  Object.keys(storeData.persistentData[roomId]["users"]).forEach(key => {
+    storeData.persistentData[roomId]["users"][key].getCard = [];
+    storeData.persistentData[roomId]["users"][key].giveCard = [];
+  });
+  
 
   //まずは順番決め
   decideOrder(roomId);
