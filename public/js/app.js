@@ -325,10 +325,10 @@ $(function() {
     //   }
     // }
     let pos = 0
-    msg.orders.forEach(ele => {
+    msg.roomInfo.orders.forEach(ele => {
       let li = $("<li>").text(ele.playerName + "(" + ele.cardNum + "枚)").attr({style: "color: red"});
       $("#orderList").append(ele);
-      if(pos !== msg.remainingCards.length -1){
+      if(pos !== msg.roomInfo.orders.length -1){
         $("#orderList").append("→");
       }
       pos++;

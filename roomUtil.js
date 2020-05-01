@@ -159,6 +159,13 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
   storeData.persistentData[reJoinInfo.roomId]["order"].forEach(key => {
     userDispList.push(storeData.persistentData[reJoinInfo.roomId]["users"][key].dispName);
   });
+  const remainingCards = [];
+  storeData.persistentData[reJoinInfo.roomId]["order"].forEach(key => {
+    remainingCards.push({
+      cardNum: storeData.persistentData[reJoinInfo.roomId]["users"][key].card.length,
+      playerName: storeData.persistentData[reJoinInfo.roomId]["users"][key].dispName
+    });
+  });
   //あとはクライアントがわに送るだけ
   //できる限り多くの情報を送らないと復活できないからね。。
   io.to(socketObj.id).emit("reJoinOK", {
@@ -178,7 +185,8 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
       shibariSuites: storeData.persistentData[reJoinInfo.roomId].shibariSuites,
       revolution: storeData.persistentData[reJoinInfo.roomId].revolution, //革命フラグ
       fieldCards: storeData.persistentData[reJoinInfo.roomId].fieldCards, //場のカード配列
-      rankingHistory: storeData.persistentData[reJoinInfo.roomId].rankingHistory //ランキングヒストリー
+      rankingHistory: storeData.persistentData[reJoinInfo.roomId].rankingHistory, //ランキングヒストリー
+      orders: remainingCards
     }
   });
   for (let [key, value] of Object.entries(storeData.persistentData[reJoinInfo.roomId]["users"])) {
