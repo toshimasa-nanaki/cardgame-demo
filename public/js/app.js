@@ -428,7 +428,7 @@ $(function() {
       $("#gameCommentaryArea")[0].scrollHeight
     );
     if(msg.memberOK){
-      $("#errorModal").modal('hide');
+      $("#releaseRoomModal").modal('hide');
     }
   });
   socket.on("connectError", function(msg) {

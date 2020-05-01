@@ -134,7 +134,16 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
   
   //この時点でleaveメンバーから抜く
   LOGGER.debug("抜く前のleaveUserIds:" + JSON.stringify(storeData.persistentData[reJoinInfo.roomId].leaveUserIds));
-  let deleteLeaveUserPos = storeData.persistentData[reJoinInfo.roomId].leaveUserIds.indexOf(reJoinInfo.reconnectUserId);
+  //let deleteLeaveUserPos = storeData.persistentData[reJoinInfo.roomId].leaveUserIds.indexOf(reJoinInfo.reconnectUserId);
+  let deleteLeaveUserPos = 0;
+  storeData.persistentData[reJoinInfo.roomId].leaveUserIds.some(ele => {
+    if(ele.id === reJoinInfo.reconnectUserId) return true;
+    deleteLeaveUserPos++;
+    if(deleteLeaveUserPos === storeData.persistentData[reJoinInfo.roomId].leaveUserIds.length){
+      //最後まで見つからなかったということ
+      deleteLeaveUserPos = -1;
+    }
+  });
   if(deleteLeaveUserPos !== -1){
     storeData.persistentData[reJoinInfo.roomId].leaveUserIds.splice(deleteLeaveUserPos, 1);
   }else{
