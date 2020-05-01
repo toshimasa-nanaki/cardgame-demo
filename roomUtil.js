@@ -156,6 +156,8 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
   LOGGER.debug("抜いたあとのleaveUserIds:" + JSON.stringify(storeData.persistentData[reJoinInfo.roomId].leaveUserIds));
   
   socketObj.join(reJoinInfo.roomId);
+  
+  
   const userDispList = [];
   storeData.persistentData[reJoinInfo.roomId]["order"].forEach(key => {
     userDispList.push(storeData.persistentData[reJoinInfo.roomId]["users"][key].dispName);

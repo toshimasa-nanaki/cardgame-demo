@@ -63,6 +63,7 @@ module.exports.notifyGameReady = roomId => {
 }
 
 module.exports.notifyGiveCard = (roomId,playerNum) => {
+  storeData.persistentData[roomId].giveCardPhase = true;
   if (playerNum === 3) {
     //3人のとき
     const LowerUser1 = storeData.persistentData[roomId]["order"][0];
