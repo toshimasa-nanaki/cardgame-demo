@@ -117,11 +117,20 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
       firstPlace: storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.reconnectUserId].firstPlace,
       giveCard: storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.reconnectUserId].giveCard
   };
+  LOGGER.debug("接続しようとしているsocketid:" + socketObj.id);
+  LOGGER.debug("前に接続していたsocketid:" + reJoinInfo.reconnectUserId);
+  LOGGER.debug("今のユーザー情報:" + JSON.stringify(storeData.persistentData[reJoinInfo.roomId]["users"]));
   storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id] = reconnectUser;
+  LOGGER.debug("追加後のユーザー情報:" + JSON.stringify(storeData.persistentData[reJoinInfo.roomId]["users"]));
   delete storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.reconnectUserId];
   
+  LOGGER.debug("削除後のユーザー情報:" + JSON.stringify(storeData.persistentData[reJoinInfo.roomId]["users"]));
+  
+  LOGGER.debug("置換前のorder:" + JSON.stringify(storeData.persistentData[reJoinInfo.roomId].order));
   let orderIndex = storeData.persistentData[reJoinInfo.roomId].order.indexOf(reJoinInfo.reconnectUserId);
-  storeData.persistentData[reJoinInfo.roomId].order = storeData.persistentData[reJoinInfo.roomId].order.splice(orderIndex, 1, socketObj.id);
+  storeData.persistentData[reJoinInfo.roomId].order.splice(orderIndex, 1, socketObj.id);
+  //storeData.persistentData[reJoinInfo.roomId].order = storeData.persistentData[reJoinInfo.roomId].order.splice(orderIndex, 1, socketObj.id);
+  LOGGER.debug("置換後のorder:" + JSON.stringify(storeData.persistentData[reJoinInfo.roomId].order));
   
   const userDispList = [];
   storeData.persistentData[reJoinInfo.roomId]["order"].forEach(key => {
