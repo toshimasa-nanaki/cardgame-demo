@@ -272,6 +272,7 @@ $(function() {
       reconnectUserId: $("input[name=memberRadios]:checked").val(),
       playerName: $("#playerName").val()
     });
+    $("#retryConnectModal").modal('hide');
     document.cookie = 'name=' + $("#playerName").val() + '; max-age=259200';
   });
   
@@ -416,6 +417,19 @@ $(function() {
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );
+  });
+  socket.on("otherMemberReJoinedOK", function(msg) {
+    //他のメンバーが再接続したとき
+    debugLog("otherMemberReJoinedOK");
+    $("#gameCommentaryArea").append(
+      msg.playerName + "さんが部屋に入りました<br />"
+    );
+    $("#gameCommentaryArea").scrollTop(
+      $("#gameCommentaryArea")[0].scrollHeight
+    );
+    if(msg.memberOK){
+      $("#errorModal").modal('hide');
+    }
   });
   socket.on("connectError", function(msg) {
     $("#errorModalBody").text("");

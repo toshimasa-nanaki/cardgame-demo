@@ -133,7 +133,8 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
   LOGGER.debug("置換後のorder:" + JSON.stringify(storeData.persistentData[reJoinInfo.roomId].order));
   
   //この時点でleaveメンバーから抜く
-  
+  let deleteL
+  storeData.persistentData[reJoinInfo.roomId].leaveUserIds.splice(orderIndex, 1, socketObj.id);
   
   const userDispList = [];
   storeData.persistentData[reJoinInfo.roomId]["order"].forEach(key => {
@@ -151,12 +152,16 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
     orderNum: storeData.persistentData[reJoinInfo.roomId].currentTurnPos,
     userList: userDispList
   });
-  if(storeData.persistentData[reJoinInfo.roomId].leaveUserIds.length === 0){
-    //
+  for (let [key, value] of Object.entries(storeData.persistentData[reJoinInfo.roomId]["users"])) {
+      if (key !== socketObj.id) io.to(key).emit("otherMemberReJoinedOK", {
+        playerName: reconnectUser.dispName,
+        memberOK: storeData.persistentData[reJoinInfo.roomId].leaveUserIds.length === 0
+      });
   }
-  for (let [key, value] of Object.entries(storeData.persistentData[joinInfo.roomId]["users"])) {
-      if (key !== socketObj.id) io.to(key).emit("otherMemberJoinedRoom", commonUtil.htmlentities(joinInfo.playerName));
-  }
+//   if(storeData.persistentData[reJoinInfo.roomId].leaveUserIds.length === 0){
+//     //人数がそろえばフリーズを解除する。
+    
+//   }
 };
 
 const createDefaultRoomName = () => {
