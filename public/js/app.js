@@ -798,15 +798,21 @@ $(function() {
         msg.playerName + "さんのターンです。<br />"
       );
     }
-    if(msg.endCurrentTurn !== -1){
-      //前のユーザーが完了したのなら、リストから消す
+//     if(msg.endCurrentTurn !== -1){
+//       //前のユーザーが完了したのなら、リストから消す
       
-    }
+//     }
     for(let i=0 ; i < $("#orderList").children().length; i++){
+      if(msg.endCurrentTurn !== -1 && msg.endCurrentTurn === i){
+        //前のユーザーが完了したのなら、リストから消す
+        $($("#orderList").children()[i]).removeAttr("style");
+        $($("#orderList").children()[i]).attr({style: "color:grey"});
+        continue;
+      }
       $($("#orderList").children()[i]).removeAttr("style");
       if(msg.orderNum === i){
         $($("#orderList").children()[i]).attr({style: "color:red"});
-      }  
+      }
     }
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
