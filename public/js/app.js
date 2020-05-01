@@ -292,6 +292,7 @@ $(function() {
           giveToLowerStatus2(msg.giveInfo, msg.giveInfo.alreadyGive)
           break;
       }
+      $("#bottomController").show();
       return;
     }
     $("#gameCommentaryArea").append(
