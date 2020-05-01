@@ -119,7 +119,8 @@ module.exports.notifyChangeTurn = (currentTurnIndex, roomId) => {
   const remainingCards = [];
   orderList.forEach(key => {
     remainingCards.push({
-      cardNum: card
+      cardNum: users[key].card.length,
+      playerName: users[key].dispName
     });
   });
   if (users[orderList[currentTurnIndex]].rankNum != 0) {
@@ -136,7 +137,8 @@ module.exports.notifyChangeTurn = (currentTurnIndex, roomId) => {
         //playerName: users[orderList[nextTurn]].dispName,
         playerName: users[nextTurnUserId].dispName,
         orderNum: storeData.persistentData[roomId]["order"].indexOf(nextTurnUserId),
-        endCurrentTurn: users[currentTurnUserId].rankNum != 0 ? currentTurnIndex : -1
+        endCurrentTurn: users[currentTurnUserId].rankNum != 0 ? currentTurnIndex : -1,
+        orders: remainingCards
       });
     }
   });
@@ -144,7 +146,8 @@ module.exports.notifyChangeTurn = (currentTurnIndex, roomId) => {
     flag: true,
     skip: users[nextTurnUserId].rank != "" ? true : false,
     orderNum: storeData.persistentData[roomId]["order"].indexOf(nextTurnUserId),
-    endCurrentTurn: users[currentTurnUserId].rankNum != 0 ? currentTurnIndex : -1
+    endCurrentTurn: users[currentTurnUserId].rankNum != 0 ? currentTurnIndex : -1,
+    orders: remainingCards
   });
   storeData.persistentData[roomId].currentTurnPos = storeData.persistentData[roomId]["order"].indexOf(nextTurnUserId);
   // if (users[orderList[currentTurnIndex]].rankNum != 0) {

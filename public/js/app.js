@@ -316,13 +316,30 @@ $(function() {
     $("#playerPoint").text(msg.playerPoint);
     $("#blindCards").empty();
     $("#orderList").empty();
-    for(let i = 0; i < msg.userList.length; i++){
-      let ele = i === 0 ? $("<li>").text(msg.userList[i]).attr({style: "color: red"}) : $("<li>").text(msg.userList[i]);
+    //$("#orderList").empty();
+    // for(let i = 0; i < msg.userList.length; i++){
+    //   let ele = i === 0 ? $("<li>").text(msg.userList[i]).attr({style: "color: red"}) : $("<li>").text(msg.userList[i]);
+    //   $("#orderList").append(ele);
+    //   if(i !== msg.userList.length -1){
+    //     $("#orderList").append("→");
+    //   }
+    // }
+    let pos = 0
+    msg.remainingCards.forEach(ele => {
+      let li = $("<li>").text(ele.playerName + "(" + ele.cardNum + "枚)").attr({style: "color: red"});
       $("#orderList").append(ele);
-      if(i !== msg.userList.length -1){
+      if(pos !== msg.remainingCards.length -1){
         $("#orderList").append("→");
       }
-    }
+      pos++;
+    });
+    // for(let i = 0; i < msg.userList.length; i++){
+    //   let ele = i === 0 ? $("<li>").text(msg.userList[i]).attr({style: "color: red"}) : $("<li>").text(msg.userList[i]);
+    //   $("#orderList").append(ele);
+    //   if(i !== msg.userList.length -1){
+    //     $("#orderList").append("→");
+    //   }
+    // }
     msg.blindCards.forEach(ele => {
       $("#blindCards").append($('<li>' + DISPLAY_DIC[ele.type + ele.number] +'</li>'));
     });
@@ -807,18 +824,36 @@ $(function() {
 //       //前のユーザーが完了したのなら、リストから消す
       
 //     }
-    for(let i=0 ; i < $("#orderList").children().length; i++){
-      if(msg.endCurrentTurn !== -1 && msg.endCurrentTurn === i){
-        //前のユーザーが完了したのなら、リストから消す
-        $($("#orderList").children()[i]).removeAttr("style");
-        $($("#orderList").children()[i]).attr({style: "color:grey"});
-        continue;
+    $("#orderList").empty();
+    // for(let i = 0; i < msg.userList.length; i++){
+    //   let ele = i === 0 ? $("<li>").text(msg.userList[i]).attr({style: "color: red"}) : $("<li>").text(msg.userList[i]);
+    //   $("#orderList").append(ele);
+    //   if(i !== msg.userList.length -1){
+    //     $("#orderList").append("→");
+    //   }
+    // }
+    let pos = 0
+    msg.remainingCards.forEach(ele => {
+      let li = $("<li>").text(ele.playerName + "(" + ele.cardNum + "枚)").attr({style: "color: red"});
+      $("#orderList").append(ele);
+      if(pos !== msg.remainingCards.length -1){
+        $("#orderList").append("→");
       }
-      $($("#orderList").children()[i]).removeAttr("style");
-      if(msg.orderNum === i){
-        $($("#orderList").children()[i]).attr({style: "color:red"});
-      }
-    }
+      pos++;
+    });
+    //orders: remainingCards
+    // for(let i=0 ; i < $("#orderList").children().length; i++){
+    //   if(msg.endCurrentTurn !== -1 && msg.endCurrentTurn === i){
+    //     //前のユーザーが完了したのなら、リストから消す
+    //     $($("#orderList").children()[i]).removeAttr("style");
+    //     $($("#orderList").children()[i]).attr({style: "color:grey"});
+    //     continue;
+    //   }
+    //   $($("#orderList").children()[i]).removeAttr("style");
+    //   if(msg.orderNum === i){
+    //     $($("#orderList").children()[i]).attr({style: "color:red"});
+    //   }
+    // }
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );
