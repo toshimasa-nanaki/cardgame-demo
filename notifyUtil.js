@@ -111,30 +111,38 @@ module.exports.notifyGiveCard = (roomId,playerNum) => {
 
 module.exports.notifyChangeTurn = (currentTurnIndex, roomId) => {
   const orderList = storeData.persistentData[roomId]["order"];
-  const users = storeData.persistentData[roomId]["users"];
+  const users = storeData.persistentData[roomId]["users"]; 
   let nextTurn =
     currentTurnIndex != orderList.length - 1 ? currentTurnIndex + 1 : 0;
-
-  Object.keys(users).forEach(function(element) {
-    if (element != orderList[nextTurn]) {
-      commonRequire.io.to(element).emit("order", {
-        flag: false,
-        skip: false,
-        playerName: users[orderList[nextTurn]].dispName,
-        orderNum: nextTurn,
-        endCurrentTurn: users[orderList[currentTurnIndex]].rankNum != 0 ? currentTurnIndex : -1
-      });
-    }
-  });
-  commonRequire.io.to(orderList[nextTurn]).emit("order", {
-    flag: true,
-    skip: users[orderList[nextTurn]].rank != "" ? true : false,
-    orderNum: nextTurn,
-    endCurrentTurn: users[orderList[currentTurnIndex]].rankNum != 0 ? currentTurnIndex : -1
-  });
+  let nextTurnUserId = orderList[nextTurn];
+  let currentTurnUserId = orderList[currentTurnIndex];
   if (users[orderList[currentTurnIndex]].rankNum != 0) {
     //現在のユーザがすでに上がっている場合
     storeData.persistentData[roomId]["order"].splice(currentTurnIndex, 1);
   }
+
+  Object.keys(users).forEach(function(element) {
+    //if (element != orderList[nextTurn]) {
+    if(element != nextTurnUserId){
+      commonRequire.io.to(element).emit("order", {
+        flag: false,
+        skip: false,
+        //playerName: users[orderList[nextTurn]].dispName,
+        playerName: users[nextTurnUserId].dispName,
+        orderNum: storeData.persistentData[roomId]["order"].indexOf(nextTurnUserId),
+        endCurrentTurn: users[currentTurnUserId].rankNum != 0 ? currentTurnIndex : -1
+      });
+    }
+  });
+  commonRequire.io.to(nextTurnUserId).emit("order", {
+    flag: true,
+    skip: users[nextTurnUserId].rank != "" ? true : false,
+    orderNum: storeData.persistentData[roomId]["order"].indexOf(nextTurnUserId),
+    endCurrentTurn: users[currentTurnUserId].rankNum != 0 ? currentTurnIndex : -1
+  });
+  // if (users[orderList[currentTurnIndex]].rankNum != 0) {
+  //   //現在のユーザがすでに上がっている場合
+  //   storeData.persistentData[roomId]["order"].splice(currentTurnIndex, 1);
+  // }
   //storeData.persistentData[roomId].currentTurnPos = currentTurnIndex != orderList.length - 1 ? currentTurnIndex + 1 : 0
 }
