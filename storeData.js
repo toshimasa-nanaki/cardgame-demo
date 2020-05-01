@@ -38,6 +38,7 @@ module.exports.fieldClear = (roomId) => {
   module.exports.persistentData[roomId].elevenback = false;
   module.exports.persistentData[roomId].stair = false;
   module.exports.persistentData[roomId].shibari = false;
+  module.exports.persistentData[roomId].shibariSuites = [];
 }
 
 module.exports.sortCard = (roomId, userId, isASC = true) => {

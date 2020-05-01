@@ -41,6 +41,7 @@ module.exports.createRoom = roomInfo => {
   passCount: 0, //パス数
   elevenback: false, //11backフラグ
   shibari: false, //縛りフラグ
+  shibariSuites: [], //縛りマーク一覧
   revolution: false, //革命フラグ
   stair: false, //階段フラグ
   fieldCards: [], //場のカード配列
@@ -173,6 +174,7 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
       roomDispName: storeData.persistentData[reJoinInfo.roomId].roomDispName, //部屋の表示名
       elevenback: storeData.persistentData[reJoinInfo.roomId].elevenback, //11backフラグ
       shibari: storeData.persistentData[reJoinInfo.roomId].shibari, //縛りフラグ
+      shibariSuites: storeData.persistentData[reJoinInfo.roomId].shibariSuites,
       revolution: storeData.persistentData[reJoinInfo.roomId].revolution, //革命フラグ
       fieldCards: storeData.persistentData[reJoinInfo.roomId].fieldCards, //場のカード配列
     }

@@ -300,7 +300,10 @@ $(function() {
     $("#other").text("");
     //$("#elevenback").text("");
     $("#elevenback").text(msg.roomInfo.elevenback ? "　11Back　" : "");
-    $("#shibari").text("");
+    //$("#shibari").text("");
+    let suites = "";
+    msg.roomInfo.shibariSuites.forEach(ele => (suites = suites + SUITES_DIC[ele]));
+    $("#shibari").text(msg.value ? "　縛り　" + suites : "");
     //$("#revolution").text("");
     $("#revolution").text(msg.roomInfo.revolution ? "　革命中　" : "");
     $("#bottomController").show();
@@ -326,6 +329,21 @@ $(function() {
     msg.blindCards.forEach(ele => {
       $("#blindCards").append($('<li>' + DISPLAY_DIC[ele.type + ele.number] +'</li>'));
     });
+    for (let i = 0; i < msg.roomInfo.card.length; i++) {
+      message =
+        message + "　" + DISPLAY_DIC[msg.result[i].type + msg.result[i].number];
+      //手札削除
+      $("#" + msg.card[i].type + msg.card[i].number).remove();
+      //場にカードを置く
+      const imgUri =
+        "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
+        DISPLAY_IMAGE_ID[msg.result[i].type + msg.result[i].number] +
+        ".png";
+      let li = $("<li></li>").append(
+        $('<img class="fieldCardImage" src="' + imgUri + '"></img>')
+      );
+      $("#field").append(li);
+    }
     msg.card.forEach(element => {
       const cardType = element.number + element.type;
       const imgUri =

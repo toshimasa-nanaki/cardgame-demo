@@ -118,6 +118,7 @@ commonRequire.io.on("connection", socket => {
       const shibariResult = checkShibari(fieldCards, validateCards);
       if (!storeData.persistentData[msg.id].shibari && shibariResult.isShibari) {
         storeData.persistentData[msg.id].shibari = true;
+        storeData.persistentData[msg.id].shibariSuites = shibariResult.suites;
         commonRequire.io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
           type: "shibari",
           value: storeData.persistentData[msg.id].shibari,
