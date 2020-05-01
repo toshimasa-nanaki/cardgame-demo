@@ -298,9 +298,11 @@ $(function() {
     //$("#field").text("なし");
     $("#field").empty();
     $("#other").text("");
-    $("#elevenback").text("");
+    //$("#elevenback").text("");
+    $("#elevenback").text(msg.roomInfo.elevenback ? "　11Back　" : "");
     $("#shibari").text("");
-    $("#revolution").text("");
+    //$("#revolution").text("");
+    $("#revolution").text(msg.roomInfo.revolution ? "　革命中　" : "");
     $("#bottomController").show();
     $("#send").prop("disabled", true);
     $("#pass").prop("disabled", true);
