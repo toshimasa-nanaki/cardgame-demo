@@ -132,6 +132,9 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
   //storeData.persistentData[reJoinInfo.roomId].order = storeData.persistentData[reJoinInfo.roomId].order.splice(orderIndex, 1, socketObj.id);
   LOGGER.debug("置換後のorder:" + JSON.stringify(storeData.persistentData[reJoinInfo.roomId].order));
   
+  //この時点でleaveメンバーから抜く
+  
+  
   const userDispList = [];
   storeData.persistentData[reJoinInfo.roomId]["order"].forEach(key => {
     userDispList.push(storeData.persistentData[reJoinInfo.roomId]["users"][key].dispName);
@@ -139,15 +142,21 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
   //あとはクライアントがわに送るだけ
   io.to(socketObj.id).emit("reJoinOK", {
     gameNum: storeData.persistentData[reJoinInfo.roomId].gameNum,
-    card: storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.reconnectUserId].card,
-    yourTurn: true,
+    card: storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].card,
+    yourTurn: storeData.persistentData[reJoinInfo.roomId].currentTurnPos === storeData.persistentData[reJoinInfo.roomId].order.indexOf(socketObj.id) ? true : false,
     playerName: storeData.persistentData[reJoinInfo.roomId]["users"][storeData.persistentData[reJoinInfo.roomId].order[storeData.persistentData[reJoinInfo.roomId].currentTurnPos]].dispName,
-    playerName2: storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.reconnectUserId].dispName,
-    playerPoint: storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.reconnectUserId].point,
+    playerName2: storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].dispName,
+    playerPoint: storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].point,
     blindCards: storeData.persistentData[reJoinInfo.roomId].blindCards,
     orderNum: storeData.persistentData[reJoinInfo.roomId].currentTurnPos,
     userList: userDispList
   });
+  if(storeData.persistentData[reJoinInfo.roomId].leaveUserIds.length === 0){
+    //
+  }
+  for (let [key, value] of Object.entries(storeData.persistentData[joinInfo.roomId]["users"])) {
+      if (key !== socketObj.id) io.to(key).emit("otherMemberJoinedRoom", commonUtil.htmlentities(joinInfo.playerName));
+  }
 };
 
 const createDefaultRoomName = () => {
