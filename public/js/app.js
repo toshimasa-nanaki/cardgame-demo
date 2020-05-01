@@ -292,7 +292,19 @@ $(function() {
           giveToLowerStatus2(msg.giveInfo, msg.giveInfo.alreadyGive)
           break;
       }
+      $("#roomSelectArea").hide();
+      $("#gameArea").show();
       $("#bottomController").show();
+      $("#gameController").hide();
+      msg.roomInfo.rankingHistory.forEach(ele => {
+        let mes = "";
+        ele.ranking.forEach(function(ele2) {
+          mes = mes + RANKING_DIC[ele2.rank] + " : " + ele2.dispName + "さん<br />";
+        });
+        $("#battleResult" + ele.gameNum).append(mes);
+        $("#battle" + ele.gameNum).show();
+        $("#battle" + ele.gameNum + "Content").collapse('show');
+      });
       return;
     }
     $("#gameCommentaryArea").append(
@@ -309,20 +321,16 @@ $(function() {
     $("#gameController").show();
     $("#giveCard").hide();
     $("#playerInfoDropdown").show();
-    // $("#giveCardCommentaryArea").hide();
     $("#rank").text("");
     $("#rematch").hide();
     $("#seiseki").text("");
     //$("#field").text("なし");
     $("#field").empty();
     $("#other").text("");
-    //$("#elevenback").text("");
     $("#elevenback").text(msg.roomInfo.elevenback ? "　11Back　" : "");
-    //$("#shibari").text("");
     let suites = "";
     msg.roomInfo.shibariSuites.forEach(ele => (suites = suites + SUITES_DIC[ele]));
     $("#shibari").text(msg.roomInfo.shibari ? "　縛り　" + suites : "");
-    //$("#revolution").text("");
     $("#revolution").text(msg.roomInfo.revolution ? "　革命中　" : "");
     $("#bottomController").show();
     $("#send").prop("disabled", true);
@@ -694,9 +702,17 @@ $(function() {
       );
       $("#giveCardList").append(li);
     });
-    $("#gameCommentaryArea").append(
+    if(alreadyFlag){
+      $("#gameCommentaryArea").append(
+        "カードの譲渡処理が終了するまでお待ちください。<br />"
+      );
+      $("#gameController2").hide();
+    }else{
+      $("#gameCommentaryArea").append(
       "大貧民に渡すカードを選んでください。<br />"
-    );
+      );
+    }
+    
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );
@@ -783,7 +799,15 @@ $(function() {
       );
       $("#giveCardList").append(li);
     });
-    $("#gameCommentaryArea").append("貧民に渡すカードを選んでください。<br />");
+    if(alreadyFlag){
+      $("#gameCommentaryArea").append(
+        "カードの譲渡処理が終了するまでお待ちください。<br />"
+      );
+      $("#gameController2").hide();
+    }else{
+      $("#gameCommentaryArea").append("貧民に渡すカードを選んでください。<br />");
+    }
+    
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );
@@ -860,19 +884,6 @@ $(function() {
       }
       pos++;
     });
-    //orders: remainingCards
-    // for(let i=0 ; i < $("#orderList").children().length; i++){
-    //   if(msg.endCurrentTurn !== -1 && msg.endCurrentTurn === i){
-    //     //前のユーザーが完了したのなら、リストから消す
-    //     $($("#orderList").children()[i]).removeAttr("style");
-    //     $($("#orderList").children()[i]).attr({style: "color:grey"});
-    //     continue;
-    //   }
-    //   $($("#orderList").children()[i]).removeAttr("style");
-    //   if(msg.orderNum === i){
-    //     $($("#orderList").children()[i]).attr({style: "color:red"});
-    //   }
-    // }
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );
