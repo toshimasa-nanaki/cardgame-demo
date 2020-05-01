@@ -329,15 +329,15 @@ $(function() {
     msg.blindCards.forEach(ele => {
       $("#blindCards").append($('<li>' + DISPLAY_DIC[ele.type + ele.number] +'</li>'));
     });
-    for (let i = 0; i < msg.roomInfo.card.length; i++) {
-      message =
-        message + "　" + DISPLAY_DIC[msg.result[i].type + msg.result[i].number];
+    for (let i = 0; i < msg.roomInfo.fieldCards.length; i++) {
+      // message =
+      //   message + "　" + DISPLAY_DIC[msg.result[i].type + msg.result[i].number];
       //手札削除
-      $("#" + msg.card[i].type + msg.card[i].number).remove();
+      //$("#" + msg.card[i].type + msg.card[i].number).remove();
       //場にカードを置く
       const imgUri =
         "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
-        DISPLAY_IMAGE_ID[msg.result[i].type + msg.result[i].number] +
+        DISPLAY_IMAGE_ID[msg.roomInfo.fieldCards[i].type + msg.roomInfo.fieldCards[i].number] +
         ".png";
       let li = $("<li></li>").append(
         $('<img class="fieldCardImage" src="' + imgUri + '"></img>')
