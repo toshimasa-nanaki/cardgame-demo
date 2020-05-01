@@ -159,14 +159,15 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
   
   let giveInfo = {};
   if(storeData.persistentData[reJoinInfo.roomId].giveCardPhase){
+    let pos = storeData.persistentData[reJoinInfo.roomId]["order"].indexOf(socketObj.id) + 1;
     //カード譲渡のフェーズに戻る必要がある。
     let playerNum = Object.keys(storeData.persistentData[reJoinInfo.roomId]["users"]).length;
     if (playerNum === 3) {
       //3人のとき
-      if(storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].rankNum === 1){
+      if(pos === 3){
         //1位である
         giveInfo = {type: "higher1",targetCard : storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].card, alreadyGive: storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].giveCard.length !== 0}
-      }else if(storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].rankNum === 3){
+      }else if(pos === 1){
         //最下位である
         giveInfo = {type: "lower1",targetCard : [storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].card.slice(-1)[0]]}
       }else{
@@ -175,16 +176,16 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
       }
   } else {
     //4人以上
-    if(storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].rankNum === 1){
+    if(pos === playerNum){
         //1位である
         giveInfo = {type: "higher2",targetCard: commonUtil.sortArray(storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].card, true), alreadyGive: storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].giveCard.length !== 0}
-      }else if(storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].rankNum === 2){
+      }else if(pos === playerNum - 1){
         //2位である
         giveInfo = {type: "higher1",targetCard: storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].card, alreadyGive: storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].giveCard.length !== 0}
-      }else if(storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].rankNum === playerNum - 1){
+      }else if(pos === 2){
         //ビリから2番目
         giveInfo = {type: "lower1", targetCard : [storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].card.slice(-1)[0]]}
-      }else if(storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].rankNum === playerNum){
+      }else if(pos === 1){
         //最下位
         giveInfo = {type: "lower2", targetCard : commonUtil.sortArray([storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].card.slice(-1)[0],storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].card.slice(-2)[0]], true)}
       }else{
