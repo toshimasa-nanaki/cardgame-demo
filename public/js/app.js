@@ -295,6 +295,7 @@ $(function() {
       $("#roomSelectArea").hide();
       $("#gameArea").show();
       $("#bottomController").show();
+      $("#playerInfoDropdown").show();
       $("#gameController").hide();
       msg.roomInfo.rankingHistory.forEach(ele => {
         let mes = "";
