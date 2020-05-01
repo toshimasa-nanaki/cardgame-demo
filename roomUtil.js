@@ -157,7 +157,64 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
   
   socketObj.join(reJoinInfo.roomId);
   
-  
+  let giveInfo = {};
+  if(storeData.persistentData[reJoinInfo.roomId].giveCardPhase){
+    //カード譲渡のフェーズに戻る必要がある。
+    let playerNum = Object.keys(storeData.persistentData[reJoinInfo.roomId]["users"]).length;
+    if (playerNum === 3) {
+      //3人のときrankNum
+      if(storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].rankNum === 1){
+        //1位である
+      }else if(storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id].rankNum === 3){
+        //最下位である
+        giveInfo = {targetCard : [storeData.persistentData[reJoinInfo.roomId]["users"][LowerUser1].card.slice(-1)[0]]}
+      }else{
+        //ありえないのでエラーでもはいておく
+        LOGGER.error("この時点で順位が出てないのはおかしい");
+      }
+    const LowerUser1 = storeData.persistentData[reJoinInfo.roomId]["order"][0];
+    const HigherUser1 = storeData.persistentData[reJoinInfo.roomId]["order"][2];
+    commonRequire.io.to(HigherUser1).emit("giveToLowerStatus1", {
+      targetCard: storeData.persistentData[reJoinInfo.roomId]["users"][HigherUser1].card
+    });
+    commonRequire.io.to(LowerUser1).emit("giveToHigherStatus1", {
+      targetCard: [storeData.persistentData[reJoinInfo.roomId]["users"][LowerUser1].card.slice(-1)[0]]
+    });
+    storeData.persistentData[roomId]["users"][LowerUser1].giveCard.push(
+      storeData.persistentData[roomId]["users"][LowerUser1].card.slice(-1)[0]
+    );
+  } else {
+    //4人以上
+    const LowerUser1 = storeData.persistentData[roomId]["order"][1];
+    const HigherUser1 = storeData.persistentData[roomId]["order"][playerNum - 2];
+    const LowerUser2 = storeData.persistentData[roomId]["order"][0];
+    const HigherUser2 = storeData.persistentData[roomId]["order"][playerNum - 1];
+    commonRequire.io.to(HigherUser2).emit("giveToLowerStatus2", {
+      targetCard: commonUtil.sortArray(storeData.persistentData[roomId]["users"][HigherUser2].card, true)
+    });
+    commonRequire.io.to(LowerUser2).emit("giveToHigherStatus2", {
+      targetCard: commonUtil.sortArray([
+        storeData.persistentData[roomId]["users"][LowerUser2].card.slice(-1)[0],
+        storeData.persistentData[roomId]["users"][LowerUser2].card.slice(-2)[0]
+      ], true)
+    });
+    commonRequire.io.to(HigherUser1).emit("giveToLowerStatus1", {
+      targetCard: storeData.persistentData[roomId]["users"][HigherUser1].card
+    });
+    commonRequire.io.to(LowerUser1).emit("giveToHigherStatus1", {
+      targetCard: [storeData.persistentData[roomId]["users"][LowerUser1].card.slice(-1)[0]]
+    });
+    storeData.persistentData[roomId]["users"][LowerUser1].giveCard.push(
+      storeData.persistentData[roomId]["users"][LowerUser1].card.slice(-1)[0]
+    );
+    storeData.persistentData[roomId]["users"][LowerUser2].giveCard.push(
+      storeData.persistentData[roomId]["users"][LowerUser2].card.slice(-1)[0]
+    );
+    storeData.persistentData[roomId]["users"][LowerUser2].giveCard.push(
+      storeData.persistentData[roomId]["users"][LowerUser2].card.slice(-2)[0]
+    );
+  }
+  }
   const userDispList = [];
   storeData.persistentData[reJoinInfo.roomId]["order"].forEach(key => {
     userDispList.push(storeData.persistentData[reJoinInfo.roomId]["users"][key].dispName);
@@ -189,7 +246,8 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
       revolution: storeData.persistentData[reJoinInfo.roomId].revolution, //革命フラグ
       fieldCards: storeData.persistentData[reJoinInfo.roomId].fieldCards, //場のカード配列
       rankingHistory: storeData.persistentData[reJoinInfo.roomId].rankingHistory, //ランキングヒストリー
-      orders: remainingCards
+      orders: remainingCards,
+      giveCardPhase: storeData.persistentData[reJoinInfo.roomId].giveCardPhase
     }
   });
   for (let [key, value] of Object.entries(storeData.persistentData[reJoinInfo.roomId]["users"])) {
