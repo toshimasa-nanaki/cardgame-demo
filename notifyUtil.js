@@ -136,4 +136,5 @@ module.exports.notifyChangeTurn = (currentTurnIndex, roomId) => {
     //現在のユーザがすでに上がっている場合
     storeData.persistentData[roomId]["order"].splice(currentTurnIndex, 1);
   }
+  storeData.persistentData[roomId].currentTurnPos = 
 }

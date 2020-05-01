@@ -22,6 +22,7 @@ let roomObjectTemp = {
   scoreTable: [], //階級別のスコアテーブル
   finishNum: 0, //上がったプレイヤーの数
   order: [], //順番
+  currentTurnPos: 0, //今order配列上何番目の人のターンか
   startedGame: false, //ゲームが開始されているか否かのフラグ
   rankCount: 1, //次に割り当てられる順位
   giveCardCount: 0, //カードを譲渡を実施した回数(最大2回想定)
@@ -118,15 +119,19 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
   let orderIndex = storeData.persistentData[reJoinInfo.roomId].order.indexOf(reJoinInfo.userId);
   storeData.persistentData[reJoinInfo.roomId].order = storeData.persistentData[reJoinInfo.roomId].order.splice(orderIndex, 1, socketObj.id);
   
+  const userDispList = [];
+  storeData.persistentData[reJoinInfo.roomId]["order"].forEach(key => {
+    userDispList.push(storeData.persistentData[reJoinInfo.roomId]["users"][key].dispName);
+  });
   //あとはクライアントがわに送るだけ
   io.to(socketObj.id).emit("reJoinOK", {
-    gameNum: storeData.persistentData[roomId].gameNum,
-    card: users[orders[0]].card,
+    gameNum: storeData.persistentData[reJoinInfo.roomId].gameNum,
+    card: storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.userId].card,
     yourTurn: true,
     playerName: users[orders[0]].dispName,
-    playerName2: users[orders[0]].dispName,
-    playerPoint: users[orders[0]].point,
-    blindCards: storeData.persistentData[roomId].blindCards,
+    playerName2: storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.userId].dispName,
+    playerPoint: storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.userId].point,
+    blindCards: storeData.persistentData[reJoinInfo.roomId].blindCards,
     orderNum: 0,
     userList: userDispList
   });
