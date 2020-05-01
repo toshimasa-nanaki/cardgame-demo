@@ -1013,6 +1013,7 @@ $(function() {
   socket.on("gameFinish", function(msg) {
     debugLog("game finish");
     $("#field").empty();
+    $("#orderList").empty();
     $("#gameCommentaryArea").append(
       "第" + msg.gameNum + "回のゲーム結果は以下の通りです。<br />"
     );

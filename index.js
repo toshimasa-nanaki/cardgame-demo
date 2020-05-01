@@ -234,6 +234,7 @@ commonRequire.io.on("connection", socket => {
 
       storeData.persistentData[msg.id].giveCardCount = storeData.persistentData[msg.id].giveCardCount + 1;
       if (storeData.persistentData[msg.id].giveCardCount == 1) {
+        storeData.persistentData[msg.id].giveCardPhase = false;  //譲渡フェーズ終了
         notifyUtil.notifyGameReady(msg.id);
       } else {
         //TODO 何か送ってもいいかもしれないが、いったん保留で

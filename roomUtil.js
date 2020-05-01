@@ -50,6 +50,7 @@ module.exports.createRoom = roomInfo => {
   order: [], //順番
   currentTurnPos: 0, //今order配列上何番目の人のターンか
   startedGame: false, //ゲームが開始されているか否かのフラグ
+  giveCardPhase: false, //カード譲渡フェーズかどうかのフラグ
   rankCount: 1, //次に割り当てられる順位
   giveCardCount: 0, //カードを譲渡を実施した回数(最大2回想定)
   users: {}, //ユーザ情報
