@@ -326,8 +326,11 @@ $(function() {
     // }
     let pos = 0
     msg.roomInfo.orders.forEach(ele => {
-      let li = $("<li>").text(ele.playerName + "(" + ele.cardNum + "枚)").attr({style: "color: red"});
-      $("#orderList").append(ele);
+      let li = $("<li>").text(ele.playerName + "(" + ele.cardNum + "枚)");
+      if(pos === msg.orderNum){
+        li.attr({style: "color: red"})
+      }
+      $("#orderList").append(li);
       if(pos !== msg.roomInfo.orders.length -1){
         $("#orderList").append("→");
       }
@@ -510,7 +513,7 @@ $(function() {
     $("#blindCards").empty();
     $("#orderList").empty();
     for(let i = 0; i < msg.userList.length; i++){
-      let ele = i === 0 ? $("<li>").text(msg.userList[i]).attr({style: "color: red"}) : $("<li>").text(msg.userList[i]);
+      let ele = i === 0 ? $("<li>").text(msg.userList[i] + "(" + msg.card.length + "枚)").attr({style: "color: red"}) : $("<li>").text(msg.userList[i] + "(" + msg.card.length + "枚)");
       $("#orderList").append(ele);
       if(i !== msg.userList.length -1){
         $("#orderList").append("→");
