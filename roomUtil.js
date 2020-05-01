@@ -86,7 +86,8 @@ module.exports.joinRoom = (joinInfo, socketObj) => {
       finishTime: 0,
       point: 0,
       firstPlace: false,
-      giveCard: []
+      giveCard: [],
+      getCard: []
     };
     socketObj.join(joinInfo.roomId);
     io.to(socketObj.id).emit("joinedRoom", storeData.persistentData[joinInfo.roomId]["users"]);

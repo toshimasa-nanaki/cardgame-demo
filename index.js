@@ -254,7 +254,8 @@ commonRequire.io.on("connection", socket => {
           storeData.persistentData[msg.id]["order"][yourOrder],
           msg.id
         );
-        storeData.persistentData[msg.id]["users"][storeData.persistentData[msg.id]["order"][yourOrder]].giveCard = [];
+        //storeData.persistentData[msg.id]["users"][storeData.persistentData[msg.id]["order"][yourOrder]].giveCard = [];
+        storeData.persistentData[msg.id]["users"][socket.id].getCard = storeData.persistentData[msg.id]["users"][storeData.persistentData[msg.id]["order"][yourOrder]].giveCard;
         //こちらのカードを相手に渡す。
         storeData.persistentData[msg.id]["users"][storeData.persistentData[msg.id]["order"][yourOrder]].card.push(
           msg.cards[0]
@@ -262,6 +263,7 @@ commonRequire.io.on("connection", socket => {
         storeData.persistentData[msg.id]["users"][storeData.persistentData[msg.id]["order"][yourOrder]].card.push(
           msg.cards[1]
         );
+        storeData.persistentData[msg.id]["users"][storeData.persistentData[msg.id]["order"][yourOrder]].getCard = msg.cards;
       } else if (yourOrder === 1) {
         //貧民とのやりとり
         storeData.persistentData[msg.id]["users"][socket.id].card.push(
@@ -273,11 +275,13 @@ commonRequire.io.on("connection", socket => {
           storeData.persistentData[msg.id]["order"][yourOrder],
           msg.id
         );
-        storeData.persistentData[msg.id]["users"][storeData.persistentData[msg.id]["order"][yourOrder]].giveCard = [];
+        //storeData.persistentData[msg.id]["users"][storeData.persistentData[msg.id]["order"][yourOrder]].giveCard = [];
+        storeData.persistentData[msg.id]["users"][socket.id].getCard = storeData.persistentData[msg.id]["users"][storeData.persistentData[msg.id]["order"][yourOrder]].giveCard;
         //こちらのカードを相手に渡す。
         storeData.persistentData[msg.id]["users"][storeData.persistentData[msg.id]["order"][yourOrder]].card.push(
           msg.cards[0]
         );
+        storeData.persistentData[msg.id]["users"][storeData.persistentData[msg.id]["order"][yourOrder]].getCard = msg.cards;
       }
       storeData.sortCard(msg.id, socket.id, true);
       storeData.sortCard(msg.id, storeData.persistentData[msg.id]["order"][yourOrder], true);
