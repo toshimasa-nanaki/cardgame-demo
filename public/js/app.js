@@ -232,7 +232,7 @@ $(function() {
   socket.on("connectRetry", function(leaveMemberInfo){
     debugLog("Retryモード");
     //選択画面を開く。
-    createSelectConnectMemberButton(leaveMemberInfo);
+    createSelectConnectMemberButton(leaveMemberInfo.leaveUserInfo);
   });
   function createSelectConnectMemberButton(leaveMemberInfo) {
     leaveMemberInfo.forEach(function(ele) {
