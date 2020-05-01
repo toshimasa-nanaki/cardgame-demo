@@ -325,7 +325,7 @@ $(function() {
     //   }
     // }
     let pos = 0
-    msg.remainingCards.forEach(ele => {
+    msg.orders.forEach(ele => {
       let li = $("<li>").text(ele.playerName + "(" + ele.cardNum + "枚)").attr({style: "color: red"});
       $("#orderList").append(ele);
       if(pos !== msg.remainingCards.length -1){
@@ -833,10 +833,13 @@ $(function() {
     //   }
     // }
     let pos = 0
-    msg.remainingCards.forEach(ele => {
-      let li = $("<li>").text(ele.playerName + "(" + ele.cardNum + "枚)").attr({style: "color: red"});
-      $("#orderList").append(ele);
-      if(pos !== msg.remainingCards.length -1){
+    msg.orders.forEach(ele => {
+      let li = $("<li>").text(ele.playerName + "(" + ele.cardNum + "枚)");
+      if(pos === msg.orderNum){
+        li.attr({style: "color: red"})
+      }
+      $("#orderList").append(li);
+      if(pos !== msg.orders.length -1){
         $("#orderList").append("→");
       }
       pos++;

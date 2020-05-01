@@ -117,16 +117,16 @@ module.exports.notifyChangeTurn = (currentTurnIndex, roomId) => {
   let nextTurnUserId = orderList[nextTurn];
   let currentTurnUserId = orderList[currentTurnIndex];
   const remainingCards = [];
+  if (users[orderList[currentTurnIndex]].rankNum != 0) {
+    //現在のユーザがすでに上がっている場合
+    storeData.persistentData[roomId]["order"].splice(currentTurnIndex, 1);
+  }
   orderList.forEach(key => {
     remainingCards.push({
       cardNum: users[key].card.length,
       playerName: users[key].dispName
     });
   });
-  if (users[orderList[currentTurnIndex]].rankNum != 0) {
-    //現在のユーザがすでに上がっている場合
-    storeData.persistentData[roomId]["order"].splice(currentTurnIndex, 1);
-  }
 
   Object.keys(users).forEach(function(element) {
     //if (element != orderList[nextTurn]) {
