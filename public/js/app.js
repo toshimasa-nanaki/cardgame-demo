@@ -239,6 +239,7 @@ $(function() {
     $("#retryConnectModal").modal({ backdrop: "static", keyboard: false });
   });
   function createSelectConnectMemberButton(leaveMemberInfo) {
+    $("#selectMemberList").empty();
     leaveMemberInfo.forEach(function(ele) {
       debugLog(ele.dispName);
       const div = $('<div class="form-check"></div>');
