@@ -119,7 +119,17 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
   storeData.persistentData[reJoinInfo.roomId].order = storeData.persistentData[reJoinInfo.roomId].order.splice(orderIndex, 1, socketObj.id);
   
   //あとはクライアントがわに送るだけ
-  //io.to(socketObj.id).emit("connectError", "roomFull");
+  io.to(socketObj.id).emit("reJoinOK", {
+    gameNum: storeData.persistentData[roomId].gameNum,
+    card: users[orders[0]].card,
+    yourTurn: true,
+    playerName: users[orders[0]].dispName,
+    playerName2: users[orders[0]].dispName,
+    playerPoint: users[orders[0]].point,
+    blindCards: storeData.persistentData[roomId].blindCards,
+    orderNum: 0,
+    userList: userDispList
+  });
 };
 
 const createDefaultRoomName = () => {
