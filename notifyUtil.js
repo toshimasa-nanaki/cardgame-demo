@@ -140,6 +140,7 @@ module.exports.notifyChangeTurn = (currentTurnIndex, roomId) => {
     orderNum: storeData.persistentData[roomId]["order"].indexOf(nextTurnUserId),
     endCurrentTurn: users[currentTurnUserId].rankNum != 0 ? currentTurnIndex : -1
   });
+  storeData.persistentData[roomId].currentTurnPos = storeData.persistentData[roomId]["order"].indexOf(nextTurnUserId);
   // if (users[orderList[currentTurnIndex]].rankNum != 0) {
   //   //現在のユーザがすでに上がっている場合
   //   storeData.persistentData[roomId]["order"].splice(currentTurnIndex, 1);

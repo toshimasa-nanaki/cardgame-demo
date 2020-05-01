@@ -271,6 +271,121 @@ $(function() {
     document.cookie = 'name=' + $("#playerName").val() + '; max-age=259200';
   });
   
+  socket.on("reJoinOK", function(msg) {
+    $("#gameCommentaryArea").append(
+      "第" + msg.gameNum + "回ゲームを再開します" + "<br />"
+    );
+    $("#gameCommentaryArea").scrollTop(
+      $("#gameCommentaryArea")[0].scrollHeight
+    );
+    $("#roomSelectArea").hide();
+    $("#gameArea").show();
+    $("#give").prop("disabled", true);
+    $("#gameFieldArea").show();
+
+    $("#gameController").show();
+    $("#giveCard").hide();
+    $("#playerInfoDropdown").show();
+    // $("#giveCardCommentaryArea").hide();
+    $("#rank").text("");
+    $("#rematch").hide();
+    $("#seiseki").text("");
+    //$("#field").text("なし");
+    $("#field").empty();
+    $("#other").text("");
+    $("#elevenback").text("");
+    $("#shibari").text("");
+    $("#revolution").text("");
+    $("#bottomController").show();
+    $("#send").prop("disabled", true);
+    $("#pass").prop("disabled", true);
+    $("#cardList").empty();
+    $("#cardList2").empty();
+    $("#giveCardList").empty();
+    $("#playerNameDisp").text(msg.playerName2);
+    $("#playerPoint").text(msg.playerPoint);
+    $("#blindCards").empty();
+    for(let i = 0; i < msg.userList.length; i++){
+      let ele = i === 0 ? $("<li>").text(msg.userList[i]).attr({style: "color: red"}) : $("<li>").text(msg.userList[i]);
+      $("#orderList").append(ele);
+      if(i !== msg.userList.length -1){
+        $("#orderList").append("→");
+      }
+    }
+    // msg.userList.forEach(user => {
+    //   let ele = $("li").val(user);
+    //   $("#orderList").append("<li>" + user + "</li>");
+    // });
+    msg.blindCards.forEach(ele => {
+      $("#blindCards").append($('<li>' + DISPLAY_DIC[ele.type + ele.number] +'</li>'));
+    });
+    msg.card.forEach(element => {
+      const cardType = element.number + element.type;
+      const imgUri =
+        "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
+        DISPLAY_IMAGE_ID[element.type + element.number] +
+        ".png";
+      //画像データを取得する
+      let img = $('<img class="handCardImage" src="' + imgUri + '"></img>')
+        .attr({
+          value: element.type + "_" + element.number
+        })
+        .on("click", function() {
+          if (!$(this).is(".checked")) {
+            // チェックが入っていない画像をクリックした場合、チェックを入れます。
+            $(this).addClass("checked");
+          } else {
+            // チェックが入っている画像をクリックした場合、チェックを外します。
+            $(this).removeClass("checked");
+          }
+        });
+      var check = $(
+        '<input class="disabled_checkbox" type="checkbox" checked="" />'
+      )
+        .attr({
+          name: "cards",
+          value: element.type + "_" + element.number
+        })
+        .on("click", function() {
+          return false;
+        });
+      let box = $('<div class="image_box"/>')
+        .append(img)
+        .append(check);
+      let li = $('<li id="' + element.type + element.number + '"></li>').append(
+        box
+      );
+      $("#cardList2").append(li);
+    });
+    debugLog("order accept");
+    if (msg.yourTurn) {
+      audio.play();
+      $("#send").prop("disabled", false);
+      $("#pass").prop("disabled", false);
+      $("#cardList2 img").prop("disabled", false);
+      //$("#order").text("あなたの番です");
+      $("#gameCommentaryArea").append("あなたのターンです。<br />");
+      if (msg.skip) {
+        socket.emit("pass", {
+          id: $("input[name=roomRadios]:checked").val()
+        });
+      }
+    } else {
+      $("#send").prop("disabled", true);
+      $("#pass").prop("disabled", true);
+      $("#cardList2 img").prop("disabled", true);
+      //$("#order").text(msg.playerName + "の番です");
+      $("#gameCommentaryArea").append(
+        msg.playerName + "さんのターンです。<br />"
+      );
+    }
+    $("#gameCommentaryArea").scrollTop(
+      $("#gameCommentaryArea")[0].scrollHeight
+    );
+    
+  });
+  
+  
   socket.on("joinedRoom", function(joinMembers) {
     //部屋ジョイン後
     debugLog("JoinedRoom");

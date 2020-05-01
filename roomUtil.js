@@ -128,11 +128,11 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
     gameNum: storeData.persistentData[reJoinInfo.roomId].gameNum,
     card: storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.userId].card,
     yourTurn: true,
-    playerName: users[orders[0]].dispName,
+    playerName: storeData.persistentData[reJoinInfo.roomId]["users"][storeData.persistentData[reJoinInfo.roomId].order[storeData.persistentData[reJoinInfo.roomId].currentTurnPos]].dispName,
     playerName2: storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.userId].dispName,
     playerPoint: storeData.persistentData[reJoinInfo.roomId]["users"][reJoinInfo.userId].point,
     blindCards: storeData.persistentData[reJoinInfo.roomId].blindCards,
-    orderNum: 0,
+    orderNum: storeData.persistentData[reJoinInfo.roomId].currentTurnPos,
     userList: userDispList
   });
 };
