@@ -174,7 +174,7 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
       elevenback: storeData.persistentData[reJoinInfo.roomId].elevenback, //11backフラグ
       shibari: storeData.persistentData[reJoinInfo.roomId].shibari, //縛りフラグ
       revolution: storeData.persistentData[reJoinInfo.roomId].revolution, //革命フラグ
-      fieldCards: storeData.persistentData[reJoinInfo.roomId].revolution, //場のカード配列
+      fieldCards: storeData.persistentData[reJoinInfo.roomId].fieldCards, //場のカード配列
     }
   });
   for (let [key, value] of Object.entries(storeData.persistentData[reJoinInfo.roomId]["users"])) {
