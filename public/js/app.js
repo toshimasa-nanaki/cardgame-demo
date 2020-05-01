@@ -315,6 +315,7 @@ $(function() {
     $("#playerNameDisp").text(msg.playerName2);
     $("#playerPoint").text(msg.playerPoint);
     $("#blindCards").empty();
+    $("#orderList").empty();
     for(let i = 0; i < msg.userList.length; i++){
       let ele = i === 0 ? $("<li>").text(msg.userList[i]).attr({style: "color: red"}) : $("<li>").text(msg.userList[i]);
       $("#orderList").append(ele);
@@ -322,10 +323,6 @@ $(function() {
         $("#orderList").append("→");
       }
     }
-    // msg.userList.forEach(user => {
-    //   let ele = $("li").val(user);
-    //   $("#orderList").append("<li>" + user + "</li>");
-    // });
     msg.blindCards.forEach(ele => {
       $("#blindCards").append($('<li>' + DISPLAY_DIC[ele.type + ele.number] +'</li>'));
     });
@@ -489,6 +486,7 @@ $(function() {
     $("#playerNameDisp").text(msg.playerName2);
     $("#playerPoint").text(msg.playerPoint);
     $("#blindCards").empty();
+    $("#orderList").empty();
     for(let i = 0; i < msg.userList.length; i++){
       let ele = i === 0 ? $("<li>").text(msg.userList[i]).attr({style: "color: red"}) : $("<li>").text(msg.userList[i]);
       $("#orderList").append(ele);
@@ -496,10 +494,6 @@ $(function() {
         $("#orderList").append("→");
       }
     }
-    // msg.userList.forEach(user => {
-    //   let ele = $("li").val(user);
-    //   $("#orderList").append("<li>" + user + "</li>");
-    // });
     msg.blindCards.forEach(ele => {
       $("#blindCards").append($('<li>' + DISPLAY_DIC[ele.type + ele.number] +'</li>'));
     });
@@ -814,10 +808,6 @@ $(function() {
         $($("#orderList").children()[i]).attr({style: "color:red"});
       }  
     }
-    // $("#orderList").children().forEach(key => {
-    //   $(key).removeAttr("style");
-    //   $(key).attr({style: "color:red"});
-    // });
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );

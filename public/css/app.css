@@ -36,9 +36,9 @@ nav#bottomController{
 div#svgArea{
   display: none;
 }
-ul#orderList {
+/* ul#orderList {
   display: none;
-}
+} */
 ul#orderList li {
   display: inline-block;
 }

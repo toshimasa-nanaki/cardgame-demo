@@ -180,14 +180,7 @@ module.exports.checkOut = (sc, roomId, userId, currentTurn) => {
               overall: displayOverAllRanking,
               finalPoint: value.point
             });
-            // if (key !== socketObj.id) io.to(key).emit("otherMemberJoinedRoom", commonUtil.htmlentities(joinInfo.playerName));
           }
-          // storeData.persistentData[roomId][]
-          // commonRequire.io.to(storeData.persistentData[roomId].roomId).emit("gameSet", {
-          //   gameNum: storeData.persistentData[roomId].gameNum,
-          //   ranking: displayRanking,
-          //   overall: displayOverAllRanking
-          // });
           return;
         } else {
           //次のゲームへ
