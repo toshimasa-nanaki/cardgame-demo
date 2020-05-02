@@ -23,6 +23,7 @@ $(function() {
     diffSuitCards: "スートしばりに合ったカードを出してください。",
     loseCards: "場のカードより強いものを出してください。",
     handError: "役ができていません。",
+    fieldNothing: "フィールドにカードがない状態でパスはできません。",
     goOutRoom: "プレイヤーの数が減ったためゲームを中断します。\nゲームをやめる場合はページを再読み込みしてください。",
     roomFull: "この部屋は既に定員に達しています。"
   };
@@ -864,6 +865,8 @@ $(function() {
 
   socket.on("order", function(msg) {
     debugLog("order accept");
+    //順番が回ったときはエラーを消そう
+    $("#errorMsg").hide();
     if (msg.flag) {
       audio.play();
       $("#send").prop("disabled", false);

@@ -62,7 +62,11 @@ module.exports.load_game_event = (socket)=> {
     const users = storeData.persistentData[msg.id]["users"];
     if(storeData.persistentData[msg.id].fieldCards.length === 0){
       //フィールドにカードが出ていない場合はパスできない。
-      
+      commonRequire.io.to(socket.id).emit("validateError", {
+        error: 1,
+        reason: "fieldNothing"
+      });
+      return;
     }
     storeData.persistentData[msg.id].passCount = storeData.persistentData[msg.id].passCount + 1;
     //const count = store[msg.id].capacity;
