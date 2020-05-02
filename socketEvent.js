@@ -60,6 +60,10 @@ module.exports.load_game_event = (socket)=> {
   socket.on("pass", function(msg) {
     const orderList = storeData.persistentData[msg.id]["order"];
     const users = storeData.persistentData[msg.id]["users"];
+    if(storeData.persistentData[msg.id].fieldCards.length === 0){
+      //フィールドにカードが出ていない場合はパスできない。
+      
+    }
     storeData.persistentData[msg.id].passCount = storeData.persistentData[msg.id].passCount + 1;
     //const count = store[msg.id].capacity;
     LOGGER.debug(
