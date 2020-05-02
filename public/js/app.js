@@ -864,6 +864,7 @@ $(function() {
   });
 
   socket.on("order", function(msg) {
+    //最初に
     debugLog("order accept");
     //順番が回ったときはエラーを消そう
     $("#errorMsg").hide();
