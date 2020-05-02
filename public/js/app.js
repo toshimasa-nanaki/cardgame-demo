@@ -160,15 +160,15 @@ $(function() {
   //関数の呼び出し。
   mypreload();
   // 画像がクリックされた時の処理です。
-  $("img.handCardImage").click(function() {
-    if (!$(this).is(".checked")) {
-      // チェックが入っていない画像をクリックした場合、チェックを入れます。
-      $(this).addClass("checked");
-    } else {
-      // チェックが入っている画像をクリックした場合、チェックを外します。
-      $(this).removeClass("checked");
-    }
-  });
+  // $("img.handCardImage").click(function() {
+  //   if (!$(this).is(".checked")) {
+  //     // チェックが入っていない画像をクリックした場合、チェックを入れます。
+  //     $(this).addClass("checked");
+  //   } else {
+  //     // チェックが入っている画像をクリックした場合、チェックを外します。
+  //     $(this).removeClass("checked");
+  //   }
+  // });
   $("#requestRoomCreate").click(function() {
     //部屋作成時
     socket.emit("requestRoomCreate", {
@@ -499,11 +499,9 @@ $(function() {
     $("#gameController").show();
     $("#giveCard").hide();
     $("#playerInfoDropdown").show();
-    // $("#giveCardCommentaryArea").hide();
     $("#rank").text("");
     $("#rematch").hide();
     $("#seiseki").text("");
-    //$("#field").text("なし");
     $("#field").empty();
     $("#other").text("");
     $("#elevenback").text("");
@@ -858,18 +856,8 @@ $(function() {
         msg.playerName + "さんのターンです。<br />"
       );
     }
-//     if(msg.endCurrentTurn !== -1){
-//       //前のユーザーが完了したのなら、リストから消す
-      
-//     }
+
     $("#orderList").empty();
-    // for(let i = 0; i < msg.userList.length; i++){
-    //   let ele = i === 0 ? $("<li>").text(msg.userList[i]).attr({style: "color: red"}) : $("<li>").text(msg.userList[i]);
-    //   $("#orderList").append(ele);
-    //   if(i !== msg.userList.length -1){
-    //     $("#orderList").append("→");
-    //   }
-    // }
     let pos = 0
     msg.orders.forEach(ele => {
       let li = $("<li>").text(ele.playerName + "(" + ele.cardNum + "枚)");
@@ -889,6 +877,8 @@ $(function() {
 
   //カードを出したとき
   $("#send").click(function() {
+    $("#send").prop("disabled", true);
+    $("#pass").prop("disabled", true);
     let sendCards = [];
     let cardarr;
     $("img.handCardImage.checked").each(function() {
@@ -901,6 +891,8 @@ $(function() {
       //選択していない場合
       $("#errorMsg").show();
       $("#errorMsg").text("カードを選択してください。");
+      $("#send").prop("disabled", false);
+      $("#pass").prop("disabled", false);
       return;
     }
     //カードの確認をしてもらう
@@ -910,11 +902,15 @@ $(function() {
     });
   });
   $("#pass").click(function() {
+    $("#send").prop("disabled", true);
+    $("#pass").prop("disabled", true);
     socket.emit("pass", {
       id: $("input[name=roomRadios]:checked").val()
     });
   });
   socket.on("validateError", function(msg) {
+    $("#send").prop("disabled", false);
+    $("#pass").prop("disabled", false);
     $("#errorMsg").show();
     $("#errorMsg").text(ERROR_DIC[msg.reason]);
   });
