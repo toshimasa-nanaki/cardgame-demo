@@ -390,23 +390,23 @@ $(function() {
           if (!$(this).is(".checked")) {
             // チェックが入っていない画像をクリックした場合、チェックを入れます。
             $(this).addClass("checked");
-            if ($("img.handCardImage.checked").length !== 0) {
-              // ボタン有効
-              $("#send").prop("disabled", false);
-            }else{
-              // ボタン無効
-              $("#send").prop("disabled", true);
-            }
+            // if ($("img.handCardImage.checked").length !== 0 && msg.yourTurn) {
+            //   // ボタン有効
+            //   $("#send").prop("disabled", false);
+            // }else{
+            //   // ボタン無効
+            //   $("#send").prop("disabled", true);
+            // }
           } else {
             // チェックが入っている画像をクリックした場合、チェックを外します。
             $(this).removeClass("checked");
-            if ($("img.handCardImage.checked").length !== 0) {
-              // ボタン有効
-              $("#send").prop("disabled", false);
-            }else{
-              // ボタン無効
-              $("#send").prop("disabled", true);
-            }
+            // if ($("img.handCardImage.checked").length !== 0 && msg.yourTurn) {
+            //   // ボタン有効
+            //   $("#send").prop("disabled", false);
+            // }else{
+            //   // ボタン無効
+            //   $("#send").prop("disabled", true);
+            // }
           }
         });
       var check = $(
@@ -430,7 +430,7 @@ $(function() {
     debugLog("order accept");
     if (msg.yourTurn) {
       audio.play();
-      //$("#send").prop("disabled", false);
+      $("#send").prop("disabled", false);
       $("#pass").prop("disabled", false);
       $("#cardList2 img").prop("disabled", false);
       //$("#order").text("あなたの番です");
@@ -556,23 +556,23 @@ $(function() {
           if (!$(this).is(".checked")) {
             // チェックが入っていない画像をクリックした場合、チェックを入れます。
             $(this).addClass("checked");
-            if ($("img.handCardImage.checked").length !== 0) {
-              // ボタン有効
-              $("#send").prop("disabled", false);
-            }else{
-              // ボタン無効
-              $("#send").prop("disabled", true);
-            }
+            // if ($("img.handCardImage.checked").length !== 0 && msg.yourTurn) {
+            //   // ボタン有効
+            //   $("#send").prop("disabled", false);
+            // }else{
+            //   // ボタン無効
+            //   $("#send").prop("disabled", true);
+            // }
           } else {
             // チェックが入っている画像をクリックした場合、チェックを外します。
             $(this).removeClass("checked");
-            if ($("img.handCardImage.checked").length !== 0) {
-              // ボタン有効
-              $("#send").prop("disabled", false);
-            }else{
-              // ボタン無効
-              $("#send").prop("disabled", true);
-            }
+            // if ($("img.handCardImage.checked").length !== 0 && msg.yourTurn) {
+            //   // ボタン有効
+            //   $("#send").prop("disabled", false);
+            // }else{
+            //   // ボタン無効
+            //   $("#send").prop("disabled", true);
+            // }
           }
         });
       var check = $(
@@ -596,7 +596,7 @@ $(function() {
     debugLog("order accept");
     if (msg.yourTurn) {
       audio.play();
-      //$("#send").prop("disabled", false);
+      $("#send").prop("disabled", false);
       $("#pass").prop("disabled", false);
       $("#cardList2 img").prop("disabled", false);
       //$("#order").text("あなたの番です");
@@ -622,7 +622,7 @@ $(function() {
   socket.on("notNeedGiveCard", msg => {
     debugLog("order accept");
     if (msg.yourTurn) {
-      //$("#send").prop("disabled", false);
+      $("#send").prop("disabled", false);
       $("#pass").prop("disabled", false);
       $("#cardList input").prop("disabled", false);
       //$("#order").text("あなたの番です");
@@ -866,7 +866,7 @@ $(function() {
     debugLog("order accept");
     if (msg.flag) {
       audio.play();
-      //$("#send").prop("disabled", false);
+      $("#send").prop("disabled", false);
       $("#pass").prop("disabled", false);
       $("#cardList input").prop("disabled", false);
       //$("#order").text("あなたの番です");
@@ -1020,8 +1020,8 @@ $(function() {
         $("#elevenback").text("");
         $("#shibari").text("");
         //また自分のターン
-        $("#send").prop("disabled", false);
-        $("#pass").prop("disabled", false);
+        // $("#send").prop("disabled", false);
+        // $("#pass").prop("disabled", false);
         break;
       case "cut8":
         $("#gameCommentaryArea").append(
@@ -1034,8 +1034,8 @@ $(function() {
         $("#elevenback").text("");
         $("#shibari").text("");
         //また自分のターン
-        $("#send").prop("disabled", false);
-        $("#pass").prop("disabled", false);
+        // $("#send").prop("disabled", false);
+        // $("#pass").prop("disabled", false);
         break;
       case "cutPass":
         $("#gameCommentaryArea").append(
