@@ -101,3 +101,14 @@ const isStairsCard = (sc) => {
   }
   return suit && stairNum;
 }
+
+const isAutoPass = (roomId) => {
+  //ポイント降順で返す。(ランキング順)
+  return Object.keys(storeData.persistentData[roomId]["users"]).sort(function(a, b) {
+    if (storeData.persistentData[roomId]["users"][a].point > storeData.persistentData[roomId]["users"][b].point)
+      return -1;
+    if (storeData.persistentData[roomId]["users"][a].point < storeData.persistentData[roomId]["users"][b].point)
+      return 1;
+    return 0;
+  });
+}
