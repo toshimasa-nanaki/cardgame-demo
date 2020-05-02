@@ -168,8 +168,17 @@ module.exports.notifyAgainTurn = (roomId, userId) => {
       playerName: users[key].dispName
     });
   });
-  commonRequire.io.to(userId).emit("againTurn", {
-    orderNum: storeData.persistentData[roomId]["order"].indexOf(userId),
-    orders: remainingCards
-  });
+  for (let [key, value] of Object.entries(storeData.persistentData[roomId]["users"])) {
+    if(key === userId){
+      commonRequire.io.to(userId).emit("againTurn", {
+        orderNum: storeData.persistentData[roomId]["order"].indexOf(userId),
+        orders: remainingCards
+      });
+    }else{
+      commonRequire.io.to(key).emit("againTurnForOtherMember", {
+        orderNum: storeData.persistentData[roomId]["order"].indexOf(userId),
+        orders: remainingCards
+      });
+    }
+  }
 }

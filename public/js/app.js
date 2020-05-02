@@ -989,8 +989,25 @@ $(function() {
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );
-    
   });
+  
+  socket.on("againTurnForOtherMember", function(msg) {
+    //ふたたび誰かさんのターン
+    $("#orderList").empty();
+    let pos = 0
+    msg.orders.forEach(ele => {
+      let li = $("<li>").text(ele.playerName + "(" + ele.cardNum + "枚)");
+      if(pos === msg.orderNum){
+        li.attr({style: "color: red"})
+      }
+      $("#orderList").append(li);
+      if(pos !== msg.orders.length -1){
+        $("#orderList").append("→");
+      }
+      pos++;
+    });
+  });
+  
   socket.on("changeStatus", function(msg) {
     switch (msg.type) {
       case "elevenback":
