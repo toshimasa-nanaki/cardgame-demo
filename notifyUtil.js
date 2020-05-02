@@ -157,3 +157,18 @@ module.exports.notifyChangeTurn = (currentTurnIndex, roomId) => {
   // }
   //storeData.persistentData[roomId].currentTurnPos = currentTurnIndex != orderList.length - 1 ? currentTurnIndex + 1 : 0
 }
+
+module.exports.notifyAgainTurn = (roomId, userId) => {
+  const orderList = storeData.persistentData[roomId]["order"];
+  const users = storeData.persistentData[roomId]["users"]; 
+  const remainingCards = [];
+  orderList.forEach(key => {
+    remainingCards.push({
+      cardNum: users[key].card.length,
+      playerName: users[key].dispName
+    });
+  });
+  commonRequire.io.to(userId).emit("againTurn", {
+    orders: remainingCards
+  });
+}

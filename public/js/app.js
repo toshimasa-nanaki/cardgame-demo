@@ -968,6 +968,16 @@ $(function() {
     $("#errorMsg").hide();
     $("#errorMsg").text("");
   });
+  socket.on("againTurn", function(msg) {
+    //ふたたび自分のターンのためsendとpassを復活させる
+    $("#send").prop("disabled", false);
+    $("#pass").prop("disabled", false);
+    $("#gameCommentaryArea").append("あなたのターンです。<br />");
+    $("#gameCommentaryArea").scrollTop(
+      $("#gameCommentaryArea")[0].scrollHeight
+    );
+    
+  });
   socket.on("changeStatus", function(msg) {
     switch (msg.type) {
       case "elevenback":

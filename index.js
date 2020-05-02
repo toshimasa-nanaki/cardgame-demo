@@ -112,6 +112,8 @@ commonRequire.io.on("connection", socket => {
         if (users[socket.id].card.length <= 0) {
           gameUtil.checkOut(validateCards, msg.id, socket.id, currentTurn);
           //notifyUtil.notifyChangeTurn(currentTurn, msg.id);
+        }else{
+          notifyUtil.notifyAgainTurn(msg.id, socket.id);
         }
         return;
       }
@@ -144,6 +146,8 @@ commonRequire.io.on("connection", socket => {
       if (users[socket.id].card.length <= 0) {
           gameUtil.checkOut(validateCards, msg.id, socket.id, currentTurn);
           //notifyUtil.notifyChangeTurn(currentTurn, msg.id);
+        }else{
+          notifyUtil.notifyAgainTurn(msg.id, socket.id);
         }
       return;
     }
@@ -168,6 +172,8 @@ commonRequire.io.on("connection", socket => {
       if (users[socket.id].card.length <= 0) {
           gameUtil.checkOut(validateCards, msg.id, socket.id, currentTurn);
           //notifyUtil.notifyChangeTurn(currentTurn, msg.id);
+        }else{
+          notifyUtil.notifyAgainTurn(msg.id, socket.id);
         }
       return;
     }
