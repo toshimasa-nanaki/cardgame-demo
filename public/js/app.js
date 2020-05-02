@@ -972,6 +972,19 @@ $(function() {
     //ふたたび自分のターンのためsendとpassを復活させる
     $("#send").prop("disabled", false);
     $("#pass").prop("disabled", false);
+    $("#orderList").empty();
+    let pos = 0
+    msg.orders.forEach(ele => {
+      let li = $("<li>").text(ele.playerName + "(" + ele.cardNum + "枚)");
+      if(pos === msg.orderNum){
+        li.attr({style: "color: red"})
+      }
+      $("#orderList").append(li);
+      if(pos !== msg.orders.length -1){
+        $("#orderList").append("→");
+      }
+      pos++;
+    });
     $("#gameCommentaryArea").append("あなたのターンです。<br />");
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight

@@ -169,6 +169,7 @@ module.exports.notifyAgainTurn = (roomId, userId) => {
     });
   });
   commonRequire.io.to(userId).emit("againTurn", {
+    orderNum: storeData.persistentData[roomId]["order"].indexOf(userId),
     orders: remainingCards
   });
 }
