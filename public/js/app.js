@@ -177,6 +177,19 @@ $(function() {
       capacity: $("#roomcapacity").val()
     });
   });
+  $('#rulePresetSelectbox').change(function() {
+    console.log($(this).val());
+    switch($(this).val()){
+      case "default":
+        break;
+      case "official":
+        $("#elevenBackSetting").prop("checked",false);
+        $("#stairSetting").prop("checked",true);
+        $("#").prop("checked",true);
+        break;
+    }
+        //var str = $(this).val();
+  });
   socket.on("createdRoom", function(roomList) {
     //部屋作成完了後
     debugLog("CreatedRoom");
