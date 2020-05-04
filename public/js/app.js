@@ -181,11 +181,16 @@ $(function() {
     console.log($(this).val());
     switch($(this).val()){
       case "default":
+        $("#setNum").val("");
+        $("#elevenBackSetting").prop("checked",true);
+        $("#stairSetting").prop("checked",true);
+        $("#shibariSetting").prop("checked",true);
         break;
       case "official":
+        $("#setNum").val(3);
         $("#elevenBackSetting").prop("checked",false);
         $("#stairSetting").prop("checked",true);
-        $("#").prop("checked",true);
+        $("#shibariSetting").prop("checked",true);
         break;
     }
         //var str = $(this).val();
