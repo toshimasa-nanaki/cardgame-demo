@@ -45,13 +45,12 @@
             aria-haspopup="true"
             aria-expanded="false"
           >
-            <span id="playerNameDisp"></span>　
+            <span id="playerNameDisp"></span>
             <span id="playerPoint">0</span>P
           </button>
           <div class="dropdown-menu">
             <span>ブラインドカード</span>
-            <ul id="blindCards">
-            </ul>
+            <ul id="blindCards"></ul>
           </div>
         </div>
         <form class="form-inline">
@@ -142,6 +141,23 @@
                       placeholder="デフォルト:4人"
                     />
                   </div>
+                  <p>
+                    <a
+                      data-toggle="collapse"
+                      href="#advancedSetting"
+                      role="button"
+                      aria-expanded="false"
+                      aria-controls="advancedSetting"
+                    >
+                      詳細設定
+                    </a>
+                  </p>
+                  <div class="collapse" id="advancedSetting">
+                     ここに詳細設定を出す。
+<!--                     <div class="card card-body">
+                      ここに詳細設定を出す。
+                    </div> -->
+                  </div>
                   <button
                     id="requestRoomCreate"
                     type="button"
@@ -156,7 +172,7 @@
           <div id="gameArea">
             <div id="gameFieldArea">
               <ul id="orderList"></ul>
-<!--               <div>
+              <!--               <div>
                 <span id="order"></span>
               </div> -->
               <div>
@@ -364,7 +380,7 @@
             </button>
           </div>
           <div class="modal-body">
-<!--             <span id="retryConnectModalBody"></span> -->
+            <!--             <span id="retryConnectModalBody"></span> -->
             再接続するユーザー名を選択してください。
             <div id="selectMemberList"></div>
           </div>
@@ -376,14 +392,18 @@
             >
               Close
             </button>
-            <button id="retryConnectRoomButton" type="button" class="btn btn-primary">ルームに再接続</button>
+            <button
+              id="retryConnectRoomButton"
+              type="button"
+              class="btn btn-primary"
+            >
+              ルームに再接続
+            </button>
           </div>
         </div>
       </div>
     </div>
-    
-    
-    
+
     <div
       class="modal fade"
       id="errorModal"
@@ -437,7 +457,7 @@
             <span id="releaseRoomModalBody"></span>
           </div>
           <div class="modal-footer">
-<!--             <button
+            <!--             <button
               type="button"
               class="btn btn-secondary"
               data-dismiss="modal"
