@@ -25,6 +25,7 @@ module.exports.gameInit = (count, sockets, roomId) => {
   storeData.persistentData[roomId].stair = false;
   storeData.persistentData[roomId]["order"] = [];
   storeData.persistentData[roomId].startedGame = true;
+  storeData.persistentData[roomId].status = "inProgress";
   storeData.persistentData[roomId].rankCount = 1;
   //もらったカード、あげたカードをクリアする
   Object.keys(storeData.persistentData[roomId]["users"]).forEach(key => {

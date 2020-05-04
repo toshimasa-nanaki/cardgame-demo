@@ -160,16 +160,6 @@ $(function() {
   }
   //関数の呼び出し。
   mypreload();
-  // 画像がクリックされた時の処理です。
-  // $("img.handCardImage").click(function() {
-  //   if (!$(this).is(".checked")) {
-  //     // チェックが入っていない画像をクリックした場合、チェックを入れます。
-  //     $(this).addClass("checked");
-  //   } else {
-  //     // チェックが入っている画像をクリックした場合、チェックを外します。
-  //     $(this).removeClass("checked");
-  //   }
-  // });
   $("#requestRoomCreate").click(function() {
     //部屋作成時
     socket.emit("requestRoomCreate", {
@@ -204,10 +194,41 @@ $(function() {
   socket.on("showRoomList", function(roomList) {
     //サーバ接続時に部屋一覧を渡す
     debugLog("ShowRoom");
+    createRoomCardList(roomList);
     createSelectRoomRadioButton(roomList);
   });
   
   $("#playerName").val(document.cookie.split(';')[0].split("=")[1]);
+  
+  function createRoomCardList(roomList) {
+    Object.keys(roomList).forEach(function(key) {
+      debugLog(roomList[key]);
+      const div = $('<div class="form-check"></div>');
+      div.append(
+        $('<input type="radio" />').attr({
+          class: "form-check-input",
+          name: "roomRadios",
+          value: roomList[key].roomId,
+          id: "room_" + roomList[key].roomId
+        })
+      );
+      div.append(
+        $(
+          '<label class="form-check-label" for="' +
+            "room_" +
+            roomList[key].roomId +
+            '">' +
+            roomList[key].roomDispName +
+            "(定員：" +
+            roomList[key].capacity +
+            "人)" +
+            "</label>"
+        )
+      );
+      $("#selectRoomList").prepend(div);
+    });
+    $("#selectRoomList > :first > input").prop("checked", true);
+  }
 
   // 部屋一覧のラジオボタン生成
   function createSelectRoomRadioButton(roomList) {
