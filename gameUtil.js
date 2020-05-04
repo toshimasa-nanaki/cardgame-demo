@@ -559,9 +559,9 @@ const aggregateBattlePhase = (roomId) => {
       storeData.persistentData[roomId]["users"][fallingOutCityUserKey].rank =
         storeData.persistentData[roomId]["scoreTable"][
           Object.keys(storeData.persistentData[roomId]["users"]).length - pos - 1
-        ];
-      LOGGER.debug("scoreTableのポス:" + Object.keys(storeData.persistentData[roomId]["users"]).length - pos - 1);
-      LOGGER.debug("都落ちユーザーの順位:" + storeData.persistentData[roomId]["users"][fallingOutCityUserKey].rank);
+        ].rankId;
+      LOGGER.debug(Object.keys(storeData.persistentData[roomId]["users"]).length - pos - 1);
+      LOGGER.debug("都落ちユーザーの順位:" + JSON.stringify(storeData.persistentData[roomId]["users"][fallingOutCityUserKey].rank));
     }
   }
   //順位の逆順で返すと何かと楽そうなのでそうする。
