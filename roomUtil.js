@@ -239,10 +239,10 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
         memberOK: storeData.persistentData[reJoinInfo.roomId].leaveUserIds.length === 0
       });
   }
-//   if(storeData.persistentData[reJoinInfo.roomId].leaveUserIds.length === 0){
-//     //人数がそろえばフリーズを解除する。
-    
-//   }
+  if(storeData.persistentData[reJoinInfo.roomId].leaveUserIds.length === 0){
+    //人数が足りているならば、緊急募集を解除してゲームを再開する
+    storeData.persistentData[reJoinInfo.roomId].status = "inProgress";
+  }
 };
 
 const createDefaultRoomName = () => {

@@ -28,6 +28,7 @@ module.exports.load_common_event = (socket)=> {
         socket.leave(roomId);
         if (storeData.persistentData[roomId].startedGame) {
           LOGGER.debug("leaveUserIdsの状態" + JSON.stringify(storeData.persistentData[roomId].leaveUserIds));
+          storeData.persistentData[roomId].status = "urgentRecruiting";
           storeData.persistentData[roomId].leaveUserIds.push({id:socket.id, dispName: storeData.persistentData[roomId]["users"][socket.id].dispName});
           console.log("送る" + JSON.stringify(roomId) + "と" + storeData.persistentData[roomId].roomId);
           io.to(storeData.persistentData[roomId].roomId).emit("releaseRoom", {
