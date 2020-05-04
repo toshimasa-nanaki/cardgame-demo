@@ -502,7 +502,8 @@ $(function() {
       $("#gameCommentaryArea").append("あなたのターンです。<br />");
       if (msg.skip) {
         socket.emit("pass", {
-          id: $("input[name=roomRadios]:checked").val()
+          //id: $("input[name=roomRadios]:checked").val()
+          id: $("#roomId").text()
         });
       }
     } else {
@@ -668,7 +669,8 @@ $(function() {
       $("#gameCommentaryArea").append("あなたのターンです。<br />");
       if (msg.skip) {
         socket.emit("pass", {
-          id: $("input[name=roomRadios]:checked").val()
+          //id: $("input[name=roomRadios]:checked").val()
+          id: $("#roomId").text()
         });
       }
     } else {
@@ -694,7 +696,8 @@ $(function() {
       $("#gameCommentaryArea").append("あなたのターンです。<br />");
       if (msg.skip) {
         socket.emit("pass", {
-          id: $("input[name=roomRadios]:checked").val()
+          //id: $("input[name=roomRadios]:checked").val()
+          id: $("#roomId").text()
         });
       }
     } else {
@@ -916,7 +919,8 @@ $(function() {
     //カードの確認をしてもらう
     socket.emit("selectedGiveCard", {
       cards: giveCards,
-      id: $("input[name=roomRadios]:checked").val()
+      // id: $("input[name=roomRadios]:checked").val()
+      id: $("#roomId").text()
     });
     $("#gameCommentaryArea").append(
       "カードの譲渡処理が終了するまでお待ちください。<br />"
@@ -941,7 +945,8 @@ $(function() {
       $("#gameCommentaryArea").append("あなたのターンです。<br />");
       if (msg.skip) {
         socket.emit("pass", {
-          id: $("input[name=roomRadios]:checked").val()
+          //id: $("input[name=roomRadios]:checked").val()
+          id: $("#roomId").text()
         });
       }
     } else {
