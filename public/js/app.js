@@ -217,7 +217,13 @@ $(function() {
       switch(roomList[key].status){
         case "recruiting":
           divCardStatus.text("メンバー募集中");
-          buttonJoinRoom = $("<button>参加</button>").addClass("btn btn-outline-primary");
+          buttonJoinRoom = $("<button>参加</button>").addClass("btn btn-outline-primary").on("click", () => {
+            socket.emit("join", {
+                roomId: roomList[key].roomId,
+                playerName: $("#playerName").val()
+            });
+            document.cookie = 'name=' + $("#playerName").val() + '; max-age=259200';
+          });
           break;
         case "inProgress":
           divCard.addClass("bg-primary text-white");
@@ -226,7 +232,13 @@ $(function() {
         case "urgentRecruiting":
           divCard.addClass("bg-warning");
           divCardStatus.text("メンバー緊急募集中");
-          buttonJoinRoom = $("<button>緊急参加(再接続)</button>").addClass("btn btn-outline-danger");
+          buttonJoinRoom = $("<button>緊急参加(再接続)</button>").addClass("btn btn-outline-danger").on("click", () => {
+            socket.emit("join", {
+                roomId: roomList[key].roomId,
+                playerName: $("#playerName").val()
+            });
+            document.cookie = 'name=' + $("#playerName").val() + '; max-age=259200';
+          });
           break;
       } 
       divCardBody.append(pCardRoomTitle, pCardRoomSetNum, pCardRoomRule);
