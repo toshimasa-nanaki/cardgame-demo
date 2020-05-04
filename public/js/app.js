@@ -203,7 +203,24 @@ $(function() {
   function createRoomCardList(roomList) {
     Object.keys(roomList).forEach(function(key) {
       debugLog(roomList[key]);
-      const div = $('<div class="form-check"></div>');
+      const divCard = $('<div class="card"></div>');
+      const divCardStatus = $('<div class="card-header"></div>');
+      const divCardBody = $('<div class="card-body"></div>');
+      const pCardRoomTitle = $('<p class="card-text"></p>');
+      const pCardRoomSetNum = $('<p class="card-text"></p>');
+      const pCardRoomRule = $('<p class="card-text"></p>');
+      switch(roomList[key].status){
+        case "recruiting":
+          break;
+        case "inProgress":
+          divCard.addClass("bg-primary text-white");
+          
+          break;
+        case "urgentRecruiting":
+          divCard.addClass("bg-warning");
+          break;
+      } 
+      $("div").addClass("addclass1");
       div.append(
         $('<input type="radio" />').attr({
           class: "form-check-input",
@@ -225,9 +242,9 @@ $(function() {
             "</label>"
         )
       );
-      $("#selectRoomList").prepend(div);
+      $("#selectRoomList2").prepend(div);
     });
-    $("#selectRoomList > :first > input").prop("checked", true);
+    //$("#selectRoomList > :first > input").prop("checked", true);
   }
 
   // 部屋一覧のラジオボタン生成
