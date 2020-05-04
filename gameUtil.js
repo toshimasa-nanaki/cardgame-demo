@@ -176,13 +176,8 @@ module.exports.checkOut = (sc, roomId, userId, currentTurn) => {
               ranking: displayRanking,
               point: value.point
             });
-            // if (key !== socketObj.id) io.to(key).emit("otherMemberJoinedRoom", commonUtil.htmlentities(joinInfo.playerName));
           }
-          // commonRequire.io.to(storeData.persistentData[roomId].roomId).emit("gameFinish", {
-          //   gameNum: storeData.persistentData[roomId].gameNum,
-          //   ranking: displayRanking
-          // });
-          commonRequire.io.to(socket.id).emit("nextGameStart", {
+          commonRequire.io.to(userId).emit("nextGameStart", {
             gameNum: storeData.persistentData[roomId].gameNum + 1,
             ranking: displayRanking
           });
