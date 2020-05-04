@@ -195,7 +195,7 @@ $(function() {
     //サーバ接続時に部屋一覧を渡す
     debugLog("ShowRoom");
     createRoomCardList(roomList);
-    createSelectRoomRadioButton(roomList);
+    //createSelectRoomRadioButton(roomList);
   });
   
   $("#playerName").val(document.cookie.split(';')[0].split("=")[1]);
@@ -211,25 +211,30 @@ $(function() {
       const pCardRoomRule = $('<p class="card-text"></p>');
       let buttonJoinRoom = "";
       
-      pCardRoomTitle.val("部屋名："+ roomList[key].roomDispName + "(定員：" + roomList[key].capacity + "人)");
-      pCardRoomSetNum.val("セット数：1セット(4ゲーム)");
-      pCardRoomRule.val("特殊ルール：11Back,スートしばり,階段");
+      pCardRoomTitle.text("部屋名："+ roomList[key].roomDispName + "(定員：" + roomList[key].capacity + "人)");
+      pCardRoomSetNum.text("セット数：1セット(4ゲーム)");
+      pCardRoomRule.text("特殊ルール：11Back,スートしばり,階段");
       switch(roomList[key].status){
         case "recruiting":
-          divCardStatus.val("メンバー募集中");
-          buttonJoinRoom = $("<button>参加</button>");
+          divCardStatus.text("メンバー募集中");
+          buttonJoinRoom = $("<button>参加</button>").addClass("btn btn-outline-primary");
           break;
         case "inProgress":
           divCard.addClass("bg-primary text-white");
-          divCardStatus.val("ゲーム中");
+          divCardStatus.text("ゲーム中");
           break;
         case "urgentRecruiting":
           divCard.addClass("bg-warning");
-          divCardStatus.val("メンバー緊急募集中");
+          divCardStatus.text("メンバー緊急募集中");
           buttonJoinRoom = $("<button>緊急参加(再接続)</button>").addClass("btn btn-outline-danger");
           break;
       } 
-      $("#selectRoomList2").prepend(div);
+      divCardBody.append(pCardRoomTitle, pCardRoomSetNum, pCardRoomRule);
+      if(buttonJoinRoom != ""){
+        divCardBody.append(buttonJoinRoom);
+      }
+      divCard.append(divCardStatus, divCardBody);
+      $("#selectRoomList2").prepend(divCard);
     });
     //$("#selectRoomList > :first > input").prop("checked", true);
   }
