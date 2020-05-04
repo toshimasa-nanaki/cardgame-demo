@@ -120,6 +120,76 @@ module.exports.checkOut = (sc, roomId, userId, currentTurn) => {
         "現在のユーザーの状態:" +
           JSON.stringify(storeData.persistentData[roomId]["users"][userId])
       );
+      if (storeData.persistentData[roomId].finishNum == Object.keys(storeData.persistentData[roomId]["users"]).length){
+        //ここまでで決着がついた場合。(このパターンは結構特殊。4人プレイのときは先行して2人が反則負けで都落ちが発生するようなパターン。)
+        //つまり二人が同時にあがったりして、びり以外という判定ができないときに通る。
+        const reverseRank = aggregateBattlePhase(roomId);
+        storeData.persistentData[roomId]["order"] = reverseRank;
+        Object.keys(storeData.persistentData[roomId]["users"]).forEach(function(key) {
+          storeData.persistentData[roomId]["scoreTable"].some(function(ele) {
+            if (storeData.persistentData[roomId]["users"][key].rank === ele.rankId) {
+              storeData.persistentData[roomId]["users"][key].point =
+                storeData.persistentData[roomId]["users"][key].point + ele.point;
+              LOGGER.debug(
+                storeData.persistentData[roomId]["users"][key].dispName +
+                  "の現在のポイント: " +
+                  storeData.persistentData[roomId]["users"][key].point
+              );
+              return true;
+            }
+          });
+        });
+        let displayRanking = [];
+        reverseRank.forEach(function(key) {
+          displayRanking.unshift({
+            rank: storeData.persistentData[roomId]["users"][key].rank,
+            dispName: storeData.persistentData[roomId]["users"][key].dispName
+          });
+        });
+        storeData.persistentData[roomId].rankingHistory.push({
+          gameNum : storeData.persistentData[roomId].gameNum,
+          ranking : displayRanking
+        });
+        if (storeData.persistentData[roomId].gameNum == 4) {
+          //1セット終了
+          let overallGrade = aggregateBattleSet(roomId);
+          let displayOverAllRanking = [];
+          overallGrade.forEach(function(key) {
+            displayOverAllRanking.push({
+              dispName: storeData.persistentData[roomId]["users"][key].dispName
+            });
+          });
+          for (let [key, value] of Object.entries(storeData.persistentData[roomId]["users"])) {
+            commonRequire.io.to(key).emit("gameSet", {
+              gameNum: storeData.persistentData[roomId].gameNum,
+              ranking: displayRanking,
+              overall: displayOverAllRanking,
+              finalPoint: value.point
+            });
+          }
+          return;
+        } else {
+          //次のゲームへ
+          for (let [key, value] of Object.entries(storeData.persistentData[roomId]["users"])) {
+            commonRequire.io.to(key).emit("gameFinish", {
+              gameNum: storeData.persistentData[roomId].gameNum,
+              ranking: displayRanking,
+              point: value.point
+            });
+            // if (key !== socketObj.id) io.to(key).emit("otherMemberJoinedRoom", commonUtil.htmlentities(joinInfo.playerName));
+          }
+          // commonRequire.io.to(storeData.persistentData[roomId].roomId).emit("gameFinish", {
+          //   gameNum: storeData.persistentData[roomId].gameNum,
+          //   ranking: displayRanking
+          // });
+          commonRequire.io.to(socket.id).emit("nextGameStart", {
+            gameNum: storeData.persistentData[roomId].gameNum + 1,
+            ranking: displayRanking
+          });
+          storeData.persistentData[roomId].gameNum = storeData.persistentData[roomId].gameNum + 1;
+          return;
+        }
+      }
       if (storeData.persistentData[roomId].finishNum == Object.keys(storeData.persistentData[roomId]["users"]).length - 1) {
         //ビリ以外は全員終了
         let lastId = Object.keys(storeData.persistentData[roomId]["users"]).filter(item => {
