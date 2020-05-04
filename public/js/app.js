@@ -209,39 +209,26 @@ $(function() {
       const pCardRoomTitle = $('<p class="card-text"></p>');
       const pCardRoomSetNum = $('<p class="card-text"></p>');
       const pCardRoomRule = $('<p class="card-text"></p>');
+      let buttonJoinRoom = "";
+      
+      pCardRoomTitle.val("部屋名："+ roomList[key].roomDispName + "(定員：" + roomList[key].capacity + "人)");
+      pCardRoomSetNum.val("セット数：1セット(4ゲーム)");
+      pCardRoomRule.val("特殊ルール：11Back,スートしばり,階段");
       switch(roomList[key].status){
         case "recruiting":
+          divCardStatus.val("メンバー募集中");
+          buttonJoinRoom = $("<button>参加</button>");
           break;
         case "inProgress":
           divCard.addClass("bg-primary text-white");
-          
+          divCardStatus.val("ゲーム中");
           break;
         case "urgentRecruiting":
           divCard.addClass("bg-warning");
+          divCardStatus.val("メンバー緊急募集中");
+          buttonJoinRoom = $("<button>緊急参加(再接続)</button>").addClass("btn btn-outline-danger");
           break;
       } 
-      $("div").addClass("addclass1");
-      div.append(
-        $('<input type="radio" />').attr({
-          class: "form-check-input",
-          name: "roomRadios",
-          value: roomList[key].roomId,
-          id: "room_" + roomList[key].roomId
-        })
-      );
-      div.append(
-        $(
-          '<label class="form-check-label" for="' +
-            "room_" +
-            roomList[key].roomId +
-            '">' +
-            roomList[key].roomDispName +
-            "(定員：" +
-            roomList[key].capacity +
-            "人)" +
-            "</label>"
-        )
-      );
       $("#selectRoomList2").prepend(div);
     });
     //$("#selectRoomList > :first > input").prop("checked", true);
