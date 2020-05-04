@@ -188,7 +188,8 @@ $(function() {
   socket.on("createdRoom", function(roomList) {
     //部屋作成完了後
     debugLog("CreatedRoom");
-    createSelectRoomRadioButton(roomList);
+    //createSelectRoomRadioButton(roomList);
+    createRoomCardList(roomList);
   });
 
   socket.on("showRoomList", function(roomList) {
@@ -218,6 +219,7 @@ $(function() {
         case "recruiting":
           divCardStatus.text("メンバー募集中");
           buttonJoinRoom = $("<button>参加</button>").addClass("btn btn-outline-primary").on("click", () => {
+            $("#roomId").text(roomList[key].roomId);
             socket.emit("join", {
                 roomId: roomList[key].roomId,
                 playerName: $("#playerName").val()
@@ -233,6 +235,7 @@ $(function() {
           divCard.addClass("bg-warning");
           divCardStatus.text("メンバー緊急募集中");
           buttonJoinRoom = $("<button>緊急参加(再接続)</button>").addClass("btn btn-outline-danger").on("click", () => {
+            $("#roomId").text(roomList[key].roomId);
             socket.emit("join", {
                 roomId: roomList[key].roomId,
                 playerName: $("#playerName").val()
@@ -281,14 +284,14 @@ $(function() {
     });
     $("#selectRoomList > :first > input").prop("checked", true);
   }
-  $("#joinRoom").click(function() {
-    let roomId = $("input[name=roomRadios]:checked").val();
-    socket.emit("join", {
-      roomId: $("input[name=roomRadios]:checked").val(),
-      playerName: $("#playerName").val()
-    });
-    document.cookie = 'name=' + $("#playerName").val() + '; max-age=259200';
-  });
+  // $("#joinRoom").click(function() {
+  //   let roomId = $("input[name=roomRadios]:checked").val();
+  //   socket.emit("join", {
+  //     roomId: $("input[name=roomRadios]:checked").val(),
+  //     playerName: $("#playerName").val()
+  //   });
+  //   document.cookie = 'name=' + $("#playerName").val() + '; max-age=259200';
+  // });
   socket.on("connectRetry", function(leaveMemberInfo){
     debugLog("Retryモード");
     //選択画面を開く。
@@ -326,7 +329,8 @@ $(function() {
   $("#retryConnectRoomButton").click(function() {
     //let reconnectUserId = $("input[name=memberRadios]:checked").val();
     socket.emit("reJoin", {
-      roomId: $("input[name=roomRadios]:checked").val(),
+      //roomId: $("input[name=roomRadios]:checked").val(),
+      roomId: $("#roomId").text(),
       reconnectUserId: $("input[name=memberRadios]:checked").val(),
       playerName: $("#playerName").val()
     });
@@ -990,14 +994,16 @@ $(function() {
     //カードの確認をしてもらう
     socket.emit("validate", {
       cards: sendCards,
-      id: $("input[name=roomRadios]:checked").val()
+      //id: $("input[name=roomRadios]:checked").val()
+      id: $("#roomId").text()
     });
   });
   $("#pass").click(function() {
     $("#send").prop("disabled", true);
     $("#pass").prop("disabled", true);
     socket.emit("pass", {
-      id: $("input[name=roomRadios]:checked").val()
+      //id: $("input[name=roomRadios]:checked").val()
+      id: $("#roomId").text()
     });
   });
   socket.on("validateError", function(msg) {
@@ -1217,8 +1223,10 @@ $(function() {
       $("#gameCommentaryArea")[0].scrollHeight
     );
     socket.emit("rematch", {
-      id: $("input[name=roomRadios]:checked").val(),
-      roomid: $("input[name=roomRadios]:checked").val()
+      //id: $("input[name=roomRadios]:checked").val(),
+      id: $("#roomId").text(),
+      roomid: $("#roomId").text()
+      //roomid: $("input[name=roomRadios]:checked").val()
     });
     // sleep(10, function () {
     //   socket.emit("rematch", {
@@ -1279,8 +1287,10 @@ $(function() {
     $("#shibari").text("");
     $("#revolution").text("");
     socket.emit("rematch", {
-      id: $("input[name=roomRadios]:checked").val(),
-      roomid: $("input[name=roomRadios]:checked").val()
+      id: $("#roomId").text(),
+      roomid: $("#roomId").text()
+      // id: $("input[name=roomRadios]:checked").val(),
+      // roomid: $("input[name=roomRadios]:checked").val()
     });
   });
 
