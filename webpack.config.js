@@ -1,3 +1,5 @@
+const nodeExternals = require("webpack-node-externals");
+
 module.exports = [
   //クライアント側(javascript)
   {
@@ -16,6 +18,13 @@ module.exports = [
     entry: {
       server: `${__dirname}/src/server/index.js`,
     },
-    target: 'node'
+    target: 'node',
+    node: {
+      // expressエラー対策：https://medium.com/@binyamin/creating-a-node-express-webpack-app-with-dev-and-prod-builds-a4962ce51334
+      // らしいが、いらなそう？
+      __dirname: false,
+      __filename: false,
+    },
+    externals: [nodeExternals()],
   }
 ];

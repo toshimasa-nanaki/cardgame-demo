@@ -4,6 +4,7 @@ dependencies:
   socket.io: 2.3.0
   webpack: 4.43.0
   webpack-cli: 3.3.11
+  webpack-node-externals: 1.7.2
 packages:
   /@webassemblyjs/ast/1.9.0:
     dependencies:
@@ -3224,6 +3225,10 @@ packages:
       webpack: 4.x.x
     resolution:
       integrity: sha512-dXlfuml7xvAFwYUPsrtQAA9e4DOe58gnzSxhgrO/ZM/gyXTBowrsYeubyN4mqGhYdpXMFNyQ6emjJS9M7OBd4g==
+  /webpack-node-externals/1.7.2:
+    dev: false
+    resolution:
+      integrity: sha512-ajerHZ+BJKeCLviLUUmnyd5B4RavLF76uv3cs6KNuO8W+HuQaEs0y0L7o40NQxdPy5w0pcv8Ew7yPUAQG0UdCg==
   /webpack-sources/1.4.3:
     dependencies:
       source-list-map: 2.0.1
@@ -3364,3 +3369,4 @@ specifiers:
   socket.io: ^2.3.0
   webpack: ^4.43.0
   webpack-cli: ^3.3.11
+  webpack-node-externals: ^1.7.2
