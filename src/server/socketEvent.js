@@ -1,12 +1,6 @@
-// import { store, io } from './index';
-// const log4js = require("log4js");
-// const logger = log4js.getLogger();
-// const app = require("express")();
-// const http = require("http").Server(app);
-// const io = require("socket.io")(http);
 const storeData = require("./storeData.js");
-const commonRequire = require("./commonRequire.js");
-const commonUtil = require("./commonUtil.js");
+const commonRequire = require("./common/commonRequire.js");
+const commonUtil = require("./common/commonUtil.js");
 const roomUtil = require("./roomUtil.js");
 const loggerUtil = require("./loggerUtil.js");
 const LOGGER = loggerUtil.logger;

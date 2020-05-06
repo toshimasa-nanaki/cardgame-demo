@@ -1,4 +1,4 @@
-const commonUtil = require("./commonUtil.js");
+const commonUtil = require("./common/commonUtil.js");
 
 module.exports.persistentData = {};
 

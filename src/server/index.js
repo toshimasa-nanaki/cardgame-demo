@@ -1,11 +1,11 @@
 "use strict";
 
-const commonUtil = require("./commonUtil.js");
+const commonUtil = require("./common/commonUtil.js");
 const gameUtil = require("./gameUtil.js");
 const storeData = require("./storeData.js");
 const loggerUtil = require("./loggerUtil.js");
 const LOGGER = loggerUtil.logger;
-const commonRequire = require("./commonRequire.js");
+const commonRequire = require("./common/commonRequire.js");
 const notifyUtil = require("./notifyUtil.js");
 const validateUtil = require("./validateUtil.js");
 
