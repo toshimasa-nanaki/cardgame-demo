@@ -1,6 +1,6 @@
 dependencies:
   express: 4.17.1
-  log4js: 6.2.0
+  log4js: 6.2.1
   socket.io: 2.3.0
 packages:
   /accepts/1.3.7:
@@ -289,7 +289,7 @@ packages:
       integrity: sha1-PYyt2Q2XZWn6g1qx+OSyOhBWBac=
   /fs-extra/8.1.0:
     dependencies:
-      graceful-fs: 4.2.3
+      graceful-fs: 4.2.4
       jsonfile: 4.0.0
       universalify: 0.1.2
     dev: false
@@ -297,10 +297,10 @@ packages:
       node: '>=6 <7 || >=8'
     resolution:
       integrity: sha512-yhlQgA6mnOJUKOsRUFsgJdQCvkKhcz8tlZG5HBQfReYZy46OwLcY+Zia0mtdHsOo9y/hP+CxMN0TU9QxoOtG4g==
-  /graceful-fs/4.2.3:
+  /graceful-fs/4.2.4:
     dev: false
     resolution:
-      integrity: sha512-a30VEBm4PEdx1dRB7MFK7BejejvCvBronbLjht+sHuGYj8PHs7M/5Z+rt5lw551vZ7yfTCj4Vuyy3mSJytDWRQ==
+      integrity: sha512-WjKPNJF79dtJAVniUlGGWHYGz2jWxT6VhN/4m1NdkbZ2nOsEF+cI1Edgql5zCRhs/VsQYRvrXctxktVXZUkixw==
   /has-binary2/1.0.3:
     dependencies:
       isarray: 2.0.1
@@ -368,21 +368,21 @@ packages:
   /jsonfile/4.0.0:
     dev: false
     optionalDependencies:
-      graceful-fs: 4.2.3
+      graceful-fs: 4.2.4
     resolution:
       integrity: sha1-h3Gq4HmbZAdrdmQPygWPnBDjPss=
-  /log4js/6.2.0:
+  /log4js/6.2.1:
     dependencies:
       date-format: 3.0.0
       debug: 4.1.1
       flatted: 2.0.2
       rfdc: 1.1.4
-      streamroller: 2.2.3
+      streamroller: 2.2.4
     dev: false
     engines:
       node: '>=8.0'
     resolution:
-      integrity: sha512-4x14gHnFaWgkKEygGtIBAvAaHuJX1z86bLx4SQ76jdgQmYxaW3SF6EFoEn9nRG6fW7TuKvyERItG6vxgNOCeTA==
+      integrity: sha512-7n+Oqxxz7VcQJhIlqhcYZBTpbcQ7XsR0MUIfJkx/n3VUjkAS4iUr+4UJlhxf28RvP9PMGQXbgTUhLApnu0XXgA==
   /media-typer/0.3.0:
     dev: false
     engines:
@@ -607,7 +607,7 @@ packages:
       node: '>= 0.6'
     resolution:
       integrity: sha1-Fhx9rBd2Wf2YEfQ3cfqZOBR4Yow=
-  /streamroller/2.2.3:
+  /streamroller/2.2.4:
     dependencies:
       date-format: 2.1.0
       debug: 4.1.1
@@ -616,7 +616,7 @@ packages:
     engines:
       node: '>=8.0'
     resolution:
-      integrity: sha512-AegmvQsscTRhHVO46PhCDerjIpxi7E+d2GxgUDu+nzw/HuLnUdxHWr6WQ+mVn/4iJgMKKFFdiUwFcFRDvcjCtw==
+      integrity: sha512-OG79qm3AujAM9ImoqgWEY1xG4HX+Lw+yY6qZj9R1K2mhF5bEmQ849wvrb+4vt4jLMLzwXttJlQbOdPOQVRv7DQ==
   /to-array/0.1.4:
     dev: false
     resolution:
@@ -690,5 +690,5 @@ shrinkwrapMinorVersion: 9
 shrinkwrapVersion: 3
 specifiers:
   express: ^4.17.1
-  log4js: ^6.2.0
+  log4js: ^6.2.1
   socket.io: ^2.3.0
