@@ -3,7 +3,7 @@ module.exports = [
   {
     mode: "development",
     entry: {
-      client: "./src/client/index.js",
+      client: `${__dirname}/src/client/index.js`,
     },
     output: {
       filename: "[name].js",
@@ -14,7 +14,7 @@ module.exports = [
   {
     mode: "development",
     entry: {
-      server: "./src/server/index.js",
+      server: `${__dirname}/src/server/index.js`,
     }
   }
 ];
