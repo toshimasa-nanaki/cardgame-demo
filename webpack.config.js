@@ -14,7 +14,7 @@ module.exports = [
   {
     mode: "development",
     entry: {
-      server: "./index.js",
+      server: "./src/server/index.js",
     }
   }
 ];
