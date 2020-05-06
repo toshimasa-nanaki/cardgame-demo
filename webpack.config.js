@@ -15,6 +15,7 @@ module.exports = [
     mode: "development",
     entry: {
       server: `${__dirname}/src/server/index.js`,
-    }
+    },
+    target: 'node'
   }
 ];
