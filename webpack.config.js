@@ -11,6 +11,9 @@ module.exports = [
       filename: "[name].js",
       path: `${__dirname}/public/js`,
     },
+    resolve: {
+      extensions: [".js", ".json"],
+    },
   },
   //サーバ側
   {

@@ -805,6 +805,7 @@ $(function() {
       );
     }
     
+    
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );
