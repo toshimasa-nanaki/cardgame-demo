@@ -175,6 +175,7 @@ commonRequire.io.on("connection", socket => {
     }
     if (validateCards[0].number == 11 && resultCheckHand.type !== "stair") {
       //11back
+      
       storeData.persistentData[msg.id].elevenback = !storeData.persistentData[msg.id].elevenback;
       commonRequire.io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
         type: "elevenback",

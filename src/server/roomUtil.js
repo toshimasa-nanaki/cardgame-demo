@@ -65,6 +65,8 @@ module.exports.createRoom = roomInfo => {
   roomObj["roomId"] = createRoomId;
   roomObj["roomDispName"] = roomInfo.dispName === "" ? createDefaultRoomName() : commonUtil.htmlentities(roomInfo.dispName);
   roomObj["capacity"] = roomInfo.capacity === "" ? 4 : Number(roomInfo.capacity);
+  roomObj["setNum"] = roomInfo.setNum === "" ? 1 : Number(roomInfo.setNum);
+  roomObj["ruleSet"] = roomInfo.ruleSet;
   storeData.persistentData[createRoomId] = roomObj;
   LOGGER.info("createdRoom:  " + roomObj.roomDispName);
   io.emit("createdRoom", { [createRoomId]: roomObj });

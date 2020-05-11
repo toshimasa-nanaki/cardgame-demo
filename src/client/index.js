@@ -166,9 +166,19 @@ $(function() {
       dispName: $("#roomDispName").val(),
       capacity: $("#roomcapacity").val(),
       setNum: $("#setNum").val(),
-      ruleSet: 
+      ruleSet: createRuleSet()
     });
   });
+  function createRuleSet(){
+    let ruleSet = [];
+    var ele=document.getElementsByName('ruleSets');
+  for(var i=0;i<ele.length;i++){
+    if(ele[i].checked){
+      ruleSet.push(ele[i].value);
+    }
+  };
+    return ruleSet;
+  }
   $('#rulePresetSelectbox').change(function() {
     console.log($(this).val());
     switch($(this).val()){

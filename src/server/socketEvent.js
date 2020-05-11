@@ -41,6 +41,7 @@ module.exports.load_common_event = (socket)=> {
 
 module.exports.load_room_event = (socket)=> {
   socket.on("requestRoomCreate", roomInfo => {
+    LOGGER.debug(JSON.stringify(roomInfo));
     roomUtil.createRoom(roomInfo);
   });
   socket.on("join", joinInfo => {
