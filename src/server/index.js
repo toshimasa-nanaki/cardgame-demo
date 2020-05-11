@@ -19,12 +19,6 @@ const debug = process.env.DEBUG === "true" ? true : false;
 
 commonRequire.app.use(commonRequire.express.static("public"));
 
-// commonRequire.app.get("/", function(req, res) {
-//   res.sendFile(__dirname + "/index.html");
-// });
-// commonRequire.app.use("/css", commonRequire.express.static("public/css"));
-// commonRequire.app.use("/js", commonRequire.express.static("public/js"));
-
 commonRequire.io.on("connection", socket => {
   //最初の接続時に現在のルーム一覧を送る
   LOGGER.debug(JSON.stringify(storeData.persistentData));
