@@ -203,6 +203,7 @@ $(function() {
     debugLog("CreatedRoom");
     //createSelectRoomRadioButton(roomList);
     createRoomCardList(roomList);
+    $('#nav-tab a[href="#nav-joinroom"]').tab('show')
   });
 
   socket.on("showRoomList", function(roomList) {
