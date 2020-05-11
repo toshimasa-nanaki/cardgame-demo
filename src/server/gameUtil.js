@@ -48,9 +48,10 @@ module.exports.gameInit = (count, sockets, roomId) => {
     notifyUtil.notifyGameReady(roomId);
   } else {
     //2回目以降はまず献上が先に実施される。(Orderが降順になっているので、それを利用する)
-    if (Object.keys(storeData.persistentData[roomId]["users"]).length >= 3) {
+    const usersLength = Object.keys(roomInfo.users).length;
+    if (usersLength >= 3) {
       //3人以上の時
-      notifyUtil.notifyGiveCard(roomId, Object.keys(storeData.persistentData[roomId]["users"]).length);
+      notifyUtil.notifyGiveCard(roomId, usersLength);
     } else {
       //2人の時などは献上はなし
       notifyUtil.notifyGameReady(roomId);
