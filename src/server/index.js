@@ -173,9 +173,8 @@ commonRequire.io.on("connection", socket => {
         }
       return;
     }
-    if (validateCards[0].number == 11 && resultCheckHand.type !== "stair") {
+    if (storeData.persistentData[msg.id].ruleSet.indexOf("elevenback") != -1 && validateCards[0].number == 11 && resultCheckHand.type !== "stair") {
       //11back
-      
       storeData.persistentData[msg.id].elevenback = !storeData.persistentData[msg.id].elevenback;
       commonRequire.io.to(storeData.persistentData[msg.id].roomId).emit("changeStatus", {
         type: "elevenback",
