@@ -73,6 +73,11 @@ module.exports.createRoom = roomInfo => {
 };
 
 module.exports.joinRoom = (joinInfo, socketObj) => {
+  if(!storeData.persistentData[joinInfo.roomId]){
+    //既に存在しない部屋の場合はエラーを返して終了。
+    io.to(socketObj.id).emit("connectError", "roomNothing");
+    return;
+  }
   const roomCapacity = storeData.persistentData[joinInfo.roomId].capacity;
     if (Object.keys(storeData.persistentData[joinInfo.roomId]["users"]).length >= roomCapacity) {
       if(storeData.persistentData[joinInfo.roomId].leaveUserIds.length > 0){
