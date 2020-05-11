@@ -15,22 +15,24 @@ const TRUMP_TEMP = debug ? commonUtil.DEBUG_TRUMPDATA : commonUtil.TRUMPDATA;
 // const io = index.io;
 
 module.exports.gameInit = (count, sockets, roomId) => {
-  storeData.persistentData[roomId]["fieldCards"] = [];
+  let roomInfo = storeData.persistentData[roomId];
+  let users = roomInfo.users;
+  roomInfo.fieldCards = [];
 
-  storeData.persistentData[roomId].finishNum = 0;
-  storeData.persistentData[roomId].scoreTable = storeData.createRankTable(count);
-  storeData.persistentData[roomId].elevenback = false;
-  storeData.persistentData[roomId].shibari = false;
-  storeData.persistentData[roomId].revolution = false;
-  storeData.persistentData[roomId].stair = false;
-  storeData.persistentData[roomId]["order"] = [];
-  storeData.persistentData[roomId].startedGame = true;
-  storeData.persistentData[roomId].status = "inProgress";
-  storeData.persistentData[roomId].rankCount = 1;
+  roomInfo.finishNum = 0;
+  //storeData.persistentData[roomId].scoreTable = storeData.createRankTable(count);
+  roomInfo.elevenback = false;
+  roomInfo.shibari = false;
+  roomInfo.revolution = false;
+  roomInfo.stair = false;
+  roomInfo.order = [];
+  roomInfo.startedGame = true;
+  roomInfo.status = "inProgress";
+  roomInfo.rankCount = 1;
   //もらったカード、あげたカードをクリアする
-  Object.keys(storeData.persistentData[roomId]["users"]).forEach(key => {
-    storeData.persistentData[roomId]["users"][key].getCard = [];
-    storeData.persistentData[roomId]["users"][key].giveCard = [];
+  Object.keys(users).forEach(key => {
+    users[key].getCard = [];
+    users[key].giveCard = [];
   });
   
 
@@ -41,7 +43,7 @@ module.exports.gameInit = (count, sockets, roomId) => {
   handOutCards(count, roomId);
 
   //準備完了通知
-  if (storeData.persistentData[roomId].gameNum == 1) {
+  if (roomInfo.gameNum == 1) {
     //1回目のゲームの場合は完了通知を送る。
     notifyUtil.notifyGameReady(roomId);
   } else {

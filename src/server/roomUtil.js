@@ -44,6 +44,7 @@ module.exports.createRoom = roomInfo => {
   roomObj["capacity"] = roomInfo.capacity === "" ? 4 : Number(roomInfo.capacity);
   roomObj["setNum"] = roomInfo.setNum === "" ? 1 : Number(roomInfo.setNum);
   roomObj["ruleSet"] = roomInfo.ruleSet;
+  roomObj["scoreTable"] = storeData.createRankTable(roomObj["capacity"]);
   storeData.persistentData[createRoomId] = roomObj;
   LOGGER.info("createdRoom:  " + roomObj.roomDispName);
   io.emit("createdRoom", { [createRoomId]: roomObj });
