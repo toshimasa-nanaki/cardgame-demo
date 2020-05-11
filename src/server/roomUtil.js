@@ -57,7 +57,10 @@ module.exports.createRoom = roomInfo => {
   blindCards: [], //ブラインドカード
   leaveUserIds: [],  //抜けた人のid
   rankingHistory: [],  //ランキングの配列
-  status: "recruiting"
+  status: "recruiting",
+  ruleSet: [],
+  setNum: 1,
+  currentSetNum: 1
 };
   roomObj["roomId"] = createRoomId;
   roomObj["roomDispName"] = roomInfo.dispName === "" ? createDefaultRoomName() : commonUtil.htmlentities(roomInfo.dispName);
