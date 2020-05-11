@@ -27,16 +27,13 @@ module.exports.createUniqueId = function(digits) {
   );
 };
 
-module.exports.sortArrayRandomly = (arrayData) => {
-  var arr = arrayData.concat();
-  var arrLength = arr.length;
-  var randomArr = [];
-  for (var i = 0; i < arrLength; i++) {
-    var randomTarget = Math.floor(Math.random() * arr.length);
-    randomArr[i] = arr[randomTarget];
-    arr.splice(randomTarget, 1);
+module.exports.sortArrayRandomly = ([...arrayData]) => {
+  let arrLength = arrayData.length;
+  while (arrLength) {
+    const i = Math.floor(Math.random() * arrLength--);
+    [arrayData[arrLength], arrayData[i]] = [arrayData[i], arrayData[arrLength]];
   }
-  return randomArr;
+  return arrayData;
 }
 
 module.exports.formatDate = (date, format) => {
