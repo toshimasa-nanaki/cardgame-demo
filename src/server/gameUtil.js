@@ -285,13 +285,13 @@ module.exports.checkOut = (sc, roomId, userId, currentTurn) => {
 
 const decideOrder = roomId => {
   if (storeData.persistentData[roomId].gameNum == 1) {
-    //1回目の場合は部屋に入った順
-    Object.keys(storeData.persistentData[roomId]["users"]).forEach(key => {
+    //1回目の場合はランダム順
+    commonUtil.sortArrayRandomly(Object.keys(storeData.persistentData[roomId]["users"])).forEach(key => {
       storeData.persistentData[roomId]["order"].push(key);
     });
-    LOGGER.debug("第1回ゲームの順序: " + storeData.persistentData[roomId]["order"]);
+    LOGGER.info("第1回ゲームの順序: " + storeData.persistentData[roomId]["order"]);
   } else {
-    //2回目以降は大貧民が一番。時計回りという概念がないので、とりあえず順位の逆順にする。(オリジナル)
+    //2回目以降は大貧民が一番。そこからは1回目の順番を継承して進む。(オリジナル)
     //TODO? 実際は大貧民から時計回り。
     let userRank = [];
     Object.keys(storeData.persistentData[roomId]["users"]).forEach(key => {
