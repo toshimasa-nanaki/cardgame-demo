@@ -228,7 +228,7 @@ $(function() {
       
       pCardRoomTitle.text("部屋名："+ roomList[key].roomDispName + "(定員：" + roomList[key].capacity + "人)");
       pCardRoomSetNum.text("セット数：1セット(4ゲーム)");
-      pCardRoomRule.text("特殊ルール：11Back,スートしばり,階段");
+      pCardRoomRule.text("追加ルール：11Back,スートしばり,階段");
       switch(roomList[key].status){
         case "recruiting":
           divCardStatus.text("メンバー募集中");
