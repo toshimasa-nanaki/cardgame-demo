@@ -5,14 +5,11 @@ const commonUtil = require("./common/commonUtil.js");
 const storeData = require("./storeData.js");
 const notifyUtil = require("./notifyUtil.js");
 const io = commonRequire.io;
-//const index = require("./index.js");
 const loggerUtil = require("./loggerUtil.js");
 const LOGGER = loggerUtil.logger;
 const debug = process.env.DEBUG === "true" ? true : false;
 const TRUMP_TEMP = debug ? commonUtil.DEBUG_TRUMPDATA : commonUtil.TRUMPDATA;
 
-
-// const io = index.io;
 
 module.exports.gameInit = (count, sockets, roomId) => {
   let roomInfo = storeData.persistentData[roomId];
@@ -20,7 +17,6 @@ module.exports.gameInit = (count, sockets, roomId) => {
   roomInfo.fieldCards = [];
 
   roomInfo.finishNum = 0;
-  //storeData.persistentData[roomId].scoreTable = storeData.createRankTable(count);
   roomInfo.elevenback = false;
   roomInfo.shibari = false;
   roomInfo.revolution = false;
