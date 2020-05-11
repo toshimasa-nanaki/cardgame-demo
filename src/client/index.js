@@ -164,7 +164,9 @@ $(function() {
     //部屋作成時
     socket.emit("requestRoomCreate", {
       dispName: $("#roomDispName").val(),
-      capacity: $("#roomcapacity").val()
+      capacity: $("#roomcapacity").val(),
+      setNum: $("#setNum").val(),
+      ruleSet: 
     });
   });
   $('#rulePresetSelectbox').change(function() {
