@@ -21,7 +21,7 @@ module.exports.DEBUG_TRUMPDATA = {
 };
 
 module.exports.createUniqueId = function(digits) {
-  var strong = typeof digits !== "undefined" ? digits : 1000;
+  const strong = typeof digits !== "undefined" ? digits : 1000;
   return (
     Date.now().toString(16) + Math.floor(strong * Math.random()).toString(16)
   );
