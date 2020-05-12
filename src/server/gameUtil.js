@@ -15,7 +15,6 @@ module.exports.gameInit = (count, sockets, roomId) => {
   let roomInfo = storeData.persistentData[roomId];
   let users = roomInfo.users;
   roomInfo.fieldCards = [];
-
   roomInfo.finishNum = 0;
   roomInfo.elevenback = false;
   roomInfo.shibari = false;
@@ -31,7 +30,6 @@ module.exports.gameInit = (count, sockets, roomId) => {
     users[key].giveCard = [];
   });
   
-
   //まずは順番決め
   decideOrder(roomId);
 
@@ -44,7 +42,7 @@ module.exports.gameInit = (count, sockets, roomId) => {
     notifyUtil.notifyGameReady(roomId);
   } else {
     //2回目以降はまず献上が先に実施される。(Orderが降順になっているので、それを利用する)
-    const usersLength = Object.keys(roomInfo.users).length;
+    const usersLength = Object.keys(users).length;
     if (usersLength >= 3) {
       //3人以上の時
       notifyUtil.notifyGiveCard(roomId, usersLength);
@@ -53,6 +51,13 @@ module.exports.gameInit = (count, sockets, roomId) => {
       notifyUtil.notifyGameReady(roomId);
     }
   }
+}
+
+module.exports.setInit = (count, sockets, roomId) => {
+  let roomInfo = storeData.persistentData[roomId];
+  roomInfo.setNum = roomInfo.setNum + 1;
+  roomInfo.currentSetNum = roomInfo.setNum;
+  this.gameInit(count, sockets, roomId);
 }
 
 module.exports.checkOut = (sc, roomId, userId, currentTurn) => {
@@ -277,20 +282,22 @@ module.exports.checkOut = (sc, roomId, userId, currentTurn) => {
 }
 
 const decideOrder = roomId => {
-  if (storeData.persistentData[roomId].gameNum == 1) {
+  let roomInfo = storeData.persistentData[roomId];
+  let users = roomInfo.users;
+  if (roomInfo.gameNum == 1) {
     //1回目の場合はランダム順
-    commonUtil.sortArrayRandomly(Object.keys(storeData.persistentData[roomId]["users"])).forEach(key => {
-      storeData.persistentData[roomId]["order"].push(key);
+    commonUtil.sortArrayRandomly(Object.keys(roomInfo["users"])).forEach(key => {
+      roomInfo["order"].push(key);
     });
     LOGGER.info("第1回ゲームの順序: " + storeData.persistentData[roomId]["order"]);
   } else {
     //2回目以降は大貧民が一番。そこからは1回目の順番を継承して進む。(オリジナル)
     //TODO? 実際は大貧民から時計回り。
     let userRank = [];
-    Object.keys(storeData.persistentData[roomId]["users"]).forEach(key => {
-      userRank.push({ id: key, rankNum: storeData.persistentData[roomId]["users"][key].rankNum });
-      storeData.persistentData[roomId]["users"][key].rankNum = 0;
-      storeData.persistentData[roomId]["users"][key].rank = "";
+    Object.keys(roomInfo["users"]).forEach(key => {
+      userRank.push({ id: key, rankNum: roomInfo["users"][key].rankNum });
+      roomInfo["users"][key].rankNum = 0;
+      roomInfo["users"][key].rank = "";
     });
     userRank
       .sort(function(a, b) {
@@ -300,7 +307,7 @@ const decideOrder = roomId => {
       })
       .forEach(key => {
         LOGGER.debug("二回目以降key:" + key);
-        storeData.persistentData[roomId]["order"].push(key.id);
+        roomInfo["order"].push(key.id);
       });
   }
 }
