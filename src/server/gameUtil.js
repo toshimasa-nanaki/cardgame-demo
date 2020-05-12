@@ -307,7 +307,6 @@ const decideOrder = roomId => {
         return 0;
       })
       .forEach(key => {
-        LOGGER.debug("二回目以降key:" + key);
         order.push(key.id);
       });
   }
