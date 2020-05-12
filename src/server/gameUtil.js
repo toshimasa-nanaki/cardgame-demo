@@ -284,20 +284,21 @@ module.exports.checkOut = (sc, roomId, userId, currentTurn) => {
 const decideOrder = roomId => {
   let roomInfo = storeData.persistentData[roomId];
   let users = roomInfo.users;
+  let order = roomInfo.order;
   if (roomInfo.gameNum == 1) {
     //1回目の場合はランダム順
-    commonUtil.sortArrayRandomly(Object.keys(roomInfo["users"])).forEach(key => {
-      roomInfo["order"].push(key);
+    commonUtil.sortArrayRandomly(Object.keys(users)).forEach(key => {
+      order.push(key);
     });
-    LOGGER.info("第1回ゲームの順序: " + storeData.persistentData[roomId]["order"]);
+    LOGGER.info("第1回ゲームの順序: " + order);
   } else {
     //2回目以降は大貧民が一番。そこからは1回目の順番を継承して進む。(オリジナル)
     //TODO? 実際は大貧民から時計回り。
     let userRank = [];
-    Object.keys(roomInfo["users"]).forEach(key => {
-      userRank.push({ id: key, rankNum: roomInfo["users"][key].rankNum });
-      roomInfo["users"][key].rankNum = 0;
-      roomInfo["users"][key].rank = "";
+    Object.keys(users).forEach(key => {
+      userRank.push({ id: key, rankNum: users[key].rankNum });
+      users[key].rankNum = 0;
+      users[key].rank = "";
     });
     userRank
       .sort(function(a, b) {
@@ -307,7 +308,7 @@ const decideOrder = roomId => {
       })
       .forEach(key => {
         LOGGER.debug("二回目以降key:" + key);
-        roomInfo["order"].push(key.id);
+        order.push(key.id);
       });
   }
 }
