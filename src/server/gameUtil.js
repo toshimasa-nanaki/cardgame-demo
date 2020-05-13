@@ -61,7 +61,7 @@ module.exports.gameInit = (count, sockets, roomId) => {
 }
 
 const gameDataInit = (roomInfo, users) => {
-  if(roomInfo.)
+  if(roomInfo.game)
   roomInfo.fieldCards = [];
   roomInfo.finishNum = 0;
   roomInfo.elevenback = false;
