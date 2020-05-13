@@ -142,8 +142,13 @@ module.exports.notifyChangeTurn = (currentTurnIndex, roomId) => {
   let n;
   while(tryCount < roomInfo.capacity - 1){
     tryCount++;
-    const preNextTurn = currentTurnIndex + tryCount >= roomInfo.capcity ? currentTurnIndex + tryCount - roomInfo.capacity : currentTurnIndex + tryCount;
-    if(currentTurnIndex + tryCount) 
+    const preNextTurn = currentTurnIndex + tryCount >= roomInfo.capcity ? 
+          currentTurnIndex + tryCount - roomInfo.capacity : currentTurnIndex + tryCount;
+    if(orderList[preNextTurn].status === ""){
+      //次の順番になれる
+      n = preNextTurn;
+      break;
+    } 
   }
   orderList.forEach(element => {
     remainingCards.push({
