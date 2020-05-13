@@ -33,47 +33,47 @@ module.exports.notifyGameReady = roomId => {
     userList: userDispList
   });
   });
-  io.to(orders[0]).emit("gameReady", {
-    gameNum: storeData.persistentData[roomId].gameNum,
-    card: users[orders[0]].card,
-    yourTurn: true,
-    playerName: users[orders[0]].dispName,
-    playerName2: users[orders[0]].dispName,
-    playerPoint: users[orders[0]].point,
-    blindCards: storeData.persistentData[roomId].blindCards,
-    orderNum: 0,
-    userList: userDispList
-  });
-  LOGGER.debug(
-    "gameReadyのレスポンス(一番目)： " +
-      JSON.stringify({
-        gameNum: storeData.persistentData[roomId].gameNum,
-        card: users[orders[0]].card,
-        yourTurn: true,
-        playerName: users[orders[0]].dispName
-      })
-  );
-  for (let i = 1; i < storeData.persistentData[roomId]["order"].length; i++) {
-    io.to(orders[i]).emit("gameReady", {
-      gameNum: storeData.persistentData[roomId].gameNum,
-      card: users[orders[i]].card,
-      yourTurn: false,
-      playerName: users[orders[0]].dispName,
-      playerName2: users[orders[i]].dispName,
-      playerPoint: users[orders[i]].point,
-      blindCards: storeData.persistentData[roomId].blindCards,
-      orderNum: 0,
-      userList: userDispList
-    });
-    LOGGER.debug(
-      "gameReadyのレスポンス(二番目以降)： " +
-        JSON.stringify({
-          card: users[orders[i]].card,
-          yourTurn: false,
-          playerName: users[orders[0]].dispName
-        })
-    );
-  }
+  // io.to(orders[0]).emit("gameReady", {
+  //   gameNum: storeData.persistentData[roomId].gameNum,
+  //   card: users[orders[0]].card,
+  //   yourTurn: true,
+  //   playerName: users[orders[0]].dispName,
+  //   playerName2: users[orders[0]].dispName,
+  //   playerPoint: users[orders[0]].point,
+  //   blindCards: storeData.persistentData[roomId].blindCards,
+  //   orderNum: 0,
+  //   userList: userDispList
+  // });
+  // LOGGER.debug(
+  //   "gameReadyのレスポンス(一番目)： " +
+  //     JSON.stringify({
+  //       gameNum: storeData.persistentData[roomId].gameNum,
+  //       card: users[orders[0]].card,
+  //       yourTurn: true,
+  //       playerName: users[orders[0]].dispName
+  //     })
+  // );
+  // for (let i = 1; i < storeData.persistentData[roomId]["order"].length; i++) {
+  //   io.to(orders[i]).emit("gameReady", {
+  //     gameNum: storeData.persistentData[roomId].gameNum,
+  //     card: users[orders[i]].card,
+  //     yourTurn: false,
+  //     playerName: users[orders[0]].dispName,
+  //     playerName2: users[orders[i]].dispName,
+  //     playerPoint: users[orders[i]].point,
+  //     blindCards: storeData.persistentData[roomId].blindCards,
+  //     orderNum: 0,
+  //     userList: userDispList
+  //   });
+  //   LOGGER.debug(
+  //     "gameReadyのレスポンス(二番目以降)： " +
+  //       JSON.stringify({
+  //         card: users[orders[i]].card,
+  //         yourTurn: false,
+  //         playerName: users[orders[0]].dispName
+  //       })
+  //   );
+  // }
 }
 
 module.exports.notifyGiveCard = (roomId,playerNum) => {
