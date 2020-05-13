@@ -10,11 +10,17 @@ const LOGGER = loggerUtil.logger;
 const debug = process.env.DEBUG === "true" ? true : false;
 const TRUMP_TEMP = debug ? commonUtil.DEBUG_TRUMPDATA : commonUtil.TRUMPDATA;
 
+module.exports.setInit = (count, sockets, roomId) => {
+  let roomInfo = storeData.persistentData[roomId];
+  //roomInfo.setNum = roomInfo.setNum + 1;
+  roomInfo.currentSetNum += 1;
+  //this.gameInit(count, sockets, roomId);
+}
 
 module.exports.gameInit = (count, sockets, roomId) => {
   let roomInfo = storeData.persistentData[roomId];
   let users = roomInfo.users;
-  gameDataInit();
+  gameDataInit(roomInfo, users);
   // roomInfo.fieldCards = [];
   // roomInfo.finishNum = 0;
   // roomInfo.elevenback = false;
@@ -55,6 +61,7 @@ module.exports.gameInit = (count, sockets, roomId) => {
 }
 
 const gameDataInit = (roomInfo, users) => {
+  if(roomInfo.)
   roomInfo.fieldCards = [];
   roomInfo.finishNum = 0;
   roomInfo.elevenback = false;
@@ -72,12 +79,7 @@ const gameDataInit = (roomInfo, users) => {
   });
 }
 
-module.exports.setInit = (count, sockets, roomId) => {
-  let roomInfo = storeData.persistentData[roomId];
-  //roomInfo.setNum = roomInfo.setNum + 1;
-  roomInfo.currentSetNum += 1;
-  //this.gameInit(count, sockets, roomId);
-}
+
 
 module.exports.checkOut = (sc, roomId, userId, currentTurn) => {
   
