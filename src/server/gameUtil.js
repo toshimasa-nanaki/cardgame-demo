@@ -307,18 +307,23 @@ const decideOrder = roomId => {
   if (roomInfo.gameNum == 1) {
     //1回目の場合はランダム順
     commonUtil.sortArrayRandomly(Object.keys(users)).forEach(key => {
-      order.push(key);
+      order.push({userId: key, status: ""});
     });
     LOGGER.info("第1回ゲームの順序: " + order);
   } else {
     //2回目以降は大貧民が一番。そこからは1回目の順番を継承して進む。(オリジナル)
     //TODO? 実際は大貧民から時計回り。
+    //最下位のメンバー
     let userRank = [];
+    //全員のランクをクリアしながら最下位のユーザを探す
+    let lowestUserId = "";
     Object.keys(users).forEach(key => {
-      userRank.push({ id: key, rankNum: users[key].rankNum });
+      if(users[key].rankNum === roomInfo.capacity) lowestUserId = key;
+      //userRank.push({ id: key, rankNum: users[key].rankNum });
       users[key].rankNum = 0;
       users[key].rank = "";
     });
+    
     userRank
       .sort(function(a, b) {
         if (a.rankNum > b.rankNum) return -1;
