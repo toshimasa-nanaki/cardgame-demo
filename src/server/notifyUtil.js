@@ -9,9 +9,10 @@ const LOGGER = loggerUtil.logger;
 const io = commonRequire.io;
 
 module.exports.notifyGameReady = roomId => {
-  storeData.persistentData[roomId].giveCardCount = 0;
-  const orders = storeData.persistentData[roomId]["order"];
-  const users = storeData.persistentData[roomId]["users"];
+  const roomInfo = storeData.persistentData[roomId];
+  roomInfo.giveCardCount = 0;
+  const orders = roomInfo.order;
+  const users = roomInfo.users;
   const userDispList = [];
   Object.keys(users).forEach(key => {
     userDispList.push(users[key].dispName);
@@ -19,6 +20,19 @@ module.exports.notifyGameReady = roomId => {
   // for (let [key, value] of Object.entries(orders)) {
   //   userDispList.push(value.dispName);
   // }
+  orders.forEach((element, index) => {
+    io.to(element.userId).emit("gameReady", {
+    gameNum: roomInfo.gameNum,
+    card: users[element.userId].card,
+    yourTurn: index === 0 ? true : false,
+    playerName: users[orders[0].userId].dispName,
+    playerName2: users[element.userId].dispName,
+    playerPoint: users[element.userId].point,
+    blindCards: roomInfo.blindCards,
+    orderNum: 0,
+    userList: userDispList
+  });
+  });
   io.to(orders[0]).emit("gameReady", {
     gameNum: storeData.persistentData[roomId].gameNum,
     card: users[orders[0]].card,
