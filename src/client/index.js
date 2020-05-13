@@ -399,7 +399,7 @@ $(function() {
     $("#giveCard").hide();
     $("#playerInfoDropdown").show();
     $("#rank").text("");
-    $("#rematch").hide();
+    //$("#rematch").hide();
     $("#seiseki").text("");
     //$("#field").text("なし");
     $("#field").empty();
@@ -594,7 +594,7 @@ $(function() {
     $("#giveCard").hide();
     $("#playerInfoDropdown").show();
     $("#rank").text("");
-    $("#rematch").hide();
+    //$("#rematch").hide();
     $("#seiseki").text("");
     $("#field").empty();
     $("#other").text("");
@@ -1236,24 +1236,14 @@ $(function() {
   });
   socket.on("nextGameStart", function(msg) {
     debugLog("next game start");
-    //$("#rematch").show();
     msg.ranking.forEach(function(key) {});
-    //$("#gameCommentaryArea").append("10秒後に次のゲームを始めます。<br />");
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );
     socket.emit("rematch", {
-      //id: $("input[name=roomRadios]:checked").val(),
       id: $("#roomId").text(),
       roomid: $("#roomId").text()
-      //roomid: $("input[name=roomRadios]:checked").val()
     });
-    // sleep(10, function () {
-    //   socket.emit("rematch", {
-    //     id: $("input[name=roomRadios]:checked").val(),
-    //     roomid: $("input[name=roomRadios]:checked").val()
-    //   });
-    // });
   });
   socket.on("gameSet", function(msg) {
     debugLog("game set");
@@ -1297,22 +1287,22 @@ $(function() {
     location.reload();
   });
 
-  $("#rematch").click(function() {
-    $("#rank").text("");
-    $("#rematch").hide();
-    $("#seiseki").text("");
-    $("#field").empty();
-    $("#other").text("");
-    $("#elevenback").text("");
-    $("#shibari").text("");
-    $("#revolution").text("");
-    socket.emit("rematch", {
-      id: $("#roomId").text(),
-      roomid: $("#roomId").text()
-      // id: $("input[name=roomRadios]:checked").val(),
-      // roomid: $("input[name=roomRadios]:checked").val()
-    });
-  });
+  // $("#rematch").click(function() {
+  //   $("#rank").text("");
+  //   $("#rematch").hide();
+  //   $("#seiseki").text("");
+  //   $("#field").empty();
+  //   $("#other").text("");
+  //   $("#elevenback").text("");
+  //   $("#shibari").text("");
+  //   $("#revolution").text("");
+  //   socket.emit("rematch", {
+  //     id: $("#roomId").text(),
+  //     roomid: $("#roomId").text()
+  //     // id: $("input[name=roomRadios]:checked").val(),
+  //     // roomid: $("input[name=roomRadios]:checked").val()
+  //   });
+  // });
 
   // setIntervalを使う方法
   function sleep(waitSec, callbackFunc) {

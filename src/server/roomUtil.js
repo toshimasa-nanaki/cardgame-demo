@@ -86,7 +86,7 @@ module.exports.joinRoom = (joinInfo, socketObj) => {
     const currentPlayerNum = Object.keys(storeData.persistentData[joinInfo.roomId]["users"]).length;
     if (currentPlayerNum === roomCapacity) {
       LOGGER.info("There were members in the room.");
-      gameUtil.gameInit(currentPlayerNum, storeData.persistentData[joinInfo.roomId]["users"], joinInfo.roomId);
+      gameUtil.gameInit(joinInfo.roomId);
     }
   
 };

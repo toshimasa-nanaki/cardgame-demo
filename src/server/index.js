@@ -31,8 +31,7 @@ commonRequire.io.on("connection", socket => {
   //再戦
   socket.on("rematch", function(msg) {
     const roomInfo = storeData.persistentData[msg.id];
-    const count = storeData.persistentData[msg.id].capacity;
-    if (Object.keys(roomInfo.users).length == count) {
+    if (Object.keys(roomInfo.users).length === roomInfo.capacity) {
       //人数がそろっているのか確認
       gameUtil.gameInit(msg.id);
     } else {
