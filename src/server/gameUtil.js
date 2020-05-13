@@ -14,21 +14,22 @@ const TRUMP_TEMP = debug ? commonUtil.DEBUG_TRUMPDATA : commonUtil.TRUMPDATA;
 module.exports.gameInit = (count, sockets, roomId) => {
   let roomInfo = storeData.persistentData[roomId];
   let users = roomInfo.users;
-  roomInfo.fieldCards = [];
-  roomInfo.finishNum = 0;
-  roomInfo.elevenback = false;
-  roomInfo.shibari = false;
-  roomInfo.revolution = false;
-  roomInfo.stair = false;
-  roomInfo.order = [];
-  roomInfo.startedGame = true;
-  roomInfo.status = "inProgress";
-  roomInfo.rankCount = 1;
-  //もらったカード、あげたカードをクリアする
-  Object.keys(users).forEach(key => {
-    users[key].getCard = [];
-    users[key].giveCard = [];
-  });
+  gameDataInit();
+  // roomInfo.fieldCards = [];
+  // roomInfo.finishNum = 0;
+  // roomInfo.elevenback = false;
+  // roomInfo.shibari = false;
+  // roomInfo.revolution = false;
+  // roomInfo.stair = false;
+  // roomInfo.order = [];
+  // roomInfo.startedGame = true;
+  // roomInfo.status = "inProgress";
+  // roomInfo.rankCount = 1;
+  // //もらったカード、あげたカードをクリアする
+  // Object.keys(users).forEach(key => {
+  //   users[key].getCard = [];
+  //   users[key].giveCard = [];
+  // });
   
   //まずは順番決め
   decideOrder(roomId);
@@ -53,11 +54,29 @@ module.exports.gameInit = (count, sockets, roomId) => {
   }
 }
 
+const gameDataInit = (roomInfo, users) => {
+  roomInfo.fieldCards = [];
+  roomInfo.finishNum = 0;
+  roomInfo.elevenback = false;
+  roomInfo.shibari = false;
+  roomInfo.revolution = false;
+  roomInfo.stair = false;
+  roomInfo.order = [];
+  roomInfo.startedGame = true;
+  roomInfo.status = "inProgress";
+  roomInfo.rankCount = 1;
+  //もらったカード、あげたカードをクリアする
+  Object.keys(users).forEach(key => {
+    users[key].getCard = [];
+    users[key].giveCard = [];
+  });
+}
+
 module.exports.setInit = (count, sockets, roomId) => {
   let roomInfo = storeData.persistentData[roomId];
-  roomInfo.setNum = roomInfo.setNum + 1;
-  roomInfo.currentSetNum = roomInfo.setNum;
-  this.gameInit(count, sockets, roomId);
+  //roomInfo.setNum = roomInfo.setNum + 1;
+  roomInfo.currentSetNum += 1;
+  //this.gameInit(count, sockets, roomId);
 }
 
 module.exports.checkOut = (sc, roomId, userId, currentTurn) => {
