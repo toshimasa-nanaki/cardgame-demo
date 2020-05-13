@@ -30,10 +30,11 @@ commonRequire.io.on("connection", socket => {
 
   //再戦
   socket.on("rematch", function(msg) {
+    const roomInfo = storeData.persistentData[msg.id];
     const count = storeData.persistentData[msg.id].capacity;
-    if (Object.keys(storeData.persistentData[msg.id]["users"]).length == count) {
+    if (Object.keys(roomInfo.users).length == count) {
       //人数がそろっているのか確認
-      gameUtil.gameInit(count, socket.nsp.adapter.rooms[msg.id].sockets, msg.id);
+      gameUtil.gameInit(msg.id);
     } else {
       //TODO 解散
       console.log("人数が足りないので解散する");

@@ -10,14 +10,14 @@ const LOGGER = loggerUtil.logger;
 const debug = process.env.DEBUG === "true" ? true : false;
 const TRUMP_TEMP = debug ? commonUtil.DEBUG_TRUMPDATA : commonUtil.TRUMPDATA;
 
-module.exports.setInit = (count, sockets, roomId) => {
+module.exports.setInit = (roomId) => {
   let roomInfo = storeData.persistentData[roomId];
   //roomInfo.setNum = roomInfo.setNum + 1;
   roomInfo.currentSetNum += 1;
-  //this.gameInit(count, sockets, roomId);
+  this.gameInit(roomId);
 }
 
-module.exports.gameInit = (count, sockets, roomId) => {
+module.exports.gameInit = (roomId) => {
   let roomInfo = storeData.persistentData[roomId];
   let users = roomInfo.users;
   gameDataInit(roomInfo, users);
@@ -41,7 +41,7 @@ module.exports.gameInit = (count, sockets, roomId) => {
   decideOrder(roomId);
 
   //カード配布
-  handOutCards(count, roomId);
+  handOutCards(roomInfo.capacity, roomId);
 
   //準備完了通知
   if (roomInfo.gameNum == 1) {
