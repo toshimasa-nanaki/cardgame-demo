@@ -82,8 +82,6 @@ const gameDataInit = (roomInfo, users) => {
 
 
 module.exports.checkOut = (sc, roomId, userId, currentTurn) => {
-  
-  //if (users[socket.id].card.length <= 0) {
       //成績をチェックする。
       checkRank(sc, roomId, userId);
       commonRequire.io.to(userId).emit("finish", {
