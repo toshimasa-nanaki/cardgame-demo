@@ -138,9 +138,12 @@ module.exports.notifyChangeTurn = (currentTurnIndex, roomId) => {
   //   //現在のユーザがすでに上がっている場合
   //   storeData.persistentData[roomId]["order"].splice(currentTurnIndex, 1);
   // }
-  let tryCount = roomInfo.capacity - 1;
-  while(tryCount >= 1){
-    
+  let tryCount = 0;
+  let n;
+  while(tryCount < roomInfo.capacity - 1){
+    tryCount++;
+    const preNextTurn = currentTurnIndex + tryCount >= roomInfo.capcity ? currentTurnIndex + tryCount - roomInfo.capacity : currentTurnIndex + tryCount;
+    if(currentTurnIndex + tryCount) 
   }
   orderList.forEach(element => {
     remainingCards.push({
