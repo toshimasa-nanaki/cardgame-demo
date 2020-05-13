@@ -13,7 +13,7 @@ module.exports.notifyGameReady = roomId => {
   const orders = storeData.persistentData[roomId]["order"];
   const users = storeData.persistentData[roomId]["users"];
   const userDispList = [];
-  orders.forEach(key => {
+  Object.keys(users).forEach(key => {
     userDispList.push(users[key].dispName);
   });
   // for (let [key, value] of Object.entries(orders)) {
