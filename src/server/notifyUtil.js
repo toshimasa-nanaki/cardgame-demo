@@ -125,18 +125,24 @@ module.exports.notifyGiveCard = (roomId,playerNum) => {
 }
 
 module.exports.notifyChangeTurn = (currentTurnIndex, roomId) => {
-  const orderList = storeData.persistentData[roomId]["order"];
-  const users = storeData.persistentData[roomId]["users"]; 
+  const roomInfo = storeData.persistentData[roomId];
+  const orderList = roomInfo.order;
+  const users = roomInfo.users;
+  
   let nextTurn =
     currentTurnIndex != orderList.length - 1 ? currentTurnIndex + 1 : 0;
   let nextTurnUserId = orderList[nextTurn];
   let currentTurnUserId = orderList[currentTurnIndex];
   const remainingCards = [];
-  if (users[orderList[currentTurnIndex]].rankNum != 0) {
-    //現在のユーザがすでに上がっている場合
-    storeData.persistentData[roomId]["order"].splice(currentTurnIndex, 1);
+  // if (users[orderList[currentTurnIndex]].rankNum != 0) {
+  //   //現在のユーザがすでに上がっている場合
+  //   storeData.persistentData[roomId]["order"].splice(currentTurnIndex, 1);
+  // }
+  let tryCount = roomInfo.capacity - 1;
+  while(tryCount >= 1){
+    
   }
-  orderList.forEach(key => {
+  orderList.forEach(element => {
     remainingCards.push({
       cardNum: users[key].card.length,
       playerName: users[key].dispName
@@ -165,11 +171,6 @@ module.exports.notifyChangeTurn = (currentTurnIndex, roomId) => {
     orders: remainingCards
   });
   storeData.persistentData[roomId].currentTurnPos = storeData.persistentData[roomId]["order"].indexOf(nextTurnUserId);
-  // if (users[orderList[currentTurnIndex]].rankNum != 0) {
-  //   //現在のユーザがすでに上がっている場合
-  //   storeData.persistentData[roomId]["order"].splice(currentTurnIndex, 1);
-  // }
-  //storeData.persistentData[roomId].currentTurnPos = currentTurnIndex != orderList.length - 1 ? currentTurnIndex + 1 : 0
 }
 
 module.exports.notifyAgainTurn = (roomId, userId) => {
