@@ -314,33 +314,23 @@ const decideOrder = roomId => {
     //2回目以降は大貧民が一番。そこからは1回目の順番を継承して進む。(オリジナル)
     //TODO? 実際は大貧民から時計回り。
     //最下位のメンバー
-    let userRank = [];
-    //全員のランクをクリアしながら最下位のユーザを探す
-    let lowestUserId = "";
+    // let userRank = [];
     let backRow = [];
     let isFindLowestUserId = false;
     Object.keys(users).forEach(key => {
       if(users[key].rankNum !== roomInfo.capacity && !isFindLowestUserId){
         //まだ見つからない場合は別配列に入れておく
-        backRow.push({userId: key, status: ""})
+        backRow.push({userId: key, status: ""});
       }else{
         order.push({userId: key, status: ""});
+        isFindLowestUserId = true; //無駄代入だがリスクは低いので容認
       }
-      if(users[key].rankNum === roomInfo.capacity) lowestUserId = key;
+      //if(users[key].rankNum === roomInfo.capacity) lowestUserId = key;
       //userRank.push({ id: key, rankNum: users[key].rankNum });
       users[key].rankNum = 0;
       users[key].rank = "";
     });
-    
-    userRank
-      .sort(function(a, b) {
-        if (a.rankNum > b.rankNum) return -1;
-        if (a.rankNum < b.rankNum) return 1;
-        return 0;
-      })
-      .forEach(key => {
-        order.push(key.id);
-      });
+    order.concat(backRow);
   }
 }
 
