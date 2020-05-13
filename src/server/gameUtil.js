@@ -317,7 +317,15 @@ const decideOrder = roomId => {
     let userRank = [];
     //全員のランクをクリアしながら最下位のユーザを探す
     let lowestUserId = "";
+    let backRow = [];
+    let isFindLowestUserId = false;
     Object.keys(users).forEach(key => {
+      if(users[key].rankNum !== roomInfo.capacity && !isFindLowestUserId){
+        //まだ見つからない場合は別配列に入れておく
+        backRow.push({userId: key, status: ""})
+      }else{
+        order.push({userId: key, status: ""});
+      }
       if(users[key].rankNum === roomInfo.capacity) lowestUserId = key;
       //userRank.push({ id: key, rankNum: users[key].rankNum });
       users[key].rankNum = 0;
