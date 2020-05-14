@@ -129,31 +129,32 @@ module.exports.notifyChangeTurn = (currentTurnIndex, roomId) => {
   const orderList = roomInfo.order;
   const users = roomInfo.users;
   
-  let nextTurn =
-    currentTurnIndex != orderList.length - 1 ? currentTurnIndex + 1 : 0;
-  let nextTurnUserId = orderList[nextTurn];
-  let currentTurnUserId = orderList[currentTurnIndex];
+  // let nextTurn =
+  //   currentTurnIndex != orderList.length - 1 ? currentTurnIndex + 1 : 0;
+  
   const remainingCards = [];
   // if (users[orderList[currentTurnIndex]].rankNum != 0) {
   //   //現在のユーザがすでに上がっている場合
   //   storeData.persistentData[roomId]["order"].splice(currentTurnIndex, 1);
   // }
   let tryCount = 0;
-  let n;
+  let nextTurn;
   while(tryCount < roomInfo.capacity - 1){
     tryCount++;
     const preNextTurn = currentTurnIndex + tryCount >= roomInfo.capcity ? 
           currentTurnIndex + tryCount - roomInfo.capacity : currentTurnIndex + tryCount;
     if(orderList[preNextTurn].status === ""){
       //次の順番になれる
-      n = preNextTurn;
+      nextTurn = preNextTurn;
       break;
     } 
   }
+  let nextTurnUserId = orderList[nextTurn];
+  let currentTurnUserId = orderList[currentTurnIndex];
   orderList.forEach(element => {
     remainingCards.push({
-      cardNum: users[key].card.length,
-      playerName: users[key].dispName
+      cardNum: users[element.userId].card.length,
+      playerName: users[element.userId].dispName
     });
   });
 
