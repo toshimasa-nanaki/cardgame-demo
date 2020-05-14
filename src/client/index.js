@@ -1,7 +1,7 @@
 $(function() {
   const voiceData = require("./voiceData.js");
   const constant = require("./constant.js");
-  require("bootstrap");
+  require("bootstrap.native/dist/bootstrap-native-v4");
   var socket = io();
   let audio = new Audio(voiceData.haihai);
   const debugMode =
