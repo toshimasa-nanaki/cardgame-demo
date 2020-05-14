@@ -1,6 +1,7 @@
 $(function() {
   const voiceData = require("./voiceData.js");
   const constant = require("./constant.js");
+  require("bootstrap");
   var socket = io();
   let audio = new Audio(voiceData.haihai);
   const debugMode =
