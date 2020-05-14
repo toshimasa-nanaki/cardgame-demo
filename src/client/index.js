@@ -70,6 +70,9 @@ $(function() {
         break;
     }
   });
+  /**
+   * 部屋作成完了後の動作
+   */
   socket.on("createdRoom", function(roomList) {
     //部屋作成完了後
     debugLog("CreatedRoom");
@@ -83,6 +86,7 @@ $(function() {
     createRoomCardList(roomList);
   });
 
+  //cookie
   $("#playerName").val(document.cookie.split(";")[0].split("=")[1]);
 
   function createRoomCardList(roomList) {
