@@ -123,7 +123,6 @@ $(function() {
       divCard.append(divCardStatus, divCardBody);
       $("#selectRoomList2").prepend(divCard);
     });
-    //$("#selectRoomList > :first > input").prop("checked", true);
   }
 
   // 部屋一覧のラジオボタン生成
@@ -441,7 +440,6 @@ $(function() {
     $("#bottomController").show();
     $("#send").prop("disabled", true);
     $("#pass").prop("disabled", true);
-    $("#cardList").empty();
     $("#cardList2").empty();
     $("#giveCardList").empty();
     $("#playerNameDisp").text(msg.playerName2);

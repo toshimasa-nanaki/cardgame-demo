@@ -34,7 +34,7 @@ module.exports.LOSE_REASON_DIC = {
     fallingOutCity: "都落ちのため、負けとなりました。"
   };
 
-const DISPLAY_IMAGE_ID = {
+module.exports.DISPLAY_IMAGE_ID = {
     spade3: "spade_3",
     spade4: "spade_4",
     spade5: "spade_5",
@@ -91,7 +91,7 @@ const DISPLAY_IMAGE_ID = {
     joker299: "joker_red"
   };
 
-const DISPLAY_DIC = {
+module.exports.DISPLAY_DIC = {
     spade3: "♠3",
     spade4: "♠4",
     spade5: "♠5",
