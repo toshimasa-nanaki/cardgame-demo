@@ -156,14 +156,7 @@ $(function() {
     });
     $("#selectRoomList > :first > input").prop("checked", true);
   }
-  // $("#joinRoom").click(function() {
-  //   let roomId = $("input[name=roomRadios]:checked").val();
-  //   socket.emit("join", {
-  //     roomId: $("input[name=roomRadios]:checked").val(),
-  //     playerName: $("#playerName").val()
-  //   });
-  //   document.cookie = 'name=' + $("#playerName").val() + '; max-age=259200';
-  // });
+
   socket.on("connectRetry", function(leaveMemberInfo){
     debugLog("Retryモード");
     //選択画面を開く。
@@ -327,23 +320,9 @@ $(function() {
           if (!$(this).is(".checked")) {
             // チェックが入っていない画像をクリックした場合、チェックを入れます。
             $(this).addClass("checked");
-            // if ($("img.handCardImage.checked").length !== 0 && msg.yourTurn) {
-            //   // ボタン有効
-            //   $("#send").prop("disabled", false);
-            // }else{
-            //   // ボタン無効
-            //   $("#send").prop("disabled", true);
-            // }
           } else {
             // チェックが入っている画像をクリックした場合、チェックを外します。
             $(this).removeClass("checked");
-            // if ($("img.handCardImage.checked").length !== 0 && msg.yourTurn) {
-            //   // ボタン有効
-            //   $("#send").prop("disabled", false);
-            // }else{
-            //   // ボタン無効
-            //   $("#send").prop("disabled", true);
-            // }
           }
         });
       var check = $(
