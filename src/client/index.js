@@ -6,136 +6,13 @@ $(function() {
   const debugMode =
     location.search.substring(1) === "debug=true" ? true : false;
   const debugLog = debugMode ? console.log.bind(console) : () => {};
-  
-  
-  
-  const LOSE_REASON_DIC = {
-    spade3Finish: "スペ3あがりのため、反則負けとなりました。",
-    jokerFinish: "ジョーカーあがりのため、反則負けとなりました。",
-    card8Finish: "非階段状態での8あがりのため、反則負けとなりました。",
-    card3Finish: "革命状態での3あがりのため、反則負けとなりました。",
-    card2Finish: "非革命状態での2あがりのため、反則負けとなりました。",
-    card11Finish: "11Backあがりのため、反則負けとなりました。",
-    fallingOutCity: "都落ちのため、負けとなりました。"
-  };
-  const DISPLAY_IMAGE_ID = {
-    spade3: "spade_3",
-    spade4: "spade_4",
-    spade5: "spade_5",
-    spade6: "spade_6",
-    spade7: "spade_7",
-    spade8: "spade_8",
-    spade9: "spade_9",
-    spade10: "spade_10",
-    spade11: "spade_jack",
-    spade12: "spade_queen",
-    spade13: "spade_king",
-    spade14: "spade_1",
-    spade15: "spade_2",
-    club3: "club_3",
-    club4: "club_4",
-    club5: "club_5",
-    club6: "club_6",
-    club7: "club_7",
-    club8: "club_8",
-    club9: "club_9",
-    club10: "club_10",
-    club11: "club_jack",
-    club12: "club_queen",
-    club13: "club_king",
-    club14: "club_1",
-    club15: "club_2",
-    diamond3: "diamond_3",
-    diamond4: "diamond_4",
-    diamond5: "diamond_5",
-    diamond6: "diamond_6",
-    diamond7: "diamond_7",
-    diamond8: "diamond_8",
-    diamond9: "diamond_9",
-    diamond10: "diamond_10",
-    diamond11: "diamond_jack",
-    diamond12: "diamond_queen",
-    diamond13: "diamond_king",
-    diamond14: "diamond_1",
-    diamond15: "diamond_2",
-    heart3: "heart_3",
-    heart4: "heart_4",
-    heart5: "heart_5",
-    heart6: "heart_6",
-    heart7: "heart_7",
-    heart8: "heart_8",
-    heart9: "heart_9",
-    heart10: "heart_10",
-    heart11: "heart_jack",
-    heart12: "heart_queen",
-    heart13: "heart_king",
-    heart14: "heart_1",
-    heart15: "heart_2",
-    joker199: "joker_black",
-    joker299: "joker_red"
-  };
-  const DISPLAY_DIC = {
-    spade3: "♠3",
-    spade4: "♠4",
-    spade5: "♠5",
-    spade6: "♠6",
-    spade7: "♠7",
-    spade8: "♠8",
-    spade9: "♠9",
-    spade10: "♠10",
-    spade11: "♠J",
-    spade12: "♠Q",
-    spade13: "♠K",
-    spade14: "♠A",
-    spade15: "♠2",
-    club3: "♧3",
-    club4: "♧4",
-    club5: "♧5",
-    club6: "♧6",
-    club7: "♧7",
-    club8: "♧8",
-    club9: "♧9",
-    club10: "♧10",
-    club11: "♧J",
-    club12: "♧Q",
-    club13: "♧K",
-    club14: "♧A",
-    club15: "♧2",
-    diamond3: "♦3",
-    diamond4: "♦4",
-    diamond5: "♦5",
-    diamond6: "♦6",
-    diamond7: "♦7",
-    diamond8: "♦8",
-    diamond9: "♦9",
-    diamond10: "♦10",
-    diamond11: "♦J",
-    diamond12: "♦Q",
-    diamond13: "♦K",
-    diamond14: "♦A",
-    diamond15: "♦2",
-    heart3: "♥3",
-    heart4: "♥4",
-    heart5: "♥5",
-    heart6: "♥6",
-    heart7: "♥7",
-    heart8: "♥8",
-    heart9: "♥9",
-    heart10: "♥10",
-    heart11: "♥J",
-    heart12: "♥Q",
-    heart13: "♥K",
-    heart14: "♥A",
-    heart15: "♥2",
-    joker199: "JOKER",
-    joker299: "JOKER"
-  };
+
   function mypreload() {
-    Object.keys(DISPLAY_IMAGE_ID).forEach(key => {
+    Object.keys(constant.DISPLAY_IMAGE_ID).forEach(key => {
       $("<img>").attr(
         "src",
         "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
-          DISPLAY_IMAGE_ID[key] +
+          constant.DISPLAY_IMAGE_ID[key] +
           ".png"
       );
     });
@@ -413,7 +290,7 @@ $(function() {
       pos++;
     });
     msg.blindCards.forEach(ele => {
-      $("#blindCards").append($('<li>' + DISPLAY_DIC[ele.type + ele.number] +'</li>'));
+      $("#blindCards").append($('<li>' + constant.DISPLAY_DIC[ele.type + ele.number] +'</li>'));
     });
     msg.roomInfo.rankingHistory.forEach(ele => {
       let mes = "";
@@ -428,7 +305,7 @@ $(function() {
       //場にカードを置く
       const imgUri =
         "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
-        DISPLAY_IMAGE_ID[msg.roomInfo.fieldCards[i].type + msg.roomInfo.fieldCards[i].number] +
+        constant.DISPLAY_IMAGE_ID[msg.roomInfo.fieldCards[i].type + msg.roomInfo.fieldCards[i].number] +
         ".png";
       let li = $("<li></li>").append(
         $('<img class="fieldCardImage" src="' + imgUri + '"></img>')
@@ -439,7 +316,7 @@ $(function() {
       const cardType = element.number + element.type;
       const imgUri =
         "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
-        DISPLAY_IMAGE_ID[element.type + element.number] +
+        constant.DISPLAY_IMAGE_ID[element.type + element.number] +
         ".png";
       //画像データを取得する
       let img = $('<img class="handCardImage" src="' + imgUri + '"></img>')
@@ -600,13 +477,13 @@ $(function() {
       }
     }
     msg.blindCards.forEach(ele => {
-      $("#blindCards").append($('<li>' + DISPLAY_DIC[ele.type + ele.number] +'</li>'));
+      $("#blindCards").append($('<li>' + constant.DISPLAY_DIC[ele.type + ele.number] +'</li>'));
     });
     msg.card.forEach(element => {
       const cardType = element.number + element.type;
       const imgUri =
         "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
-        DISPLAY_IMAGE_ID[element.type + element.number] +
+        constant.DISPLAY_IMAGE_ID[element.type + element.number] +
         ".png";
       //画像データを取得する
       let img = $('<img class="handCardImage" src="' + imgUri + '"></img>')
@@ -713,7 +590,7 @@ $(function() {
     msg.targetCard.forEach(element => {
       const imgUri =
         "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
-        DISPLAY_IMAGE_ID[element.type + element.number] +
+        constant.DISPLAY_IMAGE_ID[element.type + element.number] +
         ".png";
       let li = $("<li></li>").append(
         $('<img class="giveCardViewImage" src="' + imgUri + '"></img>')
@@ -722,9 +599,9 @@ $(function() {
     });
     $("#gameCommentaryArea").append(
       "大富豪に上記の" +
-        DISPLAY_DIC[msg.targetCard[0].type + msg.targetCard[0].number] +
+        constant.DISPLAY_DIC[msg.targetCard[0].type + msg.targetCard[0].number] +
         "と" +
-        DISPLAY_DIC[msg.targetCard[1].type + msg.targetCard[1].number] +
+        constant.DISPLAY_DIC[msg.targetCard[1].type + msg.targetCard[1].number] +
         "を渡します。<br />"
     );
     $("#gameCommentaryArea").scrollTop(
@@ -741,7 +618,7 @@ $(function() {
       const cardType = element.number + element.type;
       const imgUri =
         "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
-        DISPLAY_IMAGE_ID[element.type + element.number] +
+        constant.DISPLAY_IMAGE_ID[element.type + element.number] +
         ".png";
       //画像データを取得する
       let img = $('<img class="giveCardImage" src="' + imgUri + '"></img>')
@@ -813,7 +690,7 @@ $(function() {
     msg.targetCard.forEach(element => {
       const imgUri =
         "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
-        DISPLAY_IMAGE_ID[element.type + element.number] +
+        constant.DISPLAY_IMAGE_ID[element.type + element.number] +
         ".png";
       let li = $("<li></li>").append(
         $('<img class="giveCardViewImage" src="' + imgUri + '"></img>')
@@ -822,7 +699,7 @@ $(function() {
     });
     $("#gameCommentaryArea").append(
       "富豪に上記の" +
-        DISPLAY_DIC[msg.targetCard[0].type + msg.targetCard[0].number] +
+        constant.DISPLAY_DIC[msg.targetCard[0].type + msg.targetCard[0].number] +
         "を渡します。<br />"
     );
     $("#gameCommentaryArea").scrollTop(
@@ -839,7 +716,7 @@ $(function() {
       const cardType = element.number + element.type;
       const imgUri =
         "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
-        DISPLAY_IMAGE_ID[element.type + element.number] +
+        constant.DISPLAY_IMAGE_ID[element.type + element.number] +
         ".png";
       //画像データを取得する
       let img = $('<img class="giveCardImage" src="' + imgUri + '"></img>')
@@ -1011,20 +888,20 @@ $(function() {
     $("#send").prop("disabled", false);
     $("#pass").prop("disabled", false);
     $("#errorMsg").show();
-    $("#errorMsg").text(ERROR_DIC[msg.reason]);
+    $("#errorMsg").text(constant.ERROR_DIC[msg.reason]);
   });
   socket.on("result", function(msg) {
     let message = "";
     $("#field").empty();
     for (let i = 0; i < msg.card.length; i++) {
       message =
-        message + "　" + DISPLAY_DIC[msg.result[i].type + msg.result[i].number];
+        message + "　" + constant.DISPLAY_DIC[msg.result[i].type + msg.result[i].number];
       //手札削除
       $("#" + msg.card[i].type + msg.card[i].number).remove();
       //場にカードを置く
       const imgUri =
         "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
-        DISPLAY_IMAGE_ID[msg.result[i].type + msg.result[i].number] +
+        constant.DISPLAY_IMAGE_ID[msg.result[i].type + msg.result[i].number] +
         ".png";
       let li = $("<li></li>").append(
         $('<img class="fieldCardImage" src="' + imgUri + '"></img>')
@@ -1171,7 +1048,7 @@ $(function() {
     if (msg.rankReason !== "") {
       //何か問題があったと判断
       $("#gameCommentaryArea").append(
-        LOSE_REASON_DIC[msg.rankReason] + "<br/>"
+        constant.LOSE_REASON_DIC[msg.rankReason] + "<br/>"
       );
     }
     $("#gameCommentaryArea").append(
@@ -1183,7 +1060,7 @@ $(function() {
     if (msg.rankReason !== "") {
       //何か問題があったと判断
       $("#gameCommentaryArea").append(
-        msg.playerName + "さんが、" + LOSE_REASON_DIC[msg.rankReason] + "<br />"
+        msg.playerName + "さんが、" + constant.LOSE_REASON_DIC[msg.rankReason] + "<br />"
       );
     } else {
       $("#gameCommentaryArea").append(
@@ -1259,7 +1136,7 @@ $(function() {
   socket.on("releaseRoom", info => {
     debugLog("部屋がリリースされました");
     $("#releaseRoomModalBody").text("");
-    $("#releaseRoomModalBody").text(ERROR_DIC[info.reason]);
+    $("#releaseRoomModalBody").text(constant.ERROR_DIC[info.reason]);
     $("#releaseRoomModal").modal({ backdrop: "static", keyboard: false });
   });
   $("#releaseRoomModalButton").click(() => {
