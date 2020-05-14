@@ -74,9 +74,10 @@ module.exports.load_room_event = socket => {
 
 module.exports.load_game_event = socket => {
   socket.on("pass", function(msg) {
-    const orderList = storeData.persistentData[msg.id]["order"];
-    const users = storeData.persistentData[msg.id]["users"];
-    if (storeData.persistentData[msg.id].fieldCards.length === 0) {
+    const roomInfo = storeData.persistentData[msg.id];
+    const orderList = roomInfo.order;
+    const users = roomInfo.users;
+    if (roomInfo.fieldCards.length === 0) {
       //フィールドにカードが出ていない場合はパスできない。
       commonRequire.io.to(socket.id).emit("validateError", {
         error: 1,
@@ -84,8 +85,8 @@ module.exports.load_game_event = socket => {
       });
       return;
     }
-    storeData.persistentData[msg.id].passCount =
-      storeData.persistentData[msg.id].passCount + 1;
+    roomInfo.passCount =
+      roomInfo.passCount + 1;
     //const count = store[msg.id].capacity;
     LOGGER.debug(
       "今のpassCount:" +
@@ -93,7 +94,7 @@ module.exports.load_game_event = socket => {
         " 今のorderList長さ" +
         orderList.length
     );
-    if (storeData.persistentData[msg.id].passCount >= orderList.length - 1) {
+    if (roomInfo.passCount >= orderList.length - 1) {
       //パスで一周した場合流す
       LOGGER.debug("流します");
       storeData.fieldClear(msg.id);
@@ -104,6 +105,6 @@ module.exports.load_game_event = socket => {
 
     let currentTurn = orderList.indexOf(socket.id);
 
-    notifyUtil.notifyChangeTurn(currentTurn, msg.id);
+    notifyUtil.notifyChangeTurn(roomInfo.currentTurnPos, msg.id);
   });
 };

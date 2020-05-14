@@ -113,7 +113,10 @@ module.exports.notifyChangeTurn = (currentTurnIndex, roomId) => {
       console.log("今のpre" + preNextTurn);
       nextTurn = preNextTurn;
       break;
-    } 
+    } else {
+      //ここで飛ばされた分はpassと同様の扱いとする
+      roomInfo.passCount += 1;
+    }
   }
   console.log(nextTurn);
   let nextTurnUserId = orderList[nextTurn].userId;
@@ -159,15 +162,15 @@ module.exports.notifyAgainTurn = (roomId, userId) => {
       playerName: users[element.userId].dispName
     });
   });
-  for (let [key, value] of Object.entries(storeData.persistentData[roomId]["users"])) {
+  for (let [key, value] of Object.entries(users)) {
     if(key === userId){
       commonRequire.io.to(userId).emit("againTurn", {
-        orderNum: storeData.persistentData[roomId]["order"].indexOf(userId),
+        orderNum: storeData.persistentData[roomId].currentTurnPos,
         orders: remainingCards
       });
     }else{
       commonRequire.io.to(key).emit("againTurnForOtherMember", {
-        orderNum: storeData.persistentData[roomId]["order"].indexOf(userId),
+        orderNum: storeData.persistentData[roomId].currentTurnPos,
         orders: remainingCards
       });
     }
