@@ -73,7 +73,7 @@ $(function() {
   /**
    * 部屋作成完了後の動作
    */
-  socket.on("createdRoom", function(roomList) {
+  socket.on("createdRoom", roomList => {
     //部屋作成完了後
     debugLog("CreatedRoom");
     createRoomCardList(roomList);
@@ -89,8 +89,11 @@ $(function() {
   //cookie
   $("#playerName").val(document.cookie.split(";")[0].split("=")[1]);
 
+  /**
+   * ルーム一覧用のカード表示を作成する
+   */
   function createRoomCardList(roomList) {
-    Object.keys(roomList).forEach(function(key) {
+    Object.keys(roomList).forEach(key　=> {
       debugLog(roomList[key]);
       const divCard = $('<div class="card"></div>');
       const divCardStatus = $('<div class="card-header"></div>');
@@ -107,8 +110,8 @@ $(function() {
           roomList[key].capacity +
           "人)"
       );
-      pCardRoomSetNum.text("セット数：1セット(4ゲーム)");
-      pCardRoomRule.text("追加ルール：11Back,スートしばり,階段");
+      pCardRoomSetNum.text("セット数：" + roomList[key].setNum + "セット(" + roomList[key].setNum * 4 + "ゲーム)");
+      pCardRoomRule.text("追加ルール："+ roomList[key].ruleSet);
       switch (roomList[key].status) {
         case "recruiting":
           divCardStatus.text("メンバー募集中");
