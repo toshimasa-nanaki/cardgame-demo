@@ -28,51 +28,48 @@ $(function() {
       ruleSet: createRuleSet()
     });
   });
-  function createRuleSet(){
+  function createRuleSet() {
     let ruleSet = [];
-    var ele=document.getElementsByName('ruleSets');
-  for(var i=0;i<ele.length;i++){
-    if(ele[i].checked){
-      ruleSet.push(ele[i].value);
+    const ele = document.getElementsByName("ruleSets");
+    for (var i = 0; i < ele.length; i++) {
+      if (ele[i].checked) {
+        ruleSet.push(ele[i].value);
+      }
     }
-  };
     return ruleSet;
   }
-  $('#rulePresetSelectbox').change(function() {
+  $("#rulePresetSelectbox").change(function() {
     console.log($(this).val());
-    switch($(this).val()){
+    switch ($(this).val()) {
       case "default":
         $("#setNum").val("");
-        $("#elevenBackSetting").prop("checked",true);
-        $("#stairSetting").prop("checked",true);
-        $("#shibariSetting").prop("checked",true);
+        $("#elevenBackSetting").prop("checked", true);
+        $("#stairSetting").prop("checked", true);
+        $("#shibariSetting").prop("checked", true);
         break;
       case "official":
         $("#setNum").val(3);
-        $("#elevenBackSetting").prop("checked",false);
-        $("#stairSetting").prop("checked",true);
-        $("#shibariSetting").prop("checked",true);
+        $("#elevenBackSetting").prop("checked", false);
+        $("#stairSetting").prop("checked", true);
+        $("#shibariSetting").prop("checked", true);
         break;
     }
-        //var str = $(this).val();
   });
   socket.on("createdRoom", function(roomList) {
     //部屋作成完了後
     debugLog("CreatedRoom");
-    //createSelectRoomRadioButton(roomList);
     createRoomCardList(roomList);
-    $('#nav-tab a[href="#nav-joinroom"]').tab('show')
+    $('#nav-tab a[href="#nav-joinroom"]').tab("show");
   });
 
   socket.on("showRoomList", function(roomList) {
     //サーバ接続時に部屋一覧を渡す
     debugLog("ShowRoom");
     createRoomCardList(roomList);
-    //createSelectRoomRadioButton(roomList);
   });
-  
-  $("#playerName").val(document.cookie.split(';')[0].split("=")[1]);
-  
+
+  $("#playerName").val(document.cookie.split(";")[0].split("=")[1]);
+
   function createRoomCardList(roomList) {
     Object.keys(roomList).forEach(function(key) {
       debugLog(roomList[key]);
@@ -83,21 +80,30 @@ $(function() {
       const pCardRoomSetNum = $('<p class="card-text"></p>');
       const pCardRoomRule = $('<p class="card-text"></p>');
       let buttonJoinRoom = "";
-      
-      pCardRoomTitle.text("部屋名："+ roomList[key].roomDispName + "(定員：" + roomList[key].capacity + "人)");
+
+      pCardRoomTitle.text(
+        "部屋名：" +
+          roomList[key].roomDispName +
+          "(定員：" +
+          roomList[key].capacity +
+          "人)"
+      );
       pCardRoomSetNum.text("セット数：1セット(4ゲーム)");
       pCardRoomRule.text("追加ルール：11Back,スートしばり,階段");
-      switch(roomList[key].status){
+      switch (roomList[key].status) {
         case "recruiting":
           divCardStatus.text("メンバー募集中");
-          buttonJoinRoom = $("<button>参加</button>").addClass("btn btn-outline-primary").on("click", () => {
-            $("#roomId").text(roomList[key].roomId);
-            socket.emit("join", {
+          buttonJoinRoom = $("<button>参加</button>")
+            .addClass("btn btn-outline-primary")
+            .on("click", () => {
+              $("#roomId").text(roomList[key].roomId);
+              socket.emit("join", {
                 roomId: roomList[key].roomId,
                 playerName: $("#playerName").val()
+              });
+              document.cookie =
+                "name=" + $("#playerName").val() + "; max-age=259200";
             });
-            document.cookie = 'name=' + $("#playerName").val() + '; max-age=259200';
-          });
           break;
         case "inProgress":
           divCard.addClass("bg-primary text-white");
@@ -106,18 +112,21 @@ $(function() {
         case "urgentRecruiting":
           divCard.addClass("bg-warning");
           divCardStatus.text("メンバー緊急募集中");
-          buttonJoinRoom = $("<button>緊急参加(再接続)</button>").addClass("btn btn-outline-danger").on("click", () => {
-            $("#roomId").text(roomList[key].roomId);
-            socket.emit("join", {
+          buttonJoinRoom = $("<button>緊急参加(再接続)</button>")
+            .addClass("btn btn-outline-danger")
+            .on("click", () => {
+              $("#roomId").text(roomList[key].roomId);
+              socket.emit("join", {
                 roomId: roomList[key].roomId,
                 playerName: $("#playerName").val()
+              });
+              document.cookie =
+                "name=" + $("#playerName").val() + "; max-age=259200";
             });
-            document.cookie = 'name=' + $("#playerName").val() + '; max-age=259200';
-          });
           break;
-      } 
+      }
       divCardBody.append(pCardRoomTitle, pCardRoomSetNum, pCardRoomRule);
-      if(buttonJoinRoom != ""){
+      if (buttonJoinRoom != "") {
         divCardBody.append(buttonJoinRoom);
       }
       divCard.append(divCardStatus, divCardBody);
@@ -156,7 +165,7 @@ $(function() {
     $("#selectRoomList > :first > input").prop("checked", true);
   }
 
-  socket.on("connectRetry", function(leaveMemberInfo){
+  socket.on("connectRetry", function(leaveMemberInfo) {
     debugLog("Retryモード");
     //選択画面を開く。
     createSelectConnectMemberButton(leaveMemberInfo.leaveUserInfo);
@@ -189,7 +198,7 @@ $(function() {
     });
     $("#selectMemberList > :first > input").prop("checked", true);
   }
-  
+
   $("#retryConnectRoomButton").click(function() {
     //let reconnectUserId = $("input[name=memberRadios]:checked").val();
     socket.emit("reJoin", {
@@ -198,24 +207,24 @@ $(function() {
       reconnectUserId: $("input[name=memberRadios]:checked").val(),
       playerName: $("#playerName").val()
     });
-    $("#retryConnectModal").modal('hide');
-    document.cookie = 'name=' + $("#playerName").val() + '; max-age=259200';
+    $("#retryConnectModal").modal("hide");
+    document.cookie = "name=" + $("#playerName").val() + "; max-age=259200";
   });
-  
+
   socket.on("reJoinOK", function(msg) {
-    if(msg.roomInfo.giveCardPhase){
-      switch(msg.giveInfo.type){
+    if (msg.roomInfo.giveCardPhase) {
+      switch (msg.giveInfo.type) {
         case "lower1":
-          giveToHigherStatus1(msg.giveInfo)
+          giveToHigherStatus1(msg.giveInfo);
           break;
         case "lower2":
-          giveToHigherStatus2(msg.giveInfo)
+          giveToHigherStatus2(msg.giveInfo);
           break;
         case "higher1":
-          giveToLowerStatus1(msg.giveInfo, msg.giveInfo.alreadyGive)
+          giveToLowerStatus1(msg.giveInfo, msg.giveInfo.alreadyGive);
           break;
         case "higher2":
-          giveToLowerStatus2(msg.giveInfo, msg.giveInfo.alreadyGive)
+          giveToLowerStatus2(msg.giveInfo, msg.giveInfo.alreadyGive);
           break;
       }
       $("#roomSelectArea").hide();
@@ -226,11 +235,16 @@ $(function() {
       msg.roomInfo.rankingHistory.forEach(ele => {
         let mes = "";
         ele.ranking.forEach(function(ele2) {
-          mes = mes + constant.RANKING_DIC[ele2.rank] + " : " + ele2.dispName + "さん<br />";
+          mes =
+            mes +
+            constant.RANKING_DIC[ele2.rank] +
+            " : " +
+            ele2.dispName +
+            "さん<br />";
         });
         $("#battleResult" + ele.gameNum).append(mes);
         $("#battle" + ele.gameNum).show();
-        $("#battle" + ele.gameNum + "Content").collapse('show');
+        $("#battle" + ele.gameNum + "Content").collapse("show");
       });
       return;
     }
@@ -256,7 +270,9 @@ $(function() {
     $("#other").text("");
     $("#elevenback").text(msg.roomInfo.elevenback ? "　11Back　" : "");
     let suites = "";
-    msg.roomInfo.shibariSuites.forEach(ele => (suites = suites + constant.SUITES_DIC[ele]));
+    msg.roomInfo.shibariSuites.forEach(
+      ele => (suites = suites + constant.SUITES_DIC[ele])
+    );
     $("#shibari").text(msg.roomInfo.shibari ? "　縛り　" + suites : "");
     $("#revolution").text(msg.roomInfo.revolution ? "　革命中　" : "");
     $("#bottomController").show();
@@ -269,35 +285,44 @@ $(function() {
     $("#playerPoint").text(msg.playerPoint);
     $("#blindCards").empty();
     $("#orderList").empty();
-    let pos = 0
+    let pos = 0;
     msg.roomInfo.orders.forEach(ele => {
       let li = $("<li>").text(ele.playerName + "(" + ele.cardNum + "枚)");
-      if(pos === msg.orderNum){
-        li.attr({style: "color: red"})
+      if (pos === msg.orderNum) {
+        li.attr({ style: "color: red" });
       }
       $("#orderList").append(li);
-      if(pos !== msg.roomInfo.orders.length -1){
+      if (pos !== msg.roomInfo.orders.length - 1) {
         $("#orderList").append("→");
       }
       pos++;
     });
     msg.blindCards.forEach(ele => {
-      $("#blindCards").append($('<li>' + constant.DISPLAY_DIC[ele.type + ele.number] +'</li>'));
+      $("#blindCards").append(
+        $("<li>" + constant.DISPLAY_DIC[ele.type + ele.number] + "</li>")
+      );
     });
     msg.roomInfo.rankingHistory.forEach(ele => {
       let mes = "";
       ele.ranking.forEach(function(ele2) {
-        mes = mes + constant.RANKING_DIC[ele2.rank] + " : " + ele2.dispName + "さん<br />";
+        mes =
+          mes +
+          constant.RANKING_DIC[ele2.rank] +
+          " : " +
+          ele2.dispName +
+          "さん<br />";
       });
       $("#battleResult" + ele.gameNum).append(mes);
       $("#battle" + ele.gameNum).show();
-      $("#battle" + ele.gameNum + "Content").collapse('show');
+      $("#battle" + ele.gameNum + "Content").collapse("show");
     });
     for (let i = 0; i < msg.roomInfo.fieldCards.length; i++) {
       //場にカードを置く
       const imgUri =
         "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
-        constant.DISPLAY_IMAGE_ID[msg.roomInfo.fieldCards[i].type + msg.roomInfo.fieldCards[i].number] +
+        constant.DISPLAY_IMAGE_ID[
+          msg.roomInfo.fieldCards[i].type + msg.roomInfo.fieldCards[i].number
+        ] +
         ".png";
       let li = $("<li></li>").append(
         $('<img class="fieldCardImage" src="' + imgUri + '"></img>')
@@ -367,9 +392,9 @@ $(function() {
     }
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
-    );  
+    );
   });
-  
+
   socket.on("joinedRoom", function(joinMembers) {
     //部屋ジョイン後
     debugLog("JoinedRoom");
@@ -406,8 +431,8 @@ $(function() {
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );
-    if(msg.memberOK){
-      $("#releaseRoomModal").modal('hide');
+    if (msg.memberOK) {
+      $("#releaseRoomModal").modal("hide");
     }
   });
   socket.on("connectError", function(msg) {
@@ -446,15 +471,22 @@ $(function() {
     $("#playerPoint").text(msg.playerPoint);
     $("#blindCards").empty();
     $("#orderList").empty();
-    for(let i = 0; i < msg.userList.length; i++){
-      let ele = i === 0 ? $("<li>").text(msg.userList[i] + "(" + msg.card.length + "枚)").attr({style: "color: red"}) : $("<li>").text(msg.userList[i] + "(" + msg.card.length + "枚)");
+    for (let i = 0; i < msg.userList.length; i++) {
+      let ele =
+        i === 0
+          ? $("<li>")
+              .text(msg.userList[i] + "(" + msg.card.length + "枚)")
+              .attr({ style: "color: red" })
+          : $("<li>").text(msg.userList[i] + "(" + msg.card.length + "枚)");
       $("#orderList").append(ele);
-      if(i !== msg.userList.length -1){
+      if (i !== msg.userList.length - 1) {
         $("#orderList").append("→");
       }
     }
     msg.blindCards.forEach(ele => {
-      $("#blindCards").append($('<li>' + constant.DISPLAY_DIC[ele.type + ele.number] +'</li>'));
+      $("#blindCards").append(
+        $("<li>" + constant.DISPLAY_DIC[ele.type + ele.number] + "</li>")
+      );
     });
     msg.card.forEach(element => {
       const cardType = element.number + element.type;
@@ -562,7 +594,7 @@ $(function() {
       $("#gameCommentaryArea")[0].scrollHeight
     );
   });
-  function giveToHigherStatus2(msg){
+  function giveToHigherStatus2(msg) {
     $("#giveCard").show();
     msg.targetCard.forEach(element => {
       const imgUri =
@@ -576,9 +608,13 @@ $(function() {
     });
     $("#gameCommentaryArea").append(
       "大富豪に上記の" +
-        constant.DISPLAY_DIC[msg.targetCard[0].type + msg.targetCard[0].number] +
+        constant.DISPLAY_DIC[
+          msg.targetCard[0].type + msg.targetCard[0].number
+        ] +
         "と" +
-        constant.DISPLAY_DIC[msg.targetCard[1].type + msg.targetCard[1].number] +
+        constant.DISPLAY_DIC[
+          msg.targetCard[1].type + msg.targetCard[1].number
+        ] +
         "を渡します。<br />"
     );
     $("#gameCommentaryArea").scrollTop(
@@ -586,9 +622,9 @@ $(function() {
     );
   }
   socket.on("giveToHigherStatus2", msg => {
-    giveToHigherStatus2(msg)
+    giveToHigherStatus2(msg);
   });
-  function giveToLowerStatus2(msg, alreadyFlag){
+  function giveToLowerStatus2(msg, alreadyFlag) {
     $("#giveCard").show();
     $("#gameController2").show();
     msg.targetCard.forEach(element => {
@@ -609,7 +645,7 @@ $(function() {
             if ($("img.giveCardImage.checked").length == 2) {
               // ボタン有効
               $("#give").prop("disabled", false);
-            }else{
+            } else {
               // ボタン無効
               $("#give").prop("disabled", true);
             }
@@ -619,7 +655,7 @@ $(function() {
             if ($("img.giveCardImage.checked").length == 2) {
               // ボタン有効
               $("#give").prop("disabled", false);
-            }else{
+            } else {
               // ボタン無効
               $("#give").prop("disabled", true);
             }
@@ -643,18 +679,17 @@ $(function() {
       );
       $("#giveCardList").append(li);
     });
-    if(alreadyFlag){
+    if (alreadyFlag) {
       $("#gameCommentaryArea").append(
         "カードの譲渡処理が終了するまでお待ちください。<br />"
       );
       $("#gameController2").hide();
-    }else{
+    } else {
       $("#gameCommentaryArea").append(
-      "大貧民に渡すカードを選んでください。<br />"
+        "大貧民に渡すカードを選んでください。<br />"
       );
     }
-    
-    
+
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );
@@ -662,7 +697,7 @@ $(function() {
   socket.on("giveToLowerStatus2", msg => {
     giveToLowerStatus2(msg, false);
   });
-  function giveToHigherStatus1(msg){
+  function giveToHigherStatus1(msg) {
     $("#giveCard").show();
     msg.targetCard.forEach(element => {
       const imgUri =
@@ -676,7 +711,9 @@ $(function() {
     });
     $("#gameCommentaryArea").append(
       "富豪に上記の" +
-        constant.DISPLAY_DIC[msg.targetCard[0].type + msg.targetCard[0].number] +
+        constant.DISPLAY_DIC[
+          msg.targetCard[0].type + msg.targetCard[0].number
+        ] +
         "を渡します。<br />"
     );
     $("#gameCommentaryArea").scrollTop(
@@ -686,7 +723,7 @@ $(function() {
   socket.on("giveToHigherStatus1", msg => {
     giveToHigherStatus1(msg);
   });
-  function giveToLowerStatus1(msg, alreadyFlag){
+  function giveToLowerStatus1(msg, alreadyFlag) {
     $("#giveCard").show();
     $("#gameController2").show();
     msg.targetCard.forEach(element => {
@@ -707,7 +744,7 @@ $(function() {
             if ($("img.giveCardImage.checked").length == 1) {
               // ボタン有効
               $("#give").prop("disabled", false);
-            }else{
+            } else {
               // ボタン無効
               $("#give").prop("disabled", true);
             }
@@ -717,12 +754,12 @@ $(function() {
             if ($("img.giveCardImage.checked").length == 1) {
               // ボタン有効
               $("#give").prop("disabled", false);
-            }else{
+            } else {
               // ボタン無効
               $("#give").prop("disabled", true);
             }
           }
-    });
+        });
       var check = $(
         '<input class="disabled_checkbox" type="checkbox" checked="" />'
       )
@@ -741,15 +778,17 @@ $(function() {
       );
       $("#giveCardList").append(li);
     });
-    if(alreadyFlag){
+    if (alreadyFlag) {
       $("#gameCommentaryArea").append(
         "カードの譲渡処理が終了するまでお待ちください。<br />"
       );
       $("#gameController2").hide();
-    }else{
-      $("#gameCommentaryArea").append("貧民に渡すカードを選んでください。<br />");
+    } else {
+      $("#gameCommentaryArea").append(
+        "貧民に渡すカードを選んでください。<br />"
+      );
     }
-    
+
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );
@@ -809,14 +848,14 @@ $(function() {
     }
 
     $("#orderList").empty();
-    let pos = 0
+    let pos = 0;
     msg.orders.forEach(ele => {
       let li = $("<li>").text(ele.playerName + "(" + ele.cardNum + "枚)");
-      if(pos === msg.orderNum){
-        li.attr({style: "color: red"})
+      if (pos === msg.orderNum) {
+        li.attr({ style: "color: red" });
       }
       $("#orderList").append(li);
-      if(pos !== msg.orders.length -1){
+      if (pos !== msg.orders.length - 1) {
         $("#orderList").append("→");
       }
       pos++;
@@ -872,7 +911,9 @@ $(function() {
     $("#field").empty();
     for (let i = 0; i < msg.card.length; i++) {
       message =
-        message + "　" + constant.DISPLAY_DIC[msg.result[i].type + msg.result[i].number];
+        message +
+        "　" +
+        constant.DISPLAY_DIC[msg.result[i].type + msg.result[i].number];
       //手札削除
       $("#" + msg.card[i].type + msg.card[i].number).remove();
       //場にカードを置く
@@ -898,14 +939,14 @@ $(function() {
     $("#send").prop("disabled", false);
     $("#pass").prop("disabled", false);
     $("#orderList").empty();
-    let pos = 0
+    let pos = 0;
     msg.orders.forEach(ele => {
       let li = $("<li>").text(ele.playerName + "(" + ele.cardNum + "枚)");
-      if(pos === msg.orderNum){
-        li.attr({style: "color: red"})
+      if (pos === msg.orderNum) {
+        li.attr({ style: "color: red" });
       }
       $("#orderList").append(li);
-      if(pos !== msg.orders.length -1){
+      if (pos !== msg.orders.length - 1) {
         $("#orderList").append("→");
       }
       pos++;
@@ -915,24 +956,24 @@ $(function() {
       $("#gameCommentaryArea")[0].scrollHeight
     );
   });
-  
+
   socket.on("againTurnForOtherMember", function(msg) {
     //ふたたび誰かさんのターン
     $("#orderList").empty();
-    let pos = 0
+    let pos = 0;
     msg.orders.forEach(ele => {
       let li = $("<li>").text(ele.playerName + "(" + ele.cardNum + "枚)");
-      if(pos === msg.orderNum){
-        li.attr({style: "color: red"})
+      if (pos === msg.orderNum) {
+        li.attr({ style: "color: red" });
       }
       $("#orderList").append(li);
-      if(pos !== msg.orders.length -1){
+      if (pos !== msg.orders.length - 1) {
         $("#orderList").append("→");
       }
       pos++;
     });
   });
-  
+
   socket.on("changeStatus", function(msg) {
     switch (msg.type) {
       case "elevenback":
@@ -1037,7 +1078,10 @@ $(function() {
     if (msg.rankReason !== "") {
       //何か問題があったと判断
       $("#gameCommentaryArea").append(
-        msg.playerName + "さんが、" + constant.LOSE_REASON_DIC[msg.rankReason] + "<br />"
+        msg.playerName +
+          "さんが、" +
+          constant.LOSE_REASON_DIC[msg.rankReason] +
+          "<br />"
       );
     } else {
       $("#gameCommentaryArea").append(
@@ -1057,12 +1101,17 @@ $(function() {
       $("#gameCommentaryArea").append(
         ele.dispName + "さん : " + constant.RANKING_DIC[ele.rank] + "<br />"
       );
-      mes = mes + constant.RANKING_DIC[ele.rank] + " : " + ele.dispName + "さん<br />";
+      mes =
+        mes +
+        constant.RANKING_DIC[ele.rank] +
+        " : " +
+        ele.dispName +
+        "さん<br />";
     });
     $("#playerPoint").text(msg.point);
     $("#battleResult" + msg.gameNum).append(mes);
     $("#battle" + msg.gameNum).show();
-    $("#battle" + msg.gameNum + "Content").collapse('show');
+    $("#battle" + msg.gameNum + "Content").collapse("show");
     //$("#gameCommentaryArea").append("10秒後に次のゲームを始めます。<br />");
 
     $("#gameCommentaryArea").scrollTop(
@@ -1090,7 +1139,12 @@ $(function() {
       $("#gameCommentaryArea").append(
         ele.dispName + "さん : " + constant.RANKING_DIC[ele.rank] + "<br />"
       );
-      mes = mes + constant.RANKING_DIC[ele.rank] + " : " + ele.dispName + "さん<br />";
+      mes =
+        mes +
+        constant.RANKING_DIC[ele.rank] +
+        " : " +
+        ele.dispName +
+        "さん<br />";
     });
     $("#battleResult" + msg.gameNum).append(mes);
     $("#battle" + msg.gameNum).show();

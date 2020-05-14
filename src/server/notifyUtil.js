@@ -14,8 +14,8 @@ module.exports.notifyGameReady = roomId => {
   const orders = roomInfo.order;
   const users = roomInfo.users;
   const userDispList = [];
-  Object.keys(users).forEach(key => {
-    userDispList.push(users[key].dispName);
+  orders.forEach(key => {
+    userDispList.push(users[key.userId].dispName);
   });
   // for (let [key, value] of Object.entries(orders)) {
   //   userDispList.push(value.dispName);
