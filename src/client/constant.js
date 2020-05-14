@@ -1,3 +1,9 @@
+module.exports.RULESET_DIC = {
+    shibari: "スートしばり",
+    elevenback: "11Back",
+    stair: "階段"
+  };
+
 module.exports.SUITES_DIC = {
     spade: "♠",
     club: "♣",

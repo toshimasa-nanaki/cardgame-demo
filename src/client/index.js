@@ -155,6 +155,13 @@ $(function() {
       $("#selectRoomList2").prepend(divCard);
     });
   }
+  
+  const transRuleArrayToString = (ruleArray) => {
+    let str = "";
+    ruleArray.forEach(ele => {
+      str += constant.RULESET_DIC[ele];
+    });
+  };
 
   // 部屋一覧のラジオボタン生成
   function createSelectRoomRadioButton(roomList) {
