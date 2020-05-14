@@ -111,7 +111,7 @@ $(function() {
           "人)"
       );
       pCardRoomSetNum.text("セット数：" + roomList[key].setNum + "セット(" + roomList[key].setNum * 4 + "ゲーム)");
-      pCardRoomRule.text("追加ルール："+ roomList[key].ruleSet);
+      pCardRoomRule.text("追加ルール："+ transRuleArrayToString(roomList[key].ruleSet));
       switch (roomList[key].status) {
         case "recruiting":
           divCardStatus.text("メンバー募集中");
@@ -158,9 +158,11 @@ $(function() {
   
   const transRuleArrayToString = (ruleArray) => {
     let str = "";
-    ruleArray.forEach(ele => {
+    ruleArray.forEach((ele, index, arr) => {
       str += constant.RULESET_DIC[ele];
+      if(index !== arr.length - 1) str += "," 
     });
+    return str;
   };
 
   // 部屋一覧のラジオボタン生成
