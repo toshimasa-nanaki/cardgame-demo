@@ -53,7 +53,8 @@ commonRequire.io.on("connection", socket => {
   socket.on("validate", function(msg) {
     const orderList = storeData.persistentData[msg.id]["order"];
     const users = storeData.persistentData[msg.id]["users"];
-    let currentTurn = orderList.indexOf(socket.id);
+    //let currentTurn = orderList.indexOf(socket.id);
+    let currentTurn = storeData.persistentData[msg.id].currentTurnPos;
     //最初に来たカードは昇順ソートしておく。(念のため)
     let validateCards = msg.cards.sort(function(a, b) {
       if (a.number < b.number) return -1;

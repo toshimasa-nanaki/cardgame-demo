@@ -127,10 +127,10 @@ module.exports.checkOut = (sc, roomId, userId, currentTurn) => {
               rankReason: storeData.persistentData[roomId]["users"][key].rankReason
             });
             storeData.persistentData[roomId].finishNum = storeData.persistentData[roomId].finishNum + 1;
-            storeData.persistentData[roomId]["order"].splice(
-              storeData.persistentData[roomId]["order"].indexOf(key),
-              1
-            );
+            // storeData.persistentData[roomId]["order"].splice(
+            //   storeData.persistentData[roomId]["order"].indexOf(key),
+            //   1
+            // );
           }
         });
       }
@@ -148,7 +148,7 @@ module.exports.checkOut = (sc, roomId, userId, currentTurn) => {
         //ここまでで決着がついた場合。(このパターンは結構特殊。4人プレイのときは先行して2人が反則負けで都落ちが発生するようなパターン。)
         //つまり二人が同時にあがったりして、びり以外という判定ができないときに通る。
         const reverseRank = aggregateBattlePhase(roomId);
-        storeData.persistentData[roomId]["order"] = reverseRank;
+        //storeData.persistentData[roomId]["order"] = reverseRank;
         Object.keys(storeData.persistentData[roomId]["users"]).forEach(function(key) {
           storeData.persistentData[roomId]["scoreTable"].some(function(ele) {
             if (storeData.persistentData[roomId]["users"][key].rank === ele.rankId) {
@@ -236,7 +236,7 @@ module.exports.checkOut = (sc, roomId, userId, currentTurn) => {
           rankReason: storeData.persistentData[roomId]["users"][lastId].rankReason
         });
         const reverseRank = aggregateBattlePhase(roomId);
-        storeData.persistentData[roomId]["order"] = reverseRank;
+        //storeData.persistentData[roomId]["order"] = reverseRank;
         Object.keys(storeData.persistentData[roomId]["users"]).forEach(function(key) {
           storeData.persistentData[roomId]["scoreTable"].some(function(ele) {
             if (storeData.persistentData[roomId]["users"][key].rank === ele.rankId) {

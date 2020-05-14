@@ -141,6 +141,7 @@ module.exports.notifyChangeTurn = (currentTurnIndex, roomId) => {
   let nextTurn;
   while(tryCount < roomInfo.capacity - 1){
     tryCount++;
+    console.log("今のcurrentTurnIndex" + currentTurnIndex);
     const preNextTurn = currentTurnIndex + tryCount >= roomInfo.capcity ? 
           currentTurnIndex + tryCount - roomInfo.capacity : currentTurnIndex + tryCount;
     console.log(orderList[preNextTurn].status);
@@ -152,8 +153,8 @@ module.exports.notifyChangeTurn = (currentTurnIndex, roomId) => {
     } 
   }
   console.log(nextTurn);
-  let nextTurnUserId = orderList[nextTurn];
-  let currentTurnUserId = orderList[currentTurnIndex];
+  let nextTurnUserId = orderList[nextTurn].userId;
+  let currentTurnUserId = orderList[currentTurnIndex].userId;
   orderList.forEach(element => {
     remainingCards.push({
       cardNum: users[element.userId].card.length,
