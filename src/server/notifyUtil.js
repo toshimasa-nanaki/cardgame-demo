@@ -20,6 +20,7 @@ module.exports.notifyGameReady = roomId => {
   // for (let [key, value] of Object.entries(orders)) {
   //   userDispList.push(value.dispName);
   // }
+  LOGGER.debug(JSON.stringify(orders));
   orders.forEach((element, index) => {
     console.log("gameReadyを送られた人" + element.userId);
     io.to(element.userId).emit("gameReady", {
