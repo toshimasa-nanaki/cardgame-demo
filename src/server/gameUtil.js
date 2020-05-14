@@ -330,7 +330,8 @@ const decideOrder = roomId => {
       users[key].rankNum = 0;
       users[key].rank = "";
     });
-    order.concat(backRow);
+    order = order.concat(backRow);
+    LOGGER.debug("第2回の順番" + JSON.stringify(order));
   }
 }
 
