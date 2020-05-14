@@ -32,22 +32,30 @@ $(function() {
       dispName: $("#roomDispName").val(),
       capacity: $("#roomcapacity").val(),
       setNum: $("#setNum").val(),
-      ruleSet: createRuleSet()
+      ruleSet: genRuleSetData()
     });
   });
-  function createRuleSet() {
+  
+  /**
+   * リクエスト用のルールセットデータを作成する
+   */
+  const genRuleSetData = () => {
     let ruleSet = [];
     const ele = document.getElementsByName("ruleSets");
-    for (var i = 0; i < ele.length; i++) {
+    for (let i = 0; i < ele.length; i++) {
       if (ele[i].checked) {
         ruleSet.push(ele[i].value);
       }
     }
     return ruleSet;
   }
-  $("#rulePresetSelectbox").change(function() {
-    console.log($(this).val());
-    switch ($(this).val()) {
+  
+  /**
+   * ルールプリセットの選択を変更した際の動作
+   */
+  $("#rulePresetSelectbox").on("change", event => {
+    console.log($(event.currentTarget).val());
+    switch ($(event.currentTarget).val()) {
       case "default":
         $("#setNum").val("");
         $("#elevenBackSetting").prop("checked", true);
