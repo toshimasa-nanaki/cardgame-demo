@@ -299,9 +299,6 @@ const decideOrder = roomId => {
     LOGGER.info("第1回ゲームの順序: " + order);
   } else {
     //2回目以降は大貧民が一番。そこからは1回目の順番を継承して進む。(オリジナル)
-    //TODO? 実際は大貧民から時計回り。
-    //最下位のメンバー
-    // let userRank = [];
     let backRow = [];
     let isFindLowestUserId = false;
     Object.keys(users).forEach(key => {
@@ -312,8 +309,6 @@ const decideOrder = roomId => {
         order.push({userId: key, status: ""});
         isFindLowestUserId = true; //無駄代入だがリスクは低いので容認
       }
-      //if(users[key].rankNum === roomInfo.capacity) lowestUserId = key;
-      //userRank.push({ id: key, rankNum: users[key].rankNum });
       users[key].rankNum = 0;
       users[key].rank = "";
     });
