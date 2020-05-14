@@ -21,6 +21,7 @@ module.exports.notifyGameReady = roomId => {
   //   userDispList.push(value.dispName);
   // }
   orders.forEach((element, index) => {
+    console.log("gameReadyを送られた人" + element.userId);
     io.to(element.userId).emit("gameReady", {
     gameNum: roomInfo.gameNum,
     card: users[element.userId].card,
