@@ -21,28 +21,14 @@ module.exports.gameInit = (roomId) => {
   let roomInfo = storeData.persistentData[roomId];
   let users = roomInfo.users;
   gameDataInit(roomInfo, users);
-  // roomInfo.fieldCards = [];
-  // roomInfo.finishNum = 0;
-  // roomInfo.elevenback = false;
-  // roomInfo.shibari = false;
-  // roomInfo.revolution = false;
-  // roomInfo.stair = false;
-  // roomInfo.order = [];
-  // roomInfo.startedGame = true;
-  // roomInfo.status = "inProgress";
-  // roomInfo.rankCount = 1;
-  // //もらったカード、あげたカードをクリアする
-  // Object.keys(users).forEach(key => {
-  //   users[key].getCard = [];
-  //   users[key].giveCard = [];
-  // });
-  
+  LOGGER.debug("第2回の順番0" + JSON.stringify(roomInfo.order));
   //まずは順番決め
   decideOrder(roomId);
-
+LOGGER.debug("第2回の順番1" + JSON.stringify(roomInfo.order));
   //カード配布
   handOutCards(roomInfo.capacity, roomId);
 
+  LOGGER.debug("第2回の順番2" + JSON.stringify(roomInfo.order));
   //準備完了通知
   if (roomInfo.gameNum == 1) {
     //1回目のゲームの場合は完了通知を送る。
@@ -55,6 +41,7 @@ module.exports.gameInit = (roomId) => {
       notifyUtil.notifyGiveCard(roomId, usersLength);
     } else {
       //2人の時などは献上はなし
+      LOGGER.debug("第2回の順番3" + JSON.stringify(roomInfo.order));
       notifyUtil.notifyGameReady(roomId);
     }
   }
