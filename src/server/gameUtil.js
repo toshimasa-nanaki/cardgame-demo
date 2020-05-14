@@ -48,21 +48,21 @@ LOGGER.debug("第2回の順番1" + JSON.stringify(roomInfo.order));
 }
 
 const gameDataInit = (roomInfo, users) => {
-  if(roomInfo.game)
-  roomInfo.fieldCards = [];
+  //if(roomInfo.game)
+  roomInfo.fieldCards.length = 0;
   roomInfo.finishNum = 0;
   roomInfo.elevenback = false;
   roomInfo.shibari = false;
   roomInfo.revolution = false;
   roomInfo.stair = false;
-  roomInfo.order = [];
+  roomInfo.order.length = 0;
   roomInfo.startedGame = true;
   roomInfo.status = "inProgress";
   roomInfo.rankCount = 1;
   //もらったカード、あげたカードをクリアする
   Object.keys(users).forEach(key => {
-    users[key].getCard = [];
-    users[key].giveCard = [];
+    users[key].getCard.length = 0;
+    users[key].giveCard.length = 0;
   });
 }
 
