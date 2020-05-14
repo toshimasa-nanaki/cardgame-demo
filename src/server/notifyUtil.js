@@ -143,12 +143,15 @@ module.exports.notifyChangeTurn = (currentTurnIndex, roomId) => {
     tryCount++;
     const preNextTurn = currentTurnIndex + tryCount >= roomInfo.capcity ? 
           currentTurnIndex + tryCount - roomInfo.capacity : currentTurnIndex + tryCount;
+    console.log(orderList[preNextTurn].status);
     if(orderList[preNextTurn].status === ""){
       //次の順番になれる
+      console.log("今のpre" + preNextTurn);
       nextTurn = preNextTurn;
       break;
     } 
   }
+  console.log(nextTurn);
   let nextTurnUserId = orderList[nextTurn];
   let currentTurnUserId = orderList[currentTurnIndex];
   orderList.forEach(element => {
@@ -166,7 +169,7 @@ module.exports.notifyChangeTurn = (currentTurnIndex, roomId) => {
         skip: false,
         //playerName: users[orderList[nextTurn]].dispName,
         playerName: users[nextTurnUserId].dispName,
-        orderNum: storeData.persistentData[roomId]["order"].indexOf(nextTurnUserId),
+        orderNum: nextTurn,
         endCurrentTurn: users[currentTurnUserId].rankNum != 0 ? currentTurnIndex : -1,
         orders: remainingCards
       });
@@ -175,11 +178,11 @@ module.exports.notifyChangeTurn = (currentTurnIndex, roomId) => {
   commonRequire.io.to(nextTurnUserId).emit("order", {
     flag: true,
     skip: users[nextTurnUserId].rank != "" ? true : false,
-    orderNum: storeData.persistentData[roomId]["order"].indexOf(nextTurnUserId),
+    orderNum: nextTurn,
     endCurrentTurn: users[currentTurnUserId].rankNum != 0 ? currentTurnIndex : -1,
     orders: remainingCards
   });
-  storeData.persistentData[roomId].currentTurnPos = storeData.persistentData[roomId]["order"].indexOf(nextTurnUserId);
+  roomInfo.currentTurnPos = nextTurn;
 }
 
 module.exports.notifyAgainTurn = (roomId, userId) => {
