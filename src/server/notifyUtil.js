@@ -33,47 +33,6 @@ module.exports.notifyGameReady = roomId => {
     userList: userDispList
   });
   });
-  // io.to(orders[0]).emit("gameReady", {
-  //   gameNum: storeData.persistentData[roomId].gameNum,
-  //   card: users[orders[0]].card,
-  //   yourTurn: true,
-  //   playerName: users[orders[0]].dispName,
-  //   playerName2: users[orders[0]].dispName,
-  //   playerPoint: users[orders[0]].point,
-  //   blindCards: storeData.persistentData[roomId].blindCards,
-  //   orderNum: 0,
-  //   userList: userDispList
-  // });
-  // LOGGER.debug(
-  //   "gameReadyのレスポンス(一番目)： " +
-  //     JSON.stringify({
-  //       gameNum: storeData.persistentData[roomId].gameNum,
-  //       card: users[orders[0]].card,
-  //       yourTurn: true,
-  //       playerName: users[orders[0]].dispName
-  //     })
-  // );
-  // for (let i = 1; i < storeData.persistentData[roomId]["order"].length; i++) {
-  //   io.to(orders[i]).emit("gameReady", {
-  //     gameNum: storeData.persistentData[roomId].gameNum,
-  //     card: users[orders[i]].card,
-  //     yourTurn: false,
-  //     playerName: users[orders[0]].dispName,
-  //     playerName2: users[orders[i]].dispName,
-  //     playerPoint: users[orders[i]].point,
-  //     blindCards: storeData.persistentData[roomId].blindCards,
-  //     orderNum: 0,
-  //     userList: userDispList
-  //   });
-  //   LOGGER.debug(
-  //     "gameReadyのレスポンス(二番目以降)： " +
-  //       JSON.stringify({
-  //         card: users[orders[i]].card,
-  //         yourTurn: false,
-  //         playerName: users[orders[0]].dispName
-  //       })
-  //   );
-  // }
 }
 
 module.exports.notifyGiveCard = (roomId,playerNum) => {
@@ -142,8 +101,12 @@ module.exports.notifyChangeTurn = (currentTurnIndex, roomId) => {
   while(tryCount < roomInfo.capacity - 1){
     tryCount++;
     console.log("今のcurrentTurnIndex" + currentTurnIndex);
-    const preNextTurn = currentTurnIndex + tryCount >= roomInfo.capcity ? 
+    const preNextTurn = currentTurnIndex + tryCount >= roomInfo.capacity ? 
           currentTurnIndex + tryCount - roomInfo.capacity : currentTurnIndex + tryCount;
+    console.log("roomInfo.capcity" + roomInfo.capacity);
+    console.log("tryCount" + tryCount);
+    console.log(currentTurnIndex + tryCount >= roomInfo.capcity);
+    console.log("今のpre" + preNextTurn);
     console.log(orderList[preNextTurn].status);
     if(orderList[preNextTurn].status === ""){
       //次の順番になれる
@@ -190,10 +153,10 @@ module.exports.notifyAgainTurn = (roomId, userId) => {
   const orderList = storeData.persistentData[roomId]["order"];
   const users = storeData.persistentData[roomId]["users"]; 
   const remainingCards = [];
-  orderList.forEach(key => {
+  orderList.forEach(element => {
     remainingCards.push({
-      cardNum: users[key].card.length,
-      playerName: users[key].dispName
+      cardNum: users[element.userId].card.length,
+      playerName: users[element.userId].dispName
     });
   });
   for (let [key, value] of Object.entries(storeData.persistentData[roomId]["users"])) {
