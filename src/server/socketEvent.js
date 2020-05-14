@@ -59,6 +59,9 @@ module.exports.load_common_event = socket => {
   });
 };
 
+/**
+ * ルーム用のイベントハンドラをロードする
+ */
 module.exports.load_room_event = socket => {
   //ルーム作成要求
   socket.on("requestRoomCreate", roomInfo => {
