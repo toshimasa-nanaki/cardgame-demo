@@ -7,7 +7,10 @@ $(function() {
   const debugMode =
     location.search.substring(1) === "debug=true" ? true : false;
   const debugLog = debugMode ? console.log.bind(console) : () => {};
-
+  
+  /**
+   * 画像のプリロード
+   */
   function mypreload() {
     Object.keys(constant.DISPLAY_IMAGE_ID).forEach(key => {
       $("<img>").attr(
@@ -18,9 +21,12 @@ $(function() {
       );
     });
   }
-  //関数の呼び出し。
   mypreload();
-  $("#requestRoomCreate").click(function() {
+  
+  /**
+   * ルーム作成ボタンクリック時の動作
+   */
+  $("#requestRoomCreate").on("click", ()=> {
     //部屋作成時
     socket.emit("requestRoomCreate", {
       dispName: $("#roomDispName").val(),
@@ -60,7 +66,7 @@ $(function() {
     //部屋作成完了後
     debugLog("CreatedRoom");
     createRoomCardList(roomList);
-    $('#nav-tab a[href="#nav-joinroom"]').tab("show");
+    $('#nav-tab a[href="#nav-joinroom"]')[0].Tab.show();
   });
 
   socket.on("showRoomList", function(roomList) {
