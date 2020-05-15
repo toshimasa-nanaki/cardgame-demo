@@ -466,8 +466,8 @@ $(function() {
     $("#shibari").text("");
     $("#revolution").text("");
     $("#bottomController").show();
-    $("#send").prop("disabled", true);
-    $("#pass").prop("disabled", true);
+    $("#send").data("roomId", msg.roomId).prop("disabled", true);
+    $("#pass").data("roomId", msg.roomId).prop("disabled", true);
     $("#cardList2").empty();
     $("#giveCardList").empty();
     $("#playerNameDisp").text(msg.playerName2);
@@ -1096,6 +1096,8 @@ $(function() {
         ele.dispName +
         "さん<br />";
     });
+    
+    mes += "ブラインドカード" + msg.blindCards;
     $("#playerPoint").text(msg.point);
     $("#battleResult" + msg.gameNum).append(mes);
     $("#battle" + msg.gameNum).show();

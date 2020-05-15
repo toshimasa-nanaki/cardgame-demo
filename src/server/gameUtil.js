@@ -170,7 +170,8 @@ module.exports.checkOut = (sc, roomId, userId, currentTurn) => {
               gameNum: storeData.persistentData[roomId].gameNum,
               ranking: displayRanking,
               overall: displayOverAllRanking,
-              finalPoint: value.point
+              finalPoint: value.point,
+              blindCard: storeData.persistentData[roomId].blindCards
             });
           }
           return;
@@ -180,7 +181,8 @@ module.exports.checkOut = (sc, roomId, userId, currentTurn) => {
             commonRequire.io.to(key).emit("gameFinish", {
               gameNum: storeData.persistentData[roomId].gameNum,
               ranking: displayRanking,
-              point: value.point
+              point: value.point,
+              blindCard: storeData.persistentData[roomId].blindCards
             });
           }
           commonRequire.io.to(userId).emit("nextGameStart", {
@@ -258,7 +260,8 @@ module.exports.checkOut = (sc, roomId, userId, currentTurn) => {
               gameNum: storeData.persistentData[roomId].gameNum,
               ranking: displayRanking,
               overall: displayOverAllRanking,
-              finalPoint: value.point
+              finalPoint: value.point,
+              blindCard: storeData.persistentData[roomId].blindCards
             });
           }
           return;
@@ -268,7 +271,8 @@ module.exports.checkOut = (sc, roomId, userId, currentTurn) => {
             commonRequire.io.to(key).emit("gameFinish", {
               gameNum: storeData.persistentData[roomId].gameNum,
               ranking: displayRanking,
-              point: value.point
+              point: value.point,
+              blindCard: storeData.persistentData[roomId].blindCards
             });
           }
           commonRequire.io.to(lastId).emit("nextGameStart", {
