@@ -381,8 +381,6 @@ $(function() {
       $("#gameCommentaryArea").append("あなたのターンです。<br />");
       if (msg.skip) {
         socket.emit("pass", {
-          //id: $("input[name=roomRadios]:checked").val()
-          //id: $("#roomId").text()
           id: msg.roomInfo.roomId
         });
       }
@@ -557,33 +555,33 @@ $(function() {
       $("#gameCommentaryArea")[0].scrollHeight
     );
   });
-  socket.on("notNeedGiveCard", msg => {
-    debugLog("order accept");
-    if (msg.yourTurn) {
-      $("#send").prop("disabled", false);
-      $("#pass").prop("disabled", false);
-      $("#cardList input").prop("disabled", false);
-      //$("#order").text("あなたの番です");
-      $("#gameCommentaryArea").append("あなたのターンです。<br />");
-      if (msg.skip) {
-        socket.emit("pass", {
-          //id: $("input[name=roomRadios]:checked").val()
-          id: $("#roomId").text()
-        });
-      }
-    } else {
-      $("#send").prop("disabled", true);
-      $("#pass").prop("disabled", true);
-      $("#cardList input").prop("disabled", true);
-      //$("#order").text(msg.playerName + "の番です");
-      $("#gameCommentaryArea").append(
-        msg.playerName + "さんのターンです。<br />"
-      );
-    }
-    $("#gameCommentaryArea").scrollTop(
-      $("#gameCommentaryArea")[0].scrollHeight
-    );
-  });
+  // socket.on("notNeedGiveCard", msg => {
+  //   debugLog("order accept");
+  //   if (msg.yourTurn) {
+  //     $("#send").prop("disabled", false);
+  //     $("#pass").prop("disabled", false);
+  //     $("#cardList input").prop("disabled", false);
+  //     //$("#order").text("あなたの番です");
+  //     $("#gameCommentaryArea").append("あなたのターンです。<br />");
+  //     if (msg.skip) {
+  //       socket.emit("pass", {
+  //         //id: $("input[name=roomRadios]:checked").val()
+  //         id: $("#roomId").text()
+  //       });
+  //     }
+  //   } else {
+  //     $("#send").prop("disabled", true);
+  //     $("#pass").prop("disabled", true);
+  //     $("#cardList input").prop("disabled", true);
+  //     //$("#order").text(msg.playerName + "の番です");
+  //     $("#gameCommentaryArea").append(
+  //       msg.playerName + "さんのターンです。<br />"
+  //     );
+  //   }
+  //   $("#gameCommentaryArea").scrollTop(
+  //     $("#gameCommentaryArea")[0].scrollHeight
+  //   );
+  // });
   function giveToHigherStatus2(msg) {
     $("#giveCard").show();
     msg.targetCard.forEach(element => {
