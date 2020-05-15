@@ -155,7 +155,9 @@ $(function() {
       $("#selectRoomList2").prepend(divCard);
     });
   }
-  
+  /**
+   * ルールセットを画面に表示できる形に変換
+   */
   const transRuleArrayToString = (ruleArray) => {
     let str = "";
     ruleArray.forEach((ele, index, arr) => {
