@@ -117,8 +117,9 @@ $(function() {
           divCardStatus.text("メンバー募集中");
           buttonJoinRoom = $("<button>参加</button>")
             .addClass("btn btn-outline-primary")
+            .data("roomId", roomList[key].roomId)
             .on("click", () => {
-              $("#roomId").text(roomList[key].roomId);
+              //$("#roomId").text(roomList[key].roomId);
               socket.emit("join", {
                 roomId: roomList[key].roomId,
                 playerName: $("#playerName").val()
@@ -136,8 +137,9 @@ $(function() {
           divCardStatus.text("メンバー緊急募集中");
           buttonJoinRoom = $("<button>緊急参加(再接続)</button>")
             .addClass("btn btn-outline-danger")
+            .data("roomId", roomList[key].roomId)
             .on("click", () => {
-              $("#roomId").text(roomList[key].roomId);
+              //$("#roomId").text(roomList[key].roomId);
               socket.emit("join", {
                 roomId: roomList[key].roomId,
                 playerName: $("#playerName").val()
@@ -166,37 +168,6 @@ $(function() {
     });
     return str;
   };
-
-  // 部屋一覧のラジオボタン生成
-  function createSelectRoomRadioButton(roomList) {
-    Object.keys(roomList).forEach(function(key) {
-      debugLog(roomList[key]);
-      const div = $('<div class="form-check"></div>');
-      div.append(
-        $('<input type="radio" />').attr({
-          class: "form-check-input",
-          name: "roomRadios",
-          value: roomList[key].roomId,
-          id: "room_" + roomList[key].roomId
-        })
-      );
-      div.append(
-        $(
-          '<label class="form-check-label" for="' +
-            "room_" +
-            roomList[key].roomId +
-            '">' +
-            roomList[key].roomDispName +
-            "(定員：" +
-            roomList[key].capacity +
-            "人)" +
-            "</label>"
-        )
-      );
-      $("#selectRoomList").prepend(div);
-    });
-    $("#selectRoomList > :first > input").prop("checked", true);
-  }
 
   socket.on("connectRetry", function(leaveMemberInfo) {
     debugLog("Retryモード");
@@ -411,7 +382,8 @@ $(function() {
       if (msg.skip) {
         socket.emit("pass", {
           //id: $("input[name=roomRadios]:checked").val()
-          id: $("#roomId").text()
+          //id: $("#roomId").text()
+          id: msg.roomInfo.roomId
         });
       }
     } else {
@@ -536,23 +508,9 @@ $(function() {
           if (!$(this).is(".checked")) {
             // チェックが入っていない画像をクリックした場合、チェックを入れます。
             $(this).addClass("checked");
-            // if ($("img.handCardImage.checked").length !== 0 && msg.yourTurn) {
-            //   // ボタン有効
-            //   $("#send").prop("disabled", false);
-            // }else{
-            //   // ボタン無効
-            //   $("#send").prop("disabled", true);
-            // }
           } else {
             // チェックが入っている画像をクリックした場合、チェックを外します。
             $(this).removeClass("checked");
-            // if ($("img.handCardImage.checked").length !== 0 && msg.yourTurn) {
-            //   // ボタン有効
-            //   $("#send").prop("disabled", false);
-            // }else{
-            //   // ボタン無効
-            //   $("#send").prop("disabled", true);
-            // }
           }
         });
       var check = $(
@@ -583,8 +541,7 @@ $(function() {
       $("#gameCommentaryArea").append("あなたのターンです。<br />");
       if (msg.skip) {
         socket.emit("pass", {
-          //id: $("input[name=roomRadios]:checked").val()
-          id: $("#roomId").text()
+          id: msg.roomId
         });
       }
     } else {
@@ -1206,23 +1163,6 @@ $(function() {
   $("#releaseRoomModalButton").click(() => {
     location.reload();
   });
-
-  // $("#rematch").click(function() {
-  //   $("#rank").text("");
-  //   $("#rematch").hide();
-  //   $("#seiseki").text("");
-  //   $("#field").empty();
-  //   $("#other").text("");
-  //   $("#elevenback").text("");
-  //   $("#shibari").text("");
-  //   $("#revolution").text("");
-  //   socket.emit("rematch", {
-  //     id: $("#roomId").text(),
-  //     roomid: $("#roomId").text()
-  //     // id: $("input[name=roomRadios]:checked").val(),
-  //     // roomid: $("input[name=roomRadios]:checked").val()
-  //   });
-  // });
 
   // setIntervalを使う方法
   function sleep(waitSec, callbackFunc) {

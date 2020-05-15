@@ -24,6 +24,7 @@ module.exports.notifyGameReady = roomId => {
   orders.forEach((element, index) => {
     console.log("gameReadyを送られた人" + element.userId);
     io.to(element.userId).emit("gameReady", {
+    roomId: roomInfo.roomId,
     gameNum: roomInfo.gameNum,
     card: users[element.userId].card,
     yourTurn: index === 0 ? true : false,
