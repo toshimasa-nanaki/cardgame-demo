@@ -854,7 +854,7 @@ $(function() {
   });
 
   //カードを出したとき
-  $("#send").click(function() {
+  $("#send").on("click", () => {
     $("#send").prop("disabled", true);
     $("#pass").prop("disabled", true);
     let sendCards = [];
