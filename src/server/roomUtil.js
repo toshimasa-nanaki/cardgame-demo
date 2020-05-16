@@ -97,15 +97,16 @@ module.exports.joinRoom = (joinInfo, socketObj) => {
     "joinedRoom",
     storeData.persistentData[joinInfo.roomId]["users"]
   );
-  for (let [key, value] of Object.entries(
-    storeData.persistentData[joinInfo.roomId]["users"]
-  )) {
-    if (key !== socketObj.id)
-      io.to(key).emit(
-        "otherMemberJoinedRoom",
-        commonUtil.htmlentities(joinInfo.playerName)
-      );
-  }
+  socketObj.broadcast.to(joinInfo.roomId).emit("updateRoomMember",commonUtil.htmlentities(joinInfo.playerName));
+  // for (let [key, value] of Object.entries(
+  //   storeData.persistentData[joinInfo.roomId]["users"]
+  // )) {
+  //   if (key !== socketObj.id)
+  //     io.to(key).emit(
+  //       "otherMemberJoinedRoom",
+  //       commonUtil.htmlentities(joinInfo.playerName)
+  //     );
+  // }
   const currentPlayerNum = Object.keys(
     storeData.persistentData[joinInfo.roomId]["users"]
   ).length;
