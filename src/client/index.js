@@ -280,7 +280,7 @@ $(function() {
     //$("#seiseki").text("");
     //$("#field").text("なし");
     $("#field").empty();
-    $("#other").text("");
+    //$("#other").text("");
     $("#elevenback").text(msg.roomInfo.elevenback ? "　11Back　" : "");
     let suites = "";
     msg.roomInfo.shibariSuites.forEach(
@@ -462,8 +462,13 @@ $(function() {
   });
   
   const switchDispGameScreen = (info) => {
+    //表示関連
     $("#gameFieldArea").show(); //ゲームの場とか手札とか
+    $("#bottomController").show(); //ゲームコントローラーの親
     $("#gameController").show(); //playボタン、passボタン
+    $("#playerInfoDropdown").show(); //右上のプレイヤードロップダウン
+    //初期化
+    
   }
   //ゲームの準備ができたことを受け取る
   socket.on("gameReady", function(msg) {
@@ -479,16 +484,16 @@ $(function() {
 
     //$("#gameController").show();
     $("#giveCard").hide();
-    $("#playerInfoDropdown").show();
+    //$("#playerInfoDropdown").show();
     //$("#rank").text("");
     //$("#rematch").hide();
     //$("#seiseki").text("");
     $("#field").empty();
-    $("#other").text("");
+    //$("#other").text("");
     $("#elevenback").text("");
     $("#shibari").text("");
     $("#revolution").text("");
-    $("#bottomController").show();
+    // $("#bottomController").show();
     $("#send").data("roomId", msg.roomId).prop("disabled", true);
     $("#pass").data("roomId", msg.roomId).prop("disabled", true);
     $("#handCards").empty();
@@ -941,7 +946,7 @@ $(function() {
     $("#gameCommentaryArea").append(
       msg.playerName + "さんが" + message + "を出しました。<br />"
     );
-    $("#other").text("");
+    //$("#other").text("");
     $("#errorMsg").hide();
     $("#errorMsg").text("");
   });
