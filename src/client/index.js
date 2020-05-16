@@ -798,7 +798,7 @@ $(function() {
   socket.on("giveToLowerStatus1", msg => {
     giveToLowerStatus1(msg, false);
   });
-  $("#give").click(function() {
+  $("#give").click(e => {
     let giveCards = [];
     let cardarr;
     $("img.giveCardImage.checked").each(function() {
