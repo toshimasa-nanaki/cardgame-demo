@@ -130,7 +130,6 @@ $(function() {
             .addClass("btn btn-outline-primary")
             .data("roomId", roomList[key].roomId)
             .on("click", () => {
-              //$("#roomId").text(roomList[key].roomId);
               socket.emit("join", {
                 roomId: roomList[key].roomId,
                 playerName: $("#playerName").val()
@@ -150,7 +149,6 @@ $(function() {
             .addClass("btn btn-outline-danger")
             .data("roomId", roomList[key].roomId)
             .on("click", () => {
-              //$("#roomId").text(roomList[key].roomId);
               socket.emit("join", {
                 roomId: roomList[key].roomId,
                 playerName: $("#playerName").val()
