@@ -467,8 +467,13 @@ $(function() {
     $("#bottomController").show(); //ゲームコントローラーの親
     $("#gameController").show(); //playボタン、passボタン
     $("#playerInfoDropdown").show(); //右上のプレイヤードロップダウン
-    //初期化
-    
+    $("#giveCard").hide();　//譲渡用のエリアを隠す
+  }
+  
+  const initGameScreen = (info) => {
+    $("#elevenback").text("");
+    $("#shibari").text("");
+    $("#revolution").text("");
   }
   //ゲームの準備ができたことを受け取る
   socket.on("gameReady", function(msg) {
@@ -478,21 +483,22 @@ $(function() {
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );
+    initGameScreen(msg);
     switchDispGameScreen(msg);
     //$("#give").prop("disabled", true);
     //$("#gameFieldArea").show();
 
     //$("#gameController").show();
-    $("#giveCard").hide();
+    //$("#giveCard").hide();
     //$("#playerInfoDropdown").show();
     //$("#rank").text("");
     //$("#rematch").hide();
     //$("#seiseki").text("");
     $("#field").empty();
     //$("#other").text("");
-    $("#elevenback").text("");
-    $("#shibari").text("");
-    $("#revolution").text("");
+    // $("#elevenback").text("");
+    // $("#shibari").text("");
+    // $("#revolution").text("");
     // $("#bottomController").show();
     $("#send").data("roomId", msg.roomId).prop("disabled", true);
     $("#pass").data("roomId", msg.roomId).prop("disabled", true);
