@@ -77,7 +77,7 @@ $(function() {
     //部屋作成完了後
     debugLog("CreatedRoom");
     createRoomCardList(roomList);
-    //$('#nav-tab a[href="#nav-joinroom"]')[0].Tab.show();
+    $('#nav-tab a[href="#nav-joinroom"]')[0].Tab.show();
   });
 
   socket.on("showRoomList", function(roomList) {
