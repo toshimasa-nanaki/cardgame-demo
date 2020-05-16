@@ -154,7 +154,11 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
     giveCard:
       storeData.persistentData[reJoinInfo.roomId]["users"][
         reJoinInfo.reconnectUserId
-      ].giveCard
+      ].giveCard,
+    getCard:
+      storeData.persistentData[reJoinInfo.roomId]["users"][
+        reJoinInfo.reconnectUserId
+      ].getCard
   };
   LOGGER.debug("接続しようとしているsocketid:" + socketObj.id);
   LOGGER.debug("前に接続していたsocketid:" + reJoinInfo.reconnectUserId);
@@ -182,6 +186,7 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
     "置換前のorder:" +
       JSON.stringify(storeData.persistentData[reJoinInfo.roomId].order)
   );
+  users.findIndex((v) => v.id === id);
   let orderIndex = storeData.persistentData[reJoinInfo.roomId].order.indexOf(
     reJoinInfo.reconnectUserId
   );
