@@ -66,7 +66,7 @@ module.exports.load_room_event = socket => {
   //ルーム作成要求
   socket.on("requestRoomCreate", roomInfo => {
     LOGGER.debug(JSON.stringify(roomInfo));
-    roomUtil.createRoom(roomInfo);
+    roomUtil.createRoom(roomInfo, socket);
   });
   socket.on("join", joinInfo => {
     roomUtil.joinRoom(joinInfo, socket);

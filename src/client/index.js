@@ -79,7 +79,10 @@ $(function() {
     createRoomCardList(roomList);
     $('#nav-tab a[href="#nav-joinroom"]')[0].Tab.show();
   });
-
+  socket.on("updateRoomList", function(roomList) {
+    debugLog("updateRoomList");
+    createRoomCardList(roomList);
+  });
   socket.on("showRoomList", function(roomList) {
     //サーバ接続時に部屋一覧を渡す
     debugLog("ShowRoom");

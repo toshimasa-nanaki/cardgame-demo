@@ -11,7 +11,7 @@ const io = commonRequire.io;
 /**
  * ルーム作成処理
  */
-module.exports.createRoom = entryRoomInfo => {
+module.exports.createRoom = (entryRoomInfo, socketObj) => {
   const createRoomId = commonUtil.createUniqueId();
   let roomObj = {
     roomId: "", //部屋を一意に決めるID
@@ -53,7 +53,10 @@ module.exports.createRoom = entryRoomInfo => {
   roomObj["scoreTable"] = storeData.createRankTable(roomObj["capacity"]);
   storeData.persistentData[createRoomId] = roomObj;
   LOGGER.info("createdRoom:  " + roomObj.roomDispName);
-  io.emit("createdRoom", { [createRoomId]: roomObj });
+  //本人には作成完了通知
+  io.to(socketObj.id).emit("createdRoom", { [createRoomId]: roomObj });
+  //その他の人には部屋一覧をアップデートするように通知
+  io.broadcast.emit("updateRoomList", { [createRoomId]: roomObj });
 };
 
 module.exports.joinRoom = (joinInfo, socketObj) => {
