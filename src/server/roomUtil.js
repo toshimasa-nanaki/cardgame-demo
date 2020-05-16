@@ -186,14 +186,14 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
     "置換前のorder:" +
       JSON.stringify(storeData.persistentData[reJoinInfo.roomId].order)
   );
-  users.findIndex((v) => v.id === id);
-  let orderIndex = storeData.persistentData[reJoinInfo.roomId].order.indexOf(
-    reJoinInfo.reconnectUserId
-  );
+  const orderIndex = storeData.persistentData[reJoinInfo.roomId].order.findIndex((ele) => ele.userId === reJoinInfo.reconnectUserId);
+  // let orderIndex = storeData.persistentData[reJoinInfo.roomId].order.indexOf(
+  //   reJoinInfo.reconnectUserId
+  // );
   storeData.persistentData[reJoinInfo.roomId].order.splice(
     orderIndex,
     1,
-    socketObj.id
+    {"userId":socketObj.id,"status":storeData.persistentData[reJoinInfo.roomId].order[orderIndex].status}
   );
   //storeData.persistentData[reJoinInfo.roomId].order = storeData.persistentData[reJoinInfo.roomId].order.splice(orderIndex, 1, socketObj.id);
   LOGGER.debug(
@@ -334,16 +334,16 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
   const userDispList = [];
   storeData.persistentData[reJoinInfo.roomId]["order"].forEach(key => {
     userDispList.push(
-      storeData.persistentData[reJoinInfo.roomId]["users"][key].dispName
+      storeData.persistentData[reJoinInfo.roomId]["users"][key.userId].dispName
     );
   });
   const remainingCards = [];
   storeData.persistentData[reJoinInfo.roomId]["order"].forEach(key => {
     remainingCards.push({
       cardNum:
-        storeData.persistentData[reJoinInfo.roomId]["users"][key].card.length,
+        storeData.persistentData[reJoinInfo.roomId]["users"][key.userId].card.length,
       playerName:
-        storeData.persistentData[reJoinInfo.roomId]["users"][key].dispName
+        storeData.persistentData[reJoinInfo.roomId]["users"][key.userId].dispName
     });
   });
   //あとはクライアントがわに送るだけ
@@ -361,7 +361,7 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
       storeData.persistentData[reJoinInfo.roomId]["users"][
         storeData.persistentData[reJoinInfo.roomId].order[
           storeData.persistentData[reJoinInfo.roomId].currentTurnPos
-        ]
+        ].userId
       ].dispName,
     playerName2:
       storeData.persistentData[reJoinInfo.roomId]["users"][socketObj.id]
