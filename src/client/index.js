@@ -465,11 +465,11 @@ $(function() {
   
   const switchDispGameScreen = (info) => {
     //表示関連
-    $("#gameFieldArea").show(); //ゲームの場とか手札とか
-    $("#bottomController").show(); //ゲームコントローラーの親
-    $("#gameController").show(); //playボタン、passボタン
-    $("#playerInfoDropdown").show(); //右上のプレイヤードロップダウン
-    $("#giveCard").hide();　//譲渡用のエリアを隠す
+    document.getElementById("gameFieldArea").style.display = "block"; //ゲームの場とか手札とか
+    document.getElementById("bottomController").style.display = "block"; //ゲームコントローラーの親
+    document.getElementById("gameController").style.display = "block"; //playボタン、passボタン
+    document.getElementById("playerInfoDropdown").style.display = "block";//右上のプレイヤードロップダウン
+    document.getElementById("giveCard").style.display = "none";//譲渡用のエリアを隠す
   }
   
   const initGameScreen = (info) => {
@@ -492,25 +492,9 @@ $(function() {
     initGameScreen(msg);
     switchDispGameScreen(msg);
     
-    //$("#give").prop("disabled", true);
-    //$("#gameFieldArea").show();
-
-    //$("#gameController").show();
-    //$("#giveCard").hide();
-    //$("#playerInfoDropdown").show();
-    //$("#rank").text("");
-    //$("#rematch").hide();
-    //$("#seiseki").text("");
-    //$("#field").empty();
-    //$("#other").text("");
-    // $("#elevenback").text("");
-    // $("#shibari").text("");
-    // $("#revolution").text("");
-    // $("#bottomController").show();
     $("#send").data("roomId", msg.roomId).prop("disabled", true);
     $("#pass").data("roomId", msg.roomId).prop("disabled", true);
-    //$("#handCards").empty();
-    //$("#giveCardList").empty();
+
     $("#playerNameDisp").text(msg.playerName2);
     $("#playerPoint").text(msg.playerPoint);
     $("#blindCards").empty();
