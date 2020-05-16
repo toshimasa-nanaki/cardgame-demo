@@ -148,7 +148,9 @@ $(function() {
           buttonJoinRoom = $("<button>緊急参加(再接続)</button>")
             .addClass("btn btn-outline-danger")
             .data("roomId", roomList[key].roomId)
-            .on("click", () => {
+            .on("click", (e) => {
+              //次の画面のボタンにroomIdをつけておく
+              document.getElementById('retryConnectRoomButton').dataset.roomId = roomList[key].roomId;
               socket.emit("join", {
                 roomId: roomList[key].roomId,
                 playerName: $("#playerName").val()
@@ -182,15 +184,12 @@ $(function() {
     debugLog("Retryモード");
     //選択画面を開く。
     createSelectConnectMemberButton(leaveMemberInfo.leaveUserInfo);
-    const retryConnectModal = document.getElementById("retryConnectModal");
-    var myModalInstance = new bsnV4.Modal(retryConnectModal,
+    const myModalInstance = new bsnV4.Modal(document.getElementById("retryConnectModal"),
     { // options object
         backdrop: 'static', // we don't want to dismiss Modal when Modal or backdrop is the click event target
         keyboard: false, // we don't want to dismiss Modal on pressing Esc key
-        roomId: "test" 
     });
     myModalInstance.show();
-    //$("#retryConnectModal").modal({ backdrop: "static", keyboard: false, roomId: "test" });
   });
   function createSelectConnectMemberButton(leaveMemberInfo) {
     $("#selectMemberList").empty();
@@ -220,15 +219,21 @@ $(function() {
     $("#selectMemberList > :first > input").prop("checked", true);
   }
 
-  $("#retryConnectRoomButton").click(function() {
+  $("#retryConnectRoomButton").on("click", (e) => {
     //let reconnectUserId = $("input[name=memberRadios]:checked").val();
     socket.emit("reJoin", {
       //roomId: $("input[name=roomRadios]:checked").val(),
-      roomId: $("#roomId").text(),
+      roomId: e.currentTarget.dataset.roomId,
       reconnectUserId: $("input[name=memberRadios]:checked").val(),
       playerName: $("#playerName").val()
     });
-    $("#retryConnectModal").modal("hide");
+    const myModalInstance = new bsnV4.Modal(document.getElementById("retryConnectModal"),
+    { // options object
+        backdrop: 'static', // we don't want to dismiss Modal when Modal or backdrop is the click event target
+        keyboard: false, // we don't want to dismiss Modal on pressing Esc key
+    });
+    myModalInstance.hide();
+    //$("#retryConnectModal").modal("hide");
     document.cookie = "name=" + $("#playerName").val() + "; max-age=259200";
   });
 
