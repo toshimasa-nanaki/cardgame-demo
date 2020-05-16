@@ -489,7 +489,9 @@ $(function() {
     document.getElementById('giveCardList').innerHTML = '';//譲渡カード初期化
     //アクションボタンの設定および非活性化
     document.getElementById('send').dataset.roomId = info.roomId;
+    document.getElementById('send').setAttribute("disabled", true);
     document.getElementById('pass').dataset.roomId = info.roomId;
+    document.getElementById('pass').setAttribute("disabled", true);
     //document.getElementById('giveCardList')
   }
   //ゲームの準備ができたことを受け取る
@@ -503,8 +505,8 @@ $(function() {
     initGameScreen(msg);
     switchDispGameScreen(msg);
     
-    $("#send").data("roomId", msg.roomId).prop("disabled", true);
-    $("#pass").data("roomId", msg.roomId).prop("disabled", true);
+//     $("#send").data("roomId", msg.roomId).prop("disabled", true);
+//     $("#pass").data("roomId", msg.roomId).prop("disabled", true);
 
     $("#playerNameDisp").text(msg.playerName2);
     $("#playerPoint").text(msg.playerPoint);
