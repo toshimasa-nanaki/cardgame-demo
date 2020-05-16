@@ -182,6 +182,12 @@ $(function() {
     debugLog("Retryモード");
     //選択画面を開く。
     createSelectConnectMemberButton(leaveMemberInfo.leaveUserInfo);
+    var myModalInstance = new Modal(myModal,
+    { // options object
+        content: '<div class="modal-body">Some content to be set on init</div>', // sets modal content
+        backdrop: 'static', // we don't want to dismiss Modal when Modal or backdrop is the click event target
+        keyboard: false // we don't want to dismiss Modal on pressing Esc key
+    });
     $("#retryConnectModal").modal({ backdrop: "static", keyboard: false, roomId: "test" });
   });
   function createSelectConnectMemberButton(leaveMemberInfo) {
