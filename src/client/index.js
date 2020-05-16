@@ -471,9 +471,13 @@ $(function() {
   }
   
   const initGameScreen = (info) => {
-    $("#elevenback").text("");
-    $("#shibari").text("");
-    $("#revolution").text("");
+    $("#orderList").empty(); //順番一覧の初期化
+    $("#field").empty(); //場のカード初期化
+    $("#elevenback").text(""); //11back表示のバッチ
+    $("#shibari").text(""); //縛りのバッチ
+    $("#revolution").text(""); //革命のバッチ
+    $("#handCards").empty(); //手札の初期化
+    $("#giveCardList").empty(); //譲渡カード初期化
   }
   //ゲームの準備ができたことを受け取る
   socket.on("gameReady", function(msg) {
@@ -494,7 +498,7 @@ $(function() {
     //$("#rank").text("");
     //$("#rematch").hide();
     //$("#seiseki").text("");
-    $("#field").empty();
+    //$("#field").empty();
     //$("#other").text("");
     // $("#elevenback").text("");
     // $("#shibari").text("");
@@ -502,12 +506,12 @@ $(function() {
     // $("#bottomController").show();
     $("#send").data("roomId", msg.roomId).prop("disabled", true);
     $("#pass").data("roomId", msg.roomId).prop("disabled", true);
-    $("#handCards").empty();
-    $("#giveCardList").empty();
+    //$("#handCards").empty();
+    //$("#giveCardList").empty();
     $("#playerNameDisp").text(msg.playerName2);
     $("#playerPoint").text(msg.playerPoint);
     $("#blindCards").empty();
-    $("#orderList").empty();
+    //$("#orderList").empty();
     for (let i = 0; i < msg.userList.length; i++) {
       let ele =
         i === 0
