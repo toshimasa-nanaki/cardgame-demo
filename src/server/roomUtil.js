@@ -56,7 +56,7 @@ module.exports.createRoom = (entryRoomInfo, socketObj) => {
   //本人には作成完了通知
   io.to(socketObj.id).emit("createdRoom", { [createRoomId]: roomObj });
   //その他の人には部屋一覧をアップデートするように通知
-  io.broadcast.emit("updateRoomList", { [createRoomId]: roomObj });
+  socketObj.broadcast.emit("updateRoomList", { [createRoomId]: roomObj });
 };
 
 module.exports.joinRoom = (joinInfo, socketObj) => {
