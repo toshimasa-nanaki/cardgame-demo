@@ -1,4 +1,5 @@
 const nodeExternals = require("webpack-node-externals");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = [
   //クライアント側(javascript)
@@ -11,6 +12,12 @@ module.exports = [
       filename: "[name].js",
       path: `${__dirname}/public/js`,
     },
+    plugins: [
+      new MiniCssExtractPlugin({
+        filename: `../css/[name].css`,
+        chunkFilename: `../css/[id].css`,
+      }),
+    ],
     module:{
       rules:[
         {

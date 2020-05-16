@@ -1,6 +1,7 @@
 $(function() {
   const voiceData = require("./voiceData.js");
   const constant = require("./constant.js");
+  require("./index.scss");
   require("bootstrap.native/dist/bootstrap-native-v4");
   var socket = io();
   let audio = new Audio(voiceData.haihai);
@@ -489,6 +490,7 @@ $(function() {
     );
     initGameScreen(msg);
     switchDispGameScreen(msg);
+    
     //$("#give").prop("disabled", true);
     //$("#gameFieldArea").show();
 
