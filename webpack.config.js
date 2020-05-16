@@ -11,6 +11,40 @@ module.exports = [
       filename: "[name].js",
       path: `${__dirname}/public/js`,
     },
+    module:{
+      rules:[
+        {
+          test: /\.(sc|sa|c)ss/,
+          use: [
+            {
+              loader: MiniCssExtractPlugin.loader,
+            },
+            {
+              loader: "css-loader",
+              options: {
+                url: false,
+                sourceMap: true,
+                //minimize: true,
+                importLoaders: 2,
+              },
+            },
+            {
+              loader: "postcss-loader",
+              options: {
+                sourceMap: true,
+                plugins: () => [require("autoprefixer")],
+              },
+            },
+            {
+              loader: "sass-loader",
+              options: {
+                sourceMap: true,
+              },
+            },
+          ],
+        }
+      ]
+    },
     resolve: {
       extensions: [".js", ".json"],
     },
