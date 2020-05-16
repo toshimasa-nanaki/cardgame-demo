@@ -73,20 +73,26 @@ $(function() {
   /**
    * 部屋作成完了後の動作
    */
-  socket.on("createdRoom", roomList => {
+  socket.on("createdRoom", createdRoomInfo => {
     //部屋作成完了後
     debugLog("CreatedRoom");
-    createRoomCardList(roomList);
+    createRoomCardList(createdRoomInfo);
     $('#nav-tab a[href="#nav-joinroom"]')[0].Tab.show();
   });
-  socket.on("updateRoomList", function(roomList) {
+  /**
+   * 部屋一覧の更新要求を受けた時の動作
+   */
+  socket.on("updateRoomList", createdRoomInfo => {
     debugLog("updateRoomList");
-    createRoomCardList(roomList);
+    createRoomCardList(createdRoomInfo);
   });
-  socket.on("showRoomList", function(roomList) {
+  /**
+   * 部屋一覧を表示する(初回接続時)
+   */
+  socket.on("showRoomList", roomInfoList => {
     //サーバ接続時に部屋一覧を渡す
     debugLog("ShowRoom");
-    createRoomCardList(roomList);
+    createRoomCardList(roomInfoList);
   });
 
   //cookie
