@@ -473,13 +473,24 @@ $(function() {
   }
   
   const initGameScreen = (info) => {
-    $("#orderList").empty(); //順番一覧の初期化
-    $("#field").empty(); //場のカード初期化
-    $("#elevenback").text(""); //11back表示のバッチ
-    $("#shibari").text(""); //縛りのバッチ
-    $("#revolution").text(""); //革命のバッチ
-    $("#handCards").empty(); //手札の初期化
-    $("#giveCardList").empty(); //譲渡カード初期化
+    document.getElementById('orderList').innerHTML = ''; //順番一覧の初期化
+    document.getElementById('field').innerHTML = ''; //場のカード初期化
+    document.getElementById('elevenback').textContent  = '';//11back表示のバッチ
+    document.getElementById('shibari').textContent  = '';//縛りのバッチ
+    document.getElementById('revolution').textContent  = '';//革命のバッチ
+    // $("#orderList").empty(); //順番一覧の初期化
+    // $("#field").empty(); //場のカード初期化
+    // $("#elevenback").text(""); //11back表示のバッチ
+    // $("#shibari").text(""); //縛りのバッチ
+    // $("#revolution").text(""); //革命のバッチtextContent 
+    // $("#handCards").empty(); 
+    // $("#giveCardList").empty(); 
+    document.getElementById('handCards').innerHTML = '';//手札の初期化
+    document.getElementById('giveCardList').innerHTML = '';//譲渡カード初期化
+    //アクションボタンの設定および非活性化
+    document.getElementById('send').dataset.roomId = info.roomId;
+    document.getElementById('pass').dataset.roomId = info.roomId;
+    //document.getElementById('giveCardList')
   }
   //ゲームの準備ができたことを受け取る
   socket.on("gameReady", function(msg) {
