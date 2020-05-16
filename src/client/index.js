@@ -492,7 +492,11 @@ $(function() {
     document.getElementById('send').setAttribute("disabled", true);
     document.getElementById('pass').dataset.roomId = info.roomId;
     document.getElementById('pass').setAttribute("disabled", true);
-    //document.getElementById('giveCardList')
+    //TODO これ以降は修正する可能性あり。ただ今はとりあえず設定しておく
+    document.getElementById('blindCards').innerHTML = ''; //ブラインドカードの初期化
+    document.getElementById('playerNameDisp').textContent  = info.playerName2;//ユーザー名
+    document.getElementById('playerPoint').textContent  = info.playerPoint;//ユーザー点数
+    
   }
   //ゲームの準備ができたことを受け取る
   socket.on("gameReady", function(msg) {
@@ -508,9 +512,9 @@ $(function() {
 //     $("#send").data("roomId", msg.roomId).prop("disabled", true);
 //     $("#pass").data("roomId", msg.roomId).prop("disabled", true);
 
-    $("#playerNameDisp").text(msg.playerName2);
-    $("#playerPoint").text(msg.playerPoint);
-    $("#blindCards").empty();
+    // $("#playerNameDisp").text(msg.playerName2);
+    // $("#playerPoint").text(msg.playerPoint);
+    // $("#blindCards").empty();
     //$("#orderList").empty();
     for (let i = 0; i < msg.userList.length; i++) {
       let ele =
@@ -866,7 +870,7 @@ $(function() {
   });
 
   //カードを出したとき
-  $("#send").on("click", () => {
+  $("#send").on("click", (e) => {
     $("#send").prop("disabled", true);
     $("#pass").prop("disabled", true);
     let sendCards = [];
@@ -889,15 +893,15 @@ $(function() {
     socket.emit("validate", {
       cards: sendCards,
       //id: $("input[name=roomRadios]:checked").val()
-      id: $("#roomId").text()
+      id: e.currentTarget.dataset.roomId
     });
   });
-  $("#pass").click(function() {
+  $("#pass").click(function(e) {
     $("#send").prop("disabled", true);
     $("#pass").prop("disabled", true);
     socket.emit("pass", {
       //id: $("input[name=roomRadios]:checked").val()
-      id: $("#roomId").text()
+      id: e.currentTarget.dataset.roomId
     });
   });
   socket.on("validateError", function(msg) {
