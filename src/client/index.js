@@ -182,7 +182,7 @@ $(function() {
     debugLog("Retryモード");
     //選択画面を開く。
     createSelectConnectMemberButton(leaveMemberInfo.leaveUserInfo);
-    $("#retryConnectModal").modal({ backdrop: "static", keyboard: false });
+    $("#retryConnectModal").modal({ backdrop: "static", keyboard: false, roomId: "test" });
   });
   function createSelectConnectMemberButton(leaveMemberInfo) {
     $("#selectMemberList").empty();
