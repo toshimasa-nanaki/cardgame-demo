@@ -288,12 +288,7 @@ $(function() {
     $("#gameController").show();
     $("#giveCard").hide();
     $("#playerInfoDropdown").show();
-    //$("#rank").text("");
-    //$("#rematch").hide();
-    //$("#seiseki").text("");
-    //$("#field").text("なし");
     $("#field").empty();
-    //$("#other").text("");
     $("#elevenback").text(msg.roomInfo.elevenback ? "　11Back　" : "");
     let suites = "";
     msg.roomInfo.shibariSuites.forEach(
@@ -462,7 +457,13 @@ $(function() {
       $("#gameCommentaryArea")[0].scrollHeight
     );
     if (msg.memberOK) {
-      $("#releaseRoomModal").modal("hide");
+      //$("#releaseRoomModal").modal("hide");
+      const myModalInstance = new bsnV4.Modal(document.getElementById("releaseRoomModal"),
+    { // options object
+        backdrop: 'static', // we don't want to dismiss Modal when Modal or backdrop is the click event target
+        keyboard: false, // we don't want to dismiss Modal on pressing Esc key
+    });
+    myModalInstance.hide();
     }
   });
   /**
@@ -520,13 +521,6 @@ $(function() {
     initGameScreen(msg);
     switchDispGameScreen(msg);
     
-//     $("#send").data("roomId", msg.roomId).prop("disabled", true);
-//     $("#pass").data("roomId", msg.roomId).prop("disabled", true);
-
-    // $("#playerNameDisp").text(msg.playerName2);
-    // $("#playerPoint").text(msg.playerPoint);
-    // $("#blindCards").empty();
-    //$("#orderList").empty();
     for (let i = 0; i < msg.userList.length; i++) {
       let ele =
         i === 0
@@ -1187,11 +1181,17 @@ $(function() {
     debugLog("部屋がリリースされました");
     $("#releaseRoomModalBody").text("");
     $("#releaseRoomModalBody").text(constant.ERROR_DIC[info.reason]);
-    $("#releaseRoomModal").modal({ backdrop: "static", keyboard: false });
+    const myModalInstance = new bsnV4.Modal(document.getElementById("releaseRoomModal"),
+    { // options object
+        backdrop: 'static', // we don't want to dismiss Modal when Modal or backdrop is the click event target
+        keyboard: false, // we don't want to dismiss Modal on pressing Esc key
+    });
+    myModalInstance.show();
+    //$("#releaseRoomModal").modal({ backdrop: "static", keyboard: false });
   });
-  $("#releaseRoomModalButton").click(() => {
-    location.reload();
-  });
+  // $("#releaseRoomModalButton").click(() => {
+  //   location.reload();
+  // });
 
   // setIntervalを使う方法
   function sleep(waitSec, callbackFunc) {
