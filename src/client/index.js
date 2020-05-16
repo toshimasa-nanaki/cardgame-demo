@@ -2,7 +2,7 @@ $(function() {
   const voiceData = require("./voiceData.js");
   const constant = require("./constant.js");
   require("./index.scss");
-  require("bootstrap.native/dist/bootstrap-native-v4");
+  const bsnV4 = require("bootstrap.native/dist/bootstrap-native-v4");
   
   var socket = io();
   let audio = new Audio(voiceData.haihai);
@@ -182,13 +182,15 @@ $(function() {
     debugLog("Retryモード");
     //選択画面を開く。
     createSelectConnectMemberButton(leaveMemberInfo.leaveUserInfo);
-    var myModalInstance = new Modal(myModal,
+    const retryConnectModal = document.getElementById("retryConnectModal");
+    var myModalInstance = new bsnV4.Modal(retryConnectModal,
     { // options object
-        content: '<div class="modal-body">Some content to be set on init</div>', // sets modal content
         backdrop: 'static', // we don't want to dismiss Modal when Modal or backdrop is the click event target
-        keyboard: false // we don't want to dismiss Modal on pressing Esc key
+        keyboard: false, // we don't want to dismiss Modal on pressing Esc key
+        roomId: "test" 
     });
-    $("#retryConnectModal").modal({ backdrop: "static", keyboard: false, roomId: "test" });
+    myModalInstance.show();
+    //$("#retryConnectModal").modal({ backdrop: "static", keyboard: false, roomId: "test" });
   });
   function createSelectConnectMemberButton(leaveMemberInfo) {
     $("#selectMemberList").empty();
