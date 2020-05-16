@@ -410,7 +410,7 @@ $(function() {
   /**
    * 部屋入ったとき
    */
-  socket.on("joinedRoom", function(joinMembers) {
+  socket.on("joinedRoom", joinMembers => {
     //部屋ジョイン後
     debugLog("JoinedRoom");
     $("#roomSelectArea").hide();
@@ -426,9 +426,12 @@ $(function() {
       );
     });
   });
-  socket.on("otherMemberJoinedRoom", function(joinMemberName) {
+  /**
+   * ほかのメンバーがルームに入った際の更新要求
+   */
+  socket.on("updateRoomMember", joinMemberName => {
     //他のメンバーが部屋に入ったとき
-    debugLog("otherMemberJoinedRoom");
+    debugLog("updateRoomMember");
     $("#gameCommentaryArea").append(
       joinMemberName + "さんが部屋に入りました<br />"
     );

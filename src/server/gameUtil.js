@@ -17,6 +17,9 @@ module.exports.setInit = (roomId) => {
   this.gameInit(roomId);
 }
 
+/**
+ * 
+ */
 module.exports.gameInit = (roomId) => {
   let roomInfo = storeData.persistentData[roomId];
   let users = roomInfo.users;

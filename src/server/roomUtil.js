@@ -60,27 +60,25 @@ module.exports.createRoom = (entryRoomInfo, socketObj) => {
 };
 
 module.exports.joinRoom = (joinInfo, socketObj) => {
-  if (!storeData.persistentData[joinInfo.roomId]) {
+  const roomInfo = storeData.persistentData[joinInfo.roomId];
+  if (!roomInfo) {
     //既に存在しない部屋の場合はエラーを返して終了。
     io.to(socketObj.id).emit("connectError", "roomNothing");
     return;
   }
-  const roomCapacity = storeData.persistentData[joinInfo.roomId].capacity;
-  if (
-    Object.keys(storeData.persistentData[joinInfo.roomId]["users"]).length >=
-    roomCapacity
-  ) {
-    if (storeData.persistentData[joinInfo.roomId].leaveUserIds.length > 0) {
+  const roomCapacity = roomInfo.capacity;
+  if (Object.keys(roomInfo.users).length >= roomCapacity) {
+    if (roomInfo.leaveUserIds.length > 0) {
       //抜けたユーザーがいる場合、入れる可能性がある。
       io.to(socketObj.id).emit("connectRetry", {
-        leaveUserInfo: storeData.persistentData[joinInfo.roomId].leaveUserIds
+        leaveUserInfo: roomInfo.leaveUserIds
       });
     } else {
       io.to(socketObj.id).emit("connectError", "roomFull");
     }
     return;
   }
-  storeData.persistentData[joinInfo.roomId]["users"][socketObj.id] = {
+  roomInfo["users"][socketObj.id] = {
     dispName: commonUtil.htmlentities(joinInfo.playerName),
     card: [],
     rank: "",
@@ -93,24 +91,11 @@ module.exports.joinRoom = (joinInfo, socketObj) => {
     getCard: []
   };
   socketObj.join(joinInfo.roomId);
-  io.to(socketObj.id).emit(
-    "joinedRoom",
-    storeData.persistentData[joinInfo.roomId]["users"]
-  );
-  socketObj.broadcast.to(joinInfo.roomId).emit("updateRoomMember",commonUtil.htmlentities(joinInfo.playerName));
-  // for (let [key, value] of Object.entries(
-  //   storeData.persistentData[joinInfo.roomId]["users"]
-  // )) {
-  //   if (key !== socketObj.id)
-  //     io.to(key).emit(
-  //       "otherMemberJoinedRoom",
-  //       commonUtil.htmlentities(joinInfo.playerName)
-  //     );
-  // }
-  const currentPlayerNum = Object.keys(
-    storeData.persistentData[joinInfo.roomId]["users"]
-  ).length;
-  if (currentPlayerNum === roomCapacity) {
+  io.to(socketObj.id).emit("joinedRoom", roomInfo.users);
+  socketObj.broadcast
+    .to(joinInfo.roomId)
+    .emit("updateRoomMember", commonUtil.htmlentities(joinInfo.playerName));
+  if (Object.keys(roomInfo.users).length === roomCapacity) {
     LOGGER.info("There were members in the room.");
     gameUtil.gameInit(joinInfo.roomId);
   }
