@@ -1,4 +1,5 @@
 dependencies:
+  bootstrap: 4.5.0
   bootstrap.native: 2.0.27
   express: 4.17.1
   log4js: 6.2.1
@@ -505,6 +506,13 @@ packages:
     dev: false
     resolution:
       integrity: sha512-gv2eN4zXHOLN/oPotTxb8CJr9Dk0xlM9YURyHCWjq1Lyt2I669bri/Bp8b0HPOKX7JqRVh+Sk/VwEe0OcQN2fw==
+  /bootstrap/4.5.0:
+    dev: false
+    peerDependencies:
+      jquery: 1.9.1 - 3
+      popper.js: ^1.16.0
+    resolution:
+      integrity: sha512-Z93QoXvodoVslA+PWNdk23Hze4RBYIkpb5h8I2HY2Tu2h7A0LpAgLcyrhrSUyo2/Oxm2l1fRZPs1e5hnxnliXA==
   /boxen/4.2.0:
     dependencies:
       ansi-align: 3.0.0
@@ -4791,6 +4799,7 @@ shrinkwrapMinorVersion: 9
 shrinkwrapVersion: 3
 specifiers:
   autoprefixer: ^9.7.6
+  bootstrap: ^4.4.1
   bootstrap.native: ^2.0.27
   css-loader: ^3.5.3
   express: ^4.17.1

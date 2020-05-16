@@ -42,11 +42,11 @@ div#svgArea{
 ul#orderList li {
   display: inline-block;
 }
-ul#cardList2 li {
+ul#handCards li {
   /* liが横並びになるようにします。 */
   display: inline-block;
 }
-ul#cardList2 li .image_box {
+ul#handCards li .image_box {
   width: 60px;
   height: 70px;
   /* チェックボックスの親要素にrelativeを指定しておきます。 */
@@ -136,9 +136,9 @@ div#errorMsg {
 div#gameArea{
   display: none;
 }
-div#cardList {
+/* div#cardList {
     font: 24px Helvetica, Arial;
-}
+} */
 div#gameCommentaryArea {
     padding:5px;
     border:solid 1px #000;
@@ -179,3 +179,6 @@ div#giveCard{
       #messages {
         margin-bottom: 40px;
       }
+
+/* Bootstrap を読み込む */
+@import "~bootstrap/scss/bootstrap.scss";
