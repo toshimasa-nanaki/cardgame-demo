@@ -233,7 +233,6 @@ $(function() {
         keyboard: false, // we don't want to dismiss Modal on pressing Esc key
     });
     myModalInstance.hide();
-    //$("#retryConnectModal").modal("hide");
     document.cookie = "name=" + $("#playerName").val() + "; max-age=259200";
   });
 
@@ -457,7 +456,6 @@ $(function() {
       $("#gameCommentaryArea")[0].scrollHeight
     );
     if (msg.memberOK) {
-      //$("#releaseRoomModal").modal("hide");
       const myModalInstance = new bsnV4.Modal(document.getElementById("releaseRoomModal"),
     { // options object
         backdrop: 'static', // we don't want to dismiss Modal when Modal or backdrop is the click event target
@@ -470,9 +468,14 @@ $(function() {
    * ルームのジョインに失敗した場合などサーバとの接続に失敗した場合
    */
   socket.on("connectError", errorType => {
-    $("#errorModalBody").text("");
-    $("#errorModalBody").text(constant.ERROR_DIC[errorType]);
-    $("#errorModal").modal();
+    document.getElementById('elevenback').textContent  = constant.ERROR_DIC[errorType];
+    // document.getElementById('elevenback').textContent  = ''
+    // $("#errorModalBody").text("");
+    // $("#errorModalBody").text(constant.ERROR_DIC[errorType]);
+    const myModalInstance = new bsnV4.Modal(document.getElementById("errorModal"),
+    {});
+    myModalInstance.show();
+    //$("#errorModal").modal();
   });
   
   const switchDispGameScreen = (info) => {
@@ -1180,11 +1183,7 @@ $(function() {
         keyboard: false, // we don't want to dismiss Modal on pressing Esc key
     });
     myModalInstance.show();
-    //$("#releaseRoomModal").modal({ backdrop: "static", keyboard: false });
   });
-  // $("#releaseRoomModalButton").click(() => {
-  //   location.reload();
-  // });
 
   // setIntervalを使う方法
   function sleep(waitSec, callbackFunc) {
