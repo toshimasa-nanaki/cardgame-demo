@@ -193,7 +193,8 @@ module.exports.checkOut = (sc, roomId, userId, currentTurn) => {
           }
           commonRequire.io.to(userId).emit("nextGameStart", {
             gameNum: storeData.persistentData[roomId].gameNum + 1,
-            ranking: displayRanking
+            ranking: displayRanking,
+            roomId: roomId
           });
           storeData.persistentData[roomId].gameNum = storeData.persistentData[roomId].gameNum + 1;
           return;
@@ -283,7 +284,8 @@ module.exports.checkOut = (sc, roomId, userId, currentTurn) => {
           }
           commonRequire.io.to(lastId).emit("nextGameStart", {
             gameNum: storeData.persistentData[roomId].gameNum + 1,
-            ranking: displayRanking
+            ranking: displayRanking,
+            roomId: roomId
           });
           storeData.persistentData[roomId].gameNum = storeData.persistentData[roomId].gameNum + 1;
           return;

@@ -141,7 +141,8 @@ module.exports.notifyChangeTurn = (currentTurnIndex, roomId) => {
         playerName: users[nextTurnUserId].dispName,
         orderNum: nextTurn,
         endCurrentTurn: users[currentTurnUserId].rankNum != 0 ? currentTurnIndex : -1,
-        orders: remainingCards
+        orders: remainingCards,
+        roomId: roomId
       });
     }
   });
@@ -150,7 +151,8 @@ module.exports.notifyChangeTurn = (currentTurnIndex, roomId) => {
     skip: users[nextTurnUserId].rank != "" ? true : false,
     orderNum: nextTurn,
     endCurrentTurn: users[currentTurnUserId].rankNum != 0 ? currentTurnIndex : -1,
-    orders: remainingCards
+    orders: remainingCards,
+    roomId: roomId
   });
   roomInfo.currentTurnPos = nextTurn;
 }

@@ -837,7 +837,7 @@ $(function() {
       if (msg.skip) {
         socket.emit("pass", {
           //id: $("input[name=roomRadios]:checked").val()
-          id: $("#roomId").text()
+          id: msg.roomId
         });
       }
     } else {
@@ -1129,8 +1129,8 @@ $(function() {
       $("#gameCommentaryArea")[0].scrollHeight
     );
     socket.emit("rematch", {
-      id: $("#roomId").text(),
-      roomid: $("#roomId").text()
+      //id: msg.roomId,
+      roomId: msg.roomId
     });
   });
   socket.on("gameSet", function(msg) {
