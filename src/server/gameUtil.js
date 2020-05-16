@@ -18,7 +18,7 @@ module.exports.setInit = (roomId) => {
 }
 
 /**
- * 
+ * ゲーム初期化処理
  */
 module.exports.gameInit = (roomId) => {
   let roomInfo = storeData.persistentData[roomId];
@@ -45,6 +45,9 @@ module.exports.gameInit = (roomId) => {
   }
 }
 
+/**
+ * ゲームデータ初期化
+ */
 const gameDataInit = (roomInfo, users) => {
   //if(roomInfo.game)
   roomInfo.fieldCards.length = 0;

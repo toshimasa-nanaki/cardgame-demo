@@ -452,11 +452,18 @@ $(function() {
       $("#releaseRoomModal").modal("hide");
     }
   });
-  socket.on("connectError", function(msg) {
+  /**
+   * ルームのジョインに失敗した場合などサーバとの接続に失敗した場合
+   */
+  socket.on("connectError", errorType => {
     $("#errorModalBody").text("");
-    $("#errorModalBody").text(constant.ERROR_DIC[msg]);
+    $("#errorModalBody").text(constant.ERROR_DIC[errorType]);
     $("#errorModal").modal();
   });
+  
+  const switchDispGameScreen = (info) => {
+    $("#gameFieldArea").show();
+  }
   //ゲームの準備ができたことを受け取る
   socket.on("gameReady", function(msg) {
     $("#gameCommentaryArea").append(
@@ -465,7 +472,7 @@ $(function() {
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );
-    $("#give").prop("disabled", true);
+    //$("#give").prop("disabled", true);
     $("#gameFieldArea").show();
 
     $("#gameController").show();
