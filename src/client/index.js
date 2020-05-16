@@ -415,7 +415,6 @@ $(function() {
     debugLog("JoinedRoom");
     $("#roomSelectArea").hide();
     $("#gameArea").show();
-    //$("#gameCommentaryArea").show();
     $("#gameController").hide();
     $("#bottomController").show();
     Object.keys(joinMembers).forEach(function(key) {
