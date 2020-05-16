@@ -275,9 +275,9 @@ $(function() {
     $("#gameController").show();
     $("#giveCard").hide();
     $("#playerInfoDropdown").show();
-    $("#rank").text("");
+    //$("#rank").text("");
     //$("#rematch").hide();
-    $("#seiseki").text("");
+    //$("#seiseki").text("");
     //$("#field").text("なし");
     $("#field").empty();
     $("#other").text("");
@@ -291,8 +291,8 @@ $(function() {
     $("#bottomController").show();
     $("#send").prop("disabled", true);
     $("#pass").prop("disabled", true);
-    $("#cardList").empty();
-    $("#cardList2").empty();
+    //$("#cardList").empty();
+    $("#handCards").empty();
     $("#giveCardList").empty();
     $("#playerNameDisp").text(msg.playerName2);
     $("#playerPoint").text(msg.playerPoint);
@@ -378,14 +378,14 @@ $(function() {
       let li = $('<li id="' + element.type + element.number + '"></li>').append(
         box
       );
-      $("#cardList2").append(li);
+      $("#handCards").append(li);
     });
     debugLog("order accept");
     if (msg.yourTurn) {
       audio.play();
       $("#send").prop("disabled", false);
       $("#pass").prop("disabled", false);
-      $("#cardList2 img").prop("disabled", false);
+      $("#handCards img").prop("disabled", false);
       //$("#order").text("あなたの番です");
       $("#gameCommentaryArea").append("あなたのターンです。<br />");
       if (msg.skip) {
@@ -396,7 +396,7 @@ $(function() {
     } else {
       $("#send").prop("disabled", true);
       $("#pass").prop("disabled", true);
-      $("#cardList2 img").prop("disabled", true);
+      $("#handCards img").prop("disabled", true);
       //$("#order").text(msg.playerName + "の番です");
       $("#gameCommentaryArea").append(
         msg.playerName + "さんのターンです。<br />"
@@ -462,7 +462,8 @@ $(function() {
   });
   
   const switchDispGameScreen = (info) => {
-    $("#gameFieldArea").show();
+    $("#gameFieldArea").show(); //ゲームの場とか手札とか
+    $("#gameController").show(); //playボタン、passボタン
   }
   //ゲームの準備ができたことを受け取る
   socket.on("gameReady", function(msg) {
@@ -472,15 +473,16 @@ $(function() {
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight
     );
+    switchDispGameScreen(msg);
     //$("#give").prop("disabled", true);
-    $("#gameFieldArea").show();
+    //$("#gameFieldArea").show();
 
-    $("#gameController").show();
+    //$("#gameController").show();
     $("#giveCard").hide();
     $("#playerInfoDropdown").show();
-    $("#rank").text("");
+    //$("#rank").text("");
     //$("#rematch").hide();
-    $("#seiseki").text("");
+    //$("#seiseki").text("");
     $("#field").empty();
     $("#other").text("");
     $("#elevenback").text("");
@@ -489,7 +491,7 @@ $(function() {
     $("#bottomController").show();
     $("#send").data("roomId", msg.roomId).prop("disabled", true);
     $("#pass").data("roomId", msg.roomId).prop("disabled", true);
-    $("#cardList2").empty();
+    $("#handCards").empty();
     $("#giveCardList").empty();
     $("#playerNameDisp").text(msg.playerName2);
     $("#playerPoint").text(msg.playerPoint);
@@ -548,14 +550,14 @@ $(function() {
       let li = $('<li id="' + element.type + element.number + '"></li>').append(
         box
       );
-      $("#cardList2").append(li);
+      $("#handCards").append(li);
     });
     debugLog("order accept");
     if (msg.yourTurn) {
       audio.play();
       $("#send").prop("disabled", false);
       $("#pass").prop("disabled", false);
-      $("#cardList2 img").prop("disabled", false);
+      $("#handCards img").prop("disabled", false);
       //$("#order").text("あなたの番です");
       $("#gameCommentaryArea").append("あなたのターンです。<br />");
       if (msg.skip) {
@@ -566,7 +568,7 @@ $(function() {
     } else {
       $("#send").prop("disabled", true);
       $("#pass").prop("disabled", true);
-      $("#cardList2 img").prop("disabled", true);
+      $("#handCards img").prop("disabled", true);
       //$("#order").text(msg.playerName + "の番です");
       $("#gameCommentaryArea").append(
         msg.playerName + "さんのターンです。<br />"
@@ -838,7 +840,7 @@ $(function() {
       audio.play();
       $("#send").prop("disabled", false);
       $("#pass").prop("disabled", false);
-      $("#cardList input").prop("disabled", false);
+      //$("#cardList input").prop("disabled", false);
       //$("#order").text("あなたの番です");
       $("#gameCommentaryArea").append("あなたのターンです。<br />");
       if (msg.skip) {
@@ -850,7 +852,7 @@ $(function() {
     } else {
       $("#send").prop("disabled", true);
       $("#pass").prop("disabled", true);
-      $("#cardList input").prop("disabled", true);
+      //$("#cardList input").prop("disabled", true);
       $("#gameCommentaryArea").append(
         msg.playerName + "さんのターンです。<br />"
       );
@@ -1070,7 +1072,7 @@ $(function() {
   });
   socket.on("finish", function(msg) {
     debugLog("finish accept");
-    $("#cardList2").empty();
+    $("#handCards").empty();
     $("#gameController").hide();
     if (msg.rankReason !== "") {
       //何か問題があったと判断
