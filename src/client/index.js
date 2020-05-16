@@ -163,7 +163,7 @@ $(function() {
         divCardBody.append(buttonJoinRoom);
       }
       divCard.append(divCardStatus, divCardBody);
-      $("#selectRoomList2").prepend(divCard);
+      $("#selectRoomList").prepend(divCard);
     });
   }
   /**
@@ -407,6 +407,9 @@ $(function() {
     );
   });
 
+  /**
+   * 部屋入ったとき
+   */
   socket.on("joinedRoom", function(joinMembers) {
     //部屋ジョイン後
     debugLog("JoinedRoom");
