@@ -45,10 +45,12 @@ module.exports.notifyGiveCard = (roomId,playerNum) => {
     const LowerUser1 = storeData.persistentData[roomId]["order"][0];
     const HigherUser1 = storeData.persistentData[roomId]["order"][2];
     commonRequire.io.to(HigherUser1).emit("giveToLowerStatus1", {
-      targetCard: storeData.persistentData[roomId]["users"][HigherUser1].card
+      targetCard: storeData.persistentData[roomId]["users"][HigherUser1].card,
+      roomId: roomId
     });
     commonRequire.io.to(LowerUser1).emit("giveToHigherStatus1", {
-      targetCard: [storeData.persistentData[roomId]["users"][LowerUser1].card.slice(-1)[0]]
+      targetCard: [storeData.persistentData[roomId]["users"][LowerUser1].card.slice(-1)[0]],
+      roomId: roomId
     });
     storeData.persistentData[roomId]["users"][LowerUser1].giveCard.push(
       storeData.persistentData[roomId]["users"][LowerUser1].card.slice(-1)[0]
@@ -60,19 +62,23 @@ module.exports.notifyGiveCard = (roomId,playerNum) => {
     const LowerUser2 = storeData.persistentData[roomId]["order"][0];
     const HigherUser2 = storeData.persistentData[roomId]["order"][playerNum - 1];
     commonRequire.io.to(HigherUser2).emit("giveToLowerStatus2", {
-      targetCard: commonUtil.sortArray(storeData.persistentData[roomId]["users"][HigherUser2].card, true)
+      targetCard: commonUtil.sortArray(storeData.persistentData[roomId]["users"][HigherUser2].card, true),
+      roomId: roomId
     });
     commonRequire.io.to(LowerUser2).emit("giveToHigherStatus2", {
       targetCard: commonUtil.sortArray([
         storeData.persistentData[roomId]["users"][LowerUser2].card.slice(-1)[0],
         storeData.persistentData[roomId]["users"][LowerUser2].card.slice(-2)[0]
-      ], true)
+      ], true),
+      roomId: roomId
     });
     commonRequire.io.to(HigherUser1).emit("giveToLowerStatus1", {
-      targetCard: storeData.persistentData[roomId]["users"][HigherUser1].card
+      targetCard: storeData.persistentData[roomId]["users"][HigherUser1].card,
+      roomId: roomId
     });
     commonRequire.io.to(LowerUser1).emit("giveToHigherStatus1", {
-      targetCard: [storeData.persistentData[roomId]["users"][LowerUser1].card.slice(-1)[0]]
+      targetCard: [storeData.persistentData[roomId]["users"][LowerUser1].card.slice(-1)[0]],
+      roomId: roomId
     });
     storeData.persistentData[roomId]["users"][LowerUser1].giveCard.push(
       storeData.persistentData[roomId]["users"][LowerUser1].card.slice(-1)[0]

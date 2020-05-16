@@ -629,6 +629,7 @@ $(function() {
   function giveToLowerStatus2(msg, alreadyFlag) {
     $("#giveCard").show();
     $("#gameController2").show();
+    document.getElementById('give').dataset.roomId = msg.roomId;
     msg.targetCard.forEach(element => {
       const cardType = element.number + element.type;
       const imgUri =
@@ -728,6 +729,7 @@ $(function() {
   function giveToLowerStatus1(msg, alreadyFlag) {
     $("#giveCard").show();
     $("#gameController2").show();
+    document.getElementById('give').dataset.roomId = msg.roomId;
     msg.targetCard.forEach(element => {
       const cardType = element.number + element.type;
       const imgUri =
@@ -811,7 +813,7 @@ $(function() {
     socket.emit("selectedGiveCard", {
       cards: giveCards,
       // id: $("input[name=roomRadios]:checked").val()
-      id: $("#roomId").text()
+      id: e.currentTarget.dataset.roomId
     });
     $("#gameCommentaryArea").append(
       "カードの譲渡処理が終了するまでお待ちください。<br />"
