@@ -13,25 +13,12 @@ $(function() {
   /**
    * 画像のプリロード
    */
-  function mypreload() {
+  const mypreload = () => {
     Object.keys(constant.DISPLAY_IMAGE_ID).forEach(key => {
-      // $("<img>").attr(
-      //   "src",
-      //   "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
-      //     constant.DISPLAY_IMAGE_ID[key] +
-      //     ".png"
-      // );
-             const img = new Image();
+       const img = new Image();
        img.src = "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" + constant.DISPLAY_IMAGE_ID[key] + ".png"
-    });
-    
+    });  
   }
-//   document.addEventListener('DOMContentLoaded', () =>{
-//     Object.keys(constant.DISPLAY_IMAGE_ID).forEach(key => {
-//       const img = new Image();
-//       img.src = "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" + constant.DISPLAY_IMAGE_ID[key] + ".png"
-//     });
-// });
   mypreload();
   
   /**
