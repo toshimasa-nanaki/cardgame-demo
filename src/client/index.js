@@ -479,6 +479,10 @@ $(function() {
     document.getElementById('playerPoint').textContent  = info.playerPoint;//ユーザー点数
     
   }
+  
+  const displayOrder = () => {
+    
+  };
   //ゲームの準備ができたことを受け取る
   socket.on("gameReady", function(msg) {
     $("#gameCommentaryArea").append(

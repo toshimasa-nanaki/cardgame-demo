@@ -1,3 +1,11 @@
+module.exports.ORDER_LIST_TEMPLATE = {
+  "2": "{player0}({num0}枚)→{player1}({num1}枚)",
+  "3": "{player0}({num0}枚)→{player1}({num1}枚)→{player2}({num2}枚)",
+  "4": "{player0}({num0}枚)→{player1}({num1}枚)→{player2}({num2}枚)→{player3}({num3}枚)",
+  "5": "{player0}({num0}枚)→{player1}({num1}枚)→{player2}({num2}枚)→{player3}({num3}枚)→{player4}({num4}枚)",
+  "6": "{player0}({num0}枚)→{player1}({num1}枚)→{player2}({num2}枚)→{player3}({num3}枚)→{player4}({num4}枚)→{player5}({num5}枚)",
+};
+
 module.exports.RULESET_DIC = {
     shibari: "スートしばり",
     elevenback: "11Back",

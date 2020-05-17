@@ -25,6 +25,7 @@ module.exports.notifyGameReady = roomId => {
     console.log("gameReadyを送られた人" + element.userId);
     io.to(element.userId).emit("gameReady", {
     roomId: roomInfo.roomId,
+    capacity: roomInfo.capacity,
     gameNum: roomInfo.gameNum,
     card: users[element.userId].card,
     yourTurn: index === 0 ? true : false,
