@@ -826,23 +826,20 @@ $(function() {
     );
     $("#gameController2").hide();
   });
-
-  socket.on("order", function(msg) {
-    //最初に
-    debugLog("order accept");
-    //順番が回ったときはエラーを消そう
-    $("#errorMsg").hide();
-    if (msg.flag) {
+  
+  const switchOrder = (orderInfo) => {
+    debugLog("order switch");
+    if (orderInfo.flag) {
       audio.play();
       $("#send").prop("disabled", false);
       $("#pass").prop("disabled", false);
       //$("#cardList input").prop("disabled", false);
       //$("#order").text("あなたの番です");
       $("#gameCommentaryArea").append("あなたのターンです。<br />");
-      if (msg.skip) {
+      if (orderInfo.skip) {
         socket.emit("pass", {
           //id: $("input[name=roomRadios]:checked").val()
-          id: msg.roomId
+          id: orderInfo.roomId
         });
       }
     } else {
@@ -850,9 +847,38 @@ $(function() {
       $("#pass").prop("disabled", true);
       //$("#cardList input").prop("disabled", true);
       $("#gameCommentaryArea").append(
-        msg.playerName + "さんのターンです。<br />"
+        orderInfo.playerName + "さんのターンです。<br />"
       );
     }
+  };
+
+  socket.on("order", function(msg) {
+    //最初に
+    //debugLog("order accept");
+    //順番が回ったときはエラーを消そう
+    $("#errorMsg").hide();
+    switchOrder(msg);
+    // if (msg.flag) {
+    //   audio.play();
+    //   $("#send").prop("disabled", false);
+    //   $("#pass").prop("disabled", false);
+    //   //$("#cardList input").prop("disabled", false);
+    //   //$("#order").text("あなたの番です");
+    //   $("#gameCommentaryArea").append("あなたのターンです。<br />");
+    //   if (msg.skip) {
+    //     socket.emit("pass", {
+    //       //id: $("input[name=roomRadios]:checked").val()
+    //       id: msg.roomId
+    //     });
+    //   }
+    // } else {
+    //   $("#send").prop("disabled", true);
+    //   $("#pass").prop("disabled", true);
+    //   //$("#cardList input").prop("disabled", true);
+    //   $("#gameCommentaryArea").append(
+    //     msg.playerName + "さんのターンです。<br />"
+    //   );
+    // }
 
     $("#orderList").empty();
     let pos = 0;
