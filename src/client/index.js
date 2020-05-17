@@ -487,8 +487,8 @@ $(function() {
       if(info.cardNum === 0){
         className = "gameEnd";
       }
-      const playerName = "<span class=" + className + ">" + info[index] + "</span>";
-      const cardNum = "<span class=" + className + ">" + info.cardNum + "</span>";
+      const playerName = "<span class=" + className + ">" + info[index].playerName + "</span>";
+      const cardNum = "<span class=" + className + ">" + info[index].cardNum + "</span>";
       displayStr = displayStr.replace("{player" + index +"}", playerName).replace("{num" + index +"}", cardNum);
     });
     $("#orderList").append(displayStr);
