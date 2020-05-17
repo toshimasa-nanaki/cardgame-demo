@@ -13,10 +13,15 @@ module.exports.notifyGameReady = roomId => {
   roomInfo.giveCardCount = 0;
   const orders = roomInfo.order;
   const users = roomInfo.users;
-  const userDispList = [];
+  const orderDispList = [];
   orders.forEach(key => {
-    userDispList.push(users[key.userId].dispName);
+    orderDispList.push({ 
+      playerName: users[key.userId].dispName,
+      cardNum: users[key.userId].card.length
+    });
   });
+   // cardNum: users[element.userId].card.length,
+   //    playerName: users[element.userId].dispName
   // for (let [key, value] of Object.entries(orders)) {
   //   userDispList.push(value.dispName);
   // }
@@ -34,7 +39,7 @@ module.exports.notifyGameReady = roomId => {
     playerPoint: users[element.userId].point,
     blindCards: roomInfo.blindCards,
     orderNum: 0,
-    userList: userDispList
+    orderDispList: orderDispList
   });
   });
 }

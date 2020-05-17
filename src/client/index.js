@@ -481,14 +481,14 @@ $(function() {
   }
   
   const displayOrder = (info) => {
-    let displayStr = constant.ORDER_LIST_TEMPLATE[String(info.userList.length)];
-    info.userList.forEach((element, index) => {
+    let displayStr = constant.ORDER_LIST_TEMPLATE[String(info.length)];
+    info.forEach((element, index) => {
       let className = info.orderNum === index ? "isTurn" : "noTurn";
-      if(info.card.length === 0){
+      if(info.cardNum === 0){
         className = "gameEnd";
       }
-      const playerName = "<span class=" + className + ">" + info.userList[index] + "</span>";
-      const cardNum = "<span class=" + className + ">" + info.card.length + "</span>";
+      const playerName = "<span class=" + className + ">" + info[index] + "</span>";
+      const cardNum = "<span class=" + className + ">" + info.cardNum + "</span>";
       displayStr = displayStr.replace("{player" + index +"}", playerName).replace("{num" + index +"}", cardNum);
     });
     $("#orderList").append(displayStr);
@@ -503,7 +503,7 @@ $(function() {
     );
     initGameScreen(msg);
     switchDispGameScreen(msg);
-    displayOrder(msg);
+    displayOrder(msg.orderDispList);
     // for (let i = 0; i < msg.userList.length; i++) {
     //   let ele =
     //     i === 0
