@@ -834,7 +834,7 @@ $(function() {
    */
   const switchOrder = (orderInfo) => {
     debugLog("order switch");
-    if (orderInfo.flag) {
+    if (orderInfo.yourTurn) {
       audio.play();
       $("#send").prop("disabled", false);
       $("#pass").prop("disabled", false);
