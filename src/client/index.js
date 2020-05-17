@@ -481,14 +481,13 @@ $(function() {
   }
   
   const displayOrder = (info) => {
-    const displayTemp = constant.ORDER_LIST_TEMPLATE[String(info.userList.length)];
+    let displayStr = constant.ORDER_LIST_TEMPLATE[String(info.userList.length)];
     info.userList.forEach((element, index) => {
-      const playerName = info.userList[index];
+      const playerName = "<b>" + info.userList[index] + "</b>";
       const cardNum = info.card.length;
-      displayTemp.replace("{player" + index +"}", playerName);
-      displayTemp.replace("{num" + index +"}", cardNum);
+      displayStr = displayStr.replace("{player" + index +"}", playerName).replace("{num" + index +"}", cardNum);
     });
-    $("#orderList").append(displayTemp);
+    $("#orderList").append(displayStr);
   };
   //ゲームの準備ができたことを受け取る
   socket.on("gameReady", function(msg) {
