@@ -483,7 +483,8 @@ $(function() {
   const displayOrder = (info) => {
     let displayStr = constant.ORDER_LIST_TEMPLATE[String(info.userList.length)];
     info.userList.forEach((element, index) => {
-      const playerName = "<b>" + info.userList[index] + "</b>";
+      const className = info.orderNum === index ? ""
+      const playerName = "<span class='{}'>" + info.userList[index];
       const cardNum = info.card.length;
       displayStr = displayStr.replace("{player" + index +"}", playerName).replace("{num" + index +"}", cardNum);
     });
