@@ -998,8 +998,6 @@ $(function() {
         $("#elevenback").text("");
         $("#shibari").text("");
         //また自分のターン
-        // $("#send").prop("disabled", false);
-        // $("#pass").prop("disabled", false);
         break;
       case "cut8":
         $("#gameCommentaryArea").append(
@@ -1012,8 +1010,6 @@ $(function() {
         $("#elevenback").text("");
         $("#shibari").text("");
         //また自分のターン
-        // $("#send").prop("disabled", false);
-        // $("#pass").prop("disabled", false);
         break;
       case "cutPass":
         $("#gameCommentaryArea").append(
@@ -1022,9 +1018,6 @@ $(function() {
         $("#field").empty();
         $("#elevenback").text("");
         $("#shibari").text("");
-        //また自分のターン(これは特殊？)
-        // $("#send").prop("disabled", false);
-        // $("#pass").prop("disabled", false);
         break;
     }
     $("#gameCommentaryArea").scrollTop(
@@ -1138,6 +1131,10 @@ $(function() {
       rank++;
     });
   });
+  
+  /**
+   * 部屋を飛び出したユーザーがいるのでゲームが中断する
+   */
   socket.on("releaseRoom", info => {
     debugLog("部屋がリリースされました");
     $("#releaseRoomModalBody").text("");

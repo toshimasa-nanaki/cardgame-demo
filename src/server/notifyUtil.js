@@ -38,6 +38,7 @@ module.exports.notifyGameReady = roomId => {
   });
 }
 
+//TODO 動かない。。そもそもorderが弱い順になっていないので仕様を変える必要あり。
 module.exports.notifyGiveCard = (roomId,playerNum) => {
   const roomInfo = storeData.persistentData[roomId];
   const usersInfo = roomInfo.users;
@@ -99,15 +100,7 @@ module.exports.notifyChangeTurn = (currentTurnIndex, roomId) => {
   const roomInfo = storeData.persistentData[roomId];
   const orderList = roomInfo.order;
   const users = roomInfo.users;
-  
-  // let nextTurn =
-  //   currentTurnIndex != orderList.length - 1 ? currentTurnIndex + 1 : 0;
-  
   const remainingCards = [];
-  // if (users[orderList[currentTurnIndex]].rankNum != 0) {
-  //   //現在のユーザがすでに上がっている場合
-  //   storeData.persistentData[roomId]["order"].splice(currentTurnIndex, 1);
-  // }
   let tryCount = 0;
   let nextTurn;
   while(tryCount < roomInfo.capacity - 1){
@@ -146,7 +139,6 @@ module.exports.notifyChangeTurn = (currentTurnIndex, roomId) => {
       commonRequire.io.to(element).emit("order", {
         yourTurn: false,
         skip: false,
-        //playerName: users[orderList[nextTurn]].dispName,
         playerName: users[nextTurnUserId].dispName,
         orderNum: nextTurn,
         endCurrentTurn: users[currentTurnUserId].rankNum != 0 ? currentTurnIndex : -1,
