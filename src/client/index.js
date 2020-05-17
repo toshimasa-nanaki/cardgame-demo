@@ -389,30 +389,6 @@ $(function() {
     });
     debugLog("order accept");
     switchOrder(msg);
-    // if (msg.yourTurn) {
-    //   audio.play();
-    //   $("#send").prop("disabled", false);
-    //   $("#pass").prop("disabled", false);
-    //   //$("#handCards img").prop("disabled", false);
-    //   //$("#order").text("あなたの番です");
-    //   $("#gameCommentaryArea").append("あなたのターンです。<br />");
-    //   if (msg.skip) {
-    //     socket.emit("pass", {
-    //       id: msg.roomInfo.roomId
-    //     });
-    //   }
-    // } else {
-    //   $("#send").prop("disabled", true);
-    //   $("#pass").prop("disabled", true);
-    //   //$("#handCards img").prop("disabled", true);
-    //   //$("#order").text(msg.playerName + "の番です");
-    //   $("#gameCommentaryArea").append(
-    //     msg.playerName + "さんのターンです。<br />"
-    //   );
-    // }
-    // $("#gameCommentaryArea").scrollTop(
-    //   $("#gameCommentaryArea")[0].scrollHeight
-    // );
   });
 
   /**
@@ -575,30 +551,6 @@ $(function() {
     });
     debugLog("order accept");
     switchOrder(msg);
-    // if (msg.yourTurn) {
-    //   audio.play();
-    //   $("#send").prop("disabled", false);
-    //   $("#pass").prop("disabled", false);
-    //   //$("#handCards img").prop("disabled", false);
-    //   //$("#order").text("あなたの番です");
-    //   $("#gameCommentaryArea").append("あなたのターンです。<br />");
-    //   if (msg.skip) {
-    //     socket.emit("pass", {
-    //       id: msg.roomId
-    //     });
-    //   }
-    // } else {
-    //   $("#send").prop("disabled", true);
-    //   $("#pass").prop("disabled", true);
-    //   //$("#handCards img").prop("disabled", true);
-    //   //$("#order").text(msg.playerName + "の番です");
-    //   $("#gameCommentaryArea").append(
-    //     msg.playerName + "さんのターンです。<br />"
-    //   );
-    // }
-    // $("#gameCommentaryArea").scrollTop(
-    //   $("#gameCommentaryArea")[0].scrollHeight
-    // );
   });
   
   function giveToHigherStatus2(msg) {
@@ -866,27 +818,6 @@ $(function() {
     //順番が回ったときはエラーを消そう
     $("#errorMsg").hide();
     switchOrder(msg);
-    // if (msg.flag) {
-    //   audio.play();
-    //   $("#send").prop("disabled", false);
-    //   $("#pass").prop("disabled", false);
-    //   //$("#cardList input").prop("disabled", false);
-    //   //$("#order").text("あなたの番です");
-    //   $("#gameCommentaryArea").append("あなたのターンです。<br />");
-    //   if (msg.skip) {
-    //     socket.emit("pass", {
-    //       //id: $("input[name=roomRadios]:checked").val()
-    //       id: msg.roomId
-    //     });
-    //   }
-    // } else {
-    //   $("#send").prop("disabled", true);
-    //   $("#pass").prop("disabled", true);
-    //   //$("#cardList input").prop("disabled", true);
-    //   $("#gameCommentaryArea").append(
-    //     msg.playerName + "さんのターンです。<br />"
-    //   );
-    // }
 
     $("#orderList").empty();
     let pos = 0;

@@ -39,6 +39,9 @@ module.exports.notifyGameReady = roomId => {
 }
 
 module.exports.notifyGiveCard = (roomId,playerNum) => {
+  const roomInfo = storeData.persistentData[roomId];
+  const usersInfo = roomInfo.users;
+  const orderInfo = roomInfo.order;
   storeData.persistentData[roomId].giveCardPhase = true;
   if (playerNum === 3) {
     //3人のとき
