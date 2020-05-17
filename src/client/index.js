@@ -480,7 +480,8 @@ $(function() {
     
   }
   
-  const displayOrder = () => {
+  const displayOrder = (info) => {
+    const displayTemp = constant.ORDER_LIST_TEMPLATE[String(info.userList.length)];
     
   };
   //ゲームの準備ができたことを受け取る
