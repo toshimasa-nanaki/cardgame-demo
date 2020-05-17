@@ -141,7 +141,7 @@ module.exports.notifyChangeTurn = (currentTurnIndex, roomId) => {
     //if (element != orderList[nextTurn]) {
     if(element != nextTurnUserId){
       commonRequire.io.to(element).emit("order", {
-        flag: false,
+        yourTurn: false,
         skip: false,
         //playerName: users[orderList[nextTurn]].dispName,
         playerName: users[nextTurnUserId].dispName,
@@ -153,7 +153,7 @@ module.exports.notifyChangeTurn = (currentTurnIndex, roomId) => {
     }
   });
   commonRequire.io.to(nextTurnUserId).emit("order", {
-    flag: true,
+    yourTurn: true,
     skip: users[nextTurnUserId].rank != "" ? true : false,
     orderNum: nextTurn,
     endCurrentTurn: users[currentTurnUserId].rankNum != 0 ? currentTurnIndex : -1,
