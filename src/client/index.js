@@ -482,7 +482,13 @@ $(function() {
   
   const displayOrder = (info) => {
     const displayTemp = constant.ORDER_LIST_TEMPLATE[String(info.userList.length)];
-    
+    info.userList.forEach((element, index) => {
+      const playerName = info.userList[index];
+      const cardNum = info.card.length;
+      displayTemp.replace("{player" + index +"}", playerName);
+      displayTemp.replace("{num" + index +"}", cardNum);
+    });
+    $("#orderList").append(displayTemp);
   };
   //ゲームの準備ができたことを受け取る
   socket.on("gameReady", function(msg) {
@@ -494,19 +500,19 @@ $(function() {
     );
     initGameScreen(msg);
     switchDispGameScreen(msg);
-    
-    for (let i = 0; i < msg.userList.length; i++) {
-      let ele =
-        i === 0
-          ? $("<li>")
-              .text(msg.userList[i] + "(" + msg.card.length + "枚)")
-              .attr({ style: "color: red" })
-          : $("<li>").text(msg.userList[i] + "(" + msg.card.length + "枚)");
-      $("#orderList").append(ele);
-      if (i !== msg.userList.length - 1) {
-        $("#orderList").append("→");
-      }
-    }
+    displayOrder(msg);
+    // for (let i = 0; i < msg.userList.length; i++) {
+    //   let ele =
+    //     i === 0
+    //       ? $("<li>")
+    //           .text(msg.userList[i] + "(" + msg.card.length + "枚)")
+    //           .attr({ style: "color: red" })
+    //       : $("<li>").text(msg.userList[i] + "(" + msg.card.length + "枚)");
+    //   $("#orderList").append(ele);
+    //   if (i !== msg.userList.length - 1) {
+    //     $("#orderList").append("→");
+    //   }
+    // }
     msg.blindCards.forEach(ele => {
       $("#blindCards").append(
         $("<li>" + constant.DISPLAY_DIC[ele.type + ele.number] + "</li>")
