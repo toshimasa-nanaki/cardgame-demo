@@ -371,6 +371,7 @@ module.exports.reJoinRoom = (reJoinInfo, socketObj) => {
     blindCards: storeData.persistentData[reJoinInfo.roomId].blindCards,
     orderNum: storeData.persistentData[reJoinInfo.roomId].currentTurnPos,
     userList: userDispList,
+    roomId: reJoinInfo.roomId,
     roomInfo: {
       roomDispName: storeData.persistentData[reJoinInfo.roomId].roomDispName, //部屋の表示名
       elevenback: storeData.persistentData[reJoinInfo.roomId].elevenback, //11backフラグ

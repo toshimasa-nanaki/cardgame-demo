@@ -388,30 +388,31 @@ $(function() {
       $("#handCards").append(li);
     });
     debugLog("order accept");
-    if (msg.yourTurn) {
-      audio.play();
-      $("#send").prop("disabled", false);
-      $("#pass").prop("disabled", false);
-      //$("#handCards img").prop("disabled", false);
-      //$("#order").text("あなたの番です");
-      $("#gameCommentaryArea").append("あなたのターンです。<br />");
-      if (msg.skip) {
-        socket.emit("pass", {
-          id: msg.roomInfo.roomId
-        });
-      }
-    } else {
-      $("#send").prop("disabled", true);
-      $("#pass").prop("disabled", true);
-      //$("#handCards img").prop("disabled", true);
-      //$("#order").text(msg.playerName + "の番です");
-      $("#gameCommentaryArea").append(
-        msg.playerName + "さんのターンです。<br />"
-      );
-    }
-    $("#gameCommentaryArea").scrollTop(
-      $("#gameCommentaryArea")[0].scrollHeight
-    );
+    switchOrder(msg);
+    // if (msg.yourTurn) {
+    //   audio.play();
+    //   $("#send").prop("disabled", false);
+    //   $("#pass").prop("disabled", false);
+    //   //$("#handCards img").prop("disabled", false);
+    //   //$("#order").text("あなたの番です");
+    //   $("#gameCommentaryArea").append("あなたのターンです。<br />");
+    //   if (msg.skip) {
+    //     socket.emit("pass", {
+    //       id: msg.roomInfo.roomId
+    //     });
+    //   }
+    // } else {
+    //   $("#send").prop("disabled", true);
+    //   $("#pass").prop("disabled", true);
+    //   //$("#handCards img").prop("disabled", true);
+    //   //$("#order").text(msg.playerName + "の番です");
+    //   $("#gameCommentaryArea").append(
+    //     msg.playerName + "さんのターンです。<br />"
+    //   );
+    // }
+    // $("#gameCommentaryArea").scrollTop(
+    //   $("#gameCommentaryArea")[0].scrollHeight
+    // );
   });
 
   /**
@@ -573,30 +574,31 @@ $(function() {
       $("#handCards").append(li);
     });
     debugLog("order accept");
-    if (msg.yourTurn) {
-      audio.play();
-      $("#send").prop("disabled", false);
-      $("#pass").prop("disabled", false);
-      //$("#handCards img").prop("disabled", false);
-      //$("#order").text("あなたの番です");
-      $("#gameCommentaryArea").append("あなたのターンです。<br />");
-      if (msg.skip) {
-        socket.emit("pass", {
-          id: msg.roomId
-        });
-      }
-    } else {
-      $("#send").prop("disabled", true);
-      $("#pass").prop("disabled", true);
-      //$("#handCards img").prop("disabled", true);
-      //$("#order").text(msg.playerName + "の番です");
-      $("#gameCommentaryArea").append(
-        msg.playerName + "さんのターンです。<br />"
-      );
-    }
-    $("#gameCommentaryArea").scrollTop(
-      $("#gameCommentaryArea")[0].scrollHeight
-    );
+    switchOrder(msg);
+    // if (msg.yourTurn) {
+    //   audio.play();
+    //   $("#send").prop("disabled", false);
+    //   $("#pass").prop("disabled", false);
+    //   //$("#handCards img").prop("disabled", false);
+    //   //$("#order").text("あなたの番です");
+    //   $("#gameCommentaryArea").append("あなたのターンです。<br />");
+    //   if (msg.skip) {
+    //     socket.emit("pass", {
+    //       id: msg.roomId
+    //     });
+    //   }
+    // } else {
+    //   $("#send").prop("disabled", true);
+    //   $("#pass").prop("disabled", true);
+    //   //$("#handCards img").prop("disabled", true);
+    //   //$("#order").text(msg.playerName + "の番です");
+    //   $("#gameCommentaryArea").append(
+    //     msg.playerName + "さんのターンです。<br />"
+    //   );
+    // }
+    // $("#gameCommentaryArea").scrollTop(
+    //   $("#gameCommentaryArea")[0].scrollHeight
+    // );
   });
   
   function giveToHigherStatus2(msg) {
@@ -827,6 +829,9 @@ $(function() {
     $("#gameController2").hide();
   });
   
+  /**
+   * 順番切り替え
+   */
   const switchOrder = (orderInfo) => {
     debugLog("order switch");
     if (orderInfo.flag) {
@@ -850,6 +855,9 @@ $(function() {
         orderInfo.playerName + "さんのターンです。<br />"
       );
     }
+    $("#gameCommentaryArea").scrollTop(
+      $("#gameCommentaryArea")[0].scrollHeight
+    );
   };
 
   socket.on("order", function(msg) {
