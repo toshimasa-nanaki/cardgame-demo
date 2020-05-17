@@ -392,7 +392,7 @@ $(function() {
       audio.play();
       $("#send").prop("disabled", false);
       $("#pass").prop("disabled", false);
-      $("#handCards img").prop("disabled", false);
+      //$("#handCards img").prop("disabled", false);
       //$("#order").text("あなたの番です");
       $("#gameCommentaryArea").append("あなたのターンです。<br />");
       if (msg.skip) {
@@ -403,7 +403,7 @@ $(function() {
     } else {
       $("#send").prop("disabled", true);
       $("#pass").prop("disabled", true);
-      $("#handCards img").prop("disabled", true);
+      //$("#handCards img").prop("disabled", true);
       //$("#order").text(msg.playerName + "の番です");
       $("#gameCommentaryArea").append(
         msg.playerName + "さんのターンです。<br />"
@@ -577,7 +577,7 @@ $(function() {
       audio.play();
       $("#send").prop("disabled", false);
       $("#pass").prop("disabled", false);
-      $("#handCards img").prop("disabled", false);
+      //$("#handCards img").prop("disabled", false);
       //$("#order").text("あなたの番です");
       $("#gameCommentaryArea").append("あなたのターンです。<br />");
       if (msg.skip) {
@@ -588,7 +588,7 @@ $(function() {
     } else {
       $("#send").prop("disabled", true);
       $("#pass").prop("disabled", true);
-      $("#handCards img").prop("disabled", true);
+      //$("#handCards img").prop("disabled", true);
       //$("#order").text(msg.playerName + "の番です");
       $("#gameCommentaryArea").append(
         msg.playerName + "さんのターンです。<br />"
