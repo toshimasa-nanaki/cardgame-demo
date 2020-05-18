@@ -482,7 +482,7 @@ $(function() {
   
   const displayOrder = (info) => {
     let displayStr = constant.ORDER_LIST_TEMPLATE[String(info.orderDispList.length)];
-    info.forEach((element, index) => {
+    info.orderDispList.forEach((element, index) => {
       let className = info.orderNum === index ? "isTurn" : "noTurn";
       if(info.orderDispList[index].cardNum === 0){
         className = "gameEnd";
