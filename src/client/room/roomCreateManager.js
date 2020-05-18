@@ -37,15 +37,22 @@ document.getElementById("rulePresetSelectbox").addEventListener("change", () => 
   switch ($(event.currentTarget).val()) {
     case "default":
       document.getElementById("setNum").value = "";
-      $("#elevenBackSetting").prop("checked", true);
-      $("#stairSetting").prop("checked", true);
-      $("#shibariSetting").prop("checked", true);
+      document.getElementById("elevenBackSetting").checked = true;
+      document.getElementById("stairSetting").checked = true;
+      document.getElementById("shibariSetting").checked = true;
+      
+      // $("#elevenBackSetting").prop("checked", true);
+      // $("#stairSetting").prop("checked", true);
+      // $("#shibariSetting").prop("checked", true);
       break;
     case "official":
       document.getElementById("setNum").value = 3;
-      $("#elevenBackSetting").prop("checked", false);
-      $("#stairSetting").prop("checked", true);
-      $("#shibariSetting").prop("checked", true);
+      document.getElementById("elevenBackSetting").checked = false;
+      document.getElementById("stairSetting").checked = true;
+      document.getElementById("shibariSetting").checked = true;
+      // $("#elevenBackSetting").prop("checked", false);
+      // $("#stairSetting").prop("checked", true);
+      // $("#shibariSetting").prop("checked", true);
       break;
   }
 });
@@ -54,7 +61,7 @@ document.getElementById("rulePresetSelectbox").addEventListener("change", () => 
  */
 socketConnection.on("createdRoom", createdRoomInfo => {
   //部屋作成完了後
-  debugLog("CreatedRoom");
-  createRoomCardList(createdRoomInfo);
+  // debugLog("CreatedRoom");
+  // createRoomCardList(createdRoomInfo);
   $('#nav-tab a[href="#nav-joinroom"]')[0].Tab.show();
 });
