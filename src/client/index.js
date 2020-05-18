@@ -51,35 +51,35 @@ $(function() {
 //     return ruleSet;
 //   }
   
-  /**
-   * ルールプリセットの選択を変更した際の動作
-   */
-  $("#rulePresetSelectbox").on("change", event => {
-    console.log($(event.currentTarget).val());
-    switch ($(event.currentTarget).val()) {
-      case "default":
-        $("#setNum").val("");
-        $("#elevenBackSetting").prop("checked", true);
-        $("#stairSetting").prop("checked", true);
-        $("#shibariSetting").prop("checked", true);
-        break;
-      case "official":
-        $("#setNum").val(3);
-        $("#elevenBackSetting").prop("checked", false);
-        $("#stairSetting").prop("checked", true);
-        $("#shibariSetting").prop("checked", true);
-        break;
-    }
-  });
-  /**
-   * 部屋作成完了後の動作
-   */
-  socket.on("createdRoom", createdRoomInfo => {
-    //部屋作成完了後
-    debugLog("CreatedRoom");
-    createRoomCardList(createdRoomInfo);
-    $('#nav-tab a[href="#nav-joinroom"]')[0].Tab.show();
-  });
+  // /**
+  //  * ルールプリセットの選択を変更した際の動作
+  //  */
+  // $("#rulePresetSelectbox").on("change", event => {
+  //   console.log($(event.currentTarget).val());
+  //   switch ($(event.currentTarget).val()) {
+  //     case "default":
+  //       $("#setNum").val("");
+  //       $("#elevenBackSetting").prop("checked", true);
+  //       $("#stairSetting").prop("checked", true);
+  //       $("#shibariSetting").prop("checked", true);
+  //       break;
+  //     case "official":
+  //       $("#setNum").val(3);
+  //       $("#elevenBackSetting").prop("checked", false);
+  //       $("#stairSetting").prop("checked", true);
+  //       $("#shibariSetting").prop("checked", true);
+  //       break;
+  //   }
+  // });
+  // /**
+  //  * 部屋作成完了後の動作
+  //  */
+  // socket.on("createdRoom", createdRoomInfo => {
+  //   //部屋作成完了後
+  //   debugLog("CreatedRoom");
+  //   createRoomCardList(createdRoomInfo);
+  //   $('#nav-tab a[href="#nav-joinroom"]')[0].Tab.show();
+  // });
   /**
    * 部屋一覧の更新要求を受けた時の動作
    */
