@@ -1,3 +1,4 @@
+import socket from "./common/socketIO"; 
 $(function() {
   const voiceData = require("./voiceData.js");
   const constant = require("./constant.js");
@@ -5,7 +6,8 @@ $(function() {
   const bsnV4 = require("bootstrap.native/dist/bootstrap-native-v4");
   require("./room/roomCreateManager.js");  
   
-  var socket = io();
+  //var socket = io();
+  
   let audio = new Audio(voiceData.haihai);
   const debugMode =
     location.search.substring(1) === "debug=true" ? true : false;

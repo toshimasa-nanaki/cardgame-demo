@@ -1,4 +1,5 @@
-const socketConnection = require("../common/socketIO.js");  
+//const socketConnection = require("../common/socketIO.js");
+import socketConnection from "../common/socketIO"; 
 
 /**
    * ルーム作成ボタンクリック時の動作
