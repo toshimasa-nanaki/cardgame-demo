@@ -3,6 +3,7 @@ $(function() {
   const constant = require("./constant.js");
   require("./index.scss");
   const bsnV4 = require("bootstrap.native/dist/bootstrap-native-v4");
+  require("./room/roomCreateManager.js");  
   
   var socket = io();
   let audio = new Audio(voiceData.haihai);
@@ -21,32 +22,32 @@ $(function() {
   }
   mypreload();
   
-  /**
-   * ルーム作成ボタンクリック時の動作
-   */
-  $("#requestRoomCreate").on("click", ()=> {
-    //部屋作成時
-    socket.emit("requestRoomCreate", {
-      dispName: document.getElementById("roomDispName").value,
-      capacity: document.getElementById("roomcapacity").value,
-      setNum: document.getElementById("setNum").value,
-      ruleSet: genRuleSetData()
-    });
-  });
+//   /**
+//    * ルーム作成ボタンクリック時の動作
+//    */
+//   document.getElementById("requestRoomCreate").addEventListener('click', () => {
+//     //部屋作成時
+//     socket.emit("requestRoomCreate", {
+//       dispName: document.getElementById("roomDispName").value,
+//       capacity: document.getElementById("roomcapacity").value,
+//       setNum: document.getElementById("setNum").value,
+//       ruleSet: genRuleSetData()
+//     });
+//   });
   
-  /**
-   * リクエスト用のルールセットデータを作成する
-   */
-  const genRuleSetData = () => {
-    let ruleSet = [];
-    const ele = document.getElementsByName("ruleSets");
-    for (let i = 0; i < ele.length; i++) {
-      if (ele[i].checked) {
-        ruleSet.push(ele[i].value);
-      }
-    }
-    return ruleSet;
-  }
+//   /**
+//    * リクエスト用のルールセットデータを作成する
+//    */
+//   const genRuleSetData = () => {
+//     let ruleSet = [];
+//     const ele = document.getElementsByName("ruleSets");
+//     for (let i = 0; i < ele.length; i++) {
+//       if (ele[i].checked) {
+//         ruleSet.push(ele[i].value);
+//       }
+//     }
+//     return ruleSet;
+//   }
   
   /**
    * ルールプリセットの選択を変更した際の動作
@@ -216,17 +217,15 @@ $(function() {
   }
 
   $("#retryConnectRoomButton").on("click", (e) => {
-    //let reconnectUserId = $("input[name=memberRadios]:checked").val();
     socket.emit("reJoin", {
-      //roomId: $("input[name=roomRadios]:checked").val(),
       roomId: e.currentTarget.dataset.roomId,
       reconnectUserId: $("input[name=memberRadios]:checked").val(),
       playerName: $("#playerName").val()
     });
     const myModalInstance = new bsnV4.Modal(document.getElementById("retryConnectModal"),
     { // options object
-        backdrop: 'static', // we don't want to dismiss Modal when Modal or backdrop is the click event target
-        keyboard: false, // we don't want to dismiss Modal on pressing Esc key
+        backdrop: 'static',
+        keyboard: false,
     });
     myModalInstance.hide();
     document.cookie = "name=" + $("#playerName").val() + "; max-age=259200";
