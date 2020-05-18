@@ -27,9 +27,9 @@ $(function() {
   $("#requestRoomCreate").on("click", ()=> {
     //部屋作成時
     socket.emit("requestRoomCreate", {
-      dispName: $("#roomDispName").val(),
-      capacity: $("#roomcapacity").val(),
-      setNum: $("#setNum").val(),
+      dispName: document.getElementById("roomDispName").value,
+      capacity: document.getElementById("roomcapacity").value,
+      setNum: document.getElementById("setNum").value,
       ruleSet: genRuleSetData()
     });
   });
