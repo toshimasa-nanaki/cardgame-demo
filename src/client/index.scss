@@ -30,8 +30,14 @@ div#svgArea{
 /* ul#orderList {
   display: none;
 } */
-ul#orderList li {
+/* ul#orderList li {
   display: inline-block;
+} */
+div#orderList span.isTurn {
+  color: red;
+}
+div#orderList span.gameEnd {
+  color: blue;
 }
 ul#handCards li {
   /* liが横並びになるようにします。 */
