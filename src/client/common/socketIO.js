@@ -1,5 +1,5 @@
 const socketIO = require("socket.io-client");
 
-const socketConnection = io();
+const socketConnection = socketIO();
 
 export default socketConnection;

@@ -1,4 +1,4 @@
-const socket = require("socket.io-client");  
+const socket = require("../common/socketIO.js");  
 
 /**
    * ルーム作成ボタンクリック時の動作
