@@ -1,11 +1,11 @@
-const socket = require("../common/socketIO.js");  
+const socketConnection = require("../common/socketIO.js");  
 
 /**
    * ルーム作成ボタンクリック時の動作
    */
   document.getElementById("requestRoomCreate").addEventListener('click', () => {
     //部屋作成時
-    socket.emit("requestRoomCreate", {
+    socketConnection.emit("requestRoomCreate", {
       dispName: document.getElementById("roomDispName").value,
       capacity: document.getElementById("roomcapacity").value,
       setNum: document.getElementById("setNum").value,

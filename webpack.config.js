@@ -21,6 +21,11 @@ module.exports = [
     module:{
       rules:[
         {
+          test: /\.js$/,
+          use: "es6-loader",
+          exclude: /node_modules/,
+        },
+        {
           test: /\.(sc|sa|c)ss/,
           use: [
             {
