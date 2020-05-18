@@ -22,7 +22,7 @@ module.exports = [
       rules:[
         {
           test: /\.js$/,
-          use: "es6-loader",
+          use: "babel-loader",
           exclude: /node_modules/,
         },
         {
