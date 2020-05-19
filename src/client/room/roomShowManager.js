@@ -1,5 +1,6 @@
 import socketConnection from "../common/socketIO";
-
+import debugLog from "../common/socketIO";
+import constant from "../constant";
 
 /**
    * 部屋一覧の更新要求を受けた時の動作
@@ -47,7 +48,7 @@ import socketConnection from "../common/socketIO";
             .addClass("btn btn-outline-primary")
             .data("roomId", roomList[key].roomId)
             .on("click", () => {
-              socket.emit("join", {
+              socketConnection.emit("join", {
                 roomId: roomList[key].roomId,
                 playerName: $("#playerName").val()
               });

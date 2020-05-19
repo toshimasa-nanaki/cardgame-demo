@@ -4,7 +4,8 @@ $(function() {
   const constant = require("./constant.js");
   require("./index.scss");
   const bsnV4 = require("bootstrap.native/dist/bootstrap-native-v4");
-  require("./room/roomCreateManager.js");  
+  require("./room/roomCreateManager.js"); 
+  require("./room/roomShowManager.js");  
   
   //var socket = io();
   
