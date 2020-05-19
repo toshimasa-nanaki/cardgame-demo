@@ -80,21 +80,21 @@ $(function() {
   //   createRoomCardList(createdRoomInfo);
   //   $('#nav-tab a[href="#nav-joinroom"]')[0].Tab.show();
   // });
-  /**
-   * 部屋一覧の更新要求を受けた時の動作
-   */
-  socket.on("updateRoomList", createdRoomInfo => {
-    debugLog("updateRoomList");
-    createRoomCardList(createdRoomInfo);
-  });
-  /**
-   * 部屋一覧を表示する(初回接続時)
-   */
-  socket.on("showRoomList", roomInfoList => {
-    //サーバ接続時に部屋一覧を渡す
-    debugLog("ShowRoom");
-    createRoomCardList(roomInfoList);
-  });
+  // /**
+  //  * 部屋一覧の更新要求を受けた時の動作
+  //  */
+  // socket.on("updateRoomList", createdRoomInfo => {
+  //   debugLog("updateRoomList");
+  //   createRoomCardList(createdRoomInfo);
+  // });
+  // /**
+  //  * 部屋一覧を表示する(初回接続時)
+  //  */
+  // socket.on("showRoomList", roomInfoList => {
+  //   //サーバ接続時に部屋一覧を渡す
+  //   debugLog("ShowRoom");
+  //   createRoomCardList(roomInfoList);
+  // });
 
   //cookie
   $("#playerName").val(document.cookie.split(";")[0].split("=")[1]);
