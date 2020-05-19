@@ -1,5 +1,5 @@
 import socketConnection from "../common/socketIO";
-import debugLog from "../common/socketIO";
+import debugLog from "../common/logger.js";
 import constant from "../constant";
 
 /**
