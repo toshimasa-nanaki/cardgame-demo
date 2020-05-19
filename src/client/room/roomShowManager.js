@@ -68,7 +68,7 @@ import socketConnection from "../common/socketIO";
             .on("click", (e) => {
               //次の画面のボタンにroomIdをつけておく
               document.getElementById('retryConnectRoomButton').dataset.roomId = roomList[key].roomId;
-              socket.emit("join", {
+              socketConnection.emit("join", {
                 roomId: roomList[key].roomId,
                 playerName: $("#playerName").val()
               });
