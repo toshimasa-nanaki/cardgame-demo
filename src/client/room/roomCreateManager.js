@@ -1,7 +1,18 @@
-//const socketConnection = require("../common/socketIO.js");
 import socketConnection from "../common/socketIO";
 import {createRoomCardList} from "./roomShowManager";
 import {debugLog} from "../common/logger.js";
+
+
+/**
+ * 部屋作成完了後の動作
+ */
+socketConnection.on("createdRoom", createdRoomInfo => {
+  //部屋作成完了後
+  debugLog("CreatedRoom");
+  createRoomCardList(createdRoomInfo);
+  document.querySelector('#nav-tab a[href="#nav-joinroom"]')[0].Tab.show();
+  //$('#nav-tab a[href="#nav-joinroom"]')[0].Tab.show();
+});
 
 /**
  * ルーム作成ボタンクリック時の動作
@@ -58,12 +69,4 @@ document.getElementById("rulePresetSelectbox").addEventListener("change", () => 
       break;
   }
 });
-/**
- * 部屋作成完了後の動作
- */
-socketConnection.on("createdRoom", createdRoomInfo => {
-  //部屋作成完了後
-  debugLog("CreatedRoom");
-  createRoomCardList(createdRoomInfo);
-  $('#nav-tab a[href="#nav-joinroom"]')[0].Tab.show();
-});
+
