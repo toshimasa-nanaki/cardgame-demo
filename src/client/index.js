@@ -416,7 +416,7 @@ $(function() {
     switchOrder(msg);
   });
   
-  const dispHandCard = (cardInfo, isAutoGive = false, isSelectedCards = false) => {
+  const dispHandCard = (cardInfo, isGiveMode = false, giveModeOption = {}) => {
       const imgUri =
         "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
         constant.DISPLAY_IMAGE_ID[cardInfo.type + cardInfo.number] +
