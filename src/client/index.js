@@ -374,7 +374,7 @@ $(function() {
       );
     });
     msg.card.forEach(element => {
-      dispHandCard(element, true);
+      dispHandCard(element);
       // const cardType = element.number + element.type;
       // const imgUri =
       //   "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
@@ -416,8 +416,7 @@ $(function() {
     switchOrder(msg);
   });
   
-  const dispHandCard = (cardInfo, isSelectable) => {
-    const cardType = cardInfo.number + cardInfo.type;
+  const dispHandCard = (cardInfo, isAutoGive = false, isSelectedCards = false) => {
       const imgUri =
         "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
         constant.DISPLAY_IMAGE_ID[cardInfo.type + cardInfo.number] +
@@ -436,7 +435,7 @@ $(function() {
             $(this).removeClass("checked");
           }
         });
-      var check = $(
+      const check = $(
         '<input class="disabled_checkbox" type="checkbox" checked="" />'
       )
         .attr({
@@ -446,10 +445,10 @@ $(function() {
         .on("click", function() {
           return false;
         });
-      let box = $('<div class="image_box"/>')
+      const box = $('<div class="image_box"/>')
         .append(img)
         .append(check);
-      let li = $('<li id="' + cardInfo.type + cardInfo.number + '"></li>').append(
+      const li = $('<li id="' + cardInfo.type + cardInfo.number + '"></li>').append(
         box
       );
       $("#handCards").append(li);
