@@ -10,8 +10,7 @@ socketConnection.on("createdRoom", createdRoomInfo => {
   //部屋作成完了後
   debugLog("CreatedRoom");
   createRoomCardList(createdRoomInfo);
-  document.querySelector('#nav-tab a[href="#nav-joinroom"]')[0].Tab.show();
-  //$('#nav-tab a[href="#nav-joinroom"]')[0].Tab.show();
+  document.querySelector('#nav-tab a[href="#nav-joinroom"]').Tab.show();
 });
 
 /**
@@ -45,7 +44,6 @@ const genRuleSetData = () => {
  * ルールプリセットの選択を変更した際の動作
  */
 document.getElementById("rulePresetSelectbox").addEventListener("change", () => {
-// $("#rulePresetSelectbox").on("change", event => {
   console.log($(event.currentTarget).val());
   switch ($(event.currentTarget).val()) {
     case "default":
@@ -53,19 +51,12 @@ document.getElementById("rulePresetSelectbox").addEventListener("change", () => 
       document.getElementById("elevenBackSetting").checked = true;
       document.getElementById("stairSetting").checked = true;
       document.getElementById("shibariSetting").checked = true;
-      
-      // $("#elevenBackSetting").prop("checked", true);
-      // $("#stairSetting").prop("checked", true);
-      // $("#shibariSetting").prop("checked", true);
       break;
     case "official":
       document.getElementById("setNum").value = 3;
       document.getElementById("elevenBackSetting").checked = false;
       document.getElementById("stairSetting").checked = true;
       document.getElementById("shibariSetting").checked = true;
-      // $("#elevenBackSetting").prop("checked", false);
-      // $("#stairSetting").prop("checked", true);
-      // $("#shibariSetting").prop("checked", true);
       break;
   }
 });
