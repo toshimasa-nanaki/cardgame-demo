@@ -374,15 +374,58 @@ $(function() {
       );
     });
     msg.card.forEach(element => {
-      const cardType = element.number + element.type;
+      dispHandCard(element, true);
+      // const cardType = element.number + element.type;
+      // const imgUri =
+      //   "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
+      //   constant.DISPLAY_IMAGE_ID[element.type + element.number] +
+      //   ".png";
+      // //画像データを取得する
+      // let img = $('<img class="handCardImage" src="' + imgUri + '"></img>')
+      //   .attr({
+      //     value: element.type + "_" + element.number
+      //   })
+      //   .on("click", function() {
+      //     if (!$(this).is(".checked")) {
+      //       // チェックが入っていない画像をクリックした場合、チェックを入れます。
+      //       $(this).addClass("checked");
+      //     } else {
+      //       // チェックが入っている画像をクリックした場合、チェックを外します。
+      //       $(this).removeClass("checked");
+      //     }
+      //   });
+      // var check = $(
+      //   '<input class="disabled_checkbox" type="checkbox" checked="" />'
+      // )
+      //   .attr({
+      //     name: "cards",
+      //     value: element.type + "_" + element.number
+      //   })
+      //   .on("click", function() {
+      //     return false;
+      //   });
+      // let box = $('<div class="image_box"/>')
+      //   .append(img)
+      //   .append(check);
+      // let li = $('<li id="' + element.type + element.number + '"></li>').append(
+      //   box
+      // );
+      // $("#handCards").append(li);
+    });
+    debugLog("order accept");
+    switchOrder(msg);
+  });
+  
+  const dispHandCard = (cardInfo, isSelectable) => {
+    const cardType = cardInfo.number + cardInfo.type;
       const imgUri =
         "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
-        constant.DISPLAY_IMAGE_ID[element.type + element.number] +
+        constant.DISPLAY_IMAGE_ID[cardInfo.type + cardInfo.number] +
         ".png";
       //画像データを取得する
       let img = $('<img class="handCardImage" src="' + imgUri + '"></img>')
         .attr({
-          value: element.type + "_" + element.number
+          value: cardInfo.type + "_" + cardInfo.number
         })
         .on("click", function() {
           if (!$(this).is(".checked")) {
@@ -398,7 +441,7 @@ $(function() {
       )
         .attr({
           name: "cards",
-          value: element.type + "_" + element.number
+          value: cardInfo.type + "_" + cardInfo.number
         })
         .on("click", function() {
           return false;
@@ -406,14 +449,11 @@ $(function() {
       let box = $('<div class="image_box"/>')
         .append(img)
         .append(check);
-      let li = $('<li id="' + element.type + element.number + '"></li>').append(
+      let li = $('<li id="' + cardInfo.type + cardInfo.number + '"></li>').append(
         box
       );
       $("#handCards").append(li);
-    });
-    debugLog("order accept");
-    switchOrder(msg);
-  });
+  };
   
   function giveToHigherStatus2(msg) {
     $("#giveCard").show();
