@@ -27,20 +27,6 @@ document.getElementById("requestRoomCreate").addEventListener("click", () => {
 });
 
 /**
- * リクエスト用のルールセットデータを作成する
- */
-const genRuleSetData = () => {
-  let ruleSet = [];
-  const ele = document.getElementsByName("ruleSets");
-  for (let i = 0; i < ele.length; i++) {
-    if (ele[i].checked) {
-      ruleSet.push(ele[i].value);
-    }
-  }
-  return ruleSet;
-};
-
-/**
  * ルールプリセットの選択を変更した際の動作
  */
 document.getElementById("rulePresetSelectbox").addEventListener("change", () => {
@@ -61,3 +47,16 @@ document.getElementById("rulePresetSelectbox").addEventListener("change", () => 
   }
 });
 
+/**
+ * リクエスト用のルールセットデータを作成する
+ */
+const genRuleSetData = () => {
+  let ruleSet = [];
+  const ele = document.getElementsByName("ruleSets");
+  for (let i = 0; i < ele.length; i++) {
+    if (ele[i].checked) {
+      ruleSet.push(ele[i].value);
+    }
+  }
+  return ruleSet;
+};

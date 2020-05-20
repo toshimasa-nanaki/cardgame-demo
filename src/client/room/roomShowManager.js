@@ -9,6 +9,7 @@ socketConnection.on("updateRoomList", createdRoomInfo => {
   debugLog("updateRoomList");
   createRoomCardList(createdRoomInfo);
 });
+
 /**
  * 部屋一覧を表示する(初回接続時)
  */
@@ -95,6 +96,7 @@ export const createRoomCardList = (roomList) => {
     $("#selectRoomList").prepend(divCard);
   });
 }
+
 /**
  * ルールセットを画面に表示できる形に変換
  */
