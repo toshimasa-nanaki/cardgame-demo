@@ -461,7 +461,7 @@ $(function() {
         //   // チェックが入っている画像をクリックした場合、チェックを外します。
         //   $(e.currentTarget).removeClass("checked");
         // }
-        cardClickAction(e, isGiveMode, giveModeOption);
+        cardClickAction(e.currentTarget, isGiveMode, giveModeOption);
       });
     const check = $(
       '<input class="disabled_checkbox" type="checkbox" checked="" />'
