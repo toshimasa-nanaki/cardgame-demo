@@ -426,7 +426,7 @@ $(function() {
         .attr({
           value: cardInfo.type + "_" + cardInfo.number
         })
-        .on("click", function() {
+        .on("click", () => {
           if (!$(this).is(".checked")) {
             // チェックが入っていない画像をクリックした場合、チェックを入れます。
             $(this).addClass("checked");
