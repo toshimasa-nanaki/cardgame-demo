@@ -1,43 +1,48 @@
-import socket from "./common/socketIO"; 
+import socket from "./common/socketIO";
 $(function() {
   const voiceData = require("./voiceData.js");
   const constant = require("./constant.js");
   require("./index.scss");
   const bsnV4 = require("bootstrap.native/dist/bootstrap-native-v4");
-  require("./room/roomCreateManager.js"); 
-  require("./room/roomShowManager.js");  
-  
+  require("./room/roomCreateManager.js");
+  require("./room/roomShowManager.js");
+
   //var socket = io();
-  
+
   let audio = new Audio(voiceData.haihai);
   const debugMode =
     location.search.substring(1) === "debug=true" ? true : false;
   const debugLog = debugMode ? console.log.bind(console) : () => {};
-  
+
   /**
    * 画像のプリロード
    */
   const mypreload = () => {
     Object.keys(constant.DISPLAY_IMAGE_ID).forEach(key => {
-       const img = new Image();
-       img.src = "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" + constant.DISPLAY_IMAGE_ID[key] + ".png"
-    });  
-  }
+      const img = new Image();
+      img.src =
+        "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
+        constant.DISPLAY_IMAGE_ID[key] +
+        ".png";
+    });
+  };
   mypreload();
 
   //cookie
   $("#playerName").val(document.cookie.split(";")[0].split("=")[1]);
 
-
   socket.on("connectRetry", function(leaveMemberInfo) {
     debugLog("Retryモード");
     //選択画面を開く。
     createSelectConnectMemberButton(leaveMemberInfo.leaveUserInfo);
-    const myModalInstance = new bsnV4.Modal(document.getElementById("retryConnectModal"),
-    { // options object
-        backdrop: 'static', // we don't want to dismiss Modal when Modal or backdrop is the click event target
-        keyboard: false, // we don't want to dismiss Modal on pressing Esc key
-    });
+    const myModalInstance = new bsnV4.Modal(
+      document.getElementById("retryConnectModal"),
+      {
+        // options object
+        backdrop: "static", // we don't want to dismiss Modal when Modal or backdrop is the click event target
+        keyboard: false // we don't want to dismiss Modal on pressing Esc key
+      }
+    );
     myModalInstance.show();
   });
   function createSelectConnectMemberButton(leaveMemberInfo) {
@@ -68,17 +73,20 @@ $(function() {
     $("#selectMemberList > :first > input").prop("checked", true);
   }
 
-  $("#retryConnectRoomButton").on("click", (e) => {
+  $("#retryConnectRoomButton").on("click", e => {
     socket.emit("reJoin", {
       roomId: e.currentTarget.dataset.roomId,
       reconnectUserId: $("input[name=memberRadios]:checked").val(),
       playerName: $("#playerName").val()
     });
-    const myModalInstance = new bsnV4.Modal(document.getElementById("retryConnectModal"),
-    { // options object
-        backdrop: 'static',
-        keyboard: false,
-    });
+    const myModalInstance = new bsnV4.Modal(
+      document.getElementById("retryConnectModal"),
+      {
+        // options object
+        backdrop: "static",
+        keyboard: false
+      }
+    );
     myModalInstance.hide();
     document.cookie = "name=" + $("#playerName").val() + "; max-age=259200";
   });
@@ -280,67 +288,85 @@ $(function() {
       $("#gameCommentaryArea")[0].scrollHeight
     );
     if (msg.memberOK) {
-      const myModalInstance = new bsnV4.Modal(document.getElementById("releaseRoomModal"),
-    { // options object
-        backdrop: 'static', // we don't want to dismiss Modal when Modal or backdrop is the click event target
-        keyboard: false, // we don't want to dismiss Modal on pressing Esc key
-    });
-    myModalInstance.hide();
+      const myModalInstance = new bsnV4.Modal(
+        document.getElementById("releaseRoomModal"),
+        {
+          // options object
+          backdrop: "static", // we don't want to dismiss Modal when Modal or backdrop is the click event target
+          keyboard: false // we don't want to dismiss Modal on pressing Esc key
+        }
+      );
+      myModalInstance.hide();
     }
   });
   /**
    * ルームのジョインに失敗した場合などサーバとの接続に失敗した場合
    */
   socket.on("connectError", errorType => {
-    document.getElementById('elevenback').textContent  = constant.ERROR_DIC[errorType];
+    document.getElementById("elevenback").textContent =
+      constant.ERROR_DIC[errorType];
     // document.getElementById('elevenback').textContent  = ''
     // $("#errorModalBody").text("");
     // $("#errorModalBody").text(constant.ERROR_DIC[errorType]);
-    const myModalInstance = new bsnV4.Modal(document.getElementById("errorModal"),
-    {});
+    const myModalInstance = new bsnV4.Modal(
+      document.getElementById("errorModal"),
+      {}
+    );
     myModalInstance.show();
     //$("#errorModal").modal();
   });
-  
-  const switchDispGameScreen = (info) => {
+
+  const switchDispGameScreen = info => {
     //表示関連
     document.getElementById("gameFieldArea").style.display = "block"; //ゲームの場とか手札とか
     document.getElementById("bottomController").style.display = "block"; //ゲームコントローラーの親
     document.getElementById("gameController").style.display = "block"; //playボタン、passボタン
-    document.getElementById("playerInfoDropdown").style.display = "block";//右上のプレイヤードロップダウン
-    document.getElementById("giveCard").style.display = "none";//譲渡用のエリアを隠す
-  }
-  
-  const initGameScreen = (info) => {
-    document.getElementById('orderList').innerHTML = ''; //順番一覧の初期化
-    document.getElementById('field').innerHTML = ''; //場のカード初期化
-    document.getElementById('elevenback').textContent  = '';//11back表示のバッチ
-    document.getElementById('shibari').textContent  = '';//縛りのバッチ
-    document.getElementById('revolution').textContent  = '';//革命のバッチ
-    document.getElementById('handCards').innerHTML = '';//手札の初期化
-    document.getElementById('giveCardList').innerHTML = '';//譲渡カード初期化
+    document.getElementById("playerInfoDropdown").style.display = "block"; //右上のプレイヤードロップダウン
+    document.getElementById("giveCard").style.display = "none"; //譲渡用のエリアを隠す
+  };
+
+  const initGameScreen = info => {
+    document.getElementById("orderList").innerHTML = ""; //順番一覧の初期化
+    document.getElementById("field").innerHTML = ""; //場のカード初期化
+    document.getElementById("elevenback").textContent = ""; //11back表示のバッチ
+    document.getElementById("shibari").textContent = ""; //縛りのバッチ
+    document.getElementById("revolution").textContent = ""; //革命のバッチ
+    document.getElementById("handCards").innerHTML = ""; //手札の初期化
+    document.getElementById("giveCardList").innerHTML = ""; //譲渡カード初期化
     //アクションボタンの設定および非活性化
-    document.getElementById('send').dataset.roomId = info.roomId;
-    document.getElementById('send').setAttribute("disabled", true);
-    document.getElementById('pass').dataset.roomId = info.roomId;
-    document.getElementById('pass').setAttribute("disabled", true);
+    document.getElementById("send").dataset.roomId = info.roomId;
+    document.getElementById("send").setAttribute("disabled", true);
+    document.getElementById("pass").dataset.roomId = info.roomId;
+    document.getElementById("pass").setAttribute("disabled", true);
     //TODO これ以降は修正する可能性あり。ただ今はとりあえず設定しておく
-    document.getElementById('blindCards').innerHTML = ''; //ブラインドカードの初期化
-    document.getElementById('playerNameDisp').textContent  = info.playerName2;//ユーザー名
-    document.getElementById('playerPoint').textContent  = info.playerPoint;//ユーザー点数
-    
-  }
-  
-  const displayOrder = (info) => {
-    let displayStr = constant.ORDER_LIST_TEMPLATE[String(info.orderDispList.length)];
+    document.getElementById("blindCards").innerHTML = ""; //ブラインドカードの初期化
+    document.getElementById("playerNameDisp").textContent = info.playerName2; //ユーザー名
+    document.getElementById("playerPoint").textContent = info.playerPoint; //ユーザー点数
+  };
+
+  const displayOrder = info => {
+    let displayStr =
+      constant.ORDER_LIST_TEMPLATE[String(info.orderDispList.length)];
     info.orderDispList.forEach((element, index) => {
       let className = info.orderNum === index ? "isTurn" : "noTurn";
-      if(info.orderDispList[index].cardNum === 0){
+      if (info.orderDispList[index].cardNum === 0) {
         className = "gameEnd";
       }
-      const playerName = "<span class=" + className + ">" + info.orderDispList[index].playerName + "</span>";
-      const cardNum = "<span class=" + className + ">" + info.orderDispList[index].cardNum + "</span>";
-      displayStr = displayStr.replace("{player" + index +"}", playerName).replace("{num" + index +"}", cardNum);
+      const playerName =
+        "<span class=" +
+        className +
+        ">" +
+        info.orderDispList[index].playerName +
+        "</span>";
+      const cardNum =
+        "<span class=" +
+        className +
+        ">" +
+        info.orderDispList[index].cardNum +
+        "</span>";
+      displayStr = displayStr
+        .replace("{player" + index + "}", playerName)
+        .replace("{num" + index + "}", cardNum);
     });
     $("#orderList").append(displayStr);
   };
@@ -367,7 +393,7 @@ $(function() {
     //     $("#orderList").append("→");
     //   }
     // }
-    
+
     msg.blindCards.forEach(ele => {
       $("#blindCards").append(
         $("<li>" + constant.DISPLAY_DIC[ele.type + ele.number] + "</li>")
@@ -415,69 +441,68 @@ $(function() {
     debugLog("order accept");
     switchOrder(msg);
   });
-  
+
   const dispHandCard = (cardInfo, isGiveMode = false, giveModeOption = {}) => {
-      const imgUri =
-        "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
-        constant.DISPLAY_IMAGE_ID[cardInfo.type + cardInfo.number] +
-        ".png";
-      //画像データを取得する
-      let img = $('<img class="handCardImage" src="' + imgUri + '"></img>')
-        .attr({
-          value: cardInfo.type + "_" + cardInfo.number
-        })
-        .on("click", (e) => {
-          if (!$(e.currentTarget).is(".checked")) {
-            // チェックが入っていない画像をクリックした場合、チェックを入れます。
-            $(e.currentTarget).addClass("checked");
-          } else {
-            // チェックが入っている画像をクリックした場合、チェックを外します。
-            $(e.currentTarget).removeClass("checked");
-          }
-        });
-      const check = $(
-        '<input class="disabled_checkbox" type="checkbox" checked="" />'
-      )
-        .attr({
-          name: "cards",
-          value: cardInfo.type + "_" + cardInfo.number
-        })
-        .on("click", function() {
-          return false;
-        });
-      const box = $('<div class="image_box"/>')
-        .append(img)
-        .append(check);
-      const li = $('<li id="' + cardInfo.type + cardInfo.number + '"></li>').append(
-        box
-      );
-      $("#handCards").append(li);
+    const imgUri =
+      "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
+      constant.DISPLAY_IMAGE_ID[cardInfo.type + cardInfo.number] +
+      ".png";
+    //画像データを取得する
+    let img = $('<img class="handCardImage" src="' + imgUri + '"></img>')
+      .attr({
+        value: cardInfo.type + "_" + cardInfo.number
+      })
+      .on("click", e => {
+        // if (!$(e.currentTarget).is(".checked")) {
+        //   // チェックが入っていない画像をクリックした場合、チェックを入れます。
+        //   $(e.currentTarget).addClass("checked");
+        // } else {
+        //   // チェックが入っている画像をクリックした場合、チェックを外します。
+        //   $(e.currentTarget).removeClass("checked");
+        // }
+        cardClickAction(e, isGiveMode, giveModeOption);
+      });
+    const check = $(
+      '<input class="disabled_checkbox" type="checkbox" checked="" />'
+    )
+      .attr({
+        name: "cards",
+        value: cardInfo.type + "_" + cardInfo.number
+      })
+      .on("click", function() {
+        return false;
+      });
+    const box = $('<div class="image_box"/>')
+      .append(img)
+      .append(check);
+    const li = $(
+      '<li id="' + cardInfo.type + cardInfo.number + '"></li>'
+    ).append(box);
+    isGiveMode === true ? $("#giveCardList").append(li) : $("#handCards").append(li);
   };
-  
+
   const cardClickAction = (targetCardDom, isGiveMode, giveModeOption) => {
     if (!$(targetCardDom).is(".checked")) {
-            // チェックが入っていない画像をクリックした場合、チェックを入れます。
-            $(targetCardDom).addClass("checked");
-            if ($("img.giveCardImage.checked").length == 2) {
-              // ボタン有効
-              $("#give").prop("disabled", false);
-            } else {
-              // ボタン無効
-              $("#give").prop("disabled", true);
-            }
-          } else {
-            // チェックが入っている画像をクリックした場合、チェックを外します。
-            $(targetCardDom).removeClass("checked");
-            if ($("img.giveCardImage.checked").length == 2) {
-              // ボタン有効
-              $("#give").prop("disabled", false);
-            } else {
-              // ボタン無効
-              $("#give").prop("disabled", true);
-            }
-          }
+      // チェックが入っていない画像をクリックした場合、チェックを入れます。
+      $(targetCardDom).addClass("checked");
+    } else {
+      // チェックが入っている画像をクリックした場合、チェックを外します。
+      $(targetCardDom).removeClass("checked");
+    }
+    if (isGiveMode) {
+      //Giveモードの時のみ特殊設定
+      if (
+        $("img.giveCardImage.checked").length === giveModeOption.needGiveNum
+      ) {
+        // ボタン有効
+        $("#give").prop("disabled", false);
+      } else {
+        // ボタン無効
+        $("#give").prop("disabled", true);
+      }
+    }
   };
-  
+
   function giveToHigherStatus2(msg) {
     $("#giveCard").show();
     msg.targetCard.forEach(element => {
@@ -511,7 +536,7 @@ $(function() {
   function giveToLowerStatus2(msg, alreadyFlag) {
     $("#giveCard").show();
     $("#gameController2").show();
-    document.getElementById('give').dataset.roomId = msg.roomId;
+    document.getElementById("give").dataset.roomId = msg.roomId;
     msg.targetCard.forEach(element => {
       const cardType = element.number + element.type;
       const imgUri =
@@ -611,7 +636,7 @@ $(function() {
   function giveToLowerStatus1(msg, alreadyFlag) {
     $("#giveCard").show();
     $("#gameController2").show();
-    document.getElementById('give').dataset.roomId = msg.roomId;
+    document.getElementById("give").dataset.roomId = msg.roomId;
     msg.targetCard.forEach(element => {
       const cardType = element.number + element.type;
       const imgUri =
@@ -705,11 +730,11 @@ $(function() {
     );
     $("#gameController2").hide();
   });
-  
+
   /**
    * 順番切り替え
    */
-  const switchOrder = (orderInfo) => {
+  const switchOrder = orderInfo => {
     debugLog("order switch");
     if (orderInfo.yourTurn) {
       audio.play();
@@ -763,7 +788,7 @@ $(function() {
   });
 
   //カードを出したとき
-  $("#send").on("click", (e) => {
+  $("#send").on("click", e => {
     $("#send").prop("disabled", true);
     $("#pass").prop("disabled", true);
     let sendCards = [];
@@ -998,7 +1023,7 @@ $(function() {
         ele.dispName +
         "さん<br />";
     });
-    
+
     mes += "ブラインドカード" + msg.blindCards;
     $("#playerPoint").text(msg.point);
     $("#battleResult" + msg.gameNum).append(mes);
@@ -1056,7 +1081,7 @@ $(function() {
       rank++;
     });
   });
-  
+
   /**
    * 部屋の人数が足りなくなったことによるゲーム中断通知
    */
@@ -1064,11 +1089,14 @@ $(function() {
     debugLog("部屋がリリースされました");
     $("#releaseRoomModalBody").text("");
     $("#releaseRoomModalBody").text(constant.ERROR_DIC[info.reason]);
-    const myModalInstance = new bsnV4.Modal(document.getElementById("releaseRoomModal"),
-    { // options object
-        backdrop: 'static', // we don't want to dismiss Modal when Modal or backdrop is the click event target
-        keyboard: false, // we don't want to dismiss Modal on pressing Esc key
-    });
+    const myModalInstance = new bsnV4.Modal(
+      document.getElementById("releaseRoomModal"),
+      {
+        // options object
+        backdrop: "static", // we don't want to dismiss Modal when Modal or backdrop is the click event target
+        keyboard: false // we don't want to dismiss Modal on pressing Esc key
+      }
+    );
     myModalInstance.show();
   });
 
