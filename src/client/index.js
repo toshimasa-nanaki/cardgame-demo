@@ -426,13 +426,13 @@ $(function() {
         .attr({
           value: cardInfo.type + "_" + cardInfo.number
         })
-        .on("click", () => {
-          if (!$(this).is(".checked")) {
+        .on("click", (e) => {
+          if (!$(e.currentTarget).is(".checked")) {
             // チェックが入っていない画像をクリックした場合、チェックを入れます。
-            $(this).addClass("checked");
+            $(e.currentTarget).addClass("checked");
           } else {
             // チェックが入っている画像をクリックした場合、チェックを外します。
-            $(this).removeClass("checked");
+            $(e.currentTarget).removeClass("checked");
           }
         });
       const check = $(
