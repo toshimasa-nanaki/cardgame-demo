@@ -455,9 +455,9 @@ $(function() {
   };
   
   const cardClickAction = (targetCardDom, isGiveMode, giveModeOption) => {
-    if (!$(this).is(".checked")) {
+    if (!$(targetCardDom).is(".checked")) {
             // チェックが入っていない画像をクリックした場合、チェックを入れます。
-            $(this).addClass("checked");
+            $(targetCardDom).addClass("checked");
             if ($("img.giveCardImage.checked").length == 2) {
               // ボタン有効
               $("#give").prop("disabled", false);
@@ -467,7 +467,7 @@ $(function() {
             }
           } else {
             // チェックが入っている画像をクリックした場合、チェックを外します。
-            $(this).removeClass("checked");
+            $(targetCardDom).removeClass("checked");
             if ($("img.giveCardImage.checked").length == 2) {
               // ボタン有効
               $("#give").prop("disabled", false);
