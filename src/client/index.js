@@ -454,6 +454,10 @@ $(function() {
       $("#handCards").append(li);
   };
   
+  const cardClickAction = () => {
+    
+  };
+  
   function giveToHigherStatus2(msg) {
     $("#giveCard").show();
     msg.targetCard.forEach(element => {
