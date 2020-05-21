@@ -454,8 +454,28 @@ $(function() {
       $("#handCards").append(li);
   };
   
-  const cardClickAction = () => {
-    
+  const cardClickAction = (targetCardDom, ) => {
+    if (!$(this).is(".checked")) {
+            // チェックが入っていない画像をクリックした場合、チェックを入れます。
+            $(this).addClass("checked");
+            if ($("img.giveCardImage.checked").length == 2) {
+              // ボタン有効
+              $("#give").prop("disabled", false);
+            } else {
+              // ボタン無効
+              $("#give").prop("disabled", true);
+            }
+          } else {
+            // チェックが入っている画像をクリックした場合、チェックを外します。
+            $(this).removeClass("checked");
+            if ($("img.giveCardImage.checked").length == 2) {
+              // ボタン有効
+              $("#give").prop("disabled", false);
+            } else {
+              // ボタン無効
+              $("#give").prop("disabled", true);
+            }
+          }
   };
   
   function giveToHigherStatus2(msg) {
