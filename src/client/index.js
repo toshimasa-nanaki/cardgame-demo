@@ -454,7 +454,7 @@ $(function() {
       $("#handCards").append(li);
   };
   
-  const cardClickAction = (targetCardDom, ) => {
+  const cardClickAction = (targetCardDom, isGiveMode, giveModeOption) => {
     if (!$(this).is(".checked")) {
             // チェックが入っていない画像をクリックした場合、チェックを入れます。
             $(this).addClass("checked");
