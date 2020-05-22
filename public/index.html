@@ -255,147 +255,42 @@
                 <div class="nav nav-tabs" id="nav-tab2" role="tablist">
                   <a
                     class="nav-item nav-link active"
-                    id="nav-joinroom-tab"
+                    id="nav-thisRank-tab"
                     data-toggle="tab"
-                    href="#nav-joinroom"
+                    href="#nav-thisRank"
                     role="tab"
-                    aria-controls="nav-joinroom"
+                    aria-controls="nav-thisRank"
                     aria-selected="true"
                     >今回の順位</a
                   >
                   <a
                     class="nav-item nav-link"
-                    id="nav-createroom-tab"
+                    id="nav-overallRank-tab"
                     data-toggle="tab"
-                    href="#nav-createroom"
+                    href="#nav-overallRank"
                     role="tab"
-                    aria-controls="nav-createroom"
+                    aria-controls="nav-overallRank"
                     aria-selected="false"
                     >総合順位</a
                   >
                 </div>
               </nav>
-              <div class="tab-content" id="nav-tabContent">
+              <div class="tab-content" id="nav-tabContent2">
                 <div
                   class="tab-pane fade show active"
-                  id="nav-joinroom"
+                  id="nav-thisRank"
                   role="tabpanel"
-                  aria-labelledby="nav-joinroom-tab"
+                  aria-labelledby="nav-thisRank-tab"
                 >
-                  <div class="form-group">
-                    <label for="playerName">プレイヤー名</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="playerName"
-                      placeholder="プレイヤー名を入力してください"
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label for="selectRoomList">部屋選択</label>
-                    <div id="selectRoomList"></div>
-                  </div>
+                  <span>test</span>
                 </div>
                 <div
                   class="tab-pane fade"
-                  id="nav-createroom"
+                  id="nav-overallRank"
                   role="tabpanel"
-                  aria-labelledby="nav-createroom-tab"
+                  aria-labelledby="nav-overallRank-tab"
                 >
-                  <div class="form-group">
-                    <label for="roomDispName">部屋名</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="roomDispName"
-                      placeholder="デフォルト:日時形式"
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label for="roomcapacity">人数</label>
-                    <select class="form-control" id="roomcapacity">
-                      <option>2</option>
-                      <option>3</option>
-                      <option selected>4</option>
-                      <option>5</option>
-                      <option>6</option>
-                    </select>
-                  </div>
-                  <p>
-                    <a
-                      data-toggle="collapse"
-                      href="#advancedSetting"
-                      role="button"
-                      aria-expanded="false"
-                      aria-controls="advancedSetting"
-                    >
-                      詳細設定(まだ実装中なので効果ないです)
-                    </a>
-                  </p>
-                  <div class="collapse" id="advancedSetting">
-                    <div class="form-group">
-                      <label for="setNum">セット数</label>
-                      <select class="form-control" id="setNum">
-                        <option selected>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                      </select>
-                    </div>
-                    <div class="form-group">
-                      <label>ルール</label>
-                      <div class="form-check form-check-inline">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          id="elevenBackSetting"
-                          value="elevenback"
-                          name="ruleSets"
-                          checked
-                        />
-                        <label class="form-check-label">11Back</label>
-                      </div>
-                      <div class="form-check form-check-inline">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          id="stairSetting"
-                          value="stair"
-                          name="ruleSets"
-                          checked
-                        />
-                        <label class="form-check-label">階段</label>
-                      </div>
-                      <div class="form-check form-check-inline">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          id="shibariSetting"
-                          value="shibari"
-                          name="ruleSets"
-                          checked
-                        />
-                        <label class="form-check-label">スートしばり</label>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label for="rulePresetSelectbox">ルールプリセット</label>
-                      <select class="form-control" id="rulePresetSelectbox">
-                        <option value="default">デフォルト</option>
-                        <option value="official">公式ルールセット</option>
-                      </select>
-                    </div>
-
-                    <!--                     <div class="card card-body">
-                      ここに詳細設定を出す。
-                    </div> -->
-                  </div>
-                  <button
-                    id="requestRoomCreate"
-                    type="button"
-                    class="btn btn-outline-primary"
-                  >
-                    ルームを作成
-                  </button>
+                  <span>test2</span>
                 </div>
               </div>
 <!--         <div class="accordion" id="battleRecord">
