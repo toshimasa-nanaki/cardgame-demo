@@ -29,6 +29,7 @@ $(function() {
   mypreload();
 
   const testTable = () => {
+    //document.getElementById("tbo").innerHTML = "";
     let table = document.getElementById("thisRankTable");
     let newRow = table.insertRow(-1);
 
