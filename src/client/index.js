@@ -28,6 +28,24 @@ $(function() {
   };
   mypreload();
 
+  const testTable = () => {
+    let table = document.getElementById("thisRankTable");
+    let newRow = table.insertRow(-1);
+
+    let newCell = newRow.insertCell();
+    let newText = document.createTextNode("大富豪");
+    newCell.appendChild(newText);
+
+    newCell = newRow.insertCell();
+    newText = document.createTextNode("賢帝");
+    newCell.appendChild(newText);
+    
+    newCell = newRow.insertCell();
+    newText = document.createTextNode("都落ち");
+    newCell.appendChild(newText);
+  };
+  testTable();
+
   //cookie
   $("#playerName").val(document.cookie.split(";")[0].split("=")[1]);
 
@@ -480,7 +498,9 @@ $(function() {
       '<li id="' + cardInfo.type + cardInfo.number + '"></li>'
     ).append(box);
     // TODO できればhandCard1つにまとめたい。
-    isGiveMode === true ? $("#giveCardList").append(li) : $("#handCards").append(li);
+    isGiveMode === true
+      ? $("#giveCardList").append(li)
+      : $("#handCards").append(li);
   };
 
   const cardClickAction = (targetCardDom, isGiveMode, giveModeOption) => {
@@ -540,7 +560,7 @@ $(function() {
     $("#gameController2").show();
     document.getElementById("give").dataset.roomId = msg.roomId;
     msg.targetCard.forEach(element => {
-      dispHandCard(element, true, {needGiveNum: 2});
+      dispHandCard(element, true, { needGiveNum: 2 });
       // const cardType = element.number + element.type;
       // const imgUri =
       //   "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
@@ -641,7 +661,7 @@ $(function() {
     $("#gameController2").show();
     document.getElementById("give").dataset.roomId = msg.roomId;
     msg.targetCard.forEach(element => {
-      dispHandCard(element, true, {needGiveNum: 1});
+      dispHandCard(element, true, { needGiveNum: 1 });
       // const cardType = element.number + element.type;
       // const imgUri =
       //   "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
@@ -1032,7 +1052,10 @@ $(function() {
     $("#playerPoint").text(msg.point);
     $("#battleResult" + msg.gameNum).append(mes);
     $("#battle" + msg.gameNum).show();
-    let collapse = new bsnV4.Collapse(document.getElementById("#battle" + msg.gameNum + "Content"), {})
+    let collapse = new bsnV4.Collapse(
+      document.getElementById("#battle" + msg.gameNum + "Content"),
+      {}
+    );
     collapse.show();
     //$("#battle" + msg.gameNum + "Content").collapse("show");
     //$("#gameCommentaryArea").append("10秒後に次のゲームを始めます。<br />");
