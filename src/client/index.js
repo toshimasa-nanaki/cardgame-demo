@@ -28,7 +28,7 @@ $(function() {
   };
   mypreload();
 
-  const testTable = (initData, playerNum) => {
+  const testTable = (headerData, initData, playerNum) => {
     // 表の作成開始
     // var data = [["大富豪", "-", "-"],
     //         ["富豪", "-", "-"],
@@ -36,6 +36,12 @@ $(function() {
     //         ["大貧民", "-", "-"]];
     var rows=[];
     var table = document.createElement("table");
+    var header = table.createTHead();
+    var insertHeader = header.insertRow(0);
+    headerData.forEach((element, index)=>{
+      var insertHeaderCell = insertHeader.insertCell(index);
+      insertHeaderCell.innerHTML = headerData[index];
+    });
 
     // 表に2次元配列の要素を格納
     for(let rowNum = 0; rowNum < playerNum; rowNum++){
@@ -69,12 +75,13 @@ $(function() {
 //     newText = document.createTextNode("都落ち");
 //     newCell.appendChild(newText);
   };
-  var data = [["ランク", "名前", "特殊敗因"],
+  var headerData =["ランク", "名前", "特殊敗因"];
+  var data = [
     ["大富豪", "-", "-"],
             ["富豪", "-", "-"],
             ["貧民", "-", "-"],
             ["大貧民", "-", "-"]];
-  testTable(data, 4);
+  testTable(headerData, data, 4);
 
   //cookie
   $("#playerName").val(document.cookie.split(";")[0].split("=")[1]);
