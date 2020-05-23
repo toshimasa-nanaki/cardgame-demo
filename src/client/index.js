@@ -30,10 +30,10 @@ $(function() {
 
   const testTable = (initData, playerNum) => {
     // 表の作成開始
-    var data = [["大富豪", "-", "-"],
-            ["富豪", "-", "-"],
-            ["貧民", "-", "-"],
-            ["大貧民", "-", "-"]];
+    // var data = [["大富豪", "-", "-"],
+    //         ["富豪", "-", "-"],
+    //         ["貧民", "-", "-"],
+    //         ["大貧民", "-", "-"]];
     var rows=[];
     var table = document.createElement("table");
 
@@ -42,7 +42,7 @@ $(function() {
         rows.push(table.insertRow(-1));  // 行の追加
         for(let j = 0; j < initData[0].length; j++){
             const cell=rows[rowNum].insertCell(-1);
-            cell.appendChild(document.createTextNode(data[rowNum][j]));
+            cell.appendChild(document.createTextNode(initData[rowNum][j]));
             // 背景色の設定
             if(rowNum==0){
                 cell.style.backgroundColor = "#bbb"; // ヘッダ行
