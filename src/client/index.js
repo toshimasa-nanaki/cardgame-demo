@@ -41,11 +41,15 @@ $(function() {
     
     //ヘッダー作成
     const header = table.createTHead();
-    const insertHeader = header.insertRow(0);
+    const insertHeader = header.insertRow(-1);
     headerData.forEach((element, index)=>{
-      const insertHeaderCell = insertHeader.insertCell(index);
-      insertHeaderCell.innerHTML = headerData[index];
-      insertHeaderCell.setAttribute("scope", "col");
+      const th = document.createElement('th');
+      th.innerHTML = headerData[index];
+      th.setAttribute("scope", "col");
+      insertHeader.appendChild(th);
+      // const insertHeaderCell = insertHeader.insertCell(index);
+      // insertHeaderCell.innerHTML = headerData[index];
+      // insertHeaderCell.setAttribute("scope", "col");
     });
     
     //ボディ作成
