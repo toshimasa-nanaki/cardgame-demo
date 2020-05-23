@@ -36,13 +36,14 @@ $(function() {
     //         ["大貧民", "-", "-"]];
     var rows=[];
     //テーブル作成
-    var table = document.createElement("table");
+    const table = document.createElement("table");
+    table.className = "table";
     
     //ヘッダー作成
-    var header = table.createTHead();
-    var insertHeader = header.insertRow(0);
+    const header = table.createTHead();
+    const insertHeader = header.insertRow(0);
     headerData.forEach((element, index)=>{
-      var insertHeaderCell = insertHeader.insertCell(index);
+      const insertHeaderCell = insertHeader.insertCell(index);
       insertHeaderCell.innerHTML = headerData[index];
     });
     
