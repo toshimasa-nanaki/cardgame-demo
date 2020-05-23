@@ -30,13 +30,21 @@ $(function() {
 
   const testTable = () => {
     // 表の作成開始
+    var data = [["", 12, 13],
+            [21, 22, 23],
+            [31, 32, 33],
+            [41, 42, 43]];
     var rows=[];
     var table = document.createElement("table");
 
     // 表に2次元配列の要素を格納
-    for(i = 0; i < data.length; i++){
+    for(let i = 0; i < 4; i++){
         rows.push(table.insertRow(-1));  // 行の追加
-        for(j = 0; j < data[0].length; j++){
+        if(i == 0){
+          //ヘッダー
+          let cell=rows[i].insertCell(-1);
+        }
+        for(let j = 0; j < data[0].length; j++){
             cell=rows[i].insertCell(-1);
             cell.appendChild(document.createTextNode(data[i][j]));
             // 背景色の設定
@@ -48,7 +56,7 @@ $(function() {
         }
     }
     // 指定したdiv要素に表を加える
-    document.getElementById(tableId).appendChild(table);
+    document.getElementById(testTable).appendChild(table);
     //document.getElementById("tbo").innerHTML = "";
 //     let table = document.getElementById("thisRankTable");
 //     let newRow = table.insertRow(-1);
