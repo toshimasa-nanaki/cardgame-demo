@@ -35,7 +35,10 @@ $(function() {
     //         ["貧民", "-", "-"],
     //         ["大貧民", "-", "-"]];
     var rows=[];
+    //テーブル作成
     var table = document.createElement("table");
+    
+    //ヘッダー作成
     var header = table.createTHead();
     var insertHeader = header.insertRow(0);
     headerData.forEach((element, index)=>{
@@ -43,20 +46,16 @@ $(function() {
       insertHeaderCell.innerHTML = headerData[index];
     });
     
+    //ボディ作成
     var body = table.createTBody();
 
     // 表に2次元配列の要素を格納
     for(let rowNum = 0; rowNum < playerNum; rowNum++){
-        rows.push(table.insertRow(-1));  // 行の追加
-        for(let j = 0; j < initData[0].length; j++){
-            const cell=rows[rowNum].insertCell(-1);
-            cell.appendChild(document.createTextNode(initData[rowNum][j]));
-            // 背景色の設定
-            if(rowNum==0){
-                cell.style.backgroundColor = "#bbb"; // ヘッダ行
-            }else{
-                cell.style.backgroundColor = "#ddd"; // ヘッダ行以外
-            }
+      　const row = body.insertRow(-1);
+        //rows.push(table.insertRow(-1));  // 行の追加
+        for(let colNum = 0; colNum < initData[0].length; colNum++){
+            const cell=row.insertCell(-1);
+            cell.appendChild(document.createTextNode(initData[rowNum][colNum]));
         }
     }
     // 指定したdiv要素に表を加える
