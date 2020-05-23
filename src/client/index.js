@@ -42,6 +42,8 @@ $(function() {
       var insertHeaderCell = insertHeader.insertCell(index);
       insertHeaderCell.innerHTML = headerData[index];
     });
+    
+    var body = table.createTBody();
 
     // 表に2次元配列の要素を格納
     for(let rowNum = 0; rowNum < playerNum; rowNum++){
