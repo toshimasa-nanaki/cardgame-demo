@@ -38,13 +38,13 @@ $(function() {
     var table = document.createElement("table");
 
     // 表に2次元配列の要素を格納
-    for(let i = 0; i < playerNum; i++){
+    for(let rowNum = 0; rowNum < playerNum; rowNum++){
         rows.push(table.insertRow(-1));  // 行の追加
         for(let j = 0; j < initData[0].length; j++){
-            const cell=rows[i].insertCell(-1);
-            cell.appendChild(document.createTextNode(data[i][j]));
+            const cell=rows[rowNum].insertCell(-1);
+            cell.appendChild(document.createTextNode(data[rowNum][j]));
             // 背景色の設定
-            if(i==0){
+            if(rowNum==0){
                 cell.style.backgroundColor = "#bbb"; // ヘッダ行
             }else{
                 cell.style.backgroundColor = "#ddd"; // ヘッダ行以外
@@ -69,7 +69,12 @@ $(function() {
 //     newText = document.createTextNode("都落ち");
 //     newCell.appendChild(newText);
   };
-  testTable();
+  var data = [["ランク", "名前", "特殊敗因"],
+    ["大富豪", "-", "-"],
+            ["富豪", "-", "-"],
+            ["貧民", "-", "-"],
+            ["大貧民", "-", "-"]];
+  testTable(data, 4);
 
   //cookie
   $("#playerName").val(document.cookie.split(";")[0].split("=")[1]);
