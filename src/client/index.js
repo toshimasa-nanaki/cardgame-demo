@@ -45,6 +45,7 @@ $(function() {
     headerData.forEach((element, index)=>{
       const insertHeaderCell = insertHeader.insertCell(index);
       insertHeaderCell.innerHTML = headerData[index];
+      insertHeaderCell.setAttribute("scope", "col");
     });
     
     //ボディ作成
