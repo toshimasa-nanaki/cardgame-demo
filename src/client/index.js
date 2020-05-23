@@ -29,11 +29,6 @@ $(function() {
   mypreload();
 
   const testTable = (headerData, initData, playerNum) => {
-    // 表の作成開始
-    // var data = [["大富豪", "-", "-"],
-    //         ["富豪", "-", "-"],
-    //         ["貧民", "-", "-"],
-    //         ["大貧民", "-", "-"]];
     var rows=[];
     //テーブル作成
     const table = document.createElement("table");
@@ -47,9 +42,6 @@ $(function() {
       th.innerHTML = headerData[index];
       th.setAttribute("scope", "col");
       insertHeader.appendChild(th);
-      // const insertHeaderCell = insertHeader.insertCell(index);
-      // insertHeaderCell.innerHTML = headerData[index];
-      // insertHeaderCell.setAttribute("scope", "col");
     });
     
     //ボディ作成
@@ -66,21 +58,6 @@ $(function() {
     }
     // 指定したdiv要素に表を加える
     document.getElementById("testTable").appendChild(table);
-    //document.getElementById("tbo").innerHTML = "";
-//     let table = document.getElementById("thisRankTable");
-//     let newRow = table.insertRow(-1);
-
-//     let newCell = newRow.insertCell();
-//     let newText = document.createTextNode("大富豪");
-//     newCell.appendChild(newText);
-
-//     newCell = newRow.insertCell();
-//     newText = document.createTextNode("賢帝");
-//     newCell.appendChild(newText);
-    
-//     newCell = newRow.insertCell();
-//     newText = document.createTextNode("都落ち");
-//     newCell.appendChild(newText);
   };
   var headerData =["ランク", "名前", "特殊敗因"];
   var data = [
