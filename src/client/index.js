@@ -351,9 +351,10 @@ $(function() {
     document.getElementById("pass").dataset.roomId = info.roomId;
     document.getElementById("pass").setAttribute("disabled", true);
     //ランキングテーブル
-    if(info.gameNum === 1 && info.setNum === 1){
-      //本当に初回の場合はランキング用テーブルを作成する
-      //前回のゲーム分のクリアから始める。
+    if(document.getElementById("thisRankTable") === null){
+      //ランキング用テーブルがない場合は作成
+      initRankingTable(info);
+      //createTable(headerData, data, 4, "thisRank");
     }else{
       //初回以外はランキングテーブルを隠す
       
@@ -362,6 +363,10 @@ $(function() {
     document.getElementById("blindCards").innerHTML = ""; //ブラインドカードの初期化
     document.getElementById("playerNameDisp").textContent = info.playerName2; //ユーザー名
     document.getElementById("playerPoint").textContent = info.playerPoint; //ユーザー点数
+  };
+  
+  const initRankingTable = info => {
+    
   };
 
   const displayOrder = info => {
