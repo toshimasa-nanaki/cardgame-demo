@@ -28,44 +28,14 @@ $(function() {
   };
   mypreload();
 
-  const testTable = (headerData, initData, playerNum) => {
-    var rows=[];
-    //テーブル作成
-    const table = document.createElement("table");
-    table.className = "table";
-    
-    //ヘッダー作成
-    const header = table.createTHead();
-    const insertHeader = header.insertRow(-1);
-    headerData.forEach((element, index)=>{
-      const th = document.createElement('th');
-      th.innerHTML = headerData[index];
-      th.setAttribute("scope", "col");
-      insertHeader.appendChild(th);
-    });
-    
-    //ボディ作成
-    var body = table.createTBody();
-
-    // 表に2次元配列の要素を格納
-    for(let rowNum = 0; rowNum < playerNum; rowNum++){
-      　const row = body.insertRow(-1);
-        //rows.push(table.insertRow(-1));  // 行の追加
-        for(let colNum = 0; colNum < initData[0].length; colNum++){
-            const cell=row.insertCell(-1);
-            cell.appendChild(document.createTextNode(initData[rowNum][colNum]));
-        }
-    }
-    // 指定したdiv要素に表を加える
-    document.getElementById("testTable").appendChild(table);
-  };
+  
   var headerData =["ランク", "名前", "特殊敗因"];
   var data = [
     ["大富豪", "-", "-"],
             ["富豪", "-", "-"],
             ["貧民", "-", "-"],
             ["大貧民", "-", "-"]];
-  testTable(headerData, data, 4);
+  testTable(headerData, data, 4, "testTable");
 
   //cookie
   $("#playerName").val(document.cookie.split(";")[0].split("=")[1]);
