@@ -1,10 +1,11 @@
 /**
  * テーブルを作成し、指定の場所に配置する
  */
-export const createTable = (headerData, initData, playerNum, tableDivId) => {
+export const createTable = (headerData, initData, playerNum, tableParentDivId) => {
   //テーブル作成
   const table = document.createElement("table");
   table.className = "table";
+  table.id = tableParentDivId + "Table"; //Tableというプレフィックスをつける。
 
   //ヘッダー作成
   const header = table.createTHead();
@@ -29,5 +30,5 @@ export const createTable = (headerData, initData, playerNum, tableDivId) => {
     }
   }
   // 指定したdiv要素に表を加える
-  document.getElementById(tableDivId).appendChild(table);
+  document.getElementById(tableParentDivId).appendChild(table);
 };

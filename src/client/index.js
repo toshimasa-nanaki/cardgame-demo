@@ -36,7 +36,8 @@ $(function() {
             ["富豪", "-", "-"],
             ["貧民", "-", "-"],
             ["大貧民", "-", "-"]];
-  createTable(headerData, data, 4, "thisRankTable");
+  createTable(headerData, data, 4, "thisRank");
+  document.getElementById('thisRankTable').rows[2].cells[2].innerHTML = "test";
 
   //cookie
   $("#playerName").val(document.cookie.split(";")[0].split("=")[1]);
