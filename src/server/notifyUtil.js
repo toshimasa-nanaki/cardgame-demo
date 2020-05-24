@@ -32,6 +32,7 @@ module.exports.notifyGameReady = roomId => {
     roomId: roomInfo.roomId,
     capacity: roomInfo.capacity,
     gameNum: roomInfo.gameNum,
+    setNum: roomInfo.currentSetNum,
     card: users[element.userId].card,
     yourTurn: index === 0 ? true : false,
     playerName: users[orders[0].userId].dispName,

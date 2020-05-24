@@ -350,6 +350,14 @@ $(function() {
     document.getElementById("send").setAttribute("disabled", true);
     document.getElementById("pass").dataset.roomId = info.roomId;
     document.getElementById("pass").setAttribute("disabled", true);
+    //ランキングテーブル
+    if(info.gameNum === 1 && info.setNum === 1){
+      //本当に初回の場合はランキング用テーブルを作成する
+      //前回のゲーム分のクリアから始める。
+    }else{
+      //初回以外はランキングテーブルを隠す
+      
+    }
     //TODO これ以降は修正する可能性あり。ただ今はとりあえず設定しておく
     document.getElementById("blindCards").innerHTML = ""; //ブラインドカードの初期化
     document.getElementById("playerNameDisp").textContent = info.playerName2; //ユーザー名
