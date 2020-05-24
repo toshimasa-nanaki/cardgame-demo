@@ -1,4 +1,5 @@
 import socket from "./common/socketIO";
+import {createTable} from "./common/componentUtil.js";
 $(function() {
   const voiceData = require("./voiceData.js");
   const constant = require("./constant.js");
@@ -35,7 +36,7 @@ $(function() {
             ["富豪", "-", "-"],
             ["貧民", "-", "-"],
             ["大貧民", "-", "-"]];
-  testTable(headerData, data, 4, "testTable");
+  createTable(headerData, data, 4, "thisRankTable");
 
   //cookie
   $("#playerName").val(document.cookie.split(";")[0].split("=")[1]);
