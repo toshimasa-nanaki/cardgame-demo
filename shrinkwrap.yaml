@@ -2,7 +2,7 @@ dependencies:
   '@babel/core': 7.11.0
   babel-loader: 8.1.0
   bootstrap: 4.5.0
-  bootstrap.native: 3.0.10
+  bootstrap.native: 2.0.27
   express: 4.17.1
   log4js: 6.2.1
   nodemon: 2.0.4
@@ -14,7 +14,7 @@ dependencies:
   socket.io: 2.3.0
   webpack: 4.44.1
   webpack-cli: 3.3.12
-  webpack-node-externals: 2.5.0
+  webpack-node-externals: 1.7.2
 devDependencies:
   autoprefixer: 9.7.6
   css-loader: 3.5.3
@@ -720,13 +720,10 @@ packages:
       node: '>= 0.8'
     resolution:
       integrity: sha512-dhEPs72UPbDnAQJ9ZKMNTP6ptJaionhP5cBb541nXPlW60Jepo9RV/a4fX4XWW9CuFNK22krhrj1+rgzifNCsw==
-  /bootstrap.native/3.0.10:
-    dependencies:
-      minifill: 0.0.8
-      shorter-js: 0.1.4
+  /bootstrap.native/2.0.27:
     dev: false
     resolution:
-      integrity: sha512-Rqjup9aUM6xmWV620OQtaTbNu8gNukH2S0gfo9WzvTZCZUu/QUEnhSazTaQUfV0KVzKO/QQAy8vfShFKIGMAkA==
+      integrity: sha512-gv2eN4zXHOLN/oPotTxb8CJr9Dk0xlM9YURyHCWjq1Lyt2I669bri/Bp8b0HPOKX7JqRVh+Sk/VwEe0OcQN2fw==
   /bootstrap/4.5.0:
     dev: false
     peerDependencies:
@@ -2934,10 +2931,6 @@ packages:
       webpack: ^4.4.0
     resolution:
       integrity: sha512-lp3GeY7ygcgAmVIcRPBVhIkf8Us7FZjA+ILpal44qLdSu11wmjKQ3d9k15lfD7pO4esu9eUIAW7qiYIBppv40A==
-  /minifill/0.0.8:
-    dev: false
-    resolution:
-      integrity: sha512-DOw02Fev6xB40wyie/YJtnIhY0eI+iQ7aBQlSVkOy5OKlFAxob6uG301uvJyMT7F1OeMGfbDexOTabL3uLid1g==
   /minimalistic-assert/1.0.1:
     dev: false
     resolution:
@@ -4183,10 +4176,6 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-2kL0l0DAtC2yypcoVxyxkMmO/qM=
-  /shorter-js/0.1.4:
-    dev: false
-    resolution:
-      integrity: sha512-pKA910IvKicFs3brUAzR4o/JCSWt2KoXQjzxunhR1fikJwu5j3ABKfymywtf+3oVKnV4r8KAWfNDcueVXOzeIw==
   /signal-exit/3.0.3:
     dev: false
     resolution:
@@ -4852,10 +4841,10 @@ packages:
       webpack: 4.x.x
     resolution:
       integrity: sha512-NVWBaz9k839ZH/sinurM+HcDvJOTXwSjYp1ku+5XKeOC03z8v5QitnK/x+lAxGXFyhdayoIf/GOpv85z3/xPag==
-  /webpack-node-externals/2.5.0:
+  /webpack-node-externals/1.7.2:
     dev: false
     resolution:
-      integrity: sha512-g7/Z7Q/gsP8GkJkKZuJggn6RSb5PvxW1YD5vvmRZIxaSxAzkqjfL5n9CslVmNYlSqBVCyiqFgOqVS2IOObCSRg==
+      integrity: sha512-ajerHZ+BJKeCLviLUUmnyd5B4RavLF76uv3cs6KNuO8W+HuQaEs0y0L7o40NQxdPy5w0pcv8Ew7yPUAQG0UdCg==
   /webpack-sources/1.4.3:
     dependencies:
       source-list-map: 2.0.1
@@ -5012,25 +5001,25 @@ registry: 'https://registry.npmjs.org/'
 shrinkwrapMinorVersion: 9
 shrinkwrapVersion: 3
 specifiers:
-  '@babel/core': ^7.11.0
+  '@babel/core': ^7.9.0
   autoprefixer: ^9.7.6
   babel-loader: ^8.1.0
-  bootstrap: ^4.5.0
-  bootstrap.native: ^3.0.10
+  bootstrap: ^4.4.1
+  bootstrap.native: ^2.0.27
   css-loader: ^3.5.3
   express: ^4.17.1
   log4js: ^6.2.1
   mini-css-extract-plugin: ^0.9.0
-  nodemon: ^2.0.4
+  nodemon: ^2.0.3
   postcss-loader: ^3.0.0
   react: ^16.13.1
-  react-bootstrap: ^1.3.0
+  react-bootstrap: ^1.0.1
   react-dom: ^16.13.1
   react-router-dom: ^5.2.0
   react-toolbox: ^2.0.0-beta.13
   sass: ^1.26.5
   sass-loader: ^8.0.2
   socket.io: ^2.3.0
-  webpack: ^4.44.1
-  webpack-cli: ^3.3.12
-  webpack-node-externals: ^2.4.0
+  webpack: ^4.43.0
+  webpack-cli: ^3.3.11
+  webpack-node-externals: ^1.7.2
