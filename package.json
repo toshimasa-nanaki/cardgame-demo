@@ -10,7 +10,7 @@
     "express": "^4.17.1",
     "socket.io": "^2.3.0",
     "log4js": "^6.2.1",
-    "webpack": "^4.44.1",
+    "webpack": "^5.81.0",
     "webpack-cli": "^3.3.12",
     "webpack-node-externals": "^2.4.0",
     "nodemon": "^2.0.4",
