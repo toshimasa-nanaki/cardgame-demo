@@ -8,8 +8,6 @@ $(function() {
   require("./room/roomCreateManager.js");
   require("./room/roomShowManager.js");
 
-  //var socket = io();
-
   let audio = new Audio(voiceData.haihai);
   const debugMode =
     location.search.substring(1) === "debug=true" ? true : false;
@@ -30,14 +28,14 @@ $(function() {
   mypreload();
 
   
-  var headerData =["ランク", "名前", "特殊敗因"];
-  var data = [
-    ["大富豪", "-", "-"],
-            ["富豪", "-", "-"],
-            ["貧民", "-", "-"],
-            ["大貧民", "-", "-"]];
-  createTable(headerData, data, 4, "thisRank");
-  document.getElementById('thisRankTable').rows[2].cells[2].innerHTML = "test";
+  // var headerData =["ランク", "名前", "特殊敗因"];
+  // var data = [
+  //   ["大富豪", "-", "-"],
+  //           ["富豪", "-", "-"],
+  //           ["貧民", "-", "-"],
+  //           ["大貧民", "-", "-"]];
+  // createTable(headerData, data, 4, "thisRank");
+  // document.getElementById('thisRankTable').rows[2].cells[2].innerHTML = "test";
 
   //cookie
   $("#playerName").val(document.cookie.split(";")[0].split("=")[1]);
@@ -217,42 +215,6 @@ $(function() {
     }
     msg.card.forEach(element => {
       dispHandCard(element);
-      // const cardType = element.number + element.type;
-      // const imgUri =
-      //   "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
-      //   constant.DISPLAY_IMAGE_ID[element.type + element.number] +
-      //   ".png";
-      // //画像データを取得する
-      // let img = $('<img class="handCardImage" src="' + imgUri + '"></img>')
-      //   .attr({
-      //     value: element.type + "_" + element.number
-      //   })
-      //   .on("click", function() {
-      //     if (!$(this).is(".checked")) {
-      //       // チェックが入っていない画像をクリックした場合、チェックを入れます。
-      //       $(this).addClass("checked");
-      //     } else {
-      //       // チェックが入っている画像をクリックした場合、チェックを外します。
-      //       $(this).removeClass("checked");
-      //     }
-      //   });
-      // var check = $(
-      //   '<input class="disabled_checkbox" type="checkbox" checked="" />'
-      // )
-      //   .attr({
-      //     name: "cards",
-      //     value: element.type + "_" + element.number
-      //   })
-      //   .on("click", function() {
-      //     return false;
-      //   });
-      // let box = $('<div class="image_box"/>')
-      //   .append(img)
-      //   .append(check);
-      // let li = $('<li id="' + element.type + element.number + '"></li>').append(
-      //   box
-      // );
-      // $("#handCards").append(li);
     });
     debugLog("order accept");
     switchOrder(msg);
@@ -406,18 +368,6 @@ $(function() {
     initGameScreen(msg);
     switchDispGameScreen(msg);
     displayOrder(msg);
-    // for (let i = 0; i < msg.userList.length; i++) {
-    //   let ele =
-    //     i === 0
-    //       ? $("<li>")
-    //           .text(msg.userList[i] + "(" + msg.card.length + "枚)")
-    //           .attr({ style: "color: red" })
-    //       : $("<li>").text(msg.userList[i] + "(" + msg.card.length + "枚)");
-    //   $("#orderList").append(ele);
-    //   if (i !== msg.userList.length - 1) {
-    //     $("#orderList").append("→");
-    //   }
-    // }
 
     msg.blindCards.forEach(ele => {
       $("#blindCards").append(
@@ -426,42 +376,6 @@ $(function() {
     });
     msg.card.forEach(element => {
       dispHandCard(element);
-      // const cardType = element.number + element.type;
-      // const imgUri =
-      //   "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
-      //   constant.DISPLAY_IMAGE_ID[element.type + element.number] +
-      //   ".png";
-      // //画像データを取得する
-      // let img = $('<img class="handCardImage" src="' + imgUri + '"></img>')
-      //   .attr({
-      //     value: element.type + "_" + element.number
-      //   })
-      //   .on("click", function() {
-      //     if (!$(this).is(".checked")) {
-      //       // チェックが入っていない画像をクリックした場合、チェックを入れます。
-      //       $(this).addClass("checked");
-      //     } else {
-      //       // チェックが入っている画像をクリックした場合、チェックを外します。
-      //       $(this).removeClass("checked");
-      //     }
-      //   });
-      // var check = $(
-      //   '<input class="disabled_checkbox" type="checkbox" checked="" />'
-      // )
-      //   .attr({
-      //     name: "cards",
-      //     value: element.type + "_" + element.number
-      //   })
-      //   .on("click", function() {
-      //     return false;
-      //   });
-      // let box = $('<div class="image_box"/>')
-      //   .append(img)
-      //   .append(check);
-      // let li = $('<li id="' + element.type + element.number + '"></li>').append(
-      //   box
-      // );
-      // $("#handCards").append(li);
     });
     debugLog("order accept");
     switchOrder(msg);
@@ -478,13 +392,6 @@ $(function() {
         value: cardInfo.type + "_" + cardInfo.number
       })
       .on("click", e => {
-        // if (!$(e.currentTarget).is(".checked")) {
-        //   // チェックが入っていない画像をクリックした場合、チェックを入れます。
-        //   $(e.currentTarget).addClass("checked");
-        // } else {
-        //   // チェックが入っている画像をクリックした場合、チェックを外します。
-        //   $(e.currentTarget).removeClass("checked");
-        // }
         cardClickAction(e.currentTarget, isGiveMode, giveModeOption);
       });
     const check = $(
@@ -567,56 +474,6 @@ $(function() {
     document.getElementById("give").dataset.roomId = msg.roomId;
     msg.targetCard.forEach(element => {
       dispHandCard(element, true, { needGiveNum: 2 });
-      // const cardType = element.number + element.type;
-      // const imgUri =
-      //   "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
-      //   constant.DISPLAY_IMAGE_ID[element.type + element.number] +
-      //   ".png";
-      // //画像データを取得する
-      // let img = $('<img class="giveCardImage" src="' + imgUri + '"></img>')
-      //   .attr({
-      //     value: element.type + "_" + element.number
-      //   })
-      //   .on("click", function() {
-      //     if (!$(this).is(".checked")) {
-      //       // チェックが入っていない画像をクリックした場合、チェックを入れます。
-      //       $(this).addClass("checked");
-      //       if ($("img.giveCardImage.checked").length == 2) {
-      //         // ボタン有効
-      //         $("#give").prop("disabled", false);
-      //       } else {
-      //         // ボタン無効
-      //         $("#give").prop("disabled", true);
-      //       }
-      //     } else {
-      //       // チェックが入っている画像をクリックした場合、チェックを外します。
-      //       $(this).removeClass("checked");
-      //       if ($("img.giveCardImage.checked").length == 2) {
-      //         // ボタン有効
-      //         $("#give").prop("disabled", false);
-      //       } else {
-      //         // ボタン無効
-      //         $("#give").prop("disabled", true);
-      //       }
-      //     }
-      //   });
-      // var check = $(
-      //   '<input class="disabled_checkbox" type="checkbox" checked="" />'
-      // )
-      //   .attr({
-      //     name: "cards",
-      //     value: element.type + "_" + element.number
-      //   })
-      //   .on("click", function() {
-      //     return false;
-      //   });
-      // let box = $('<div class="image_box"/>')
-      //   .append(img)
-      //   .append(check);
-      // let li = $('<li id="' + element.type + element.number + '"></li>').append(
-      //   box
-      // );
-      // $("#giveCardList").append(li);
     });
     if (alreadyFlag) {
       $("#gameCommentaryArea").append(
@@ -668,56 +525,6 @@ $(function() {
     document.getElementById("give").dataset.roomId = msg.roomId;
     msg.targetCard.forEach(element => {
       dispHandCard(element, true, { needGiveNum: 1 });
-      // const cardType = element.number + element.type;
-      // const imgUri =
-      //   "https://raw.githubusercontent.com/kentei/SVG-cards/master/png/2x/" +
-      //   constant.DISPLAY_IMAGE_ID[element.type + element.number] +
-      //   ".png";
-      // //画像データを取得する
-      // let img = $('<img class="giveCardImage" src="' + imgUri + '"></img>')
-      //   .attr({
-      //     value: element.type + "_" + element.number
-      //   })
-      //   .on("click", function() {
-      //     if (!$(this).is(".checked")) {
-      //       // チェックが入っていない画像をクリックした場合、チェックを入れます。
-      //       $(this).addClass("checked");
-      //       if ($("img.giveCardImage.checked").length == 1) {
-      //         // ボタン有効
-      //         $("#give").prop("disabled", false);
-      //       } else {
-      //         // ボタン無効
-      //         $("#give").prop("disabled", true);
-      //       }
-      //     } else {
-      //       // チェックが入っている画像をクリックした場合、チェックを外します。
-      //       $(this).removeClass("checked");
-      //       if ($("img.giveCardImage.checked").length == 1) {
-      //         // ボタン有効
-      //         $("#give").prop("disabled", false);
-      //       } else {
-      //         // ボタン無効
-      //         $("#give").prop("disabled", true);
-      //       }
-      //     }
-      //   });
-      // var check = $(
-      //   '<input class="disabled_checkbox" type="checkbox" checked="" />'
-      // )
-      //   .attr({
-      //     name: "cards",
-      //     value: element.type + "_" + element.number
-      //   })
-      //   .on("click", function() {
-      //     return false;
-      //   });
-      // let box = $('<div class="image_box"/>')
-      //   .append(img)
-      //   .append(check);
-      // let li = $('<li id="' + element.type + element.number + '"></li>').append(
-      //   box
-      // );
-      // $("#giveCardList").append(li);
     });
     if (alreadyFlag) {
       $("#gameCommentaryArea").append(
@@ -1063,8 +870,6 @@ $(function() {
       {}
     );
     collapse.show();
-    //$("#battle" + msg.gameNum + "Content").collapse("show");
-    //$("#gameCommentaryArea").append("10秒後に次のゲームを始めます。<br />");
 
     $("#gameCommentaryArea").scrollTop(
       $("#gameCommentaryArea")[0].scrollHeight

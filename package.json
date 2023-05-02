@@ -2,6 +2,9 @@
   "name": "daihugou",
   "version": "1.0.0",
   "description": "",
+  "engines": {
+    "node": "16.14.2"
+  },
   "main": "dist/server.js",
   "dependencies": {
     "express": "^4.17.1",

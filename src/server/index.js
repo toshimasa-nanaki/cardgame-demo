@@ -10,9 +10,6 @@ const notifyUtil = require("./notifyUtil.js");
 const validateUtil = require("./validateUtil.js");
 
 var SocketEvent = require("./socketEvent");
-//LOGGER.level = "debug";
-// io.set('heartbeat interval', 5000);
-// io.set('heartbeat timeout', 15000);
 var port = process.env.PORT || 3000;
 //debug用フラグ
 const debug = process.env.DEBUG === "true" ? true : false;
